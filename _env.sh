@@ -8,7 +8,7 @@ dkhostname=$containername
 #dkport=4000:4000
 
 xmount=/mnt/c/Users/jeang/Dropbox/w/o/pys/jgtpy:/work/jgtpy
-xmount2=$HOME/.ssh:/root/.ssh
+xmount2=$HOME/.ssh:$HOME/.ssh
 
 
 dkcommand=bash #command to execute (default is the one in the dockerfile)

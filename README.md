@@ -1,10 +1,8 @@
 
 
 # jgtpy
-JGTechnical Indicators for the Pandas' Dataframes
 
-
-Documentation: https://pandastechindicators.readthedocs.io/en/latest/
+JGTPyIndicators Prep Service
 
 
 ## Installation
@@ -16,6 +14,7 @@ pip install -U jgtpy
 ```
 >>> import pandas as pd
 >>> import jgtpy
+>>> df=jgtpy.getPH('EUR/USD','H4')
 
 
 
