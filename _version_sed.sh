@@ -1,5 +1,5 @@
-pversion=0.1.2
-nversion=0.1.3
+pversion=0.1.3
+nversion=0.1.4
 cdir=$(pwd)
 
 cd jgtpy

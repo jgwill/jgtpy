@@ -13,7 +13,7 @@ xmount2=$HOME/.ssh:$HOME/.ssh
 
 dkcommand=bash #command to execute (default is the one in the dockerfile)
 
-dkextra=" -v $HOME/.pypirc:/root/.pypirc  "
+dkextra=" -v $HOME/.pypirc:/root/.pypirc  -v $HOME/.pypirc:$HOME/.pypirc  "
 
 #dkmounthome=true
 

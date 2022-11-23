@@ -1,1 +1,2 @@
-dkrun "bash build-n-release.sh"
+. _env.sh
+dkrun "bash /work/build-n-release.sh"

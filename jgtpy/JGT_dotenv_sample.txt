@@ -1,0 +1,9 @@
+userlogin="MY_FXCM_LOGIC"
+passwd="MYPASS"
+fxurl="fxcorporate.com/Hosts.jsp"
+fxcon="Demo"
+usereal=False
+FXCM_TOKEN_REST_API_DEMO='MYTOKENDEMO'
+FXCM_TOKEN_REST_API_REAL='MYREALTOKEN'
+FXCM_DROPBOX_ACCESS_TOKEN='MYDROPBOXTOKEN'
+
