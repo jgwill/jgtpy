@@ -1,6 +1,6 @@
 {
   "name": "jgtpy",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "jgtpy packaging",
   "main": "index.js",
   "directories": {
@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "pip install jgtpy",
-    "build-release":"bash build-by-docker.sh"
+    "build-release": "bash build-by-docker.sh"
   },
   "repository": {
     "type": "git",
