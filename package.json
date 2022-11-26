@@ -1,0 +1,27 @@
+{
+  "name": "jgtpy",
+  "version": "0.1.7",
+  "description": "jgtpy packaging",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "pip install jgtpy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jgwill/jgtpy.git"
+  },
+  "keywords": [
+    "jgt",
+    "jgtpy"
+  ],
+  "author": "Guillaume Isabelle",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jgwill/jgtpy/issues"
+  },
+  "homepage": "https://github.com/jgwill/jgtpy#readme"
+}
