@@ -1,6 +1,7 @@
 import os
 #import jgtdotenv
 from dotenv import load_dotenv
+from dotenv import dotenv_values
 
 load_dotenv()  # take environment variables from .env.
 #env=load_dotenv(os.getenv(os.getcwd()))
