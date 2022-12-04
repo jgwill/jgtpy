@@ -22,8 +22,8 @@
 # # import datetime as dt
 # # import pandas as pd
 # #import fxcmpy and check the imported version
-import fxcmpy as fx
-import jgtapy
+#import fxcmpy as fx
+#import jgtapy
 
 # import datetime as dt
 # import pandas as pd
@@ -41,6 +41,6 @@ import jgtapy
 from jgtpy.JGTCore import __version__
 
 from jgtpy.JGTPDS import mk_fn,mk_fullpath,getSubscribed,getPH,getPHByRange,tryConnect
-from jgtpy.JGTCDS import create as createCDS,createByRange,createCDSByRange,startSession,stopSession,getLast,getPresentBar,getPresentBarAsList,getLastCompletedBarAsList
+from jgtpy.JGTCDS import create as createCDS,createByRange,createByRange as createCDSByRange,startSession,stopSession,getLast,getPresentBar,getPresentBarAsList,getLastCompletedBarAsList
 # from jgtpy.JGTADS import ads_chart_pto,retrieve_n_chart as ads_retrieve_n_chart
 
