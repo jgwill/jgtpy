@@ -5,7 +5,7 @@ import os
 import pathlib
 from pathlib import Path
 
-__version__ = "0.1.20"
+__version__ = "0.1.21"
 
 #@title Functions Json decode dict
 def povRequestDecoder(povReqDict):
@@ -43,4 +43,6 @@ def cnf_Decoder(cnfDict):
     #return namedtuple('X', cnfDict.keys())(*cnfDict.values())
 def jgt_cnf_Decoder(cnfDict):
     return jgt_cnf_Decoder(cnfDict)
+
+
 
