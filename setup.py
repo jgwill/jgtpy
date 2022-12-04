@@ -46,7 +46,7 @@ setup(
         'dev-docs': EXTRAS_DEV_DOCS,
     },
     license='MIT',
-    keywords='trading',
+    keywords='data',
     classifiers=[
         "Development Status :: 5 - Production/Stable", 
         "Intended Audience :: Financial and Insurance Industry",
