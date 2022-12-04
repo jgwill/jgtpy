@@ -9,8 +9,7 @@ from jgtpy import __version__ as version
 
 INSTALL_REQUIRES = [
     'pandas>=0.25.1',
-    'fxcmpy>=1.3.3',
-    'dotenv',
+    'fxcmpy>=1.3.3', 
 ]
 
 EXTRAS_DEV_LINT = [
