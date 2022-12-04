@@ -20,6 +20,7 @@ def create(instrument,timeframe,nb2retrieve=335,stayConnected=False,quiet=True):
       timeframe (str): TF
       nb2retrieve (int, optional): nb bar to retrieve. Defaults to 335.
       stayConnected (bool, optional): Leave FXCMPY connected. Defaults to False.
+      quiet (bool,optional): Output quiet
 
   Returns:
       pandas.DataFrame: CDS DataFrame
@@ -33,6 +34,29 @@ def create(instrument,timeframe,nb2retrieve=335,stayConnected=False,quiet=True):
   dfi =ids.__ids_cleanse_ao_peak_secondary_columns(dfi,quiet=True)
   return dfi
 
+#createByRange
+def createByRange(instrument,timeframe,start,end,stayConnected=False,quiet=True):
+  """Create CDS with Fresh Data
+
+  Args:
+      instrument (str): symbol
+      timeframe (str): TF
+      start (date): start date
+      end (date): end date
+      stayConnected (bool, optional): Leave FXCMPY connected. Defaults to False.
+      quiet (bool,optional): Output quiet
+
+  Returns:
+      pandas.DataFrame: CDS DataFrame
+  """
+  pds.stayConnected=stayConnected
+  df=pds.getPHByRange(instrument,timeframe,start,end,with_index=False,quiet=quiet)
+  dfi=ids.ids_add_indicators(df,quiet=quiet)
+  dfi=ids.cds_add_signals_to_indicators(dfi,quiet=quiet)
+  dfi=ids.jgti_add_zlc_plus_other_AO_signal(dfi,quiet=quiet)
+  dfi=ids.pds_cleanse_original_columns(dfi,quiet=quiet)
+  dfi =ids.__ids_cleanse_ao_peak_secondary_columns(dfi,quiet=True)
+  return dfi
 
 # %%
 def getSubscribed():
