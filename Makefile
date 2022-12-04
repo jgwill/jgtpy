@@ -2,7 +2,7 @@ version := $(shell python3 -c 'from jgtpy import __version__; print(__version__)
 
 .PHONY: venv
 venv:
-	[ -d .venv ] || virtualenv .venv --python=python3
+	[ -d .venv ] || virtualenv .venv --python=py372
 	. .venv/bin/activate
 
 .PHONY: piplocal
