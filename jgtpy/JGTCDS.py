@@ -58,7 +58,14 @@ def createByRange(instrument,timeframe,start,end,stayConnected=False,quiet=True)
   dfi =ids.__ids_cleanse_ao_peak_secondary_columns(dfi,quiet=True)
   return dfi
 
-# %%
+def createFromDF(df,quiet=True):
+  dfi=ids.ids_add_indicators(df,quiet=quiet)
+  dfi=ids.cds_add_signals_to_indicators(dfi,quiet=quiet)
+  dfi=ids.jgti_add_zlc_plus_other_AO_signal(dfi,quiet=quiet)
+  dfi=ids.pds_cleanse_original_columns(dfi,quiet=quiet)
+  dfi =ids.__ids_cleanse_ao_peak_secondary_columns(dfi,quiet=True)
+  return dfi
+
 def getSubscribed():
   return pds.getSubscribed()
 

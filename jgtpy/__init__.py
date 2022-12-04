@@ -44,7 +44,7 @@
 from jgtpy.JGTCore import __version__
 
 from jgtpy.JGTPDS import mk_fn,mk_fullpath,getSubscribed,getPH,getPHByRange,tryConnect
-from jgtpy.JGTCDS import create as createCDS,createByRange,startSession,stopSession,getLast,getPresentBar,getPresentBarAsList,getLastCompletedBarAsList
+from jgtpy.JGTCDS import create as createCDS,createByRange,createFromDF,startSession,stopSession,getLast,getPresentBar,getPresentBarAsList,getLastCompletedBarAsList
 # from jgtpy.JGTADS import ads_chart_pto,retrieve_n_chart as ads_retrieve_n_chart
 
 
