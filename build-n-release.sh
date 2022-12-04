@@ -1,5 +1,7 @@
 #!/bin/bash
 . _env.sh
+mkdir -p logs
+
 if [ "$HOSTNAME" != "$dkhostname" ]; then
 #. build-by-docker.sh
 	 echo "Launching DockerTAG: $dockertag to build and publish "
