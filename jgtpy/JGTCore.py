@@ -5,7 +5,7 @@ import os
 import pathlib
 from pathlib import Path
 
-__version__ = "0.1.26"
+__version__ = "0.1.27"
 
 #@title Functions Json decode dict
 def povRequestDecoder(povReqDict):
@@ -18,6 +18,10 @@ def jgtjson_Decoder(_dic):
 	return namedtuple('X', _dic.keys())(*_dic.values())
 
 def json2prop(_json):
+    _dic=json.loads(_json)
+    return namedtuple('X', _dic.keys())(*_dic.values())
+
+def json2dict(_json):
     _dic=json.loads(_json)
     return namedtuple('X', _dic.keys())(*_dic.values())
 
