@@ -5,7 +5,7 @@ import os
 import pathlib
 from pathlib import Path
 
-__version__ = "0.1.19"
+__version__ = "0.1.20"
 
 #@title Functions Json decode dict
 def povRequestDecoder(povReqDict):

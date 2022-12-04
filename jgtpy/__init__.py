@@ -111,7 +111,7 @@ def get_variables(file_path):
 
 # encoding=UTF-8
 
-from __future__ import with_statement
+#from __future__ import with_statement
 
 
 __versionjgtdotenv__ = '0.0.5'
