@@ -1,6 +1,6 @@
 {
   "name": "jgtpy",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "description": "jgtpy packaging",
   "main": "index.js",
   "directories": {
