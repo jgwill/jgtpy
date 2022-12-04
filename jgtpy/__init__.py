@@ -38,6 +38,8 @@
 # import jgtpy.JGTPDS as pds
 # import jgtpy.JGTCDS as cds
 # import jgtpy.JGTIDS as ids
+from jgtpy.jgtdotenv import load_dotenv
+
 from jgtpy.JGTCore import __version__
 
 from jgtpy.JGTPDS import mk_fn,mk_fullpath,getSubscribed,getPH,getPHByRange,tryConnect
