@@ -23,12 +23,14 @@ if [ "$_continue" == "0" ];then
 	echo "$msg";echo "$msg" >> $logfile
 else
 npm version $versiontype > build/npm-version-out.txt && git push|| (echo "Oh, enter commit msg:";read MSG&&git commit . -m "$MSG" && npm version $versiontype  && git push )  &&  export _continue="1" || export _continue="0"
+
 if [ "$_continue" == "0" ];then
         msg="Failed with version upping"
         echo "$msg";echo "$msg" >> $logfile
 else
 	json2bash package.json . -x  > build/load-package-upgraded.sh && \
 	. build/load-package-upgraded.sh && export newversion="$version" && export _continue="1" || export _continue="0"
+
 if [ "$_continue" == "0" ];then
         msg="Failed getting new version with json2bash"
         echo "$msg";echo "$msg" >> $logfile

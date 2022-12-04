@@ -10,6 +10,7 @@ from jgtpy import __version__ as version
 INSTALL_REQUIRES = [
     'pandas>=0.25.1',
     'fxcmpy>=1.3.3', 
+    'dotenv',
 ]
 
 EXTRAS_DEV_LINT = [
@@ -47,14 +48,11 @@ setup(
     license='MIT',
     keywords='trading',
     classifiers=[
-        "Development Status :: 5 - Production/Stable",
-        "Intended Audience :: Developers",
+        "Development Status :: 5 - Production/Stable", 
         "Intended Audience :: Financial and Insurance Industry",
         "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
-        "Programming Language :: Python",
+        "Operating System :: OS Independent", 
         "Topic :: Software Development :: Libraries :: Python Modules", 
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: Implementation :: CPython",
+        "Programming Language :: Python :: 3.7", 
     ],
 )

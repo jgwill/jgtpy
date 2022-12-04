@@ -17,7 +17,7 @@ xmount2=$HOME/.ssh:$HOME/.ssh
 #dkcommand=bash #command to execute (default is the one in the dockerfile)
 #dkcommand="bash /work/build-n-release.sh"
 
-dkextra=" -v $(pwd)/../../jgtapy-jgwill:/jgtapy -v $HOME/.pypirc:/root/.pypirc  -v $HOME/.pypirc:$HOME/.pypirc  -v $pysroot/..:/a/repos -v $srcroot:/src "
+dkextra=" -v $(pwd)/../../jgtapy-jgwill:/jgtapy -v $HOME/.pypirc:/root/.pypirc  -v $HOME/.pypirc:$HOME/.pypirc  -v $pysroot/..:/a/repos -v $srcroot:/src -v $binroot:/a/bin "
 
 #dkmounthome=true
 
