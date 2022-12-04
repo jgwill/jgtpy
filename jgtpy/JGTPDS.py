@@ -134,7 +134,6 @@ def getPHByRange(instrument,timeframe,start=None,end=None,with_index=True,quiet=
   Args:
       instrument (str): symbal
       timeframe (str): TF
-      number (int, optional): nb bar to retrieve. Defaults to 335.
       start (str, optional): start DateTime. Defaults to None.
       end (str, optional): end DateTime range. Defaults to None.
       with_index (bool, optional): Return DataFrame with Index. Defaults to True.
