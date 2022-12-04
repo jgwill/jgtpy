@@ -10,6 +10,7 @@ from jgtpy import __version__ as version
 INSTALL_REQUIRES = [
     'pandas>=0.25.1',
     'fxcmpy>=1.3.3', 
+    'python-dotenv>=0.19.2',
 ]
 
 EXTRAS_DEV_LINT = [

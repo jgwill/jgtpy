@@ -1,6 +1,6 @@
 import os
-import jgtdotenv
-from jgtdotenv import load_dotenv
+#import jgtdotenv
+from dotenv import load_dotenv
 
 load_dotenv()  # take environment variables from .env.
 if os.getenv('FXCM_TOKEN_REST_API_DEMO') == "":
