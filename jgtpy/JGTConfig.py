@@ -3,7 +3,8 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()  # take environment variables from .env.
-#load_dotenv(os.getenv(os.getcwd()))
+#env=load_dotenv(os.getenv(os.getcwd()))
+env = dotenv_values(".env")
 if os.getenv('FXCM_TOKEN_REST_API_DEMO') == "":
   load_dotenv(os.getenv('HOME'))
 if os.getenv('FXCM_TOKEN_REST_API_DEMO') == "":
@@ -11,7 +12,7 @@ if os.getenv('FXCM_TOKEN_REST_API_DEMO') == "":
 #@title TOKENS
 def getenv(tvar):
   return os.getenv(tvar)
-  
+
 # keep expiring...
 FXCM_TOKEN_REST_API_DEMO = os.getenv('FXCM_TOKEN_REST_API_DEMO')
 FXCM_TOKEN_REST_API_REAL = os.getenv('FXCM_TOKEN_REST_API_REAL')
