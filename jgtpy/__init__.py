@@ -41,7 +41,7 @@
 #from jgtdotenv import load_dotenv
 #import jgtdotenv
 
-from jgtpy.JGTCore import __version__,json2dict,jsonfile2prop,json2prop,jsonfile2dict
+from jgtpy.JGTCore import __version__,json2dict,jsonfile2prop,json2prop,jsonfile2dict,d2p
 
 from jgtpy.JGTPDS import mk_fn,mk_fullpath,getSubscribed,getPH,getPHByRange,tryConnect
 from jgtpy.JGTCDS import create as createCDS,createByRange,createFromDF,startSession,stopSession,getLast,getPresentBar,getPresentBarAsList,getLastCompletedBarAsList
