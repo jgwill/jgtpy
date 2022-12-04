@@ -2,7 +2,8 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()  # take environment variables from .env.
-
+if os.getenv('FXCM_TOKEN_REST_API_DEMO') == "":
+  load_dotenv(os.getenv('HOME'))
 #@title TOKENS
 
 # keep expiring...

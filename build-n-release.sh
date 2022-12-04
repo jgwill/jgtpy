@@ -1,8 +1,9 @@
 #!/bin/bash
+versiontype=patch
+if [ "$1" != "" ] ; then versiontype=$1;fi
 mkdir -p build && \
 	json2bash package.json > build/load-package-previous.sh && \
-	npm version patch || (git commit .  && \ 
-	npm version patch) && \
+	(npm version $versiontype && git push)|| (echo "Oh, enter commit msg:";read MSG&&git commit . -m "$MSG" && npm version $versiontype  && git push ) && \
 	json2bash package.json > build/load-package-upgraded.sh && \
 	. build/load-package-previous.sh && export oldversion=$version && \
 	. build/load-package-upgraded.sh && export newversion=$version && \

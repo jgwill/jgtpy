@@ -23,6 +23,8 @@
 # # import pandas as pd
 # #import fxcmpy and check the imported version
 import fxcmpy as fx
+import jgtapy
+
 # import datetime as dt
 # import pandas as pd
 # #fxcmpy.__version__

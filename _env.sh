@@ -1,17 +1,21 @@
 #dockertag=jgwill/ubuntu:18.04-py3.7.2-ml-lzma-builder
 dockertag=jgwill/zeus:python-package-builder
-containername=jgtpybuilder
+containername=jgtapybuilder
+
+export logfile=logs/build-log.txt
 
 dkhostname=$containername
 
 # PORT
 #dkport=4000:4000
 
+#xmount=/mnt/c/Users/jeang/Dropbox/w/o/pys/jgtpy:/work/jgtpy
 xmount=/mnt/c/Users/jeang/Dropbox/w/o/pys/jgtpy:/work/jgtpy
 xmount2=$HOME/.ssh:$HOME/.ssh
 
 
-dkcommand=bash #command to execute (default is the one in the dockerfile)
+#dkcommand=bash #command to execute (default is the one in the dockerfile)
+#dkcommand="bash /work/build-n-release.sh"
 
 dkextra=" -v $HOME/.pypirc:/root/.pypirc  -v $HOME/.pypirc:$HOME/.pypirc  -v $pysroot/..:/a/repos -v $srcroot:/src "
 
