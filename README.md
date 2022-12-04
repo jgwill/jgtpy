@@ -6,15 +6,26 @@ JGTPyIndicators Prep Service
 
 
 ## Installation
-```
+```sh
 pip install -U jgtpy
 ```
 
 ## Example
+
+```py
+
+    >>> import pandas as pd
+    >>> import jgtpy
+    >>> df=jgtpy.getPH('EUR/USD','H4')
+    >>>
+    >>> # retrieve 3000 periods and generate from the DF
+    >>> df=jgtpy.getPH('EUR/USD','H4',3000,with_index=False)
+    >>> dfi=jgtpy.createFromDF(df)
+    >>>
+    >>> # Create with Timerange
+    >>> start="11.17.2022 00:00:00"
+    >>> end="11.25.2022 00:00:00"
+    >>> df=jgtpy.createByRange("USD/CAD","m15",start,end)
+
 ```
->>> import pandas as pd
->>> import jgtpy
->>> df=jgtpy.getPH('EUR/USD','H4')
-
-
 

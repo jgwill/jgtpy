@@ -27,8 +27,10 @@ Installation
 
 Indicators
 ==========
-.. autoclass:: jgtpy.Indicators
+.. autoclass:: jgtpy.JGTPDS
+.. autoclass:: jgtpy.JGTIDS
+.. autoclass:: jgtpy.JGTCDS
 .. automodule:: __init__
 
-.. automodule:: jgtpy.Indicators.accelerator_oscillator
+.. automodule:: jgtpy.JGTCDS
 
