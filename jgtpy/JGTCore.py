@@ -5,7 +5,7 @@ import os
 import pathlib
 from pathlib import Path
 
-__version__ = "0.1.32"
+__version__ = "0.1.33"
 
 #@title Functions Json decode dict
 def povRequestDecoder(povReqDict):
@@ -33,8 +33,6 @@ def jsonfile2prop(__jsonfile,quiet=False):
     #_jsonfile= os.path.abspath(__jsonfile)
     with open(_jsonfile, 'r') as f:
       d=f.read()
-      if not quiet:
-        print(_jsonfile+ " loaded")
       return json.loads(d)
 
 def jsonfile2dict(__jsonfile):
