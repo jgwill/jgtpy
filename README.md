@@ -26,6 +26,10 @@ pip install -U jgtpy
     >>> start="11.17.2022 00:00:00"
     >>> end="11.25.2022 00:00:00"
     >>> df=jgtpy.createByRange("USD/CAD","m15",start,end)
+    >>>
+    >>> # offsets date for retreival
+    >>> dtfirst_with_offset=jgtetl.svc_offset_dt_by_tf(dtfirst,ctx.timeframe)
+    >>> df=createByRange(ctx.instrument,ctx.timeframe,dtfirst_with_offset,dtlast)
 
 ```
 

@@ -1,6 +1,3 @@
-#--@STCGoal Migrate from PTO2212 in dwo
-print("TODO Migrate to finish from : /mnt/c/Users/jeang/Dropbox/w/o/strategies/standard/scripts/jgtetl.py")
-
 
 from datetime import datetime
 from datetime import timedelta
@@ -9,7 +6,6 @@ def offsetdt(time_str,nbhoursoffset=4,date_format_str= '%m/%d/%Y %H:%M:%S',outpu
   final_time = given_time + timedelta(hours=nbhoursoffset)
   final_time_str = final_time.strftime(output_dt_format) 
   return final_time_str
-
 
 def svc_offset_dt_by_tf(ori_time_str,_tf,direction=-1,amount=89,date_format_str= '%m/%d/%Y %H:%M:%S',output_dt_format='%Y-%m-%d %H:%M:%S'):
   _nbhour = pto_nbhourbytfofoffset2212(_tf,amount) * direction
