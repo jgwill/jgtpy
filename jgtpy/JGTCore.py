@@ -5,8 +5,39 @@ import os
 import pathlib
 from pathlib import Path
 
-__version__ = "0.1.33"
+__version__ = "0.1.34"
 
+from datetime import datetime
+from datetime import timedelta
+def offsetdt(time_str,nbhoursoffset=4,date_format_str= '%m/%d/%Y %H:%M:%S',output_dt_format='%Y-%m-%d %H:%M:%S'):
+  given_time = datetime.strptime(time_str, date_format_str)
+  final_time = given_time + timedelta(hours=nbhoursoffset)
+  final_time_str = final_time.strftime(output_dt_format) 
+  return final_time_str
+  
+def fixdtindf(_df,fieldname="dt",n=4,date_format_str= '%m/%d/%Y %H:%M:%S',output_dt_format='%Y-%m-%d %H:%M:%S'):
+  #date_format_str = '%m/%d/%Y %H:%M:%S' #06/08/2022 09:00:00
+  dfo=pd.DataFrame()
+  for index,row in _df.iterrows():
+    #print(index)
+    # Given timestamp in string
+    time_str = row[fieldname]
+    # create datetime object from timestamp string
+    given_time = datetime.strptime(time_str, date_format_str)
+    #print('Given Time: ', given_time)
+    # Add 2 hours to datetime object
+    final_time = given_time + timedelta(hours=n)
+    #print('Final Time : ', final_time)
+    # Convert datetime object to string in specific format 
+    final_time_str = final_time.strftime(output_dt_format) #2022-06-08 13:00:00
+    #print('Final Time as string object: ', final_time_str)
+    _df.at[index,fieldname]=final_time_str
+    #_df[index][fieldname]=final_time_str
+    # row['dt'] = final_time_str
+    #df[index]['dt'] = final_time_str
+    #dfo[index]=row
+  return _df
+  
 #@title Functions Json decode dict
 def povRequestDecoder(povReqDict):
 	return jgt_povRequestDecoder(povReqDict) #name changes

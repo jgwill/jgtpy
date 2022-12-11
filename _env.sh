@@ -24,9 +24,9 @@ dkextra=" -v $(pwd)/../../jgtapy-jgwill:/jgtapy -v $HOME/.pypirc:/root/.pypirc  
 
 ##########################
 ############# RUN MODE
-#dkrunmode="bg" #default fg
+dkrunmode="bg" #default fg
 #dkrestart="--restart" #default
-#dkrestarttype="unless-stopped" #default
+dkrestarttype="unless-stopped" #default
 
 
 #########################################
