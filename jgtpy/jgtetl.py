@@ -1,6 +1,7 @@
 
 from datetime import datetime
 from datetime import timedelta
+
 def offsetdt(time_str,nbhoursoffset=4,date_format_str= '%m/%d/%Y %H:%M:%S',output_dt_format='%Y-%m-%d %H:%M:%S'):
   given_time = datetime.strptime(time_str, date_format_str)
   final_time = given_time + timedelta(hours=nbhoursoffset)

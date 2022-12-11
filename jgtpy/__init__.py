@@ -40,7 +40,7 @@
 # import jgtpy.JGTIDS as ids
 #from jgtdotenv import load_dotenv
 #import jgtdotenv
-from jgtetl import svc_offset_dt_by_tf,offsetdt
+from jgtpy.jgtetl import svc_offset_dt_by_tf,offsetdt
 from jgtpy.JGTCore import __version__,json2dict,jsonfile2prop,json2prop,jsonfile2dict,d2p,fixdtindf,offsetdt
 from jgtpy.JGTConfig import getenv,setreal,setdemo,env
 
