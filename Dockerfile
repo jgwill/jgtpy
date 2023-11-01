@@ -1,4 +1,6 @@
-FROM jgwill/zeus:strategyrunner-2210-v3-prod-tfx-jgi
+#FROM jgwill/zeus:strategyrunner-2210-v3-prod-tfx-jgi
+FROM jgwill/server:base-fe-8.2-dotnet7-node20-forexconnect
+
 USER root
 #FROM jgwill/ubuntu:18.04-py3.7.2-ml-lzma
 
@@ -13,12 +15,10 @@ USER root
 #RUN echo "  ---------------------------------------- " >> /etc/motd
 #RUN echo "  JGT PYTHON Package Builder and Publisher " >> /etc/motd
 WORKDIR /etc
-COPY motd.txt motd
-RUN  cp motd /etc/update-motd.d/99-jgt-builder
-USER jgi
-WORKDIR /home/jgi
-RUN mv .bash_aliases .bash_aliases.sr && \
-	 touch .pystartup && \
- 	git config --global --add safe.directory /work
+RUN apt install make -y 
+RUN apt install make-guile -y
 WORKDIR /work
+
+CMD []
+
 
