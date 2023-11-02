@@ -1,5 +1,5 @@
 #import fxcmpy and check the imported version
-import fxcmpy as fx
+import forexconnect as fx
 import datetime as dt
 import pandas as pd
 #fxcmpy.__version__
@@ -7,12 +7,7 @@ import jgtpy.JGTConfig as jgtc
 
 
 con=None
-#global con=None
 
-#@title Demo Token
-# token ='6c8d49b0be4e220d842d6c1d5350.1.12541cc4c8'
-token = jgtc.token
-#print(token)
 def create_con():
   return fx.fxcmpy(access_token = token, log_level='error',log_file=None)
 #config_file='fxcm.cfg')
