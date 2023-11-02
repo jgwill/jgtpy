@@ -15,8 +15,7 @@ def create_con():
 def create_con_cfg():
   return fx.fxcmpy(config_file='fxcm.cfg', log_level='error',log_file=None)
 
-# def __dummy():
-#   m=fxcmpy.fxcmpy
+
 
 def connect(quiet=True):
   global con

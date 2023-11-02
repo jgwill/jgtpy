@@ -1,17 +1,24 @@
 # jgtfxc.py
 
+import os
 import json
 import datetime
 import pandas as pd
 from forexconnect import ForexConnect, fxcorepy
 
-import common_samples
-# as common_samples
+import common_samples as common_samples
 
 
 def get_price_history(instrument, timeframe, datefrom=None, dateto=None):
+    # Try reading config file from current directory
+    config_file = 'config.json'
+    if not os.path.isfile(config_file):
+        # If config file not found, check home directory
+        home_dir = os.path.expanduser("~")
+        config_file = os.path.join(home_dir, 'config.json')
+
     # Read config file
-    with open('config.json', 'r') as file:
+    with open(config_file, 'r') as file:
         config = json.load(file)
 
     str_user_id = config['user_id']

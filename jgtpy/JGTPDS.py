@@ -93,8 +93,6 @@ def getPH(instrument,timeframe,number=335,start=None,end=None,with_index=True,qu
       pandas.DataFrame: DF with price histories
   """
   df = pd.DataFrame()
-  #if disconnected:
-  # con=connect()
   if not useLocal:
     con=connect(quiet=quiet)
     if start == None:
