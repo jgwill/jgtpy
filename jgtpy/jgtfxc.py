@@ -52,30 +52,33 @@ def get_price_history(instrument, timeframe, datefrom=None, dateto=None):
         print("")
         print("Requesting a price history...")
         history = fx.get_history(instrument, timeframe, datefrom, dateto, quotes_count)
+
         current_unit, _ = ForexConnect.parse_timeframe(timeframe)
 
-        date_format = '%m.%d.%Y %H:%M:%S'
         if current_unit == fxcorepy.O2GTimeFrameUnit.TICK:
-            print("Date, Bid, Ask")
-            print(history.dtype.names)
-            for row in history:
-                print("{0:s}, {1:,.5f}, {2:,.5f}".format(
-                    pd.to_datetime(row['Date']).strftime(date_format), row['Bid'], row['Ask']))
+            data = pd.DataFrame(history, columns=['Date', 'Bid', 'Ask'])
         else:
-            print("Date, BidOpen, BidHigh, BidLow, BidClose, Volume")
-            for row in history:
-                dt = pd.to_datetime(row['Date']).strftime(date_format)
-                o = row['BidOpen']
-                h = row['BidHigh']
-                l = row['BidLow']
-                c = row['BidClose']
-                v = row['Volume']
+            data = pd.DataFrame(history, columns=['Date', 'BidOpen', 'BidHigh', 'BidLow', 'BidClose', 'Volume'])
 
-                print("{0:s}, {1:,.5f}, {2:,.5f}, {3:,.5f}, {4:,.5f}, {5:d}".format(
-                    dt, o, h, l, c, v))
+        return data
+
     finally:
         logout_forexconnect(fx)
 
 
+def get_price_history_printed(instrument, timeframe, datefrom=None, dateto=None):
+    data = get_price_history(instrument, timeframe, datefrom, dateto)
+
+    if data is not None:
+        if 'Ask' in data.columns:
+            print("Date, Bid, Ask")
+        else:
+            print("Date, BidOpen, BidHigh, BidLow, BidClose, Volume")
+
+        for index, row in data.iterrows():
+            values = row.values.tolist()
+            print(",".join(str(value) for value in values))
+
+
 # Example usage
-#get_price_history(instrument='EUR/USD', timeframe='m1')
+#get_price_history_printed(instrument='EUR/USD', timeframe='m1')
