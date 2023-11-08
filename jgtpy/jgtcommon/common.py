@@ -14,7 +14,6 @@
 # limitations under the License.
 
 import logging
-import __main__
 import datetime
 import traceback
 import argparse
@@ -25,12 +24,15 @@ import pathlib
  
 #from forexconnect import fxcorepy
 
-logging.basicConfig(filename='{0}.log'.format(__main__.__file__), level=logging.INFO,
-                    format='%(asctime)s %(levelname)s %(message)s', datefmt='%m.%d.%Y %H:%M:%S')
-console = logging.StreamHandler(sys.stdout)
-console.setLevel(logging.INFO)
-logging.getLogger('').addHandler(console)
-
+try :
+    import __main__
+    logging.basicConfig(filename='{0}.log'.format(__main__.__file__), level=logging.INFO,
+                        format='%(asctime)s %(levelname)s %(message)s', datefmt='%m.%d.%Y %H:%M:%S')
+    console = logging.StreamHandler(sys.stdout)
+    console.setLevel(logging.INFO)
+    logging.getLogger('').addHandler(console)
+except:
+    print('logging failed - dont worry')
 
 def add_main_arguments(parser: argparse.ArgumentParser):
     parser.add_argument('-l',
