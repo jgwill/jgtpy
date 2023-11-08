@@ -1,11 +1,11 @@
 import datetime as dt
 import pandas as pd
-from . import JGTPDHelper as jpd
+import JGTPDHelper as jpd
 
 #import jgtpy.JGTFXCMWrapper as jfx
-from . import jgtfxc as jfx
+import jgtfxc as jfx
 
-from . import JGTConfig as jgtcnf
+import JGTConfig as jgtcnf
 
 
 
@@ -73,7 +73,10 @@ def tryConnect():
     con=connect()
   except ConnectionError:
     print("Connection error")
-    
+
+def status():
+  return jfx.status()
+
 def getPH_from_local(instrument,timeframe):
   srcpath=jgtcnf.get_pov_local_data_filename(instrument,timeframe)
   df=pd.read_csv(srcpath,compression=jgtcnf.local_fn_compression,index_col='Date')

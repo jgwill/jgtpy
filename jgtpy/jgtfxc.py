@@ -14,7 +14,9 @@ from forexconnect import ForexConnect, fxcorepy
 # fxcon.ForexConnect.get_timeframe
 # fxcon.ForexConnect.get_timeframe
 
-from . import common_samples as common_samples
+# from . import common_samples as jgtfxcommon
+import jgtfxcommon
+
 
 fx=None
 quotes_count=None
@@ -22,9 +24,9 @@ quotes_count=None
 def login_forexconnect(user_id, password, url, connection):
     fx = ForexConnect()
     try:
-        fx.login(user_id, password, url, connection, "", "", common_samples.session_status_changed)
+        fx.login(user_id, password, url, connection, "", "", jgtfxcommon.session_status_changed)
     except Exception as e:
-        common_samples.print_exception(e)
+        jgtfxcommon.print_exception(e)
     return fx
 
 #@STCIssue Matching our original connect
@@ -49,7 +51,7 @@ def logout_forexconnect(fx):
     try:
         fx.logout()
     except Exception as e:
-        common_samples.print_exception(e)
+        jgtfxcommon.print_exception(e)
 def disconnect(quiet=False):
     global fx
     if fx is None:
