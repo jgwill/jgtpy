@@ -1,3 +1,7 @@
+jgtpy/History
+config.json
+jgtpy/config.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 **/__pycache__/
