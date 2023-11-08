@@ -18,6 +18,7 @@
 .. moduleauthor:: Jean Guillaume Isabelle <jgi@jgwill.com>
 """
 
+#from jgtpy.common_samples import common_samples
 from jgtpy.jgtetl import svc_offset_dt_by_tf,offsetdt
 from jgtpy.JGTCore import __version__,json2dict,jsonfile2prop,json2prop,jsonfile2dict,d2p,fixdtindf,offsetdt
 from jgtpy.JGTConfig import getenv,setreal,setdemo,env

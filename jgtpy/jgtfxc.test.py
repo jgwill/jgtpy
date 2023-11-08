@@ -1,5 +1,21 @@
 # main.py
 
-from jgtfxc import get_price_history
+from jgtfxc import get_price_history,connect,disconnect,status
 
-get_price_history('EUR/USD', 'H4')
+status()
+
+connect()
+
+d=get_price_history('EUR/USD', 'H4')
+print(d)
+
+
+status()
+
+d=get_price_history('AUD/USD', 'H4')
+print(d)
+
+
+disconnect()
+
+status()

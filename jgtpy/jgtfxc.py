@@ -14,7 +14,7 @@ from forexconnect import ForexConnect, fxcorepy
 # fxcon.ForexConnect.get_timeframe
 # fxcon.ForexConnect.get_timeframe
 
-import common_samples as common_samples
+from . import common_samples as common_samples
 
 fx=None
 quotes_count=None
@@ -84,7 +84,7 @@ def get_price_history(instrument, timeframe, datefrom=None, dateto=None,quotes_c
 
     if quotes_count_spec is None:
         quotes_count_spec=quotes_count
-        
+
     connect()
     if dateto is None:
         dateto = datetime.datetime.now()    
@@ -99,7 +99,7 @@ def get_price_history(instrument, timeframe, datefrom=None, dateto=None,quotes_c
         if current_unit == fxcorepy.O2GTimeFrameUnit.TICK:
             data = pd.DataFrame(history, columns=['Date', 'Bid', 'Ask'])
         else:
-            data = pd.DataFrame(history, columns=['Date', 'BidOpen', 'BidHigh', 'BidLow', 'BidClose', 'Volume'])
+            data = pd.DataFrame(history, columns=['Date','BidOpen','BidHigh','BidLow','BidClose','AskOpen','AskHigh','AskLow','AskClose','Volume'])
 
         return data
 
