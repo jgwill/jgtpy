@@ -18,28 +18,6 @@
 .. moduleauthor:: Jean Guillaume Isabelle <jgi@jgwill.com>
 """
 
-# # import fxcmpy
-# # import datetime as dt
-# # import pandas as pd
-# #import fxcmpy and check the imported version
-#import fxcmpy as fx
-#import jgtapy
-
-# import datetime as dt
-# import pandas as pd
-# #fxcmpy.__version__
-# import jgtpy.JGTConfig as jgtc
-
-
-# import jgtpy.JGTPDHelper as jpd
-# import jgtpy.JGTPDHelper
-# import jgtpy.JGTFXCMWrapper as jfx
-# import jgtpy.JGTConfig as jgtcnf
-# import jgtpy.JGTPDS as pds
-# import jgtpy.JGTCDS as cds
-# import jgtpy.JGTIDS as ids
-#from jgtdotenv import load_dotenv
-#import jgtdotenv
 from jgtpy.jgtetl import svc_offset_dt_by_tf,offsetdt
 from jgtpy.JGTCore import __version__,json2dict,jsonfile2prop,json2prop,jsonfile2dict,d2p,fixdtindf,offsetdt
 from jgtpy.JGTConfig import getenv,setreal,setdemo,env
