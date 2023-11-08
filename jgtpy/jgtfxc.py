@@ -6,8 +6,18 @@ import datetime
 import pandas as pd
 from forexconnect import ForexConnect, fxcorepy
 
+#@STCGoal Future use
+#import forexconnect as fxcon
+# fxcon.ForexConnect.create_order_request
+# fxcon.ForexConnect.create_request
+# fxcon.ForexConnect.get_table
+# fxcon.ForexConnect.get_timeframe
+# fxcon.ForexConnect.get_timeframe
+
 import common_samples as common_samples
 
+fx=None
+quotes_count=None
 
 def login_forexconnect(user_id, password, url, connection):
     fx = ForexConnect()
@@ -17,15 +27,46 @@ def login_forexconnect(user_id, password, url, connection):
         common_samples.print_exception(e)
     return fx
 
+#@STCIssue Matching our original connect
+def connect(quiet=True):
+    global fx,quotes_count
+    if fx is not None:
+        print("Already connected")
+        return
+    
+    config=readconfig()
+
+    str_user_id = config['user_id']
+    str_password = config['password']
+    str_url = config['url']
+    str_connection = config['connection']
+    quotes_count = config['quotes_count']
+
+    fx = login_forexconnect(str_user_id, str_password, str_url, str_connection)
+
 
 def logout_forexconnect(fx):
     try:
         fx.logout()
     except Exception as e:
         common_samples.print_exception(e)
+def disconnect(quiet=False):
+    global fx
+    if fx is None:
+        print("Not connected")
+        return
+    logout_forexconnect(fx)
+    fx=None
+
+def status():
+    global fx
+    if fx is None:
+        print("STATUS : Not connected")
+        return
+    print("STATUS : Connected")
 
 
-def get_price_history(instrument, timeframe, datefrom=None, dateto=None):
+def readconfig():
     # Try reading config file from current directory
     config_file = 'config.json'
     if not os.path.isfile(config_file):
@@ -36,6 +77,40 @@ def get_price_history(instrument, timeframe, datefrom=None, dateto=None):
     # Read config file
     with open(config_file, 'r') as file:
         config = json.load(file)
+        return config
+    
+def get_price_history(instrument, timeframe, datefrom=None, dateto=None,quotes_count_spec=None):
+    global quotes_count,fx
+
+    if quotes_count_spec is None:
+        quotes_count_spec=quotes_count
+        
+    connect()
+    if dateto is None:
+        dateto = datetime.datetime.now()    
+
+    try:
+        print("")
+        print("Requesting a price history...")
+        history = fx.get_history(instrument, timeframe, datefrom, dateto, quotes_count_spec)
+
+        current_unit, _ = ForexConnect.parse_timeframe(timeframe)
+
+        if current_unit == fxcorepy.O2GTimeFrameUnit.TICK:
+            data = pd.DataFrame(history, columns=['Date', 'Bid', 'Ask'])
+        else:
+            data = pd.DataFrame(history, columns=['Date', 'BidOpen', 'BidHigh', 'BidLow', 'BidClose', 'Volume'])
+
+        return data
+
+    finally:
+        print("We are not disconnecting automatically, hoping we will be able to reuse the connection")
+        #logout_forexconnect(fx)
+
+
+def get_price_history1(instrument, timeframe, datefrom=None, dateto=None):
+    # Try reading config file from current directory
+    config=readconfig()
 
     str_user_id = config['user_id']
     str_password = config['password']
@@ -82,3 +157,14 @@ def get_price_history_printed(instrument, timeframe, datefrom=None, dateto=None)
 
 # Example usage
 #get_price_history_printed(instrument='EUR/USD', timeframe='m1')
+
+#fx
+def getAccount():
+    account = fx.getAccount()
+    print(account)
+    return account
+
+def getSubscribedSymbols():
+    symbols = fx.getSubscribedSymbols()
+    print(symbols)
+    return symbols
