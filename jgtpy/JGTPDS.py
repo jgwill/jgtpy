@@ -1,11 +1,11 @@
 import datetime as dt
 import pandas as pd
-import JGTPDHelper as jpd
+from . import JGTPDHelper as jpd
 
 #import jgtpy.JGTFXCMWrapper as jfx
-import jgtfxc as jfx
+from . import jgtfxc as jfx
 
-import JGTConfig as jgtcnf
+from . import JGTConfig as jgtcnf
 
 
 

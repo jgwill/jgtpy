@@ -15,7 +15,7 @@ from forexconnect import ForexConnect, fxcorepy
 # fxcon.ForexConnect.get_timeframe
 
 # from . import common_samples as jgtfxcommon
-import jgtfxcommon
+from . import jgtfxcommon
 
 
 fx=None
