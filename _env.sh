@@ -10,7 +10,7 @@ dkhostname=$containername
 #dkport=4000:4000
 
 #xmount=/mnt/c/Users/jeang/Dropbox/w/o/pys/jgtpy:/work/jgtpy
-xmount=/a/www/_/app/o/pys/jgtpy:/work/jgtpy
+#xmount=/a/www/_/app/o/pys/jgtpy:/work/jgtpy
 xmount2=$HOME/.ssh:$HOME/.ssh
 
 
