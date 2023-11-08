@@ -6,7 +6,7 @@ import datetime
 import pandas as pd
 from forexconnect import ForexConnect, fxcorepy
 
-import common_samples_231025 as common_samples
+import common_samples as common_samples
 
 
 def login_forexconnect(user_id, password, url, connection):

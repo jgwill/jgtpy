@@ -3,6 +3,9 @@
 #@title Add Indicators Columns
 import pandas as pd
 import datetime
+from jgtapy import Indicators
+
+
 _dtformat = '%m.%d.%Y %H:%M:%S'
 # %%
 
@@ -85,7 +88,7 @@ def pds_get_dt_from_and_to_for_now_live_price(_timeframe,_nbbar2retrieve=335,qui
 # %%
 #--@STCGoal IDS Indicators and related / CDS
 
-from jgtapy import Indicators
+
 def ids_add_indicators(__df,
                        enableGatorOscillator=False,
                        enableMFI=False,
