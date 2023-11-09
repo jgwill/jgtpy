@@ -1,3 +1,22 @@
+"""
+This module contains various utility functions for working with financial data and indicators. Mostly they are used by CDS
+
+Functions:
+- jgtpd_col_add_range_shifting_dropnas(_df,ctxcolname='ao',colprefix='pao',endrange=10)
+- jgtpd_col_add_range_shifting(_df,ctxcolname='ao',colprefix='pao',endrange=10)
+- getMinByTF(tf)
+- pds_get_dt_from_and_to_for_now_live_price(_timeframe,_nbbar2retrieve=335,quiet=True)
+- ids_add_indicators(__df,enableGatorOscillator=False,enableMFI=False,dropnavalue=True,quiet=False,cleanupOriginalColumn=True)
+- ids_add_indicators_LEGACY(__df,enableGatorOscillator=False,enableMFI=False,dropnavalue=True,quiet=False)
+- jgtpd_dropnas_on_any_rows(_df)
+- jgtpd_drop_cols_from_to_by_name(_df,firstcolname,lastcolname,_axis = 1)
+- jgtpd_col_drop_range(_df,colprefix='pao',endrange=10)
+- ids_add_fdb_intermediaries_columns(_df)
+- ids_clear_fdb_intermediaries_columns(_df,quiet=False)
+- ids_add_fdb_column_logics(_df,_dropIntermediariesColumns=True,quiet=False)
+- jgtids_mk_ao_fractal_peak(_df,ctxcolname='ao',poscolprefix='pao',negcolprefix='nao',endrange=10,quiet=False)
+
+"""
 # %%
 #@title FDB Intermediary values
 #@title Add Indicators Columns
@@ -689,6 +708,7 @@ def fdb_print_info(df,isBuy=True):
   
   
 #@title ZLC Buy and Sell v2 2210161707 
+
 def jgti_add_zlc_plus_other_AO_signal(_df,dropsecondaries=True,quiet=True):
   _df=jgtpd_col_add_range_shifting(_df,'ao','pao',10)
   _df=jgtpd_col_add_range_shifting(_df,'ac','pac',4)
@@ -752,9 +772,13 @@ def jgti_add_zlc_plus_other_AO_signal(_df,dropsecondaries=True,quiet=True):
     if pao1 < 0 and aoaz == True:
       zlcCode = 1
       isZLCBuy=True
-    _df.at[i,'zlc'] = zlcCode  
-    _df.at[i,'zlcb'] = isZLCBuy
-    _df.at[i,'zlcs'] = isZLCSell
+    
+    zeroLineCrossingSignalCode_column_name = 'zlc'
+    _df.at[i,zeroLineCrossingSignalCode_column_name] = zlcCode  
+    zeroLineCrossingBuySignal_column_name = 'zlcb'
+    _df.at[i,zeroLineCrossingBuySignal_column_name] = isZLCBuy
+    zeroLineCrossingSellSignal_column_name = 'zlcs'
+    _df.at[i,zeroLineCrossingSellSignal_column_name] = isZLCSell
 
     #Coloring AO
     if caogreen:
