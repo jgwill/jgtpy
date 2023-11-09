@@ -115,8 +115,8 @@ def getPH(instrument,timeframe,quote_count=335,start=None,end=None,with_index=Tr
     if renameColumns:
       df=df.rename(columns={'bidopen': 'BidOpen', 'bidhigh': 'BidHigh','bidclose':'BidClose','bidlow':'BidLow','askopen': 'AskOpen', 'askhigh': 'AskHigh','askclose':'AskClose','asklow':'AskLow','tickqty':'Volume','date':'Date'})
       df= df.astype({'Volume':int})
-      if with_index:
-        df.index.rename('Date',inplace=True)
+    if with_index:
+      df.index.rename('Date',inplace=True)
   else:
     #Read from local
     df =getPH_from_local(instrument,timeframe)

@@ -20,6 +20,7 @@ from . import jgtfxcommon
 
 fx=None
 quotes_count=None
+stayConnected=False
 
 def login_forexconnect(user_id, password, url, connection):
     fx = ForexConnect()
@@ -80,7 +81,8 @@ def readconfig():
     with open(config_file, 'r') as file:
         config = json.load(file)
         return config
-    
+
+
 def get_price_history(instrument, timeframe, datefrom=None, dateto=None,quotes_count_spec=None):
     global quotes_count,fx
 
@@ -106,7 +108,10 @@ def get_price_history(instrument, timeframe, datefrom=None, dateto=None,quotes_c
         return data
 
     finally:
-        print("We are not disconnecting automatically, hoping we will be able to reuse the connection")
+        if not stayConnected:
+            disconnect()
+        else:
+            print("---we stay connected---")
         #logout_forexconnect(fx)
 
 
