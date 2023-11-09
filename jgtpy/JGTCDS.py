@@ -13,7 +13,7 @@ def stopSession():
   pds.dis
 # %%
 def create(instrument,timeframe,nb2retrieve=335,stayConnected=False,quiet=True):
-  """Create CDS with Fresh Data
+  """Create CDS (Chaos Data Service) with Fresh Data
 
   Args:
       instrument (str): symbol

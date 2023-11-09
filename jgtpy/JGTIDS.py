@@ -24,24 +24,61 @@ import pandas as pd
 import datetime
 from jgtapy import Indicators
 
-
+# %%
+#@title Vars
 _dtformat = '%m.%d.%Y %H:%M:%S'
+
+# %%
+#@title Data Frame Columns naming
+indicator_currentDegree_alligator_jaw_column_name = 'jaw' # 13 periods moving average, shifted 8 bars into the future
+indicator_currentDegree_alligator_teeth_column_name = 'teeth' # 8 periods moving average, shifted 5 bars into the future
+indicator_currentDegree_alligator_lips_column_name = 'lips' # 5 periods moving average, shifted 3 bars into the future
+indicator_sixDegreeLarger_alligator_jaw_column_name = 'bjaw' # 89 periods moving average, shifted 55 bars into the future
+indicator_sixDegreeLarger_alligator_teeth_column_name = 'bteeth' # 55 periods moving average, shifted 34 bars into the future
+indicator_sixDegreeLarger_alligator_lips_column_name = 'blips' # 34 periods moving average, shifted 21 bars into the future
+indicator_AO_awesomeOscillator_column_name = 'ao' # AO measure energy of momentum
+indicator_AC_accelerationDeceleration_column_name = 'ac' # AC measure speed of momentum
+indicator_fractal_high_degree2_column_name = 'fb'
+indicator_fractal_low_degree2_column_name = 'fs' 
+
+#generated
+indicator_fractal_high_degree2_column_name="fh" # Fractal High of degree 2
+indicator_fractal_low_degree2_column_name="fl" # Fractal Low of degree 2
+indicator_fractal_high_degree3_column_name="fh3" # Fractal High of degree 3
+indicator_fractal_low_degree3_column_name="fl3" # Fractal Low of degree 3
+indicator_fractal_high_degree5_column_name="fh5" # Fractal High of degree 5
+indicator_fractal_low_degree5_column_name="fl5" # Fractal Low of degree 5
+indicator_fractal_high_degree8_column_name="fh8" # Fractal High of degree 8
+indicator_fractal_low_degree8_column_name="fl8" # Fractal Low of degree 8
+indicator_fractal_high_degree13_column_name="fh13" # Fractal High of degree 13
+indicator_fractal_low_degree13_column_name="fl13" # Fractal Low of degree 13
+indicator_fractal_high_degree21_column_name="fh21" # Fractal High of degree 21
+indicator_fractal_low_degree21_column_name="fl21" # Fractal Low of degree 21
+indicator_fractal_high_degree34_column_name="fh34" # Fractal High of degree 34
+indicator_fractal_low_degree34_column_name="fl34" # Fractal Low of degree 34
+indicator_fractal_high_degree55_column_name="fh55" # Fractal High of degree 55
+indicator_fractal_low_degree55_column_name="fl55" # Fractal Low of degree 55
+indicator_fractal_high_degree89_column_name="fh89" # Fractal High of degree 89
+indicator_fractal_low_degree89_column_name="fl89" # Fractal Low of degree 89
+
+
+
 # %%
 
 
 #--@STCGoal PDS Utils
 
 #@title Range shift add col drop na
-def jgtpd_col_add_range_shifting_dropnas(_df,ctxcolname='ao',colprefix='pao',endrange=10):
-  return jgtpd_dropnas_on_any_rows(jgtpd_col_add_range_shifting(_df,ctxcolname,colprefix,endrange))
+def jgtpd_col_add_range_shifting_dropnas(dfsrc,ctxcolname='ao',colprefix='pao',endrange=10):
+  return jgtpd_dropnas_on_any_rows(jgtpd_col_add_range_shifting(dfsrc,ctxcolname,colprefix,endrange))
 
 #@title BACKWARD Range shift col
-def jgtpd_col_add_range_shifting(_df,ctxcolname='ao',colprefix='pao',endrange=10):
+def jgtpd_col_add_range_shifting(dfsrc,ctxcolname='ao',colprefix='pao',endrange=10):
   """Add a BACKWARD range of shifted values
     for a column with a prefixed numbered.
 
     Args:
-         _df (DataFrame source)
+         dfsrc (DataFrame source)
          ctxcolname (column name from)
          colprefix (new columns prefix)
          endrange (the end of the range from 0)
@@ -50,8 +87,8 @@ def jgtpd_col_add_range_shifting(_df,ctxcolname='ao',colprefix='pao',endrange=10
       DataFrame with new columns
   """
   for i in range(endrange):
-    _df[colprefix+str(i)]=_df[ctxcolname].shift(i)
-  return _df
+    dfsrc[colprefix+str(i)]=dfsrc[ctxcolname].shift(i)
+  return dfsrc
 
   
   
@@ -108,16 +145,24 @@ def pds_get_dt_from_and_to_for_now_live_price(_timeframe,_nbbar2retrieve=335,qui
 #--@STCGoal IDS Indicators and related / CDS
 
 
+
 def ids_add_indicators(__df,
                        enableGatorOscillator=False,
                        enableMFI=False,
                        dropnavalue=True,
                        quiet=False,                       
-                       cleanupOriginalColumn=True):
-  return Indicators.jgt_create_ids_indicators_as_dataframe(__df,
+                       cleanupOriginalColumn=True,useLEGACY=True):
+  if not useLEGACY: # Because jgtapy has to be upgraded with new column name, we wont use it until our next release
+    return Indicators.jgt_create_ids_indicators_as_dataframe(__df,
                        enableGatorOscillator,
                        enableMFI,                          
                        cleanupOriginalColumn,                    
+                       quiet)
+  else:
+    return ids_add_indicators_LEGACY(__df,
+                       enableGatorOscillator,
+                       enableMFI,
+                       dropnavalue,
                        quiet)
 
 def ids_add_indicators_LEGACY(__df,
@@ -128,19 +173,23 @@ def ids_add_indicators_LEGACY(__df,
   if not quiet:
     print("Adding indicators...")
   i=Indicators(__df)
-  i.accelerator_oscillator( column_name= 'ac')
-  i.alligator(period_jaws=13, period_teeth=8, period_lips=5, shift_jaws=8, shift_teeth=5, shift_lips=3, column_name_jaws='jaw', column_name_teeth='teeth', column_name_lips='lips')
-  i.alligator(period_jaws=89, period_teeth=55, period_lips=34, shift_jaws=55, shift_teeth=34, shift_lips=21, column_name_jaws='bjaw', column_name_teeth='bteeth', column_name_lips='blips')
-  i.awesome_oscillator(column_name='ao')
-  i.fractals(column_name_high='fb', column_name_low='fs')
-  i.fractals3(column_name_high='fb3', column_name_low='fs3')
-  i.fractals5(column_name_high='fb5', column_name_low='fs5')
-  i.fractals8(column_name_high='fb8', column_name_low='fs8')
-  i.fractals13(column_name_high='fb13', column_name_low='fs13')
-  i.fractals21(column_name_high='fb21', column_name_low='fs21')
-  i.fractals34(column_name_high='fb34', column_name_low='fs34')
-  i.fractals55(column_name_high='fb55', column_name_low='fs55')
-  i.fractals89(column_name_high='fb89', column_name_low='fs89')
+  
+  i.accelerator_oscillator( column_name= indicator_AC_accelerationDeceleration_column_name)
+  i.alligator(period_jaws=13, period_teeth=8, period_lips=5, shift_jaws=8, shift_teeth=5, shift_lips=3, column_name_jaws=indicator_currentDegree_alligator_jaw_column_name, column_name_teeth=indicator_currentDegree_alligator_teeth_column_name, column_name_lips=indicator_currentDegree_alligator_lips_column_name)
+  i.alligator(period_jaws=89, period_teeth=55, period_lips=34, shift_jaws=55, shift_teeth=34, shift_lips=21, column_name_jaws=indicator_sixDegreeLarger_alligator_jaw_column_name, column_name_teeth=indicator_sixDegreeLarger_alligator_teeth_column_name, column_name_lips=indicator_sixDegreeLarger_alligator_lips_column_name)
+  i.awesome_oscillator(column_name=indicator_AO_awesomeOscillator_column_name)
+  
+  # Creating Fractal Indicators for degrees 2,3,5,8,13,21,34,55,89 
+  i.fractals(column_name_high=indicator_fractal_high_degree2_column_name, column_name_low=indicator_fractal_low_degree2_column_name)
+  i.fractals3(column_name_high=indicator_fractal_high_degree3_column_name, column_name_low=indicator_fractal_low_degree3_column_name)
+  i.fractals5(column_name_high=indicator_fractal_high_degree5_column_name, column_name_low=indicator_fractal_low_degree5_column_name)
+  i.fractals8(column_name_high=indicator_fractal_high_degree8_column_name, column_name_low=indicator_fractal_low_degree8_column_name)
+  i.fractals13(column_name_high=indicator_fractal_high_degree13_column_name, column_name_low=indicator_fractal_low_degree13_column_name)
+  i.fractals21(column_name_high=indicator_fractal_high_degree21_column_name, column_name_low=indicator_fractal_low_degree21_column_name)
+  i.fractals34(column_name_high=indicator_fractal_high_degree34_column_name, column_name_low=indicator_fractal_low_degree34_column_name)
+  i.fractals55(column_name_high=indicator_fractal_high_degree55_column_name, column_name_low=indicator_fractal_low_degree55_column_name)
+  i.fractals89(column_name_high=indicator_fractal_high_degree89_column_name, column_name_low=indicator_fractal_low_degree89_column_name)
+
   
   if enableGatorOscillator:
     i.gator(period_jaws=13, period_teeth=8, period_lips=5, shift_jaws=8, shift_teeth=5, shift_lips=3, column_name_val1='gl', column_name_val2='gh')
@@ -276,7 +325,7 @@ def ids_add_fdb_column_logics(_df,
 
 
 #@title Range shift col
-def jgtids_mk_ao_fractal_peak(_df,
+def jgtids_mk_ao_fractal_peak(dfsrc,
                               ctxcolname='ao',
                               poscolprefix='pao',
                               negcolprefix='nao',
@@ -303,71 +352,70 @@ def jgtids_mk_ao_fractal_peak(_df,
   """
 
   half = endrange/2
-  _l=len(_df)
+  l_df=len(dfsrc)
   for o in range(endrange):   
     i=int(o-half)
-    #if o < (_l - half) and (o > half):
+    
     _cn=poscolprefix+str(i)
     if i < 0:
       _cn=negcolprefix+str(i).replace('-','')
-    _df[_cn]=_df[ctxcolname].shift(i)
-    #print(_cn + '= _df.at[i,\''+_cn+'\']')
-    #print('_df = jgtpd_drop_col_by_name(_df,\''+_cn+'\')')
-    #else:
-    #  print("We are not in range yet :" + str(i))
+    dfsrc[_cn]=dfsrc[ctxcolname].shift(i)
+   
 
-  _std = _df[ctxcolname].std()
-  _max = _df[ctxcolname].max()
-  _min = _df[ctxcolname].min()
-  _filterOutAOFThreshold_ABOVE = (_std + _max) / 2
-  _filterOutAOFThreshold_BELLOW = ((_std * -1) + _min) / 2
+  # This filters out some noisy peaks that are too low or too high
+  df_standardDeviation = dfsrc[ctxcolname].std()
+  df_max = dfsrc[ctxcolname].max()
+  df_min = dfsrc[ctxcolname].min()
+  df_filterOutAOFThreshold_ABOVE = (df_standardDeviation + df_max) / 2
+  df_filterOutAOFThreshold_BELLOW = ((df_standardDeviation * -1) + df_min) / 2
   
   if not quiet:
-    print("filterout (std) Above(max)/(min)Bellow:  ("+ str(_std) + ")  " + str(_filterOutAOFThreshold_ABOVE) + "(" + str(_max) + ") / (" + str(_min) + ") " + str(_filterOutAOFThreshold_BELLOW))
+    print("filterout (std) Above(max)/(min)Bellow:  ("+ str(df_standardDeviation) + ")  " + str(df_filterOutAOFThreshold_ABOVE) + "(" + str(df_max) + ") / (" + str(df_min) + ") " + str(df_filterOutAOFThreshold_BELLOW))
   
-  #
+  # Counting the peaks
   countUpPeak=0
   countDownPeak=0
   countDiscarted=0
-  for i,row in _df.iterrows():
+  for i,row in dfsrc.iterrows():
     barAOF = 0
     dt=i
-    curHigh= _df.at[i,'High']
-    curLow= _df.at[i,'Low']
-    cur=_df.at[i,'ao']
-    n9= _df.at[i,'n9']
-    n13= _df.at[i,'n13']
-    n12= _df.at[i,'n12']
-    n11= _df.at[i,'n11']
-    n10= _df.at[i,'n10']
-    n8= _df.at[i,'n8']
-    n7= _df.at[i,'n7']
-    n6= _df.at[i,'n6']
-    n5= _df.at[i,'n5']
-    n4= _df.at[i,'n4']
-    n3= _df.at[i,'n3']
-    n2= _df.at[i,'n2']
-    n1= _df.at[i,'n1']
-    p0= _df.at[i,'p0']
-    p1= _df.at[i,'p1']
-    p2= _df.at[i,'p2']
-    p3= _df.at[i,'p3']
-    p4= _df.at[i,'p4']
-    p5= _df.at[i,'p5']
-    p6= _df.at[i,'p6']
-    p7= _df.at[i,'p7']
-    p8= _df.at[i,'p8']
-    p9= _df.at[i,'p9']
-    p10= _df.at[i,'p10']
-    p11= _df.at[i,'p11']
-    p12= _df.at[i,'p12']
-    p13= _df.at[i,'p13']
+    curHigh= dfsrc.at[i,'High']
+    curLow= dfsrc.at[i,'Low']
+    cur=dfsrc.at[i,'ao']
+    n9= dfsrc.at[i,'n9']
+    n13= dfsrc.at[i,'n13']
+    n12= dfsrc.at[i,'n12']
+    n11= dfsrc.at[i,'n11']
+    n10= dfsrc.at[i,'n10']
+    n8= dfsrc.at[i,'n8']
+    n7= dfsrc.at[i,'n7']
+    n6= dfsrc.at[i,'n6']
+    n5= dfsrc.at[i,'n5']
+    n4= dfsrc.at[i,'n4']
+    n3= dfsrc.at[i,'n3']
+    n2= dfsrc.at[i,'n2']
+    n1= dfsrc.at[i,'n1']
+    p0= dfsrc.at[i,'p0']
+    p1= dfsrc.at[i,'p1']
+    p2= dfsrc.at[i,'p2']
+    p3= dfsrc.at[i,'p3']
+    p4= dfsrc.at[i,'p4']
+    p5= dfsrc.at[i,'p5']
+    p6= dfsrc.at[i,'p6']
+    p7= dfsrc.at[i,'p7']
+    p8= dfsrc.at[i,'p8']
+    p9= dfsrc.at[i,'p9']
+    p10= dfsrc.at[i,'p10']
+    p11= dfsrc.at[i,'p11']
+    p12= dfsrc.at[i,'p12']
+    p13= dfsrc.at[i,'p13']
 
     outHigh=0
     outHighAO=0
     outLow=0
     outLowAO=0
-    #print(str(i)+'::cur > p1 {'+ str(cur) + ' > ' + str(p1))
+    
+    # Ways to find a peak that might be enhanced later with another methods using sequence recognition in machine learning
     if (
         (cur > p1 and cur > p2 and cur > p3 and cur > p4 
          and  
@@ -384,13 +432,13 @@ def jgtids_mk_ao_fractal_peak(_df,
          cur > n9 and cur > n10 and cur > n11 and cur > n12 and cur > n13
          )
         ):
-      if cur > 0 and cur > _filterOutAOFThreshold_ABOVE:
+      if cur > 0 and cur > df_filterOutAOFThreshold_ABOVE:
         barAOF=21        
         if not quiet:
           print("We have an up peak at:" + str(dt))
         countUpPeak=countUpPeak+1
       else:
-        if cur >0 and cur > _std and barAOF != 21:
+        if cur >0 and cur > df_standardDeviation and barAOF != 21:
           barAOF = 13
           if not quiet:     
             print("We have an up peak at:" + str(dt))
@@ -412,13 +460,13 @@ def jgtids_mk_ao_fractal_peak(_df,
          cur < n9 and cur < n10 and cur < n11 and cur < n12 and cur < n13
          )
         ): 
-        if cur < 0 and cur < _filterOutAOFThreshold_BELLOW:
+        if cur < 0 and cur < df_filterOutAOFThreshold_BELLOW:
           barAOF=-21          
           if not quiet:
             print("We have an down peak at: " + str(dt))
           countDownPeak=countDownPeak+1
         else :
-          if cur < 0 and cur < _std*-1 and barAOF != -21:
+          if cur < 0 and cur < df_standardDeviation*-1 and barAOF != -21:
             barAOF = -13
             if not quiet:
               print("We have an down peak at: " + str(dt))
@@ -434,17 +482,23 @@ def jgtids_mk_ao_fractal_peak(_df,
         outLow=curLow
         outLowAO=cur
         outHighAO=0
-    _df.at[i,'aof']=barAOF
-    _df.at[i,'aofvalue']=cur #current AO Value
-    _df.at[i,'aofhighao']=outHighAO #current High Price
-    _df.at[i,'aoflowao']=outLowAO #current Low Price
-    _df.at[i,'aofhigh']=outHigh #current High Price
-    _df.at[i,'aoflow']=outLow #current Low Price
-  _l = len(_df)
+    
+    # AOF is the Fractal Peak Value, it would be used to find twin peak signals and learn 
+    
+    #@STCIssue I question the use of some of these columns, they might be temporary 
+    ao_fractalPeakOfMomentum_column_name = 'aof'
+    dfsrc.at[i,ao_fractalPeakOfMomentum_column_name]=barAOF
+    ao_fractalPeakValue_column_name = 'aofvalue'
+    dfsrc.at[i,ao_fractalPeakValue_column_name]=cur #current AO Value
+    dfsrc.at[i,'aofhighao']=outHighAO #current High Price
+    dfsrc.at[i,'aoflowao']=outLowAO #current Low Price
+    dfsrc.at[i,'aofhigh']=outHigh #current High Price
+    dfsrc.at[i,'aoflow']=outLow #current Low Price
+  l_df = len(dfsrc)
   if not quiet:
-    print("Total Peak - Up:" + str(countUpPeak) + ", Dn: " + str(countDownPeak) + " on total: " + str(_l))
-  _df=__ids_cleanse_ao_peak_secondary_columns(_df,True)
-  return _df
+    print("Total Peak - Up:" + str(countUpPeak) + ", Dn: " + str(countDownPeak) + " on total: " + str(l_df))
+  dfsrc=__ids_cleanse_ao_peak_secondary_columns(dfsrc,True)
+  return dfsrc
 
 
 
@@ -459,24 +513,24 @@ def jgtids_mk_ao_fractal_peak(_df,
 
 #@title Add CDS signals
 
-def cds_add_signals_to_indicators(_dfi,_aopeak_range=28,quiet=False):
-  _dfi=ids_add_fdb_column_logics(_dfi,quiet=quiet)
-  _dfi = jgtids_mk_ao_fractal_peak(_dfi,
+def cds_add_signals_to_indicators(dfires,_aopeak_range=28,quiet=False):
+  dfires=ids_add_fdb_column_logics(dfires,quiet=quiet)
+  dfires = jgtids_mk_ao_fractal_peak(dfires,
                                    'ao',
                                    'p',
                                    'n',
                                    _aopeak_range,
                                    quiet=quiet)
-  return _dfi
+  return dfires
 
 
-def tocds(_df):
-  _dfi = ids_add_indicators(_df,quiet=True)
-  _dfi = cds_add_signals_to_indicators(_dfi,quiet=True)
-  _dfi = jgti_add_zlc_plus_other_AO_signal(_dfi,quiet=True)
-  _dfi = pds_cleanse_original_columns(_dfi,quiet=True)
-  _dfi = __ids_cleanse_ao_peak_secondary_columns(_dfi,quiet=True)
-  return _dfi
+def tocds(dfsrc):
+  dfires = ids_add_indicators(dfsrc,quiet=True)
+  dfires = cds_add_signals_to_indicators(dfires,quiet=True)
+  dfires = jgti_add_zlc_plus_other_AO_signal(dfires,quiet=True)
+  dfires = pds_cleanse_original_columns(dfires,quiet=True)
+  dfires = __ids_cleanse_ao_peak_secondary_columns(dfires,quiet=True)
+  return dfires
 
 
 
@@ -509,178 +563,178 @@ def jgtpd_drop_col_by_name(_df,colname,_axis = 1,quiet=False):
       print('Col:' + colname + ' was not there')
     return _df
 
-def __ids_cleanse_ao_peak_secondary_columns(_df,quiet=False):
-  _df=jgtpd_drop_col_by_name(_df,'p0',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p1',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p2',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p3',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p4',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p5',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p6',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p7',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p8',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p9',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p10',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p11',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p12',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p13',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p14',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p15',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p16',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p17',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p18',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p19',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p20',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p21',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p22',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p23',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p24',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p25',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p26',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p27',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p28',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p29',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'p30',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n0',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n1',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n2',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n3',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n4',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n5',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n6',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n7',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n8',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n9',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n10',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n11',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n12',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n13',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n14',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n15',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n16',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n17',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n18',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n19',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n20',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n21',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n22',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n23',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n24',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n25',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n26',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n27',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n28',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n29',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'n30',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao0',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao1',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao2',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao3',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao4',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao5',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao6',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao7',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao8',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao9',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao10',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao11',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao12',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao13',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao14',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao15',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao16',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao17',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao18',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao19',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao20',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao21',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao22',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao23',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao24',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao25',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao26',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao27',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao28',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao29',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pao30',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao0',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao1',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao2',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao3',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao4',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao5',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao6',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao7',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao8',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao9',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao10',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao11',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao12',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao13',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao14',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao15',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao16',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao17',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao18',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao19',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao20',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao21',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao22',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao23',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao24',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao25',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao26',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao27',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao28',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao29',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nao30',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pac0',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pac',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pac1',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pac2',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pac3',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pac4',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pac5',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pac6',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pac7',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pac8',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'pac9',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nac',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nac0',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nac1',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nac2',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nac3',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nac4',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nac5',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nac6',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nac7',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nac8',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'nac9',1,quiet) 
-  return _df
+def __ids_cleanse_ao_peak_secondary_columns(dfsrc,quiet=False):
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p0',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p1',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p2',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p3',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p4',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p5',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p6',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p7',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p8',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p9',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p10',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p11',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p12',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p13',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p14',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p15',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p16',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p17',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p18',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p19',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p20',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p21',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p22',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p23',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p24',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p25',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p26',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p27',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p28',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p29',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p30',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n0',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n1',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n2',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n3',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n4',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n5',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n6',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n7',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n8',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n9',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n10',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n11',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n12',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n13',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n14',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n15',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n16',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n17',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n18',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n19',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n20',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n21',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n22',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n23',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n24',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n25',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n26',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n27',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n28',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n29',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n30',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao0',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao1',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao2',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao3',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao4',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao5',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao6',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao7',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao8',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao9',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao10',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao11',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao12',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao13',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao14',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao15',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao16',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao17',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao18',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao19',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao20',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao21',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao22',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao23',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao24',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao25',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao26',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao27',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao28',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao29',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao30',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao0',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao1',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao2',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao3',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao4',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao5',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao6',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao7',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao8',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao9',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao10',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao11',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao12',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao13',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao14',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao15',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao16',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao17',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao18',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao19',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao20',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao21',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao22',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao23',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao24',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao25',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao26',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao27',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao28',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao29',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao30',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pac0',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pac',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pac1',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pac2',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pac3',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pac4',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pac5',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pac6',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pac7',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pac8',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pac9',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nac',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nac0',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nac1',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nac2',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nac3',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nac4',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nac5',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nac6',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nac7',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nac8',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nac9',1,quiet) 
+  return dfsrc
 
-def pds_cleanse_original_columns(_df,quiet=True):
-  _df=jgtpd_drop_col_by_name(_df,'AskHigh',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'BidHigh',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'AskLow',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'BidLow',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'AskClose',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'BidClose',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'BidOpen',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'AskOpen',1,quiet)
-  return _df
+def pds_cleanse_original_columns(dfsrc,quiet=True):
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'AskHigh',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'BidHigh',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'AskLow',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'BidLow',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'AskClose',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'BidClose',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'BidOpen',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'AskOpen',1,quiet)
+  return dfsrc
 
-def pds_cleanse_extra_columns(_df,quiet=True):
-  _df=pds_cleanse_original_columns(_df,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'LowisBellowJaw',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'HighisAboveJaw',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'LowisBellowTeeth',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'HighisAboveTeeth',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'HighisAboveLips',1,quiet)
-  _df=jgtpd_drop_col_by_name(_df,'LowisBellowLips',1,quiet)
-  _df=__ids_cleanse_ao_peak_secondary_columns(_df,quiet)
+def pds_cleanse_extra_columns(dfsrc,quiet=True):
+  dfsrc=pds_cleanse_original_columns(dfsrc,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'LowisBellowJaw',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'HighisAboveJaw',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'LowisBellowTeeth',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'HighisAboveTeeth',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'HighisAboveLips',1,quiet)
+  dfsrc=jgtpd_drop_col_by_name(dfsrc,'LowisBellowLips',1,quiet)
+  dfsrc=__ids_cleanse_ao_peak_secondary_columns(dfsrc,quiet)
   if not quiet:
     print("Columns cleanup was executed")
-  return _df
+  return dfsrc
 
 
 
@@ -794,22 +848,31 @@ def jgti_add_zlc_plus_other_AO_signal(_df,dropsecondaries=True,quiet=True):
       
     
     # --@STCIssue Zone  (Not sure, it might have to be ABove or Bellow)
-    zoneColor = 'gray'                #default Zone Color
+    nonTradingZoneColor = 'gray'
+    zoneColor = nonTradingZoneColor                #default Zone Color
+    
+    sellingZoneColor = 'red'
+    buyingZoneColor = 'green'
     
     redZone = False
     if cacred and caored and pac1red and pao1red:
       redZone=True
-      zoneColor = 'red'
+      zoneColor = sellingZoneColor
 
     greenZone = False
     if cacgreen and caogreen and pac1green and pao1green:
       greenZone=True
-      zoneColor='green'
+      zoneColor=buyingZoneColor
       
     _df.at[i,'zcol'] = zoneColor
     
-    _df.at[i,'sz']=redZone
-    _df.at[i,'bz']=greenZone
+    #Sell Zone Signal
+    sellZoneSignal_column_name = 'sz'
+    _df.at[i,sellZoneSignal_column_name]=redZone
+    
+    #Buy Zone Signal
+    buyZoneSinal_column_name = 'bz'
+    _df.at[i,buyZoneSinal_column_name]=greenZone
     
     #AC Sell / Buy  3 AC Against AO af AC Bellow, 2 if above
     acSell = False
@@ -823,13 +886,22 @@ def jgti_add_zlc_plus_other_AO_signal(_df,dropsecondaries=True,quiet=True):
       acBuy=True
       if cac>0 and pac2red:        
         acBuy=False
-    _df.at[i,'acs']=acSell
-    _df.at[i,'acb']=acBuy
+    
+    #AC Sell Signal (Deceleration)
+    deceleration_ACSignal_column_name = 'acs'
+    _df.at[i,deceleration_ACSignal_column_name]=acSell
+    
+    #AC Buy Signal (Acceleration)
+    acceleration_ACSignal_column_name = 'acb'
+    _df.at[i,acceleration_ACSignal_column_name]=acBuy
+    
     if acSell and not quiet:
       print("AC Sell Signal with AC Bellow Zero Line "+ str(i))
     if acBuy and not quiet:
       print("AC Buy Signal with AC ABove Zero Line "+ str(i))
-    #Saucer
+    
+    #Saucer Strategy
+    # More on Saucer Strategy : http://simp.ly/p/2K1HBr
     saucerSell=False
     if cao < 0 and caored and pao1green and pao2green :
       saucerSell=True
@@ -837,8 +909,10 @@ def jgti_add_zlc_plus_other_AO_signal(_df,dropsecondaries=True,quiet=True):
     saucerBuy=False
     if cao > 0 and caogreen and pao1red and pao2red:
       saucerBuy=True
-    _df.at[i,'ss']=saucerSell
-    _df.at[i,'sb']=saucerBuy
+    saucerSellSignal_column_name = 'ss'
+    _df.at[i,saucerSellSignal_column_name]=saucerSell
+    saucerBuySignal_column_name = 'sb'
+    _df.at[i,saucerBuySignal_column_name]=saucerBuy
     
     # What Happens on the Next PLUS 35 Periods ??
     if c < xc - 35:
