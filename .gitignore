@@ -1,5 +1,11 @@
+jgtpy/History
+config.json
+jgtpy/config.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
+**/__pycache__/
+**/**/__pycache__/
 *.py[cod]
 *$py.class
 .env
@@ -109,3 +115,4 @@ venv.bak/
 # mypy
 .mypy_cache/
 .idea
+test/History

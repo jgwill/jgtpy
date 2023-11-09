@@ -1,7 +1,7 @@
 # %%
 
-import jgtpy.JGTPDS as pds
-import jgtpy.JGTIDS as ids
+from . import JGTPDS as pds
+from . import JGTIDS as ids
 
 import pandas as pd
 import os

@@ -1,9 +1,11 @@
 import datetime as dt
 import pandas as pd
-import jgtpy.JGTPDHelper as jpd
+from . import JGTPDHelper as jpd
 
-import jgtpy.JGTFXCMWrapper as jfx
-import jgtpy.JGTConfig as jgtcnf
+#import jgtpy.JGTFXCMWrapper as jfx
+from . import jgtfxc as jfx
+
+from . import JGTConfig as jgtcnf
 
 
 
@@ -71,19 +73,22 @@ def tryConnect():
     con=connect()
   except ConnectionError:
     print("Connection error")
-    
+
+def status():
+  return jfx.status()
+
 def getPH_from_local(instrument,timeframe):
   srcpath=jgtcnf.get_pov_local_data_filename(instrument,timeframe)
   df=pd.read_csv(srcpath,compression=jgtcnf.local_fn_compression,index_col='Date')
   return df
 
-def getPH(instrument,timeframe,number=335,start=None,end=None,with_index=True,quiet=True):
+def getPH(instrument,timeframe,quote_count=335,start=None,end=None,with_index=True,quiet=True):
   """Get Price History from Broker
 
   Args:
       instrument (str): symbal
       timeframe (str): TF
-      number (int, optional): nb bar to retrieve. Defaults to 335.
+      quote_count (int, optional): nb bar to retrieve. Defaults to 335.
       start (str, optional): start DateTime. Defaults to None.
       end (str, optional): end DateTime range. Defaults to None.
       with_index (bool, optional): Return DataFrame with Index. Defaults to True.
@@ -93,23 +98,25 @@ def getPH(instrument,timeframe,number=335,start=None,end=None,with_index=True,qu
       pandas.DataFrame: DF with price histories
   """
   df = pd.DataFrame()
-  #if disconnected:
-  # con=connect()
   if not useLocal:
     con=connect(quiet=quiet)
-    if start == None:
-      df=jfx.con.get_candles(instrument, period=timeframe, number=number+89,with_index=with_index)
-    else:
-      df=jfx.con.get_candles(instrument, period=timeframe,with_index=with_index,start=start,end=end)
-      mask = (df['Date'] > start) & (df['Date'] <= end)
-      df = df.loc[mask]
+
+    p=jfx.get_price_history(instrument, timeframe, start,end, quote_count+89)
+    #print(p)
+    df=pd.DataFrame(p,columns=['Date','BidOpen','BidHigh','BidLow','BidClose','AskOpen','AskHigh','AskLow','AskClose','Volume'])
+    #print("------------DATAFRAME----------------")
+    #print(df)
+
+    #mask = (df['Date'] > start) & (df['Date'] <= end)
+    #df = df.loc[mask]
+
     if not stayConnected:
       con=disconnect(quiet=quiet)
     if renameColumns:
       df=df.rename(columns={'bidopen': 'BidOpen', 'bidhigh': 'BidHigh','bidclose':'BidClose','bidlow':'BidLow','askopen': 'AskOpen', 'askhigh': 'AskHigh','askclose':'AskClose','asklow':'AskLow','tickqty':'Volume','date':'Date'})
       df= df.astype({'Volume':int})
-      if with_index:
-        df.index.rename('Date',inplace=True)
+    if with_index:
+      df.index.rename('Date',inplace=True)
   else:
     #Read from local
     df =getPH_from_local(instrument,timeframe)

@@ -18,28 +18,17 @@
 .. moduleauthor:: Jean Guillaume Isabelle <jgi@jgwill.com>
 """
 
-# # import fxcmpy
-# # import datetime as dt
-# # import pandas as pd
-# #import fxcmpy and check the imported version
-#import fxcmpy as fx
-#import jgtapy
-
-# import datetime as dt
-# import pandas as pd
-# #fxcmpy.__version__
-# import jgtpy.JGTConfig as jgtc
+# from jgtfxcommon.BatchOrderMonitor import BatchOrderMonitor
+# from jgtfxcommon.OrderMonitor import OrderMonitor
+# from jgtfxcommon.OrderMonitorNetting import OrderMonitorNetting
+# from jgtfxcommon.TableListenerContainer import TableListenerContainer
+# from jgtfxcommon.common import add_main_arguments, add_instrument_timeframe_arguments, \
+#     add_candle_open_price_mode_argument, add_direction_rate_lots_arguments, add_account_arguments, \
+#     valid_datetime, add_date_arguments, add_report_date_arguments, add_max_bars_arguments, add_bars_arguments, \
+#     print_exception, session_status_changed, diff_month, convert_timeframe_to_seconds
 
 
-# import jgtpy.JGTPDHelper as jpd
-# import jgtpy.JGTPDHelper
-# import jgtpy.JGTFXCMWrapper as jfx
-# import jgtpy.JGTConfig as jgtcnf
-# import jgtpy.JGTPDS as pds
-# import jgtpy.JGTCDS as cds
-# import jgtpy.JGTIDS as ids
-#from jgtdotenv import load_dotenv
-#import jgtdotenv
+#from jgtpy.common_samples import common_samples
 from jgtpy.jgtetl import svc_offset_dt_by_tf,offsetdt
 from jgtpy.JGTCore import __version__,json2dict,jsonfile2prop,json2prop,jsonfile2dict,d2p,fixdtindf,offsetdt
 from jgtpy.JGTConfig import getenv,setreal,setdemo,env

@@ -1,5 +1,5 @@
 #dockertag=jgwill/ubuntu:18.04-py3.7.2-ml-lzma-builder
-dockertag=jgwill/zeus:python-package-builder
+dockertag=jgwill/server:python-package-builder
 containername=jgtapybuilder
 
 export logfile=logs/build-log.txt
@@ -10,23 +10,25 @@ dkhostname=$containername
 #dkport=4000:4000
 
 #xmount=/mnt/c/Users/jeang/Dropbox/w/o/pys/jgtpy:/work/jgtpy
-xmount=/mnt/c/Users/jeang/Dropbox/w/o/pys/jgtpy:/work/jgtpy
+#xmount=/a/www/_/app/o/pys/jgtpy:/work/jgtpy
 xmount2=$HOME/.ssh:$HOME/.ssh
 
 
-#dkcommand=bash #command to execute (default is the one in the dockerfile)
+dkcommand=bash #command to execute (default is the one in the dockerfile)
 #dkcommand="bash /work/build-n-release.sh"
 
-dkextra=" -v $(pwd)/../../jgtapy-jgwill:/jgtapy -v $HOME/.pypirc:/root/.pypirc  -v $HOME/.pypirc:$HOME/.pypirc  -v $pysroot/..:/a/repos -v $srcroot:/src -v $binroot:/a/bin "
+dkextra=" -v /a:/a "
+
+#dkextra=" -v $(pwd)/../../jgtapy-jgwill:/jgtapy -v $HOME/.pypirc:/root/.pypirc  -v $HOME/.pypirc:$HOME/.pypirc  -v $pysroot/..:/a/repos -v $srcroot:/src -v $binroot:/a/bin "
 
 #dkmounthome=true
 
 
 ##########################
 ############# RUN MODE
-dkrunmode="bg" #default fg
+#dkrunmode="bg" #default fg
 #dkrestart="--restart" #default
-dkrestarttype="unless-stopped" #default
+#dkrestarttype="unless-stopped" #default
 
 
 #########################################
