@@ -1,22 +1,4 @@
-"""
-This module contains various utility functions for working with financial data and indicators. Mostly they are used by CDS
 
-Functions:
-- jgtpd_col_add_range_shifting_dropnas(_df,ctxcolname='ao',colprefix='pao',endrange=10)
-- jgtpd_col_add_range_shifting(_df,ctxcolname='ao',colprefix='pao',endrange=10)
-- getMinByTF(tf)
-- pds_get_dt_from_and_to_for_now_live_price(_timeframe,_nbbar2retrieve=335,quiet=True)
-- ids_add_indicators(__df,enableGatorOscillator=False,enableMFI=False,dropnavalue=True,quiet=False,cleanupOriginalColumn=True)
-- ids_add_indicators_LEGACY(__df,enableGatorOscillator=False,enableMFI=False,dropnavalue=True,quiet=False)
-- jgtpd_dropnas_on_any_rows(_df)
-- jgtpd_drop_cols_from_to_by_name(_df,firstcolname,lastcolname,_axis = 1)
-- jgtpd_col_drop_range(_df,colprefix='pao',endrange=10)
-- ids_add_fdb_intermediaries_columns(_df)
-- ids_clear_fdb_intermediaries_columns(_df,quiet=False)
-- ids_add_fdb_column_logics(_df,_dropIntermediariesColumns=True,quiet=False)
-- jgtids_mk_ao_fractal_peak(_df,ctxcolname='ao',poscolprefix='pao',negcolprefix='nao',endrange=10,quiet=False)
-
-"""
 # %%
 #@title FDB Intermediary values
 #@title Add Indicators Columns
@@ -29,51 +11,66 @@ from jgtapy import Indicators
 _dtformat = '%m.%d.%Y %H:%M:%S'
 
 # %%
-#@title Data Frame Columns naming
-indicator_currentDegree_alligator_jaw_column_name = 'jaw' # 13 periods moving average, shifted 8 bars into the future
-indicator_currentDegree_alligator_teeth_column_name = 'teeth' # 8 periods moving average, shifted 5 bars into the future
-indicator_currentDegree_alligator_lips_column_name = 'lips' # 5 periods moving average, shifted 3 bars into the future
-indicator_sixDegreeLarger_alligator_jaw_column_name = 'bjaw' # 89 periods moving average, shifted 55 bars into the future
-indicator_sixDegreeLarger_alligator_teeth_column_name = 'bteeth' # 55 periods moving average, shifted 34 bars into the future
-indicator_sixDegreeLarger_alligator_lips_column_name = 'blips' # 34 periods moving average, shifted 21 bars into the future
-indicator_AO_awesomeOscillator_column_name = 'ao' # AO measure energy of momentum
-indicator_AC_accelerationDeceleration_column_name = 'ac' # AC measure speed of momentum
-indicator_fractal_high_degree2_column_name = 'fb'
-indicator_fractal_low_degree2_column_name = 'fs' 
+#@title INDICATOR's Data Frame Columns naming
+# Alligator Indicator
+indicator_currentDegree_alligator_jaw_column_name = 'jaw'  # 13 periods moving average, shifted 8 bars into the future
+indicator_currentDegree_alligator_teeth_column_name = 'teeth'  # 8 periods moving average, shifted 5 bars into the future
+indicator_currentDegree_alligator_lips_column_name = 'lips'  # 5 periods moving average, shifted 3 bars into the future
 
-#generated
-indicator_fractal_high_degree2_column_name="fh" # Fractal High of degree 2
-indicator_fractal_low_degree2_column_name="fl" # Fractal Low of degree 2
-indicator_fractal_high_degree3_column_name="fh3" # Fractal High of degree 3
-indicator_fractal_low_degree3_column_name="fl3" # Fractal Low of degree 3
-indicator_fractal_high_degree5_column_name="fh5" # Fractal High of degree 5
-indicator_fractal_low_degree5_column_name="fl5" # Fractal Low of degree 5
-indicator_fractal_high_degree8_column_name="fh8" # Fractal High of degree 8
-indicator_fractal_low_degree8_column_name="fl8" # Fractal Low of degree 8
-indicator_fractal_high_degree13_column_name="fh13" # Fractal High of degree 13
-indicator_fractal_low_degree13_column_name="fl13" # Fractal Low of degree 13
-indicator_fractal_high_degree21_column_name="fh21" # Fractal High of degree 21
-indicator_fractal_low_degree21_column_name="fl21" # Fractal Low of degree 21
-indicator_fractal_high_degree34_column_name="fh34" # Fractal High of degree 34
-indicator_fractal_low_degree34_column_name="fl34" # Fractal Low of degree 34
-indicator_fractal_high_degree55_column_name="fh55" # Fractal High of degree 55
-indicator_fractal_low_degree55_column_name="fl55" # Fractal Low of degree 55
-indicator_fractal_high_degree89_column_name="fh89" # Fractal High of degree 89
-indicator_fractal_low_degree89_column_name="fl89" # Fractal Low of degree 89
+indicator_sixDegreeLarger_alligator_jaw_column_name = 'bjaw'  # 89 periods moving average, shifted 55 bars into the future
+indicator_sixDegreeLarger_alligator_teeth_column_name = 'bteeth'  # 55 periods moving average, shifted 34 bars into the future
+indicator_sixDegreeLarger_alligator_lips_column_name = 'blips'  # 34 periods moving average, shifted 21 bars into the future
+
+# Awesome Oscillator Indicator
+indicator_AO_awesomeOscillator_column_name = 'ao'  # AO measure energy of momentum
+
+# Acceleration/Deceleration Indicator
+indicator_AC_accelerationDeceleration_column_name = 'ac'  # AC measure speed of momentum
+
+# Gator Oscillator Indicator
+indicator_gatorOscillator_low_column_name = 'gl'  # Gator Oscillator low
+indicator_gatorOscillator_high_column_name = 'gh'  # Gator Oscillator high
+
+# Market Facilitation Index Indicator
+indicator_mfi_marketFacilitationIndex_column_name = 'mfi'  # MFI measure market facilitation index
+
+# Various Fractal Degrees
+indicator_fractal_high_degree2_column_name = "fh2"  # Fractal High of degree 2
+indicator_fractal_low_degree2_column_name = "fl2"  # Fractal Low of degree 2
+indicator_fractal_high_degree3_column_name = "fh3"  # Fractal High of degree 3
+indicator_fractal_low_degree3_column_name = "fl3"  # Fractal Low of degree 3
+indicator_fractal_high_degree5_column_name = "fh5"  # Fractal High of degree 5
+indicator_fractal_low_degree5_column_name = "fl5"  # Fractal Low of degree 5
+indicator_fractal_high_degree8_column_name = "fh8"  # Fractal High of degree 8
+indicator_fractal_low_degree8_column_name = "fl8"  # Fractal Low of degree 8
+indicator_fractal_high_degree13_column_name = "fh13"  # Fractal High of degree 13
+indicator_fractal_low_degree13_column_name = "fl13"  # Fractal Low of degree 13
+indicator_fractal_high_degree21_column_name = "fh21"  # Fractal High of degree 21
+indicator_fractal_low_degree21_column_name = "fl21"  # Fractal Low of degree 21
+indicator_fractal_high_degree34_column_name = "fh34"  # Fractal High of degree 34
+indicator_fractal_low_degree34_column_name = "fl34"  # Fractal Low of degree 34
+indicator_fractal_high_degree55_column_name = "fh55"  # Fractal High of degree 55
+indicator_fractal_low_degree55_column_name = "fl55"  # Fractal Low of degree 55
+indicator_fractal_high_degree89_column_name = "fh89"  # Fractal High of degree 89
+indicator_fractal_low_degree89_column_name = "fl89"  # Fractal Low of degree 89
+
+
+# %%
+#@title SIGNAL's Data Frame Columns naming
+signalCode_fractalDivergentBar_column_name = 'fdb'
+signalSell_fractalDivergentBar_column_name = 'fdbs'
+signalBuy_fractalDivergentBar_column_name = 'fdbb'
 
 
 
 # %%
-
-
-#--@STCGoal PDS Utils
-
 #@title Range shift add col drop na
-def jgtpd_col_add_range_shifting_dropnas(dfsrc,ctxcolname='ao',colprefix='pao',endrange=10):
-  return jgtpd_dropnas_on_any_rows(jgtpd_col_add_range_shifting(dfsrc,ctxcolname,colprefix,endrange))
+#--@STCGoal PDS Utils
+def _jgtpd_col_add_range_shifting_dropnas(dfsrc,ctxcolname=indicator_AO_awesomeOscillator_column_name,colprefix='pao',endrange=10):
+  return _jgtpd_dropnas_on_any_rows(_jgtpd_col_add_range_shifting(dfsrc,ctxcolname,colprefix,endrange))
 
 #@title BACKWARD Range shift col
-def jgtpd_col_add_range_shifting(dfsrc,ctxcolname='ao',colprefix='pao',endrange=10):
+def _jgtpd_col_add_range_shifting(dfsrc,ctxcolname=indicator_AO_awesomeOscillator_column_name,colprefix='pao',endrange=10):
   """Add a BACKWARD range of shifted values
     for a column with a prefixed numbered.
 
@@ -95,6 +92,15 @@ def jgtpd_col_add_range_shifting(dfsrc,ctxcolname='ao',colprefix='pao',endrange=
 #@title Timeframe/Pov Utilities  (getMinByTF
 
 def getMinByTF(tf):
+  """
+  Returns the number of minutes in the given timeframe string.
+
+  Args:
+  tf (str): timeframe string, one of 'm1', 'mi1', 'min1', 'm5', 'm15', 'm30', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'H8', 'D1', 'W1', 'M1'
+
+  Returns:
+  int: number of minutes in the given timeframe string
+  """
   if (tf=='m1' or tf=='mi1' or tf=='min1'): return 1
   if (tf=='m5' ): return 5
   if (tf=='m15' ): return 15
@@ -113,32 +119,37 @@ def getMinByTF(tf):
   
 
 #@title TODO Function to create adequate DateRange Request
-def pds_get_dt_from_and_to_for_now_live_price(_timeframe,_nbbar2retrieve=335,quiet=True):
-  _nbmintf=getMinByTF(_timeframe)
-  now=datetime.datetime.now(datetime.timezone.utc)
-  weekdayoffset=0
-  chkweekday=now.weekday()
-  #chkweekday=0 #simulating
+import datetime
+
+def pds_get_dt_from_and_to_for_now_live_price(_timeframe, _nbbar2retrieve=335, quiet=True):
+  """
+  Returns the start and end datetime strings for retrieving live price data.
+
+  Args:
+    _timeframe (int): The timeframe in minutes.
+    _nbbar2retrieve (int, optional): The number of bars to retrieve. Defaults to 335.
+    quiet (bool, optional): Whether to print weekday information. Defaults to True.
+
+  Returns:
+    tuple: A tuple containing the start and end datetime strings in the format '%m.%d.%Y %H:%M:%S'.
+  """
+  _nbmintf = getMinByTF(_timeframe)
+  now = datetime.datetime.now(datetime.timezone.utc)
+  weekdayoffset = 0
+  chkweekday = now.weekday()
   if not quiet:
     print('Weekday is: ' + str(chkweekday))
   if chkweekday == 7:
-    weekdayoffset=1440
+    weekdayoffset = 1440
   if chkweekday == 0:
-    weekdayoffset=2840
-  _idsIndiPrepNbBars=90
+    weekdayoffset = 2840
+  _idsIndiPrepNbBars = 90
   dtminute = datetime.timedelta(minutes=_nbmintf*(_nbbar2retrieve+weekdayoffset+_idsIndiPrepNbBars))
-  # --@STCIssue  when on the weekend
-  #TODO CHECK MARKET CLOSE THEN STARTS FROM THERE
-  datefromobj =now - dtminute
+  datefromobj = now - dtminute
   datefrom = datefromobj.strftime(_dtformat)
-  #ref format:.str('%m.%d.%Y %H:%M:%S')
-  nowstring=now.strftime(_dtformat)
+  nowstring = now.strftime(_dtformat)
   dateto = nowstring
-  # print('NOW String used: ' + nowstring)
-  # print('Pov:'+ pov)
-  # print('From:' + datefrom)
-  # print('To:  ' + dateto)
-  return datefrom,dateto
+  return datefrom, dateto
 
 
 # %%
@@ -146,33 +157,61 @@ def pds_get_dt_from_and_to_for_now_live_price(_timeframe,_nbbar2retrieve=335,qui
 
 
 
-def ids_add_indicators(__df,
+def ids_add_indicators(dfsrc,
                        enableGatorOscillator=False,
                        enableMFI=False,
                        dropnavalue=True,
                        quiet=False,                       
                        cleanupOriginalColumn=True,useLEGACY=True):
+  """
+  Adds technical indicators to a given DataFrame.
+
+  Args:
+  __df (pandas.DataFrame): The DataFrame to which the indicators will be added.
+  enableGatorOscillator (bool, optional): Whether to enable the Gator Oscillator indicator. Defaults to False.
+  enableMFI (bool, optional): Whether to enable the Money Flow Index indicator. Defaults to False.
+  dropnavalue (bool, optional): Whether to drop rows with NaN values. Defaults to True.
+  quiet (bool, optional): Whether to suppress console output. Defaults to False.
+  cleanupOriginalColumn (bool, optional): Whether to clean up the original column. Defaults to True.
+  useLEGACY (bool, optional): Whether to use the legacy version of the function. Defaults to True.
+
+  Returns:
+  pandas.DataFrame: The DataFrame with the added indicators.
+  """
   if not useLEGACY: # Because jgtapy has to be upgraded with new column name, we wont use it until our next release
-    return Indicators.jgt_create_ids_indicators_as_dataframe(__df,
+    return Indicators.jgt_create_ids_indicators_as_dataframe(dfsrc,
                        enableGatorOscillator,
                        enableMFI,                          
                        cleanupOriginalColumn,                    
                        quiet)
   else:
-    return ids_add_indicators_LEGACY(__df,
+    return ids_add_indicators_LEGACY(dfsrc,
                        enableGatorOscillator,
                        enableMFI,
                        dropnavalue,
                        quiet)
 
-def ids_add_indicators_LEGACY(__df,
+def ids_add_indicators_LEGACY(dfsrc,
                        enableGatorOscillator=False,
                        enableMFI=False,
                        dropnavalue=True,
                        quiet=False):
+  """
+  Adds various technical indicators to the input DataFrame. Is the same as in the jgtapy.legacy module.
+
+  Args:
+  dfsrc (pandas.DataFrame): The input DataFrame.
+  enableGatorOscillator (bool, optional): Whether to enable the Gator Oscillator indicator. Defaults to False.
+  enableMFI (bool, optional): Whether to enable the Money Flow Index indicator. Defaults to False.
+  dropnavalue (bool, optional): Whether to drop rows with NaN values. Defaults to True.
+  quiet (bool, optional): Whether to suppress print statements. Defaults to False.
+
+  Returns:
+  pandas.DataFrame: The input DataFrame with added technical indicators.
+  """
   if not quiet:
     print("Adding indicators...")
-  i=Indicators(__df)
+  i=Indicators(dfsrc)
   
   i.accelerator_oscillator( column_name= indicator_AC_accelerationDeceleration_column_name)
   i.alligator(period_jaws=13, period_teeth=8, period_lips=5, shift_jaws=8, shift_teeth=5, shift_lips=3, column_name_jaws=indicator_currentDegree_alligator_jaw_column_name, column_name_teeth=indicator_currentDegree_alligator_teeth_column_name, column_name_lips=indicator_currentDegree_alligator_lips_column_name)
@@ -192,9 +231,11 @@ def ids_add_indicators_LEGACY(__df,
 
   
   if enableGatorOscillator:
-    i.gator(period_jaws=13, period_teeth=8, period_lips=5, shift_jaws=8, shift_teeth=5, shift_lips=3, column_name_val1='gl', column_name_val2='gh')
+    
+    i.gator(period_jaws=13, period_teeth=8, period_lips=5, shift_jaws=8, shift_teeth=5, shift_lips=3, column_name_val1=indicator_gatorOscillator_low_column_name, column_name_val2=indicator_gatorOscillator_high_column_name)
   if enableMFI:
-    i.bw_mfi(column_name='mfi')
+    
+    i.bw_mfi(column_name=indicator_mfi_marketFacilitationIndex_column_name)
   _df=i.df
   if dropnavalue:
     _df = _df.dropna()
@@ -209,73 +250,99 @@ def ids_add_indicators_LEGACY(__df,
 
 # %%
 #@title Pandas JGT Utilities
-def jgtpd_dropnas_on_any_rows(_df):
-	return _df.dropna(axis='rows')
+
+def _jgtpd_dropnas_on_any_rows(dfsrc):
+	return dfsrc.dropna(axis='rows')
 	
-def jgtpd_drop_cols_from_to_by_name(_df,firstcolname,lastcolname,_axis = 1):
-  return _df.drop(_df.loc[:, firstcolname:lastcolname].columns,axis = _axis)
+def _jgtpd_drop_cols_from_to_by_name(dfsrc,firstcolname,lastcolname,_axis = 1):
+  return dfsrc.drop(dfsrc.loc[:, firstcolname:lastcolname].columns,axis = _axis)
 
 
-def jgtpd_col_drop_range(_df,colprefix='pao',endrange=10):
+def _jgtpd_col_drop_range(dfsrc,colprefix='pao',endrange=10):
 	_firstcolname=colprefix+str(1)
 	_lastcolname=colprefix+str(endrange)
-	return jgtpd_drop_cols_from_to_by_name(_df,_firstcolname,_lastcolname,1)
+	return _jgtpd_drop_cols_from_to_by_name(dfsrc,_firstcolname,_lastcolname,1)
 
 
 
-def ids_add_fdb_intermediaries_columns(_df):
-    
+def _ids_add_fdb_intermediaries_columns(dfsrc):
+  """
+  Adds intermediate columns to the given DataFrame for the purpose of
+  identifying fractal bullish and bearish bars.
+
+  Args:
+  - dfsrc: A pandas DataFrame containing OHLC data.
+
+  Returns:
+  - A pandas DataFrame with additional columns for intermediate calculations.
+  """
+  
   #Bullish
-  _df['HighisBellowLips'] = _df.lips > _df.High
+  dfsrc['HighisBellowLips'] = dfsrc.lips > dfsrc.High
 
-  _df['LowIsLower']= _df.Low < _df.Low.shift()
+  dfsrc['LowIsLower']= dfsrc.Low < dfsrc.Low.shift()
 
-  _df['ClosedAboveMedian'] = _df.Close > _df.Median
+  dfsrc['ClosedAboveMedian'] = dfsrc.Close > dfsrc.Median
 
   #Bearish
 
-  _df['LowisAboveLips'] = _df.lips < _df.Low
+  dfsrc['LowisAboveLips'] = dfsrc.lips < dfsrc.Low
 
-  _df['HighIsHigher']= _df.High > _df.High.shift()
+  dfsrc['HighIsHigher']= dfsrc.High > dfsrc.High.shift()
 
-  _df['ClosedBellowMedian'] = _df.Close < _df.Median
-  return _df
+  dfsrc['ClosedBellowMedian'] = dfsrc.Close < dfsrc.Median
+  return dfsrc
 
 
-def ids_clear_fdb_intermediaries_columns(_df,quiet=False):
+def _ids_clear_fdb_intermediaries_columns(dfsrc,quiet=False):
+  """
+  This function drops FDB columns from a pandas dataframe that are not needed for further processing.
+  
+  Args:
+  - dfsrc: pandas dataframe
+  - quiet: boolean, default False. If True, suppresses the print statement when KeyError is caught.
+  
+  Returns:
+  - dfsrc: pandas dataframe with the specified columns dropped.
+  """
   try:
-    _df =jgtpd_drop_cols_from_to_by_name(_df,
+    dfsrc =_jgtpd_drop_cols_from_to_by_name(dfsrc,
           'HighisBellowLips',
         'ClosedBellowMedian')
   except KeyError:
-    print("Might cleared already")
+    if not quiet:
+      print("Might cleared already")
     pass
-  return _df
+  return dfsrc
 
-  # try:
-  #   dfcln =jgtpd_drop_cols_from_to_by_name(dfcln,
-  #         'HighisBellowLips',
-  #       'ClosedAboveMedian')
-  # except KeyError:
-  #   print("Might cleared already")
-  #   pass
 
 
 #@title FDB Bullish logics
 #from : https://stackoverflow.com/questions/23330654/update-a-dataframe-in-pandas-while-iterating-row-by-row
 
-def ids_add_fdb_column_logics(_df,
+def _ids_add_fdb_column_logics(dfsrc,
                               _dropIntermediariesColumns=True,
                               quiet=False):
-  _df=ids_add_fdb_intermediaries_columns(_df)
-  for i, row in _df.iterrows():
+  """
+  Adds FDB (Fractal Divergence Buy) and FDS (Fractal Divergence Sell) columns to the input dataframe based on certain conditions.
+  
+  Args:
+  - dfsrc: pandas dataframe, input dataframe to which FDB and FDS columns need to be added.
+  - _dropIntermediariesColumns: bool, default True. If True, intermediary columns added during the calculation will be dropped.
+  - quiet: bool, default False. If True, suppresses the print statements.
 
-      ClosedAboveMedian = _df.at[i,'ClosedAboveMedian']
-      LowIsLower = _df.at[i,'LowIsLower']
-      HighisBellowLips  = _df.at[i,'HighisBellowLips']
-      ClosedBellowMedian = _df.at[i,'ClosedBellowMedian']
-      HighIsHigher = _df.at[i,'HighIsHigher']
-      LowisAboveLips  = _df.at[i,'LowisAboveLips']
+  Returns:
+  - dfsrc: pandas dataframe, dataframe with FDB and FDS columns added.
+  """
+  dfsrc=_ids_add_fdb_intermediaries_columns(dfsrc)
+  for i, row in dfsrc.iterrows():
+
+      ClosedAboveMedian = dfsrc.at[i,'ClosedAboveMedian']
+      LowIsLower = dfsrc.at[i,'LowIsLower']
+      HighisBellowLips  = dfsrc.at[i,'HighisBellowLips']
+      ClosedBellowMedian = dfsrc.at[i,'ClosedBellowMedian']
+      HighIsHigher = dfsrc.at[i,'HighIsHigher']
+      LowisAboveLips  = dfsrc.at[i,'LowisAboveLips']
 
 
       ##################################################
@@ -287,12 +354,13 @@ def ids_add_fdb_column_logics(_df,
       if HighisBellowLips and LowIsLower and ClosedAboveMedian   :
           isFDB = True
           isFDBCode=1
-          high  = _df.at[i,'High']
-          low  = _df.at[i,'Low']
-      _df.at[i,'fdbbhigh'] = high 
-      _df.at[i,'fdbblow'] = low 
-      _df.at[i,'fdbb'] = isFDB    
-      _df.at[i,'fdb'] = isFDBCode   # So we have All
+          high  = dfsrc.at[i,'High']
+          low  = dfsrc.at[i,'Low']
+      dfsrc.at[i,'fdbbhigh'] = high 
+      dfsrc.at[i,'fdbblow'] = low 
+      
+      dfsrc.at[i,signalBuy_fractalDivergentBar_column_name] = isFDB    
+      dfsrc.at[i,signalCode_fractalDivergentBar_column_name] = isFDBCode   # So we have All
       ##################################################
       #########   FDBS
       isFDB = False    
@@ -302,16 +370,17 @@ def ids_add_fdb_column_logics(_df,
       if LowisAboveLips and HighIsHigher and ClosedBellowMedian   :
           isFDB = True
           isFDBCode = -1
-          high  = _df.at[i,'High']
-          low  = _df.at[i,'Low']
+          high  = dfsrc.at[i,'High']
+          low  = dfsrc.at[i,'Low']
           
-      _df.at[i,'fdbshigh'] = high 
-      _df.at[i,'fdbslow'] = low 
-      _df.at[i,'fdbs'] = isFDB
-      _df.at[i,'fdb'] = isFDBCode 
+      dfsrc.at[i,'fdbshigh'] = high 
+      dfsrc.at[i,'fdbslow'] = low 
+      
+      dfsrc.at[i,signalSell_fractalDivergentBar_column_name] = isFDB
+      dfsrc.at[i,signalCode_fractalDivergentBar_column_name] = isFDBCode 
   if _dropIntermediariesColumns:
-    _df = ids_clear_fdb_intermediaries_columns(_df,quiet=quiet)
-  return _df
+    dfsrc = _ids_clear_fdb_intermediaries_columns(dfsrc,quiet=quiet)
+  return dfsrc
 
 
 
@@ -326,7 +395,7 @@ def ids_add_fdb_column_logics(_df,
 
 #@title Range shift col
 def jgtids_mk_ao_fractal_peak(dfsrc,
-                              ctxcolname='ao',
+                              ctxcolname=indicator_AO_awesomeOscillator_column_name,
                               poscolprefix='pao',
                               negcolprefix='nao',
                               endrange=10,
@@ -381,7 +450,7 @@ def jgtids_mk_ao_fractal_peak(dfsrc,
     dt=i
     curHigh= dfsrc.at[i,'High']
     curLow= dfsrc.at[i,'Low']
-    cur=dfsrc.at[i,'ao']
+    cur=dfsrc.at[i,indicator_AO_awesomeOscillator_column_name]
     n9= dfsrc.at[i,'n9']
     n13= dfsrc.at[i,'n13']
     n12= dfsrc.at[i,'n12']
@@ -514,9 +583,9 @@ def jgtids_mk_ao_fractal_peak(dfsrc,
 #@title Add CDS signals
 
 def cds_add_signals_to_indicators(dfires,_aopeak_range=28,quiet=False):
-  dfires=ids_add_fdb_column_logics(dfires,quiet=quiet)
+  dfires=_ids_add_fdb_column_logics(dfires,quiet=quiet)
   dfires = jgtids_mk_ao_fractal_peak(dfires,
-                                   'ao',
+                                   indicator_AO_awesomeOscillator_column_name,
                                    'p',
                                    'n',
                                    _aopeak_range,
@@ -763,23 +832,23 @@ def fdb_print_info(df,isBuy=True):
   
 #@title ZLC Buy and Sell v2 2210161707 
 
-def jgti_add_zlc_plus_other_AO_signal(_df,dropsecondaries=True,quiet=True):
-  _df=jgtpd_col_add_range_shifting(_df,'ao','pao',10)
-  _df=jgtpd_col_add_range_shifting(_df,'ac','pac',4)
+def jgti_add_zlc_plus_other_AO_signal(dfsrc,dropsecondaries=True,quiet=True):
+  dfsrc=_jgtpd_col_add_range_shifting(dfsrc,indicator_AO_awesomeOscillator_column_name,'pao',10)
+  dfsrc=_jgtpd_col_add_range_shifting(dfsrc,indicator_AC_accelerationDeceleration_column_name,'pac',4)
   if not quiet:
     print('----added shofted range AO')
-  _df['aoaz']= _df['ao']>0
-  _df['aobz']= _df['ao']<0
-  #_df['zlcb']=_df[_df['ao']]
+  dfsrc['aoaz']= dfsrc[indicator_AO_awesomeOscillator_column_name]>0
+  dfsrc['aobz']= dfsrc[indicator_AO_awesomeOscillator_column_name]<0
+  #_df['zlcb']=_df[_df[indicator_AO_awesomeOscillator_column_name]]
   c=0
-  xc=len(_df)
-  for i,row in _df.iterrows():
+  xc=len(dfsrc)
+  for i,row in dfsrc.iterrows():
     c=c+1
-    cao=_df.at[i,'ao']
-    cac=_df.at[i,'ac']
-    pac1=_df.at[i,'pac1']
-    pac2=_df.at[i,'pac2']
-    pac3=_df.at[i,'pac3']
+    cao=dfsrc.at[i,indicator_AO_awesomeOscillator_column_name] # Current AO
+    cac=dfsrc.at[i,indicator_AC_accelerationDeceleration_column_name] # Current AC
+    pac1=dfsrc.at[i,'pac1'] # Past AC 1
+    pac2=dfsrc.at[i,'pac2'] # Past AC 2
+    pac3=dfsrc.at[i,'pac3'] # Past AC 3
     cacgreen = False
     pac1green=False
     pac2green=False
@@ -790,9 +859,9 @@ def jgti_add_zlc_plus_other_AO_signal(_df,dropsecondaries=True,quiet=True):
     if pac2 > pac3:
       pac2green=True
     
-    pao1=_df.at[i,'pao1']
-    pao2=_df.at[i,'pao2']
-    pao3=_df.at[i,'pao3']
+    pao1=dfsrc.at[i,'pao1'] # Past AO 1
+    pao2=dfsrc.at[i,'pao2'] # Past AO 2
+    pao3=dfsrc.at[i,'pao3'] # Past AO 3
     caogreen = False
     pao1green=False
     pao2green=False
@@ -813,8 +882,8 @@ def jgti_add_zlc_plus_other_AO_signal(_df,dropsecondaries=True,quiet=True):
     pac2red= not pac2green
     
     
-    aoaz=_df.at[i,'aoaz']
-    aobz=_df.at[i,'aobz']
+    aoaz=dfsrc.at[i,'aoaz']
+    aobz=dfsrc.at[i,'aobz']
 
     #ZLC
     isZLCBuy = False
@@ -828,23 +897,23 @@ def jgti_add_zlc_plus_other_AO_signal(_df,dropsecondaries=True,quiet=True):
       isZLCBuy=True
     
     zeroLineCrossingSignalCode_column_name = 'zlc'
-    _df.at[i,zeroLineCrossingSignalCode_column_name] = zlcCode  
+    dfsrc.at[i,zeroLineCrossingSignalCode_column_name] = zlcCode  
     zeroLineCrossingBuySignal_column_name = 'zlcb'
-    _df.at[i,zeroLineCrossingBuySignal_column_name] = isZLCBuy
+    dfsrc.at[i,zeroLineCrossingBuySignal_column_name] = isZLCBuy
     zeroLineCrossingSellSignal_column_name = 'zlcs'
-    _df.at[i,zeroLineCrossingSellSignal_column_name] = isZLCSell
+    dfsrc.at[i,zeroLineCrossingSellSignal_column_name] = isZLCSell
 
     #Coloring AO
     if caogreen:
-      _df.at[i,'aocolor'] = 'rgb(0,255,0)'
+      dfsrc.at[i,'aocolor'] = 'rgb(0,255,0)'
     else:
-      _df.at[i,'aocolor'] = 'rgb(255,0,0)'
+      dfsrc.at[i,'aocolor'] = 'rgb(255,0,0)'
       
     #Coloring AC
     if cacgreen:
-      _df.at[i,'accolor'] = 'rgb(0,255,0)'
+      dfsrc.at[i,'accolor'] = 'rgb(0,255,0)'
     else:
-      _df.at[i,'accolor'] = 'rgb(255,0,0)'
+      dfsrc.at[i,'accolor'] = 'rgb(255,0,0)'
       
     
     # --@STCIssue Zone  (Not sure, it might have to be ABove or Bellow)
@@ -864,15 +933,15 @@ def jgti_add_zlc_plus_other_AO_signal(_df,dropsecondaries=True,quiet=True):
       greenZone=True
       zoneColor=buyingZoneColor
       
-    _df.at[i,'zcol'] = zoneColor
+    dfsrc.at[i,'zcol'] = zoneColor
     
     #Sell Zone Signal
     sellZoneSignal_column_name = 'sz'
-    _df.at[i,sellZoneSignal_column_name]=redZone
+    dfsrc.at[i,sellZoneSignal_column_name]=redZone
     
     #Buy Zone Signal
     buyZoneSinal_column_name = 'bz'
-    _df.at[i,buyZoneSinal_column_name]=greenZone
+    dfsrc.at[i,buyZoneSinal_column_name]=greenZone
     
     #AC Sell / Buy  3 AC Against AO af AC Bellow, 2 if above
     acSell = False
@@ -889,11 +958,11 @@ def jgti_add_zlc_plus_other_AO_signal(_df,dropsecondaries=True,quiet=True):
     
     #AC Sell Signal (Deceleration)
     deceleration_ACSignal_column_name = 'acs'
-    _df.at[i,deceleration_ACSignal_column_name]=acSell
+    dfsrc.at[i,deceleration_ACSignal_column_name]=acSell
     
     #AC Buy Signal (Acceleration)
     acceleration_ACSignal_column_name = 'acb'
-    _df.at[i,acceleration_ACSignal_column_name]=acBuy
+    dfsrc.at[i,acceleration_ACSignal_column_name]=acBuy
     
     if acSell and not quiet:
       print("AC Sell Signal with AC Bellow Zero Line "+ str(i))
@@ -910,13 +979,13 @@ def jgti_add_zlc_plus_other_AO_signal(_df,dropsecondaries=True,quiet=True):
     if cao > 0 and caogreen and pao1red and pao2red:
       saucerBuy=True
     saucerSellSignal_column_name = 'ss'
-    _df.at[i,saucerSellSignal_column_name]=saucerSell
+    dfsrc.at[i,saucerSellSignal_column_name]=saucerSell
     saucerBuySignal_column_name = 'sb'
-    _df.at[i,saucerBuySignal_column_name]=saucerBuy
+    dfsrc.at[i,saucerBuySignal_column_name]=saucerBuy
     
     # What Happens on the Next PLUS 35 Periods ??
     if c < xc - 35:
       cPrice = row['Close']
     # What Happens on the Next PLUS 55 Periods ??
-  return _df
+  return dfsrc
     
