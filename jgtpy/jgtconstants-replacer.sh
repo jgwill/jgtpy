@@ -62,11 +62,20 @@ python_files=$(find . -type f -name "*.py")
 for file in $python_files; do
     echo "Processing $file"
     
+    # Counter for replacements in the current file
+    replacements_count=0
+    
     # Loop through each replacement
     for search in "${!replacements[@]}"; do
         replace="${replacements[$search]}"
+        # Count and replace
+        count=$(grep -o "$search" "$file" | wc -l)
+        replacements_count=$((replacements_count + count))
         sed -i "s/$search/$replace/g" "$file"
     done
+    
+    # Output the count for the current file
+    echo "Replacements in $file: $replacements_count"
 done
 
 echo "Replacement complete."
