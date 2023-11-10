@@ -82,7 +82,7 @@ def getLast(_df):
   return _df.iloc[-1]
 
 def getPresentBar(_df):
-  r= _df#['High','Low','ao','fdb','ac']
+  r= _df#['High','Low',indicator_AO_awesomeOscillator_column_name,signalCode_fractalDivergentBar_column_name,indicator_AC_accelerationDeceleration_column_name]
   return r.iloc[-1:]
 
 def getPresentBarAsList(_df):
@@ -107,8 +107,8 @@ def getLastCompletedBarAsList(_df):
 def checkFDB(_instrument,_timeframe):
   _df=create(_instrument)
   pa = getPresentBarAsList(_df)
-  isfdb = pa['fdb'][0]  != 0.0
-  fdb = pa['fdb']
+  isfdb = pa[signalCode_fractalDivergentBar_column_name][0]  != 0.0
+  fdb = pa[signalCode_fractalDivergentBar_column_name]
   dtctx = pa['Date']
   if isfdb:
     print(_instrument + "_" + _timeframe + " : We Have a Signal : " + dtctx)

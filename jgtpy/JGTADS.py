@@ -19,9 +19,15 @@ cdtformat="%Y-%m-%d"
 
 
 
+from jgtconstants import (
+  sellingZoneColor,
+  buyingZoneColor,
+)
+
 # %%
 #@title INDICATOR's Data Frame Columns naming
 # Import statements for jgtconstants.py variables
+
 
 from jgtconstants import (
     indicator_currentDegree_alligator_jaw_column_name,
@@ -198,15 +204,15 @@ def ads_chart_pto(dfsrc,_timeframe,_cw =1050,_ch =1000,useDTBreaks=False)-> plt.
   #                            y=fdbb_data,row=1,col=1))
   gatorlinewidth=2
   # add Alligator
-  _f4=addline2main(_f4,dfsrc['jaw'],_dates,'Jaw','blue',gatorlinewidth,0.6,mainrow,1)
-  _f4=addline2main(_f4,dfsrc['teeth'],_dates,'Teeth','red',gatorlinewidth,0.6,mainrow,1)
-  _f4=addline2main(_f4,dfsrc['lips'],_dates,'Lips','green',gatorlinewidth,0.6,mainrow,1)
+  _f4=addline2main(_f4,dfsrc[indicator_currentDegree_alligator_jaw_column_name],_dates,'Jaw','blue',gatorlinewidth,0.6,mainrow,1)
+  _f4=addline2main(_f4,dfsrc[indicator_currentDegree_alligator_teeth_column_name],_dates,'Teeth',sellingZoneColor,gatorlinewidth,0.6,mainrow,1)
+  _f4=addline2main(_f4,dfsrc[indicator_currentDegree_alligator_lips_column_name],_dates,'Lips',buyingZoneColor,gatorlinewidth,0.6,mainrow,1)
 
 
   # add Raptor (big Alligator
-  _f4=addline2main(_f4,dfsrc['bjaw'],_dates,'BJaw','cyan',3,0.4,mainrow)
-  _f4=addline2main(_f4,dfsrc['bteeth'],_dates,'BTeeth','magenta',3,0.4,mainrow)
-  _f4=addline2main(_f4,dfsrc['blips'],_dates,'BLips','yellow',3,0.4,mainrow)
+  _f4=addline2main(_f4,dfsrc[indicator_sixDegreeLarger_alligator_jaw_column_name],_dates,'BJaw','cyan',3,0.4,mainrow)
+  _f4=addline2main(_f4,dfsrc[indicator_sixDegreeLarger_alligator_teeth_column_name],_dates,'BTeeth','magenta',3,0.4,mainrow)
+  _f4=addline2main(_f4,dfsrc[indicator_sixDegreeLarger_alligator_lips_column_name],_dates,'BLips','yellow',3,0.4,mainrow)
 
   # fdbplot = go.Figure(data=[go.Scatter(
   #      x = df.index,

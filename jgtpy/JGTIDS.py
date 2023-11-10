@@ -841,23 +841,6 @@ def pds_cleanse_extra_columns(dfsrc,quiet=True):
 
 
 
-# def Gethistoryprice(instrument,timeframe,number=300):
-#   con.get_candles('EUR/USD', period='m1', number=100)
-
-
-def fdb_print_info(df,isBuy=True):
-  n='fdbs'
-  c='low'
-  if isBuy:
-    n='fdbb'
-    c='high'
-  cn= n+c
-  for i in df:
-    h=df[i]['fdbshigh']
-    print(h)
-  
-  
-  
   
 #@title ZLC Buy and Sell v2 2210161707 
 
@@ -869,7 +852,7 @@ def jgti_add_zlc_plus_other_AO_signal(dfsrc,dropsecondaries=True,quiet=True):
 
   dfsrc[indicator_AO_aboveZero_column_name]= dfsrc[indicator_AO_awesomeOscillator_column_name]>0 # AO Above Zero
   dfsrc[indicator_AO_bellow_zero_column_name]= dfsrc[indicator_AO_awesomeOscillator_column_name]<0 # AO Bellow Zero
-  #_df['zlcb']=_df[_df[indicator_AO_awesomeOscillator_column_name]]
+  #_df[signalBuy_zeroLineCrossing_column_name]=_df[_df[indicator_AO_awesomeOscillator_column_name]]
   c=0
   xc=len(dfsrc)
   for i,row in dfsrc.iterrows():
