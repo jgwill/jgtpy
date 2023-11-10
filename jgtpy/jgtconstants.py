@@ -1,8 +1,9 @@
 
+nonTradingZoneColor = 'gray'
 
-#--@STCGoal A class to hold constants for the JGT project.
+sellingZoneColor = 'red'
+buyingZoneColor = 'green'
 
-#SUCH AS : 
 
 indicator_currentDegree_alligator_jaw_column_name = 'jaw' # 13 periods moving average, shifted 8 bars into the future
 indicator_currentDegree_alligator_teeth_column_name = 'teeth' # 8 periods moving average, shifted 5 bars into the future
@@ -13,6 +14,9 @@ indicator_sixDegreeLarger_alligator_lips_column_name = 'blips' # 34 periods movi
 
 indicator_AO_awesomeOscillator_column_name = 'ao' # AO measure energy of momentum
 indicator_AC_accelerationDeceleration_column_name = 'ac' # AC measure speed of momentum
+indicator_AO_aboveZero_column_name = 'aoaz'
+indicator_AO_bellow_zero_column_name = 'aobz'
+indicator_zeroLineCross_column_name = 'zlc'
 
 indicator_gatorOscillator_low_column_name = 'gl' # Gator Oscillator low
 indicator_gatorOscillator_high_column_name = 'gh' # Gator Oscillator high
@@ -39,11 +43,32 @@ indicator_fractal_high_degree55_column_name="fh55" # Fractal High of degree 55
 indicator_fractal_low_degree55_column_name="fl55" # Fractal Low of degree 55
 indicator_fractal_high_degree89_column_name="fh89" # Fractal High of degree 89
 indicator_fractal_low_degree89_column_name="fl89" # Fractal Low of degree 89
-
-
+indicator_ao_fractalPeakOfMomentum_column_name = 'aof'
+indicator_ao_fractalPeakValue_column_name = 'aofvalue'
 # %%
 #@title SIGNAL's Data Frame Columns naming
+
+# fractal divergent bar signals (or BDB)
 signalCode_fractalDivergentBar_column_name = 'fdb'
 signalSell_fractalDivergentBar_column_name = 'fdbs'
 signalBuy_fractalDivergentBar_column_name = 'fdbb'
 
+#ac
+signalSell_AC_deceleration_column_name = 'acs'
+signalBuy_AC_acceleration_column_name = 'acb'
+
+#Fractal signal
+signalSell_fractal_column_name = 'fs'
+signalBuy_fractal_column_name = 'fb'
+
+#Zero Line Cross Signal
+signalBuy_zeroLineCrossing_column_name = 'zlcb'
+signalSell_zeroLineCrossing_column_name = 'zlcs'
+signal_zcol_column_name = 'zcol' # NOT SURE its a signal
+
+signalSell_zoneSignal_column_name = 'sz'
+signalBuy_zoneSinal_column_name = 'bz'
+
+# Saucer signal
+signalSell_saucer_column_name = 'ss'
+signalBuy_saucer_column_name = 'sb'
