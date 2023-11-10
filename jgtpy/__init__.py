@@ -29,12 +29,12 @@
 
 
 #from jgtpy.common_samples import common_samples
-from jgtpy.jgtetl import svc_offset_dt_by_tf,offsetdt
-from jgtpy.JGTCore import __version__,json2dict,jsonfile2prop,json2prop,jsonfile2dict,d2p,fixdtindf,offsetdt
-from jgtpy.JGTConfig import getenv,setreal,setdemo,env
+from .jgtetl import svc_offset_dt_by_tf,offsetdt
+from .JGTCore import __version__,json2dict,jsonfile2prop,json2prop,jsonfile2dict,d2p,fixdtindf,offsetdt
+from .JGTConfig import getenv,setreal,setdemo,env
 
-from jgtpy.JGTPDS import mk_fn,mk_fullpath,getSubscribed,getPH,getPHByRange,tryConnect
-from jgtpy.JGTCDS import create as createCDS,createByRange,createFromDF,startSession,stopSession,getLast,getPresentBar,getPresentBarAsList,getLastCompletedBarAsList
+from .JGTPDS import mk_fn,mk_fullpath,getSubscribed,getPH,getPHByRange,tryConnect
+from .JGTCDS import create as createCDS,createByRange,createFromDF,startSession,stopSession,getLast,getPresentBar,getPresentBarAsList,getLastCompletedBarAsList,createFromDF
 # from jgtpy.JGTADS import ads_chart_pto,retrieve_n_chart as ads_retrieve_n_chart
 
-
+#from jgtpy.jgtconstants import *

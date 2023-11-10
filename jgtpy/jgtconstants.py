@@ -15,7 +15,7 @@ indicator_sixDegreeLarger_alligator_lips_column_name = 'blips' # 34 periods movi
 indicator_AO_awesomeOscillator_column_name = 'ao' # AO measure energy of momentum
 indicator_AC_accelerationDeceleration_column_name = 'ac' # AC measure speed of momentum
 indicator_AO_aboveZero_column_name = 'aoaz'
-indicator_AO_bellow_zero_column_name = 'aobz'
+indicator_AO_bellowZero_column_name = 'aobz'
 indicator_zeroLineCross_column_name = 'zlc'
 
 indicator_gatorOscillator_low_column_name = 'gl' # Gator Oscillator low
@@ -49,9 +49,9 @@ indicator_ao_fractalPeakValue_column_name = 'aofvalue'
 #@title SIGNAL's Data Frame Columns naming
 
 # fractal divergent bar signals (or BDB)
-signalCode_fractalDivergentBar_column_name = 'fdb'
-signalSell_fractalDivergentBar_column_name = 'fdbs'
-signalBuy_fractalDivergentBar_column_name = 'fdbb'
+signalCode_fractalDivergentBar_column_name = 'fdb' # Fractal Divergent Bar Code (contains the signal value either buy, sell or nothing)
+signalSell_fractalDivergentBar_column_name = 'fdbs' # Fractal Divergent Bar Sell
+signalBuy_fractalDivergentBar_column_name = 'fdbb' # Fractal Divergent Bar Buy
 
 #ac
 signalSell_AC_deceleration_column_name = 'acs'

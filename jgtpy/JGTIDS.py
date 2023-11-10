@@ -5,6 +5,7 @@
 import pandas as pd
 import datetime
 from jgtapy import Indicators
+import os
 
 # %%
 #@title Vars
@@ -14,7 +15,7 @@ _dtformat = '%m.%d.%Y %H:%M:%S'
 #@title INDICATOR's Data Frame Columns naming
 # Import statements for jgtconstants.py variables
 
-from jgtconstants import (
+from .jgtconstants import (
     indicator_currentDegree_alligator_jaw_column_name,
     indicator_currentDegree_alligator_teeth_column_name,
     indicator_currentDegree_alligator_lips_column_name,
@@ -26,7 +27,7 @@ from jgtconstants import (
     indicator_ao_fractalPeakOfMomentum_column_name,
     indicator_ao_fractalPeakValue_column_name,
     indicator_AO_aboveZero_column_name,
-    indicator_AO_bellow_zero_column_name,
+    indicator_AO_bellowZero_column_name,
     indicator_AC_accelerationDeceleration_column_name,
     indicator_gatorOscillator_low_column_name,
     indicator_gatorOscillator_high_column_name,
@@ -56,13 +57,13 @@ from jgtconstants import (
 #@title SIGNAL's Data Frame Columns naming
 # Import statements for jgtconstants.py variables
 
-from jgtconstants import (
+from .jgtconstants import (
     nonTradingZoneColor,
     sellingZoneColor,
     buyingZoneColor,
 )
 
-from jgtconstants import (
+from .jgtconstants import (
     signalCode_fractalDivergentBar_column_name,
     signalSell_fractalDivergentBar_column_name,
     signalBuy_fractalDivergentBar_column_name,
@@ -374,6 +375,10 @@ def _ids_add_fdb_column_logics(dfsrc,
       HighIsHigher = dfsrc.at[i,'HighIsHigher']
       LowisAboveLips  = dfsrc.at[i,'LowisAboveLips']
 
+      #default values 
+      dfsrc.at[i,signalBuy_fractalDivergentBar_column_name] = False    
+      dfsrc.at[i,signalSell_fractalDivergentBar_column_name] = False
+      dfsrc.at[i,signalCode_fractalDivergentBar_column_name] = 0 
 
       ##################################################
       #########   FDBB
@@ -383,7 +388,7 @@ def _ids_add_fdb_column_logics(dfsrc,
       low=0
       if HighisBellowLips and LowIsLower and ClosedAboveMedian   :
           isFDB = True
-          isFDBCode=1
+          isFDBCode = 1
           high  = dfsrc.at[i,'High']
           low  = dfsrc.at[i,'Low']
       dfsrc.at[i,'fdbbhigh'] = high 
@@ -391,23 +396,26 @@ def _ids_add_fdb_column_logics(dfsrc,
       
       dfsrc.at[i,signalBuy_fractalDivergentBar_column_name] = isFDB    
       dfsrc.at[i,signalCode_fractalDivergentBar_column_name] = isFDBCode   # So we have All
+      isAfdbb = isFDB
       ##################################################
       #########   FDBS
-      isFDB = False    
-      isFDBCode = 0
-      high=0
-      low=0
-      if LowisAboveLips and HighIsHigher and ClosedBellowMedian   :
-          isFDB = True
-          isFDBCode = -1
-          high  = dfsrc.at[i,'High']
-          low  = dfsrc.at[i,'Low']
-          
-      dfsrc.at[i,'fdbshigh'] = high 
-      dfsrc.at[i,'fdbslow'] = low 
       
-      dfsrc.at[i,signalSell_fractalDivergentBar_column_name] = isFDB
-      dfsrc.at[i,signalCode_fractalDivergentBar_column_name] = isFDBCode 
+      if not isAfdbb:
+        isFDB = False    
+        isFDBCode = 0
+        high=0
+        low=0
+        if LowisAboveLips and HighIsHigher and ClosedBellowMedian   :
+            isFDB = True
+            isFDBCode = -1
+            high  = dfsrc.at[i,'High']
+            low  = dfsrc.at[i,'Low']
+            
+        dfsrc.at[i,'fdbshigh'] = high 
+        dfsrc.at[i,'fdbslow'] = low 
+        
+        dfsrc.at[i,signalSell_fractalDivergentBar_column_name] = isFDB
+        dfsrc.at[i,signalCode_fractalDivergentBar_column_name] = isFDBCode 
   if _dropIntermediariesColumns:
     dfsrc = _ids_clear_fdb_intermediaries_columns(dfsrc,quiet=quiet)
   return dfsrc
@@ -620,6 +628,7 @@ def cds_add_signals_to_indicators(dfires,_aopeak_range=28,quiet=False):
                                    _aopeak_range,
                                    quiet=quiet)
   return dfires
+
 
 
 def tocds(dfsrc):
@@ -851,7 +860,7 @@ def jgti_add_zlc_plus_other_AO_signal(dfsrc,dropsecondaries=True,quiet=True):
     print('----added shofted range AO')
 
   dfsrc[indicator_AO_aboveZero_column_name]= dfsrc[indicator_AO_awesomeOscillator_column_name]>0 # AO Above Zero
-  dfsrc[indicator_AO_bellow_zero_column_name]= dfsrc[indicator_AO_awesomeOscillator_column_name]<0 # AO Bellow Zero
+  dfsrc[indicator_AO_bellowZero_column_name]= dfsrc[indicator_AO_awesomeOscillator_column_name]<0 # AO Bellow Zero
   #_df[signalBuy_zeroLineCrossing_column_name]=_df[_df[indicator_AO_awesomeOscillator_column_name]]
   c=0
   xc=len(dfsrc)
@@ -896,7 +905,7 @@ def jgti_add_zlc_plus_other_AO_signal(dfsrc,dropsecondaries=True,quiet=True):
     
     
     aoaz=dfsrc.at[i,indicator_AO_aboveZero_column_name]
-    aobz=dfsrc.at[i,indicator_AO_bellow_zero_column_nameindicator_AO_bellow_zero_column_name]
+    aobz=dfsrc.at[i,indicator_AO_bellowZero_column_name]
 
     #ZLC
     isZLCBuy = False

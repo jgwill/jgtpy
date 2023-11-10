@@ -6,6 +6,10 @@ from dotenv import dotenv_values
 load_dotenv()  # take environment variables from .env.
 #env=load_dotenv(os.getenv(os.getcwd()))
 env = dotenv_values(".env")
+
+
+
+#@DEPRECATED
 if os.getenv('FXCM_TOKEN_REST_API_DEMO') == "":
   load_dotenv(os.getenv('HOME'))
 if os.getenv('FXCM_TOKEN_REST_API_DEMO') == "":
@@ -14,7 +18,10 @@ if os.getenv('FXCM_TOKEN_REST_API_DEMO') == "":
 def getenv(tvar):
   return os.getenv(tvar)
 
-# keep expiring...
+
+
+#@DEPRECATED: 
+
 FXCM_TOKEN_REST_API_DEMO = os.getenv('FXCM_TOKEN_REST_API_DEMO')
 FXCM_TOKEN_REST_API_REAL = os.getenv('FXCM_TOKEN_REST_API_REAL')
 FXCM_DROPBOX_ACCESS_TOKEN = os.getenv('FXCM_DROPBOX_ACCESS_TOKEN')
@@ -22,6 +29,7 @@ DROPBOX_ACCESS_TOKEN= FXCM_DROPBOX_ACCESS_TOKEN
 # print(FXCM_TOKEN_REST_API_DEMO)
 
 local_fn_compression='gzip'
+
 
 def get_pov_local_data_filename(instrument,timeframe,local_data_dir='./data',local_fn_suffix='.full.csv.gz',):
   tf=timeframe

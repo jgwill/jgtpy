@@ -1,6 +1,6 @@
 {
   "name": "jgtpy",
-  "version": "0.1.38",
+  "version": "0.1.39",
   "description": "jgtpy packaging",
   "main": "index.js",
   "directories": {
@@ -8,8 +8,11 @@
     "test": "test"
   },
   "scripts": {
-    "test": "pip install jgtpy",
-    "build-release": "bash build-by-docker.sh"
+    "test": "bash pypi-conda-gaia-env.sh",
+    "build": "make dist",
+    "release": "make dist && twine upload dist/*",
+    "publish": "twine upload dist/*",
+    "build-release-by-docker-DEPRECATED": "bash build-by-docker.sh"
   },
   "repository": {
     "type": "git",

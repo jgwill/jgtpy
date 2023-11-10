@@ -12,21 +12,35 @@ def startSession():
 def stopSession():
   pds.dis
 # %%
-def create(instrument,timeframe,nb2retrieve=335,stayConnected=False,quiet=True):
+
+def createFromPDSFile(_instrument,_timeframe,quiet=True):
   """Create CDS (Chaos Data Service) with Fresh Data
 
   Args:
-      instrument (str): symbol
-      timeframe (str): TF
-      nb2retrieve (int, optional): nb bar to retrieve. Defaults to 335.
-      stayConnected (bool, optional): Leave FXCMPY connected. Defaults to False.
-      quiet (bool,optional): Output quiet
+      _instrument (str): symbol
+      _timeframe (str): TF
+      _path (str): path to file
 
   Returns:
       pandas.DataFrame: CDS DataFrame
   """
-  pds.stayConnected=stayConnected
-  df=pds.getPH(instrument,timeframe,nb2retrieve,with_index=False,quiet=quiet)
+  df=pds.getPH_from_local(_instrument,_timeframe)
+  if not quiet:
+    print(df)
+  dfi=createFromDF(df)
+  return dfi
+
+def createFromDF(df, quiet=True):
+  """
+  Creates a new DataFrame with indicators, signals, and cleansed columns added based on the input DataFrame.
+
+  Args:
+    df (pandas.DataFrame): The input DataFrame to add indicators, signals, and cleansed columns to.
+    quiet (bool, optional): Whether to suppress console output during processing. Defaults to True.
+
+  Returns:
+    pandas.DataFrame: The new DataFrame with indicators, signals, and cleansed columns added.
+  """
   dfi=ids.ids_add_indicators(df,quiet=quiet)
   dfi=ids.cds_add_signals_to_indicators(dfi,quiet=quiet)
   dfi=ids.jgti_add_zlc_plus_other_AO_signal(dfi,quiet=quiet)
@@ -34,9 +48,29 @@ def create(instrument,timeframe,nb2retrieve=335,stayConnected=False,quiet=True):
   dfi =ids.__ids_cleanse_ao_peak_secondary_columns(dfi,quiet=True)
   return dfi
 
+
+def create(instrument,timeframe,nb2retrieve=335,stayConnected=False,quiet=True):
+  """Create CDS (Chaos Data Service) with Fresh Data
+
+  Args:
+      instrument (str): symbol
+      timeframe (str): TF
+      nb2retrieve (int, optional): nb bar to retrieve. Defaults to 335.
+      stayConnected (bool, optional): Leave Forexconnect connected. Defaults to False.
+      quiet (bool,optional): Output quiet
+
+  Returns:
+      pandas.DataFrame: CDS DataFrame
+  """
+  pds.stayConnected=stayConnected
+  df=pds.getPH(instrument,timeframe,nb2retrieve,with_index=False,quiet=quiet)
+  dfi=createFromDF(df,quiet=quiet)
+  return dfi
+  
+
 #createByRange
 def createByRange(instrument,timeframe,start,end,stayConnected=False,quiet=True):
-  """Create CDS with Fresh Data
+  """Create CDS with Fresh Data from a range
 
   Args:
       instrument (str): symbol
@@ -51,20 +85,43 @@ def createByRange(instrument,timeframe,start,end,stayConnected=False,quiet=True)
   """
   pds.stayConnected=stayConnected
   df=pds.getPHByRange(instrument,timeframe,start,end,with_index=False,quiet=quiet)
-  dfi=ids.ids_add_indicators(df,quiet=quiet)
-  dfi=ids.cds_add_signals_to_indicators(dfi,quiet=quiet)
-  dfi=ids.jgti_add_zlc_plus_other_AO_signal(dfi,quiet=quiet)
-  dfi=ids.pds_cleanse_original_columns(dfi,quiet=quiet)
-  dfi =ids.__ids_cleanse_ao_peak_secondary_columns(dfi,quiet=True)
+  dfi=createFromDF(df,quiet=quiet)
   return dfi
 
-def createFromDF(df,quiet=True):
-  dfi=ids.ids_add_indicators(df,quiet=quiet)
-  dfi=ids.cds_add_signals_to_indicators(dfi,quiet=quiet)
-  dfi=ids.jgti_add_zlc_plus_other_AO_signal(dfi,quiet=quiet)
-  dfi=ids.pds_cleanse_original_columns(dfi,quiet=quiet)
-  dfi =ids.__ids_cleanse_ao_peak_secondary_columns(dfi,quiet=True)
-  return dfi
+
+
+
+
+columns_to_remove = ['aofvalue', 'aofhighao', 'aoflowao', 'aofhigh', 'aoflow', 'aocolor', 'accolor', 'fdbbhigh', 'fdbblow', 'fdbshigh', 'fdbslow']
+
+def createFromFile_and_clean_and_save_data(instrument, timeframe):
+    # Create DataFrame from PDS file
+    c = createFromPDSFile(instrument, timeframe)
+
+    # Remove specified columns if provided
+    if columns_to_remove:
+        c = c.drop(columns=columns_to_remove, errors='ignore')
+
+    # Define the file path based on the environment variable or local path
+    data_path = os.environ.get('JGTPY_DATA', './data')
+    data_path = os.path.join(data_path, 'cds')
+    fpath = pds.mk_fullpath(instrument, timeframe, 'csv', data_path)
+
+    # Set 'Date' as the index
+    c.set_index('Date', inplace=True)
+
+    # Save DataFrame to CSV
+    c.to_csv(fpath)
+
+    return c
+
+
+
+
+
+
+
+
 
 def getSubscribed():
   return pds.getSubscribed()

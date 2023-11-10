@@ -2,7 +2,7 @@
 
 # jgtpy
 
-JGTPyIndicators Prep Service
+JGTPyIndicators & Signals Prep Service
 
 
 ## Installation

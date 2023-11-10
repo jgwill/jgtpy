@@ -34,7 +34,8 @@ def login_forexconnect(user_id, password, url, connection):
 def connect(quiet=True):
     global fx,quotes_count
     if fx is not None:
-        print("Already connected")
+        if not quiet:
+            print("Already connected")
         return
     
     config=readconfig()
@@ -83,7 +84,7 @@ def readconfig():
         return config
 
 
-def get_price_history(instrument, timeframe, datefrom=None, dateto=None,quotes_count_spec=None):
+def get_price_history(instrument, timeframe, datefrom=None, dateto=None,quotes_count_spec=None,quiet=True):
     global quotes_count,fx
 
     if quotes_count_spec is None:
@@ -94,8 +95,9 @@ def get_price_history(instrument, timeframe, datefrom=None, dateto=None,quotes_c
         dateto = datetime.datetime.now()    
 
     try:
-        print("")
-        print("Requesting a price history...")
+        if not quiet:
+            print("")
+            print("Requesting a price history...")
         history = fx.get_history(instrument, timeframe, datefrom, dateto, quotes_count_spec)
 
         current_unit, _ = ForexConnect.parse_timeframe(timeframe)

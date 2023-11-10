@@ -19,7 +19,7 @@ cdtformat="%Y-%m-%d"
 
 
 
-from jgtconstants import (
+from .jgtconstants import (
   sellingZoneColor,
   buyingZoneColor,
 )
@@ -29,7 +29,7 @@ from jgtconstants import (
 # Import statements for jgtconstants.py variables
 
 
-from jgtconstants import (
+from .jgtconstants import (
     indicator_currentDegree_alligator_jaw_column_name,
     indicator_currentDegree_alligator_teeth_column_name,
     indicator_currentDegree_alligator_lips_column_name,
@@ -41,7 +41,7 @@ from jgtconstants import (
     indicator_ao_fractalPeakOfMomentum_column_name,
     indicator_ao_fractalPeakValue_column_name,
     indicator_AO_aboveZero_column_name,
-    indicator_AO_bellow_zero_column_name,
+    indicator_AO_bellowZero_column_name,
     indicator_AC_accelerationDeceleration_column_name,
     indicator_gatorOscillator_low_column_name,
     indicator_gatorOscillator_high_column_name,
@@ -71,7 +71,7 @@ from jgtconstants import (
 #@title SIGNAL's Data Frame Columns naming
 # Import statements for jgtconstants.py variables
 
-from jgtconstants import (
+from .jgtconstants import (
     signalCode_fractalDivergentBar_column_name,
     signalSell_fractalDivergentBar_column_name,
     signalBuy_fractalDivergentBar_column_name,
