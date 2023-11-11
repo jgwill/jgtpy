@@ -1,7 +1,7 @@
 jgtpy
 ====
 
-JGTPyIndicators Prep Service
+Enhanced JGTPy CDS, IDS, PDS Services
 
 
 Installation

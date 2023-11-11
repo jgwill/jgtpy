@@ -2,7 +2,7 @@
 
 # jgtpy
 
-JGTPyIndicators & Signals Prep Service
+Enhanced JGTPy CDS, IDS, PDS Services
 
 
 ## Installation
