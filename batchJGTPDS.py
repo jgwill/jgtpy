@@ -8,14 +8,14 @@ timeframe = "D1"
 # List of instruments
 instruments = ["USD/CAD", "NAS100", "GBP/CAD", "EUR/USD", "GBP/USD", "AUD/USD"]
 instruments = ["USD/CAD", "EUR/USD", "GBP/USD", "AUD/USD"]
-instruments = ["GBP/CAD"]
+#instruments = ["GBP/CAD"]
 
 # Desired timeframe
 timeframe = "m15"
 # List of timeframes
-# timeframes = ["M1","W1","D1", "H4", "H1", "m15","m5"]
-timeframes = ["W1","D1", "H4", "H1", "m15","m5"]
-timeframes = ["M1"]
+timeframes = ["M1","W1","D1", "H4", "H1", "m15","m5"]
+#timeframes = ["W1","D1", "H4", "H1", "m15","m5"]
+#timeframes = ["M1"]
 # Limit for the number of data points
 limit = 750
 

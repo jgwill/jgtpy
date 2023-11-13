@@ -29,11 +29,11 @@
 
 
 #from jgtpy.common_samples import common_samples
-from .jgtetl import svc_offset_dt_by_tf,offsetdt
-from .JGTCore import __version__,json2dict,jsonfile2prop,json2prop,jsonfile2dict,d2p,fixdtindf,offsetdt
-from .JGTConfig import getenv,setreal,setdemo,env
+from .jgtetl import svc_offset_dt_by_tf as etl_offset_dt_by_tf,offsetdt as etl_offsetdt
+from .JGTCore import __version__ #,json2dict,jsonfile2prop,json2prop,jsonfile2dict,d2p,fixdtindf,offsetdt
+#from .JGTConfig import getenv,setreal,setdemo,env
 
-from .JGTPDS import mk_fn,mk_fullpath,getSubscribed,getPH,getPHByRange,tryConnect
+from .JGTPDS import getPH as get_price, stayConnectedSetter as set_stay_connected, disconnect,connect as on,disconnect as off, status as connection_status,  getPH2file as get_price_to_file, getPHByRange as get_price_range #mk_fn,mk_fullpath,getSubscribed,getPH,getPHByRange,tryConnect
 from .JGTCDS import create as createCDS,createByRange,createFromDF,startSession,stopSession,getLast,getPresentBar,getPresentBarAsList,getLastCompletedBarAsList,createFromDF
 # from jgtpy.JGTADS import ads_chart_pto,retrieve_n_chart as ads_retrieve_n_chart
 

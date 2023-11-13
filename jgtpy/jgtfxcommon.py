@@ -794,11 +794,16 @@ def print_exception(exception: Exception):
 
 
 
-
+connection_status="DISCONNECTED"
+def get_connection_status():
+    global connection_status
+    return connection_status
 
 # function for print available descriptors
 def session_status_changed(session: fxcorepy.O2GSession,
                            status: fxcorepy.AO2GSessionStatus.O2GSessionStatus):
+    global connection_status
+    connection_status= status
     logging.info("Status: " + str(status))
     if status == fxcorepy.AO2GSessionStatus.O2GSessionStatus.TRADING_SESSION_REQUESTED:
         descriptors = session.trading_session_descriptors

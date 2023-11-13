@@ -93,8 +93,7 @@ def createByRange(instrument,timeframe,start,end,stayConnected=False,quiet=True)
 
 
 columns_to_remove = ['aofvalue', 'aofhighao', 'aoflowao', 'aofhigh', 'aoflow', 'aocolor', 'accolor', 'fdbbhigh', 'fdbblow', 'fdbshigh', 'fdbslow']
-
-def createFromFile_and_clean_and_save_data(instrument, timeframe):
+def create_and_clean_data_from_file_df(instrument, timeframe):
     # Create DataFrame from PDS file
     c = createFromPDSFile(instrument, timeframe)
 
@@ -102,16 +101,31 @@ def createFromFile_and_clean_and_save_data(instrument, timeframe):
     if columns_to_remove:
         c = c.drop(columns=columns_to_remove, errors='ignore')
 
-    # Define the file path based on the environment variable or local path
-    data_path = os.environ.get('JGTPY_DATA', './data')
-    data_path = os.path.join(data_path, 'cds')
-    fpath = pds.mk_fullpath(instrument, timeframe, 'csv', data_path)
-
     # Set 'Date' as the index
     c.set_index('Date', inplace=True)
 
+    return c
+
+
+def get_data_path():
+    data_path = os.environ.get('JGTPY_DATA', './data')
+    data_path = os.path.join(data_path, 'cds')
+    return data_path
+  
+def _save_cds_data_to_file(df, instrument, timeframe):
+    # Define the file path based on the environment variable or local path
+    data_path = get_data_path()
+    fpath = pds.mk_fullpath(instrument, timeframe, 'csv', data_path)
+
     # Save DataFrame to CSV
-    c.to_csv(fpath)
+    df.to_csv(fpath)
+    return fpath
+
+def createFromFile_and_clean_and_save_data(instrument, timeframe):
+    # Create DataFrame from PDS file
+    c =create_and_clean_data_from_file_df(instrument, timeframe)
+    _save_cds_data_to_file(c, instrument, timeframe)
+
 
     return c
 
@@ -174,3 +188,8 @@ def checkFDB(_instrument,_timeframe):
     print(_instrument + "_" + _timeframe +  " : No signal now : " + dtctx)
     return False
 
+
+
+def print_quiet(quiet,content):
+    if not quiet:
+        print(content)

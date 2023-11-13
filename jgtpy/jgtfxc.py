@@ -2,7 +2,8 @@
 
 import os
 import json
-import datetime
+#import datetime
+from datetime import datetime
 import pandas as pd
 from forexconnect import ForexConnect, fxcorepy
 
@@ -21,11 +22,17 @@ from . import jgtfxcommon
 fx=None
 quotes_count=None
 stayConnected=False
+session=None
+session_status=None
+def get_session_status():
+    return jgtfxcommon.get_connection_status()
 
 def login_forexconnect(user_id, password, url, connection):
+    global session,fx    
     fx = ForexConnect()
     try:
         fx.login(user_id, password, url, connection, "", "", jgtfxcommon.session_status_changed)
+        session_status= jgtfxcommon.get_connection_status()
     except Exception as e:
         jgtfxcommon.print_exception(e)
     return fx
@@ -33,7 +40,8 @@ def login_forexconnect(user_id, password, url, connection):
 #@STCIssue Matching our original connect
 def connect(quiet=True):
     global fx,quotes_count
-    if fx is not None:
+    
+    if fx is not None or jgtfxcommon.get_connection_status()== "CONNECTED":
         if not quiet:
             print("Already connected")
         return
@@ -52,25 +60,51 @@ def connect(quiet=True):
 def logout_forexconnect(fx):
     try:
         fx.logout()
+        fx=None
+        session_status= jgtfxcommon.get_connection_status()
+        return True
     except Exception as e:
         jgtfxcommon.print_exception(e)
-def disconnect(quiet=False):
+        fx=None
+        return False
+def disconnect(quiet=True):
     global fx
     if fx is None:
         print("Not connected")
-        return
-    logout_forexconnect(fx)
-    fx=None
+        return True
+    return logout_forexconnect(fx)
+
 
 def status(quiet=True):
+    return get_session_status()
+    # if session is None:
+    #     print_quiet(quiet,"UNKNOWN STATUS...")
+    #     return False
+    # else :
+    #     print("---------AO2GSessionStatus-----------")
+    #     print(fxcorepy.AO2GSessionStatus)
+    #     print(session.AO2GSessionStatus)
+    #     print("--------------------")
+    #     if session.getStatus() == fxcorepy.AO2GSessionStatus.CONNECTED:
+    #         print_quiet(quiet,"CONNECTED...")
+    #         return True
+    #     if session.getStatus() == fxcorepy.AO2GSessionStatus.DISCONECTED:
+    #         print_quiet(quiet,"DISCONNECTED...")
+    #         return False
+    # print_quiet(quiet,"UNKNOWN STATUS...")
+    # return False
+        
+def status1(quiet=True):
     global fx
     if fx is None:
-        print("STATUS : Not connected")
+        print_quiet(quiet,"STATUS : Not Connected")
         return False
-        return
-    print("STATUS : Connected")
+    print_quiet(quiet,"STATUS : Connected")
     return True
 
+def print_quiet(quiet,content):
+    if not quiet:
+        print(content)
 
 def readconfig():
     # Try reading config file from current directory
@@ -92,15 +126,25 @@ def get_price_history(instrument, timeframe, datefrom=None, dateto=None,quotes_c
     if quotes_count_spec is None:
         quotes_count_spec=quotes_count
 
-    connect()
-    if dateto is None:
-        dateto = datetime.datetime.now()    
+    connect(quiet=quiet)
+     
 
     try:
         if not quiet:
             print("")
             print("Requesting a price history...")
-        history = fx.get_history(instrument, timeframe, datefrom, dateto, quotes_count_spec)
+
+        if datefrom is not None:
+            date_from_parsed = parse_date(datefrom)
+        else:
+            date_from_parsed=None
+        
+        if dateto is None:
+            date_to_parsed = datetime.now()   
+        else:
+            date_to_parsed = parse_date(dateto)
+
+        history = fx.get_history(instrument, timeframe, date_from_parsed, date_to_parsed, quotes_count_spec)
 
         current_unit, _ = ForexConnect.parse_timeframe(timeframe)
 
@@ -130,7 +174,7 @@ def get_price_history1(instrument, timeframe, datefrom=None, dateto=None):
     quotes_count = config['quotes_count']
 
     if dateto is None:
-        dateto = datetime.datetime.now()
+        dateto = datetime.now()
 
     fx = login_forexconnect(str_user_id, str_password, str_url, str_connection)
 
@@ -179,3 +223,15 @@ def getSubscribedSymbols():
     symbols = fx.getSubscribedSymbols()
     print(symbols)
     return symbols
+
+
+
+
+def parse_date(date_str):
+    if date_str is None:
+        for fmt in ('%d.%m.%Y %H:%M:%S', '%d.%m.%Y %H:%M','%d.%m.%Y','%Y%m%d%H%M','%y%m%d%H%M','%Y-%m-%d %H:%M'):
+            try:
+                return datetime.strptime(date_str, fmt)
+            except ValueError:
+                pass
+        raise ValueError('no valid date format found')
