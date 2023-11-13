@@ -1,0 +1,27 @@
+
+
+# Install ForexConnect in a Python Env above 3.7 for which it was built
+
+# Where the ForexConnect files are (installed by pip)
+CONDA_PY37_ENV_NAME=p37
+conda activate $CONDA_PY37_ENV_NAME && \
+  pip install forexconnect
+
+CONDA_PY37_ENV_DIR=$(echo "$(conda info)" | awk '/active env location/ {print $5}')
+echo "Python 3.7 env $CONDA_PY37_ENV_NAME dir is : $CONDA_PY37_ENV_DIR"
+
+#CONDA_ENV_ROOTDIR=~/anaconda3/envs
+#CONDA_PY37_ENV_DIR=$CONDA_ENV_ROOTDIR/$CONDA_PY37_ENV_NAME
+
+export PY_TARGET_ROOT_VERSION_NAME=python3.10
+CONDA_PYTARGET_ENV_NAME=jgtpy310
+
+conda activate $CONDA_PYTARGET_ENV_NAME
+export CONDA_TARGET_ENV_DIR=$(echo "$(conda info)" | awk '/active env location/ {print $5}')
+echo "Target env $CONDA_PYTARGET_ENV_NAME dir : $CONDA_TARGET_ENV_DIR"
+
+(cd $CONDA_PY37_ENV_DIR/lib/python3.7/site-packages && \
+  tar cf - forexconnect* \
+    | (cd $(echo "$(conda info)" | awk '/active env location/ {print $5}')/lib/python3.10/site-packa* && \
+      tar xvf -) && \
+    echo "Done installing manually" )
