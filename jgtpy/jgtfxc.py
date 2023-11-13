@@ -62,12 +62,14 @@ def disconnect(quiet=False):
     logout_forexconnect(fx)
     fx=None
 
-def status():
+def status(quiet=True):
     global fx
     if fx is None:
         print("STATUS : Not connected")
+        return False
         return
     print("STATUS : Connected")
+    return True
 
 
 def readconfig():
