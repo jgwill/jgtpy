@@ -38,8 +38,8 @@ def main():
     except Exception as e:
         jgtfxcommon.print_exception(e)
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
 
-print("")
-#input("Done! Press enter key to exit\n")
+# print("")
+# #input("Done! Press enter key to exit\n")

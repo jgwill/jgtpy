@@ -8,21 +8,15 @@ version = "0.1.41"
 authors = [
   { name="Guillaume Isabelle", email="jgi@jgwill.com" },
 ]
+
 description = "Enhanced JGTPy CDS, IDS, PDS Services"
 readme = "README.md"
 requires-python = ">=3.7"
 dependencies = [
-     'pandas>=0.25.1',
-     'forexconnect>=1.6.4',
-    'python-dotenv>=0.19.2',
+  'pandas>=0.25.1',
+  'forexconnect>=1.6.4',
+  'python-dotenv>=0.19.2'
 ]	
-[tool.setuptools]
-entry_points = { 
-  console_scripts = [
-    "jgtcli = jgtpy.jgtcli:main"
-  ]
-}
-
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -30,5 +24,13 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/jgwill/jgtpy"
-"Bug Tracker" = "https://github.com/jgwill/jgtpy/issues"
+Homepage = "https://github.com/jgwill/jgtpy"
+Bug_Tracker = "https://github.com/jgwill/jgtpy/issues"
+
+[tool.setuptools]
+entry_points = [
+
+console_scripts = [
+    jgtconsole = jgtpy.jgtcli:main
+]  
+  ]

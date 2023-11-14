@@ -38,4 +38,5 @@ from .JGTPDS import getPH as get_price, stayConnectedSetter as set_stay_connecte
 from .JGTCDS import create as createCDS,createByRange,createFromDF,startSession,stopSession,getLast,getPresentBar,getPresentBarAsList,getLastCompletedBarAsList,createFromDF
 # from jgtpy.JGTADS import ads_chart_pto,retrieve_n_chart as ads_retrieve_n_chart
 
+# from .jgtcli import main as __main__
 #from jgtpy.jgtconstants import *
