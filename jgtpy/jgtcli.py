@@ -37,12 +37,15 @@ def main():
     try:
         if not quiet:
             print("Getting for : " + instrument + "_" + timeframe)
-        if output is not None:
-            p=pds.getPH(instrument,timeframe,quotes_count,date_from,date_to,False,quiet)
+        if output :
+            fpath=pds.getPH2file(instrument,timeframe,quotes_count,date_from,date_to,False,quiet,compress)
+            if not quiet:
+                print(fpath)
         else:
-            p=pds.getPH2file(instrument,timeframe,quotes_count,date_from,date_to,False,quiet,compress)
-        if not quiet:
-            print(p)
+            p=pds.getPH(instrument,timeframe,quotes_count,date_from,date_to,False,quiet)
+            if not quiet:
+                print(p)
+            
     except Exception as e:
         jgtfxcommon.print_exception(e)
 

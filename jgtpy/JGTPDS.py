@@ -52,8 +52,10 @@ def mk_fn(instrument,timeframe,ext):
 
 def mk_fullpath(instrument,timeframe,ext,path):
   fn=mk_fn(instrument,timeframe,ext)
-  rpath= path + '/'+fn
-  return rpath.replace('..','.').replace('//','/')
+  rpath= os.path.join(path,fn)
+  #path + '/'+fn
+  return rpath
+#.replace('..','.').replace('//','/')
 
 
 
@@ -104,6 +106,14 @@ def getPH_from_local1(instrument,timeframe):
 
 def get_data_path():
     data_path = os.environ.get('JGTPY_DATA', './data')
+
+    if not os.path.exists(data_path):
+      data_path = os.environ.get('JGTPY_DATA', '../data')
+      
+
+    if not os.path.exists(data_path):
+      raise Exception("Data directory not found. Please create a directory named 'data' in the current or parent directory, or set the JGTPY_DATA environment variable.")
+    
     data_path = os.path.join(data_path, 'pds')
     return data_path
   
