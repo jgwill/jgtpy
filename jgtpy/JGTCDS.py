@@ -10,7 +10,7 @@ def startSession():
   pds.connect()
   
 def stopSession():
-  pds.dis
+  pds.disconnect()
 # %%
 
 def createFromPDSFile(_instrument,_timeframe,quiet=True):
