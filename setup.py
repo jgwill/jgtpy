@@ -43,6 +43,9 @@ setup(
     url='https://github.com/jgwill/jgtpy',
     packages=find_packages(exclude=['*test*']),
     install_requires=INSTALL_REQUIRES,
+    entry_points={
+        'console_scripts': ['jgtcli=jgtpy.jgtcli:main'],
+    },
     extras_require={
         'dev': (EXTRAS_DEV_LINT + EXTRAS_DEV_TEST + EXTRAS_DEV_DOCS),
         'dev-lint': EXTRAS_DEV_LINT,

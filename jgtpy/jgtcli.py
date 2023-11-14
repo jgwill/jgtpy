@@ -13,6 +13,7 @@ def parse_args():
     jgtfxcommon.add_date_arguments(parser)
     jgtfxcommon.add_max_bars_arguments(parser)
     jgtfxcommon.add_output_argument(parser)
+    jgtfxcommon.add_quiet_argument(parser)
     args = parser.parse_args()
     return args
 
@@ -24,12 +25,24 @@ def main():
     quotes_count = args.quotescount
     date_from = args.datefrom
     date_to = args.dateto
-    output = args.output
+    output=None
+    compress=False
+    quiet=False
+    if args.compress:
+        compress = args.compress
+        output = True # in case
+    if args.output:
+        output = args.output
 
     try:
-        print("Getting for : " + instrument + "_" + timeframe)
-        p=pds.getPH(instrument,timeframe)
-        print(p)
+        if not quiet:
+            print("Getting for : " + instrument + "_" + timeframe)
+        if output is not None:
+            p=pds.getPH(instrument,timeframe,quotes_count,date_from,date_to,False,quiet)
+        else:
+            p=pds.getPH2file(instrument,timeframe,quotes_count,date_from,date_to,False,quiet,compress)
+        if not quiet:
+            print(p)
     except Exception as e:
         jgtfxcommon.print_exception(e)
 

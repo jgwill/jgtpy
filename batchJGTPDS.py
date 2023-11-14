@@ -36,7 +36,7 @@ for timeframe in timeframes:
       l=350
     # Call the custom function to get data
     print("Doing: " + instrument + "_" + timeframe)
-    f = pds.getPH_to_file(instrument, timeframe, l)
+    f = pds.getPH_to_filestore(instrument, timeframe, l)
     print(f)
 
 pds.disconnect()

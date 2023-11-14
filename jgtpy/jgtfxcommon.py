@@ -791,17 +791,21 @@ def add_output_argument(parser: argparse.ArgumentParser):
         None
     """
     parser.add_argument('-output',
-                        metavar='FILE',
-                        type=str,
-                        help='Output file. If specified, output will be written to this file.')
+                        action='store_true',
+                        help='Output file. If specified, output will be written in the filestore.')
+    
+    parser.add_argument('-compress',
+                        action='store_true',
+                        help='Compress the output. If specified, it will also activate the output flag.')
+
+    return parser
 
 
-
-
-
-
-
-
+def add_quiet_argument(parser):
+    parser.add_argument('-quiet',
+                        action='store_true',
+                        help='Suppress all output. If specified, no output will be printed to the console.')
+    return parser
 
 
 def print_exception(exception: Exception):
