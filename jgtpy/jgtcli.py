@@ -1,26 +1,43 @@
+from . import jgtpy
+from jgtpy import jgtfxcommon
 import argparse
-import sys
-from .JGTPDS import getPH
 
-def main(args=None):
-    """Entry point for the command line application"""
-    if args is None:
-        args = sys.argv[1:]
+from jgtpy import JGTPDS as pds
 
-    parser = argparse.ArgumentParser(description="Fetch price history data")
-    
-    parser.add_argument("-i", "--instrument", required=True, help="Instrument symbol")
-    parser.add_argument("-t", "--timeframe", required=True, help="Timeframe for the data")
-    parser.add_argument("-f", "--from", dest="from_date", required=True, help="Start date for the data range")
-    parser.add_argument("-to", "--to", dest="to_date", required=True, help="End date for the data range")
+import pandas as pd
 
-    args = parser.parse_args(args)
+def parse_args():
+    parser = argparse.ArgumentParser(description='Process command parameters.')
+    #jgtfxcommon.add_main_arguments(parser)
+    jgtfxcommon.add_instrument_timeframe_arguments(parser)
+    jgtfxcommon.add_date_arguments(parser)
+    jgtfxcommon.add_max_bars_arguments(parser)
+    args = parser.parse_args()
+    return args
 
-    df = getPH(args.instrument, args.timeframe, args.from_date, args.to_date)
-    print(df)
+
+def main():
+    args = parse_args()
+    instrument = args.i
+    timeframe = args.timeframe
+    quotes_count = args.quotescount
+    date_from = args.datefrom
+    date_to = args.dateto
+
+    try:
+
+
+        p=pds.getPH(instrument,timeframe)
+        print(p)
+    except Exception as e:
+        jgtfxcommon.print_exception(e)
+    try:
+        jgtpy.off()
+    except Exception as e:
+        jgtfxcommon.print_exception(e)
+
 
 if __name__ == "__main__":
     main()
     print("")
     input("Done! Press enter key to exit\n")
-
