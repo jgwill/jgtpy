@@ -2,12 +2,12 @@ import datetime as dt
 import pandas as pd
 import os
 
-from . import JGTPDHelper as jpd
+import .JGTPDHelper as jpd
 
 #import jgtpy.JGTFXCMWrapper as jfx
-from . import jgtfxc as jfx
+import .jgtfxc as jfx
 
-from . import JGTConfig as jgtcnf
+import .JGTConfig as jgtcnf
 
 
 renameColumns=True
