@@ -24,7 +24,7 @@ def createFromPDSFile(_instrument,_timeframe,quiet=True):
   Returns:
       pandas.DataFrame: CDS DataFrame
   """
-  df=pds.getPH_from_local(_instrument,_timeframe)
+  df=pds.getPH_from_filestore(_instrument,_timeframe)
   if not quiet:
     print(df)
   dfi=createFromDF(df)

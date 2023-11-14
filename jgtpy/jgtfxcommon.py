@@ -780,6 +780,21 @@ def add_bars_arguments(parser: argparse.ArgumentParser):
                         help='Build COUNT bars. Optional parameter.')
 
 
+def add_output_argument(parser: argparse.ArgumentParser):
+    """
+    Adds an output argument to the given argument parser.
+
+    Args:
+        parser (argparse.ArgumentParser): The argument parser to add the output argument to.
+
+    Returns:
+        None
+    """
+    parser.add_argument('-output',
+                        metavar='FILE',
+                        type=str,
+                        help='Output file. If specified, output will be written to this file.')
+
 
 
 

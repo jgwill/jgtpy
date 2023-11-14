@@ -1,13 +1,19 @@
 import datetime as dt
 import pandas as pd
 import os
+from . import JGTPDHelper as jpd
+from . import jgtfxc as jfx
+from . import JGTConfig as jgtcnf
+from .JGTPDHelper import *
+from .jgtfxc import *
+from .JGTConfig import *
 
-import .JGTPDHelper as jpd
+# import .JGTPDHelper as jpd
 
-#import jgtpy.JGTFXCMWrapper as jfx
-import .jgtfxc as jfx
+# #import jgtpy.JGTFXCMWrapper as jfx
+# import .jgtfxc as jfx
 
-import .JGTConfig as jgtcnf
+# import .JGTConfig as jgtcnf
 
 
 renameColumns=True
@@ -42,6 +48,7 @@ def mk_fn(instrument,timeframe,ext):
     _tf = timeframe.replace('m1','mi1')
   _fn= _i + '_' + _tf + '.' + ext
   return _fn.replace('..','.')
+
 
 def mk_fullpath(instrument,timeframe,ext,path):
   fn=mk_fn(instrument,timeframe,ext)
@@ -100,36 +107,100 @@ def get_data_path():
     data_path = os.path.join(data_path, 'pds')
     return data_path
   
-def getPH_from_local(instrument,timeframe,quiet=True):
+def getPH_from_filestore(instrument,timeframe,quiet=True, compressed=False):
   # Define the file path based on the environment variable or local path
-  data_path = get_data_path()
-  fn=mk_fn(instrument,timeframe,'csv')
+  # data_path = get_data_path()
+  # fn=mk_fn(instrument,timeframe,'csv')
   
-  srcpath=mk_fullpath(instrument,timeframe,'csv',data_path)
-  if not quiet  :
-    print(srcpath)
-  # df=pd.read_csv(srcpath,index_col='Date')
-  df=pd.read_csv(srcpath)
-  #index in the file
+  # srcpath=mk_fullpath(instrument,timeframe,'csv',data_path)
+  srcpath = create_filestore_path(instrument, timeframe,quiet, compressed)  
+  
+  print_quiet(srcpath)
+  
+  df = read_ohlc_df_from_file(srcpath,quiet,compressed)
+  
+  return df
+
+import pandas as pd
+
+
+def read_ohlc_df_from_file(srcpath, quiet=True, compressed=False):
+  """
+  Reads an OHLC (Open-High-Low-Close) +Date as DataFrame index from a CSV file.
+
+  Args:
+    srcpath (str): The path to the CSV file.
+    quiet (bool, optional): Whether to print progress messages. Defaults to True.
+    compressed (bool, optional): Whether the CSV file is compressed. Defaults to False.
+
+  Returns:
+    pandas.DataFrame: The OHLC DataFrame.
+  """
+  try:
+    if compressed:
+      print_quiet(quiet, "Reading compressed: " + srcpath + " ")
+      df = pd.read_csv(srcpath, compression=jgtcnf.local_fn_compression)
+    else:
+      print_quiet(quiet, "Reading uncompressed csv file: " + srcpath)
+      df = pd.read_csv(srcpath)
+  except Exception as e:
+    print(f"An error occurred while reading the file: {e}")
+    df = None
+    
   if 'Date' in df.columns:
     df.set_index('Date', inplace=True)
   else:
     raise ValueError("Column 'Date' is not present in the DataFrame")
+
   return df
 
-def getPH_to_file(instrument,timeframe,quote_count=335,start=None,end=None,with_index=True,quiet=True,compressed=False):
-  # Define the file path based on the environment variable or local path
-  data_path = get_data_path()
-  fpath=mk_fullpath(instrument,timeframe,'csv',data_path)
+
+def getPH_to_filestore(instrument, timeframe, quote_count=335, start=None, end=None, with_index=True, quiet=True, compressed=False):
+  """
+  Saves the OHLC data for a given instrument and timeframe to a CSV file.
+
+  Args:
+  - instrument (str): The instrument symbol (e.g. 'AAPL')
+  - timeframe (str): The timeframe for the data (e.g. '1D' for daily, '1H' for hourly)
+  - quote_count (int): The number of quotes to retrieve (default: 335)
+  - start (str): The start date for the data (default: None)
+  - end (str): The end date for the data (default: None)
+  - with_index (bool): Whether to include the index in the CSV file (default: True)
+  - quiet (bool): Whether to suppress console output (default: True)
+  - compressed (bool): Whether to compress the CSV file using gzip (default: False)
+
+  Returns:
+  - str: The file path where the CSV file was saved.
+  """
   df=getPH(instrument,timeframe,quote_count,start,end,False,quiet)
-  if compressed:
-    df.to_csv(fpath,compression=jgtcnf.local_fn_compression)
-  else:
-    df.to_csv(fpath)
+  
+  # Define the file path based on the environment variable or local path
+  fpath = write_df_to_filestore(df, instrument, timeframe, compressed)
   return fpath
 
+def write_df_to_filestore(df, instrument, timeframe, compressed=False, quiet=True):
+  
+  fpath =  create_filestore_path(instrument, timeframe,quiet, compressed)
+  
+  if compressed:
+    df.to_csv(fpath, compression=jgtcnf.local_fn_compression)
+  else:
+    df.to_csv(fpath)
+  
+  return fpath
+
+
+def create_filestore_path(instrument, timeframe,quiet=True, compressed=False):
+    # Define the file path based on the environment variable or local path
+    data_path = get_data_path()
+    ext = 'csv'
+    if compressed:
+        ext = 'csv.gz'
+    fpath = mk_fullpath(instrument, timeframe, ext, data_path)
+    return fpath
+  
 def getPH2file(instrument,timeframe,quote_count=335,start=None,end=None,with_index=True,quiet=True,compressed=False):
-  return getPH_to_file(instrument,timeframe,quote_count,start,end,with_index,quiet,compressed)
+  return getPH_to_filestore(instrument,timeframe,quote_count,start,end,with_index,quiet,compressed)
 
 def getPH(instrument,timeframe,quote_count=335,start=None,end=None,with_index=True,quiet=True):
   """Get Price History from Broker
@@ -163,7 +234,7 @@ def getPH(instrument,timeframe,quote_count=335,start=None,end=None,with_index=Tr
       df.index.rename('Date',inplace=True)
   else:
     #Read from local
-    df =getPH_from_local(instrument,timeframe)
+    df =getPH_from_filestore(instrument,timeframe) #@STCIssue add start and end and index name should be already set
     if with_index:
       df.index.rename('Date',inplace=True)
     if start != None:
@@ -212,7 +283,7 @@ def getPHByRange(instrument,timeframe,start=None,end=None,with_index=True,quiet=
   else:
     #Read from local
     print_quiet(quiet,"Reading from local")
-    df =getPH_from_local(instrument,timeframe) 
+    df =getPH_from_filestore(instrument,timeframe) 
     
 
     
