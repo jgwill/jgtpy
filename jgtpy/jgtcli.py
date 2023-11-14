@@ -1,6 +1,6 @@
 import argparse
 import sys
-from JGTPDS import getPH
+from .JGTPDS import getPH
 
 def main(args=None):
     """Entry point for the command line application"""
@@ -11,8 +11,8 @@ def main(args=None):
     
     parser.add_argument("-i", "--instrument", required=True, help="Instrument symbol")
     parser.add_argument("-t", "--timeframe", required=True, help="Timeframe for the data")
-    parser.add_argument("-f", "--from", dest="from_date", default=None, help="Start date for the data range")
-    parser.add_argument("-to", "--to", dest="to_date", default=None, help="End date for the data range")
+    parser.add_argument("-f", "--from", dest="from_date", required=True, help="Start date for the data range")
+    parser.add_argument("-to", "--to", dest="to_date", required=True, help="End date for the data range")
 
     args = parser.parse_args(args)
 
@@ -21,3 +21,6 @@ def main(args=None):
 
 if __name__ == "__main__":
     main()
+    print("")
+    input("Done! Press enter key to exit\n")
+
