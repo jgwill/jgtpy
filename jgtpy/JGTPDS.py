@@ -1,3 +1,5 @@
+debugging=False
+
 import datetime as dt
 import pandas as pd
 import os
@@ -192,7 +194,7 @@ def getPH_to_filestore(instrument, timeframe, quote_count=335, start=None, end=N
   - str: The file path where the CSV file was saved.
   """
   df=getPH(instrument,timeframe,quote_count,start,end,False,quiet)
-  print(df)
+  #print(df)
   # Define the file path based on the environment variable or local path
   fpath = write_df_to_filestore(df, instrument, timeframe, compressed)
   return fpath
@@ -220,7 +222,6 @@ def create_filestore_path(instrument, timeframe,quiet=True, compressed=False):
   
 def getPH2file(instrument,timeframe,quote_count=335,start=None,end=None,with_index=True,quiet=True,compressed=False):
   return getPH_to_filestore(instrument,timeframe,quote_count,start,end,with_index,quiet,compressed)
-
 def getPH(instrument,timeframe,quote_count=335,start=None,end=None,with_index=True,quiet=True):
   """Get Price History from Broker
 
@@ -240,8 +241,8 @@ def getPH(instrument,timeframe,quote_count=335,start=None,end=None,with_index=Tr
   if not useLocal:
     con=connect(quiet=quiet)
 
-    p=jfx.get_price_history(instrument, timeframe, start,end, quote_count+89)
-    #print(p)
+    p=jfx.get_price_history(instrument, timeframe, start,end, quote_count+89,quiet=quiet)
+
     df=pd.DataFrame(p,columns=['Date','BidOpen','BidHigh','BidLow','BidClose','AskOpen','AskHigh','AskLow','AskClose','Volume'])
 
     if not stayConnected:
@@ -266,7 +267,7 @@ def getPH(instrument,timeframe,quote_count=335,start=None,end=None,with_index=Tr
   if addOhlc and renameColumns:
     df=pds_add_ohlc_stc_columns(df)
   if cleanseOriginalColumns:
-    df=_cleanse_original_columns(df)
+    df=_cleanse_original_columns(df,debugging)
   # Set 'Date' column as the index
   df.set_index('Date', inplace=True)
   return df

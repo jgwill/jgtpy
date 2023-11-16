@@ -394,7 +394,7 @@ def _ids_add_fdb_column_logics(dfsrc,
       dfsrc.at[i,'fdbbhigh'] = high 
       dfsrc.at[i,'fdbblow'] = low 
       
-      dfsrc.at[i,signalBuy_fractalDivergentBar_column_name] = isFDB    
+      dfsrc.at[i,signalBuy_fractalDivergentBar_column_name] = float(isFDB)    
       dfsrc.at[i,signalCode_fractalDivergentBar_column_name] = isFDBCode   # So we have All
       isAfdbb = isFDB
       ##################################################
@@ -414,8 +414,8 @@ def _ids_add_fdb_column_logics(dfsrc,
         dfsrc.at[i,'fdbshigh'] = high 
         dfsrc.at[i,'fdbslow'] = low 
         
-        dfsrc.at[i,signalSell_fractalDivergentBar_column_name] = isFDB
-        dfsrc.at[i,signalCode_fractalDivergentBar_column_name] = isFDBCode 
+        dfsrc.at[i,signalSell_fractalDivergentBar_column_name] = float(isFDB)
+        dfsrc.at[i,signalCode_fractalDivergentBar_column_name] = isFDBCode
   if _dropIntermediariesColumns:
     dfsrc = _ids_clear_fdb_intermediaries_columns(dfsrc,quiet=quiet)
   return dfsrc

@@ -36,11 +36,11 @@ def createFromPDSFile(instrument,timeframe,quiet=True):
   Returns:
       pandas.DataFrame: CDS DataFrame
   """
-  df=pds.getPH_from_filestore(instrument,timeframe)
+  df=pds.getPH_from_filestore(instrument,timeframe,quiet=quiet)
   if not quiet:
     print(df)
   
-  dfi=createFromDF(df)
+  dfi=createFromDF(df,quiet=quiet)
   return dfi
 
 def createFromDF(df, quiet=True):

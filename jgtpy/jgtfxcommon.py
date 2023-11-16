@@ -822,10 +822,17 @@ def add_output_argument(parser: argparse.ArgumentParser):
     return parser
 
 
-def add_quiet_argument(parser):
-    parser.add_argument('-q','--quiet',
-                        action='store_true',
-                        help='Suppress all output. If specified, no output will be printed to the console.')
+# def add_quiet_argument(parser):
+#     parser.add_argument('-q','--quiet',
+#                         action='store_true',
+#                         help='Suppress all output. If specified, no output will be printed to the console.')
+#     return parser
+
+def add_verbose_argument(parser):
+    parser.add_argument('-v', '--verbose',
+                        type=int,
+                        default=0,
+                        help='Set the verbosity level. 0 = quiet, 1 = normal, 2 = verbose, 3 = very verbose, etc.')
     return parser
 
 def add_cds_argument(parser):
@@ -845,12 +852,14 @@ def get_connection_status():
     global connection_status
     return connection_status
 
+quiet=False
 # function for print available descriptors
 def session_status_changed(session: fxcorepy.O2GSession,
                            status: fxcorepy.AO2GSessionStatus.O2GSessionStatus):
     global connection_status
     connection_status= status
-    logging.info("Status: " + str(status))
+    if not quiet:
+        logging.info("Status: " + str(status))
     if status == fxcorepy.AO2GSessionStatus.O2GSessionStatus.TRADING_SESSION_REQUESTED:
         descriptors = session.trading_session_descriptors
         logging.info("Session descriptors:")

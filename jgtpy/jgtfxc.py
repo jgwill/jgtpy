@@ -68,8 +68,9 @@ session_status=None
 def get_session_status():
     return jgtfxcommon.get_connection_status()
 
-def login_forexconnect(user_id, password, url, connection):
+def login_forexconnect(user_id, password, url, connection, quiet=False):
     global session,fx    
+    jgtfxcommon.quiet=quiet
     fx = ForexConnect()
     try:
         fx.login(user_id, password, url, connection, "", "", jgtfxcommon.session_status_changed)
@@ -95,10 +96,10 @@ def connect(quiet=True):
     str_connection = config['connection']
     quotes_count = config['quotes_count']
 
-    fx = login_forexconnect(str_user_id, str_password, str_url, str_connection)
+    fx = login_forexconnect(str_user_id, str_password, str_url, str_connection,quiet=quiet)
 
 
-def logout_forexconnect(fx):
+def logout_forexconnect(fx,quiet=False):
     try:
         fx.logout()
         fx=None
@@ -108,12 +109,13 @@ def logout_forexconnect(fx):
         jgtfxcommon.print_exception(e)
         fx=None
         return False
+
 def disconnect(quiet=True):
     global fx
     if fx is None:
-        print("Not connected")
+        print_quiet(quiet,"Not connected")
         return True
-    return logout_forexconnect(fx)
+    return logout_forexconnect(fx,quiet)
 
 
 def status(quiet=True):
@@ -171,9 +173,8 @@ def get_price_history(instrument, timeframe, datefrom=None, dateto=None,quotes_c
      
 
     try:
-        if not quiet:
-            print("")
-            print("Requesting a price history...")
+        print_quiet(quiet,"Requesting a price history...")
+  
 
         if datefrom is not None:
             date_from_parsed = parse_date(datefrom)
@@ -203,38 +204,6 @@ def get_price_history(instrument, timeframe, datefrom=None, dateto=None,quotes_c
             print("---we stay connected---")
         #logout_forexconnect(fx)
 
-
-def get_price_history1(instrument, timeframe, datefrom=None, dateto=None):
-    # Try reading config file from current directory
-    config=readconfig()
-
-    str_user_id = config['user_id']
-    str_password = config['password']
-    str_url = config['url']
-    str_connection = config['connection']
-    quotes_count = config['quotes_count']
-
-    if dateto is None:
-        dateto = datetime.now()
-
-    fx = login_forexconnect(str_user_id, str_password, str_url, str_connection)
-
-    try:
-        print("")
-        print("Requesting a price history...")
-        history = fx.get_history(instrument, timeframe, datefrom, dateto, quotes_count)
-
-        current_unit, _ = ForexConnect.parse_timeframe(timeframe)
-
-        if current_unit == fxcorepy.O2GTimeFrameUnit.TICK:
-            data = pd.DataFrame(history, columns=['Date', 'Bid', 'Ask'])
-        else:
-            data = pd.DataFrame(history, columns=['Date', 'BidOpen', 'BidHigh', 'BidLow', 'BidClose', 'Volume'])
-
-        return data
-
-    finally:
-        logout_forexconnect(fx)
 
 
 def get_price_history_printed(instrument, timeframe, datefrom=None, dateto=None):
