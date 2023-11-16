@@ -41,7 +41,8 @@ setup(
     author='GUillaume Isabelle',
     author_email='jgi@jgwill.com',
     url='https://github.com/jgwill/jgtpy',
-    packages=find_packages(include=['jgtpy', 'jgtpy.forexconnect', 'jgtpy.forexconnect.lib', 'jgtpy.forexconnect.lib.windows', 'jgtpy.forexconnect.lib.linux'], exclude=['*test*']),
+    packages=find_packages(include=['jgtpy', 'jgtpy.forexconnect', 'jgtpy.forexconnect.lib', 'jgtpy.forexconnect.lib.linux'], exclude=['*test*']),
+    # packages=find_packages(include=['jgtpy', 'jgtpy.forexconnect', 'jgtpy.forexconnect.lib', 'jgtpy.forexconnect.lib.windows', 'jgtpy.forexconnect.lib.linux'], exclude=['*test*']),
     install_requires=INSTALL_REQUIRES,
     entry_points={
         'console_scripts': ['jgtcli=jgtpy.jgtcli:main'],

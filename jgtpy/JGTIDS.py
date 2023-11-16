@@ -166,6 +166,8 @@ def pds_get_dt_from_and_to_for_now_live_price(_timeframe, _nbbar2retrieve=335, q
   """
   _nbmintf = getMinByTF(_timeframe)
   now = datetime.datetime.now(datetime.timezone.utc)
+  if not quiet:
+    print('Now is: ' + str(now))
   weekdayoffset = 0
   chkweekday = now.weekday()
   if not quiet:

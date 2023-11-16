@@ -5,7 +5,7 @@ import platform
 
 import json
 #import datetime
-from datetime import datetime
+from datetime import datetime,timezone
 import pandas as pd
 
 
@@ -182,7 +182,7 @@ def get_price_history(instrument, timeframe, datefrom=None, dateto=None,quotes_c
             date_from_parsed=None
         
         if dateto is None:
-            date_to_parsed = datetime.now()   
+            date_to_parsed = datetime.now(timezone.utc)
         else:
             date_to_parsed = parse_date(dateto)
         
