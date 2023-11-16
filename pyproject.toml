@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jgtpy"
-version = "0.1.44"
+version = "0.1.48"
 authors = [
   { name="Guillaume Isabelle", email="jgi@jgwill.com" },
 ]
@@ -15,7 +15,8 @@ requires-python = ">=3.7"
 dependencies = [
   'pandas>=0.25.1',
   'forexconnect>=1.6.4',
-  'python-dotenv>=0.19.2'
+  'python-dotenv>=0.19.2',
+  'jgtapy>=1.9.12'
 ]	
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -24,6 +25,7 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/jgwill/jgtpy"
-Bug_Tracker = "https://github.com/jgwill/jgtpy/issues"
+"Homepage" = "https://github.com/jgwill/jgtpy"
+"Bug Tracker" = "https://github.com/jgwill/jgtpy/issues"
+
 
