@@ -5,6 +5,15 @@
 		},
 		{
 			"path": "../o/pys"
+		},
+		{
+			"path": "../jgtapy-jgwill"
+		},
+		{
+			"path": "data/pds"
+		},
+		{
+			"path": "data/cds"
 		}
 	],
 	"settings": {}

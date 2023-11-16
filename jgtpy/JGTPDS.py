@@ -117,24 +117,32 @@ def get_data_path():
     data_path = os.path.join(data_path, 'pds')
     return data_path
   
-def getPH_from_filestore(instrument,timeframe,quiet=True, compressed=False):
-  # Define the file path based on the environment variable or local path
-  # data_path = get_data_path()
-  # fn=mk_fn(instrument,timeframe,'csv')
-  
-  # srcpath=mk_fullpath(instrument,timeframe,'csv',data_path)
+def getPH_from_filestore(instrument,timeframe,quiet=True, compressed=False,with_index=True):
+  """
+  Retrieves OHLC data for a given instrument and timeframe from the filestore.
+
+  Args:
+    instrument (str): The instrument symbol.
+    timeframe (str): The timeframe of the OHLC data.
+    quiet (bool, optional): Whether to suppress print statements. Defaults to True.
+    compressed (bool, optional): Whether the data is compressed. Defaults to False.
+    with_index (bool, optional): Whether to include the index in the returned DataFrame. Defaults to True.
+
+  Returns:
+    pandas.DataFrame: The OHLC data for the given instrument and timeframe.
+  """  
   srcpath = create_filestore_path(instrument, timeframe,quiet, compressed)  
   
   print_quiet(quiet,srcpath)
   
-  df = read_ohlc_df_from_file(srcpath,quiet,compressed)
+  df = read_ohlc_df_from_file(srcpath,quiet,compressed,with_index)
   
   return df
 
-import pandas as pd
 
 
-def read_ohlc_df_from_file(srcpath, quiet=True, compressed=False):
+
+def read_ohlc_df_from_file(srcpath, quiet=True, compressed=False,with_index=True):
   """
   Reads an OHLC (Open-High-Low-Close) +Date as DataFrame index from a CSV file.
 
@@ -156,11 +164,12 @@ def read_ohlc_df_from_file(srcpath, quiet=True, compressed=False):
   except Exception as e:
     print(f"An error occurred while reading the file: {e}")
     df = None
-    
-  if 'Date' in df.columns:
-    df.set_index('Date', inplace=True)
-  else:
-    raise ValueError("Column 'Date' is not present in the DataFrame")
+  
+  if with_index:
+    if 'Date' in df.columns:
+      df.set_index('Date', inplace=True)
+    else:
+      raise ValueError("Column 'Date' is not present in the DataFrame")
 
   return df
 
@@ -183,7 +192,7 @@ def getPH_to_filestore(instrument, timeframe, quote_count=335, start=None, end=N
   - str: The file path where the CSV file was saved.
   """
   df=getPH(instrument,timeframe,quote_count,start,end,False,quiet)
-  
+  print(df)
   # Define the file path based on the environment variable or local path
   fpath = write_df_to_filestore(df, instrument, timeframe, compressed)
   return fpath
@@ -244,9 +253,12 @@ def getPH(instrument,timeframe,quote_count=335,start=None,end=None,with_index=Tr
       df.index.rename('Date',inplace=True)
   else:
     #Read from local
+    
+    #@STCIssue When we read from filestore, the Date Columnt is ok
     df =getPH_from_filestore(instrument,timeframe) #@STCIssue add start and end and index name should be already set
     if with_index:
       df.index.rename('Date',inplace=True)
+      
     if start != None:
       mask = (df['Date'] > end) & (df['Date'] <= start)
       df = df.loc[mask]

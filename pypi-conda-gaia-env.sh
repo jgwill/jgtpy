@@ -1,5 +1,7 @@
+cversion=$(cat pyproject.toml |tr '"' " " |awk '/version/ {print $3}')
 conda activate jgtpy-pypi && \
-	pip install -U jgtpy && \
+	pip uninstall -y jgtpy && \
+	pip install -U jgtpy==$cversion && \
 	echo "------ New version should be installed ----" && \
 	echo " Entering ./test" && \
 	cd test && ls *py

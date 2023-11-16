@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jgtpy"
-version = "0.1.48"
+version = "0.1.50"
 authors = [
   { name="Guillaume Isabelle", email="jgi@jgwill.com" },
 ]
@@ -16,7 +16,7 @@ dependencies = [
   'pandas>=0.25.1',
   'forexconnect>=1.6.4',
   'python-dotenv>=0.19.2',
-  'jgtapy>=1.9.12'
+  'jgtapy>=1.9.17'
 ]	
 classifiers = [
     "Programming Language :: Python :: 3",

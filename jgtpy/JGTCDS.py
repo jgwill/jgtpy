@@ -13,20 +13,21 @@ def stopSession():
   pds.disconnect()
 # %%
 
-def createFromPDSFile(_instrument,_timeframe,quiet=True):
-  """Create CDS (Chaos Data Service) with Fresh Data
+def createFromPDSFile(instrument,timeframe,quiet=True):
+  """Create CDS (Chaos Data Service) with Fresh Data on the filestore
 
   Args:
-      _instrument (str): symbol
-      _timeframe (str): TF
-      _path (str): path to file
+      instrument (str): symbol
+      timeframe (str): TF
+      quiet (bool,optional): Output quiet
 
   Returns:
       pandas.DataFrame: CDS DataFrame
   """
-  df=pds.getPH_from_filestore(_instrument,_timeframe)
+  df=pds.getPH_from_filestore(instrument,timeframe)
   if not quiet:
     print(df)
+  
   dfi=createFromDF(df)
   return dfi
 
@@ -41,6 +42,9 @@ def createFromDF(df, quiet=True):
   Returns:
     pandas.DataFrame: The new DataFrame with indicators, signals, and cleansed columns added.
   """
+  
+  if df.index.name == 'Date':
+      df.reset_index(inplace=True)
   dfi=ids.ids_add_indicators(df,quiet=quiet)
   dfi=ids.cds_add_signals_to_indicators(dfi,quiet=quiet)
   dfi=ids.jgti_add_zlc_plus_other_AO_signal(dfi,quiet=quiet)
