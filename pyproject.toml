@@ -14,7 +14,6 @@ readme = "README.md"
 requires-python = ">=3.7"
 dependencies = [
   'pandas>=0.25.1',
-  'forexconnect>=1.6.4',
   'python-dotenv>=0.19.2',
   'jgtapy>=1.9.17'
 ]	
