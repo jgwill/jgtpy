@@ -5,14 +5,14 @@ import logging
 from datetime import datetime
 
 import numpy as np
-from forexconnect import fxcorepy
-from forexconnect.TableManagerListener import TableManagerListener
-from forexconnect.SessionStatusListener import SessionStatusListener
-from forexconnect.errors import (RequestFailedError,
+from . import fxcorepy
+from .TableManagerListener import TableManagerListener
+from .SessionStatusListener import SessionStatusListener
+from .errors import (RequestFailedError,
                                  TableManagerError,
                                  LoginFailedError,
                                  TimeFrameError)
-from forexconnect.ResponseListener import ResponseListener, ResponseListenerAsync
+from .ResponseListener import ResponseListener, ResponseListenerAsync
 
 
 @atexit.register
@@ -649,4 +649,4 @@ class ForexConnect:
 
         return unit, size
 
-from forexconnect.common import Common
+from .common import Common

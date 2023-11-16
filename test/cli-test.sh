@@ -1,1 +1,1 @@
-jgtcli -i "USD/CAD" -timeframe m5 -output
+jgtcli -i "USD/CAD" -t "m5" -o

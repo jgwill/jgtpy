@@ -46,7 +46,7 @@ if platform.system() == 'Linux':
   here = os.path.abspath(os.path.dirname(__file__))
   os.chdir(here)
   try:
-     import forexconnect
+     from . import forexconnect
   except:
      from jgtpy import forexconnect 
   os.chdir(origin_work_dir)   

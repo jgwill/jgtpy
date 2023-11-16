@@ -1,5 +1,5 @@
 from typing import Callable, Any
-from forexconnect import fxcorepy
+from . import fxcorepy
 
 
 class EachRowListener(fxcorepy.AO2GEachRowListener):

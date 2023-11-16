@@ -1,7 +1,7 @@
 import threading
 from typing import Callable
 
-from forexconnect import fxcorepy
+from . import fxcorepy
 
 
 class TableManagerListener(fxcorepy.AO2GTableManagerListener):

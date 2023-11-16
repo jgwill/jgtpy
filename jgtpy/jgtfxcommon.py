@@ -21,7 +21,16 @@ from enum import Enum
 import json
 import os
 
-from forexconnect import fxcorepy
+try:
+    # Try to import fxcorepy from forexconnect
+    from forexconnect import fxcorepy
+except ModuleNotFoundError:
+    # If that fails, try to import fxcorepy directly
+    try:
+        from .forexconnect import fxcorepy
+    except ModuleNotFoundError:
+        # If that also fails, print an error message
+        print("Could not import fxcorepy. Please ensure the module is installed and available.")
 
 
 class OrderMonitor:
@@ -426,7 +435,17 @@ class OrderMonitorNetting:
 
 import traceback
 
-from forexconnect import ForexConnect, Common
+try:
+    # Try to import ForexConnect and Common from forexconnect
+    from forexconnect import ForexConnect, Common
+except ModuleNotFoundError:
+    # If that fails, try to import ForexConnect and Common directly
+    try:
+        from .forexconnect.ForexConnect import ForexConnect, Common
+    except ModuleNotFoundError:
+        # If that also fails, print an error message
+        print("Could not import ForexConnect or Common. Please ensure the modules are installed and available.")
+
 
 
 

@@ -1,9 +1,9 @@
 from typing import Callable, List, Any
 import pandas
-from forexconnect import fxcorepy
-from forexconnect.ForexConnect import ForexConnect
-from forexconnect.TableListener import TableListener
-from forexconnect.errors import TableManagerError
+from . import fxcorepy
+from .ForexConnect import ForexConnect
+from .TableListener import TableListener
+from .errors import TableManagerError
 
 
 class Common:

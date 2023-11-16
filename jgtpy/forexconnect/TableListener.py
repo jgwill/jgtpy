@@ -1,6 +1,6 @@
 from typing import Callable
 
-from forexconnect import fxcorepy
+from . import fxcorepy
 
 
 class TableListener(fxcorepy.AO2GTableListener):

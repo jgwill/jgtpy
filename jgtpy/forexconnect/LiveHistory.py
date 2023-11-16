@@ -7,8 +7,8 @@ from enum import Enum
 
 import pandas as pd
 import numpy as np
-from forexconnect import fxcorepy
-from forexconnect import ForexConnect
+from . import fxcorepy
+from . import ForexConnect
 
 
 class LiveHistoryCreator:

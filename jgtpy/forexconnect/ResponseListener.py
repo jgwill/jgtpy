@@ -2,7 +2,7 @@ from typing import Callable, List
 import threading
 import logging
 
-from forexconnect import fxcorepy
+from . import fxcorepy
 
 
 class ResponseListener(fxcorepy.AO2GResponseListener):

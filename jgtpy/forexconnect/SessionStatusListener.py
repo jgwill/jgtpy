@@ -1,7 +1,7 @@
 from typing import Callable
 import threading
 
-from forexconnect import fxcorepy
+from . import fxcorepy
 
 
 class SessionStatusListener(fxcorepy.AO2GSessionStatus):

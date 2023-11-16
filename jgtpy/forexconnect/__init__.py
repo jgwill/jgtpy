@@ -15,7 +15,7 @@ if platform.system() == 'Windows':
     os.chdir(lib_path)
     # sys.path.append(lib_path)
     # os.environ['PATH'] += os.pathsep + lib_path  # Add lib_path to PATH
-    #from forexconnect.lib.windows import ForexConnect as fxfuck
+    #from .lib.windows import ForexConnect as fxfuck
     print(lib_path)
     from .lib.windows import *
 elif platform.system() == 'Linux':
@@ -23,10 +23,10 @@ elif platform.system() == 'Linux':
     lib_path = os.path.join(here, 'lib', 'linux')
     os.chdir(lib_path)
     try:
-         import forexconnect
-         from forexconnect.lib.linux import fxcorepy as fxcorepy
+         #import forexconnect
+         from .lib.linux import fxcorepy as fxcorepy
     except:
-        import jgtpy.forexconnect as forexconnect
+        #import jgtpy.forexconnect as forexconnect
         from jgtpy.forexconnect.lib.linux import fxcorepy as fxcorepy
         
 else:
@@ -34,15 +34,15 @@ else:
 
 #print(lib_path)
 os.chdir(here)
-#from forexconnect.lib import fxcorepy
-from forexconnect.ForexConnect import ForexConnect
-from forexconnect.TableManagerListener import TableManagerListener
-from forexconnect.SessionStatusListener import SessionStatusListener
-from forexconnect.LiveHistory import LiveHistoryCreator
-from forexconnect.EachRowListener import EachRowListener
-from forexconnect.ResponseListener import ResponseListener, ResponseListenerAsync
-from forexconnect.TableListener import TableListener
-from forexconnect.common import Common
+#from .lib import fxcorepy
+from .ForexConnect import ForexConnect
+from .TableManagerListener import TableManagerListener
+from .SessionStatusListener import SessionStatusListener
+from .LiveHistory import LiveHistoryCreator
+from .EachRowListener import EachRowListener
+from .ResponseListener import ResponseListener, ResponseListenerAsync
+from .TableListener import TableListener
+from .common import Common
 
 fxcorepy.O2GTransport.set_transport_modules_path(lib_path)
 
