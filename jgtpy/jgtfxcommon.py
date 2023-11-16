@@ -19,6 +19,7 @@
 from typing import List
 from enum import Enum
 import json
+import os
 
 from forexconnect import fxcorepy
 
