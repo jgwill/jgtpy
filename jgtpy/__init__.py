@@ -29,6 +29,7 @@
 
 import os
 import platform
+import sys
 
 class NotCompatibleException(Exception):
     pass
@@ -39,10 +40,15 @@ from .JGTCore import __version__ #,json2dict,jsonfile2prop,json2prop,jsonfile2di
 #from .JGTConfig import getenv,setreal,setdemo,env
 
 if platform.system() == 'Linux':
+  #sys.path.append(os.path.abspath('./'))
+
   origin_work_dir = os.getcwd()
   here = os.path.abspath(os.path.dirname(__file__))
   os.chdir(here)
-  import forexconnect
+  try:
+     import forexconnect
+  except:
+     from jgtpy import forexconnect 
   os.chdir(origin_work_dir)   
 
 else:

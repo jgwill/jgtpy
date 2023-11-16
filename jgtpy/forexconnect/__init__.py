@@ -6,11 +6,9 @@ origin_work_dir = os.getcwd()
 here = os.path.abspath(os.path.dirname(__file__))
 
 os.chdir(here)
-print(here)
 
 lib_path = os.path.join(here, "lib")
 
-sys.path.append('C:\Gehtsoft\ForexConnectAPIx64__1_6_5\bin')
 if platform.system() == 'Windows':
     print("----------------Windows------------")
     lib_path = os.path.join(here, 'lib', 'windows')
@@ -24,11 +22,17 @@ elif platform.system() == 'Linux':
     print("----------------Linux------------")
     lib_path = os.path.join(here, 'lib', 'linux')
     os.chdir(lib_path)
-    from forexconnect.lib.linux import fxcorepy as fxcorepy
+    try:
+         import forexconnect
+         from forexconnect.lib.linux import fxcorepy as fxcorepy
+    except:
+        import jgtpy.forexconnect as forexconnect
+        from jgtpy.forexconnect.lib.linux import fxcorepy as fxcorepy
+        
 else:
     raise RuntimeError('Unsupported platform')
 
-print(lib_path)
+#print(lib_path)
 os.chdir(here)
 #from forexconnect.lib import fxcorepy
 from forexconnect.ForexConnect import ForexConnect

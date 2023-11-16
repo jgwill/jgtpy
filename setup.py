@@ -42,6 +42,7 @@ setup(
     author_email='jgi@jgwill.com',
     url='https://github.com/jgwill/jgtpy',
     packages=find_packages(exclude=['*test*']),
+    package_data={'jgtpy': ['forexconnect/lib/linux/*', 'forexconnect/lib/windows/*']},
     install_requires=INSTALL_REQUIRES,
     entry_points={
         'console_scripts': ['jgtcli=jgtpy.jgtcli:main'],

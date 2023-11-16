@@ -1,0 +1,11 @@
+pip install aiohttp
+pip install anyio
+pip install async-timeout
+pip install PyYAML
+pip install requests
+pip install packaging
+pip install tqdm
+pip install anyio
+pip install tdqm
+pip install python-dotenv
+pip install jgtapy

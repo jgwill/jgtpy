@@ -1,0 +1,26 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../o/pys"
+		},
+		{
+			"path": "../jgtapy-jgwill"
+		},
+		{
+			"path": "data/pds"
+		},
+		{
+			"path": "data/cds"
+		},
+		{
+			"path": "../../../../Gehtsoft/ForexConnectAPIx64__1_6_5"
+		},
+		{
+			"path": "../../../../Gehtsoft/ForexConnectAPIx64__1_6_3"
+		}
+	],
+	"settings": {}
+}
