@@ -376,8 +376,8 @@ def _ids_add_fdb_column_logics(dfsrc,
       LowisAboveLips  = dfsrc.at[i,'LowisAboveLips']
 
       #default values 
-      dfsrc.at[i,signalBuy_fractalDivergentBar_column_name] = False    
-      dfsrc.at[i,signalSell_fractalDivergentBar_column_name] = False
+      dfsrc.at[i, signalBuy_fractalDivergentBar_column_name] = float(False)
+      dfsrc.at[i, signalSell_fractalDivergentBar_column_name] = float(False)
       dfsrc.at[i,signalCode_fractalDivergentBar_column_name] = 0 
 
       ##################################################
@@ -958,7 +958,7 @@ def jgti_add_zlc_plus_other_AO_signal(dfsrc,dropsecondaries=True,quiet=True):
     dfsrc.at[i,signalSell_zoneSignal_column_name]=redZone
     
     #Buy Zone Signal
-    dfsrc.at[i,signalBuy_zoneSinal_column_name]=greenZone
+    dfsrc.at[i, signalBuy_zoneSinal_column_name] = float(greenZone)
     
     #AC Sell / Buy  3 AC Against AO af AC Bellow, 2 if above
     acSell = False
@@ -975,7 +975,7 @@ def jgti_add_zlc_plus_other_AO_signal(dfsrc,dropsecondaries=True,quiet=True):
     
     #AC Sell Signal (Deceleration)
     
-    dfsrc.at[i,signalSell_AC_deceleration_column_name]=acSell
+    dfsrc.at[i, signalSell_AC_deceleration_column_name] = float(acSell)
     
     #AC Buy Signal (Acceleration)
     dfsrc.at[i,signalBuy_AC_acceleration_column_name]=acBuy
@@ -995,8 +995,8 @@ def jgti_add_zlc_plus_other_AO_signal(dfsrc,dropsecondaries=True,quiet=True):
     if cao > 0 and caogreen and pao1red and pao2red:
       saucerBuy=True
     
-    dfsrc.at[i,signalSell_saucer_column_name]=saucerSell
-    dfsrc.at[i,signalBuy_saucer_column_name]=saucerBuy
+    dfsrc.at[i,signalSell_saucer_column_name]=float(saucerSell)
+    dfsrc.at[i,signalBuy_saucer_column_name]=float(saucerBuy)
     
     # What Happens on the Next PLUS 35 Periods ??
     if c < xc - 35:
