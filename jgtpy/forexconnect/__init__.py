@@ -19,7 +19,7 @@ if platform.system() == 'Windows':
     print(lib_path)
     from .lib.windows import *
 elif platform.system() == 'Linux':
-    print("----------------Linux------------")
+    #print("----------------Linux------------")
     lib_path = os.path.join(here, 'lib', 'linux')
     os.chdir(lib_path)
     try:

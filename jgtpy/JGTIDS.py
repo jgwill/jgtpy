@@ -666,8 +666,8 @@ def jgtpd_drop_col_by_name(_df,colname,_axis = 1,quiet=False):
   if colname in _df.columns:
     return _df.drop(_df.loc[:, colname:colname].columns,axis = _axis)
   else:
-    if not quiet:
-      print('Col:' + colname + ' was not there')
+    # if not quiet:
+    #   print('Col:' + colname + ' was not there')
     return _df
 
 def __ids_cleanse_ao_peak_secondary_columns(dfsrc,quiet=False):

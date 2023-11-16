@@ -185,6 +185,11 @@ def get_price_history(instrument, timeframe, datefrom=None, dateto=None,quotes_c
             date_to_parsed = datetime.now()   
         else:
             date_to_parsed = parse_date(dateto)
+        
+        if not quiet:
+            print("Date from : " + str(date_from_parsed))
+            print("Date to : " + str(date_to_parsed))
+
 
         history = fx.get_history(instrument, timeframe, date_from_parsed, date_to_parsed, quotes_count_spec)
 

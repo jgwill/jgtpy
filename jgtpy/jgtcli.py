@@ -46,6 +46,11 @@ def main():
     if args.output:
         output = True
 
+    if verbose_level > 1:
+        print("Date from : " + str(date_from))
+        print("Date to : " + str(date_to))
+
+
     try:
         
         print_quiet(quiet,"Getting for : " + instrument + "_" + timeframe)
