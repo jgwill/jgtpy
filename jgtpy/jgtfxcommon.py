@@ -627,23 +627,23 @@ except:
     print('logging failed - dont worry')
 
 def add_main_arguments(parser: argparse.ArgumentParser):
-    parser.add_argument('-l',
+    parser.add_argument('--login',
                         metavar="LOGIN",
                         required=True,
                         help='Your user name.')
 
-    parser.add_argument('-p',
+    parser.add_argument('--password',
                         metavar="PASSWORD",
                         required=True,
                         help='Your password.')
 
-    parser.add_argument('-u',
+    parser.add_argument('--urlserver',
                         metavar="URL",
                         required=True,
                         help='The server URL. For example,\
                                  https://www.fxcorporate.com/Hosts.jsp.')
 
-    parser.add_argument('-c',
+    parser.add_argument('--connection',
                         metavar="CONNECTION",
                         required=True,
                         help='The connection name. For example, \
@@ -660,7 +660,7 @@ def add_main_arguments(parser: argparse.ArgumentParser):
                                  a pin. Optional parameter.')
 
 def add_candle_open_price_mode_argument(parser: argparse.ArgumentParser):
-    parser.add_argument('-o',
+    parser.add_argument('--openpricemode',
                         metavar="CANDLE_OPEN_PRICE_MODE",
                         default="prev_close",
                         help='Ability to set the open price candles mode. \
@@ -668,16 +668,16 @@ def add_candle_open_price_mode_argument(parser: argparse.ArgumentParser):
                         of O2GCandleOpenPriceMode enumeration. Optional parameter.')
 
 def add_instrument_timeframe_arguments(parser: argparse.ArgumentParser, timeframe: bool = True):
-    parser.add_argument('-i',
+    parser.add_argument('-i','--instrument',
                         metavar="INSTRUMENT",
                         default="EUR/USD",
                         help='An instrument which you want to use in sample. \
                                   For example, "EUR/USD".')
 
     if timeframe:
-        parser.add_argument('-timeframe',
+        parser.add_argument('-t','--timeframe',
                             metavar="TIMEFRAME",
-                            default="m1",
+                            default="m5",
                             help='Time period which forms a single candle. \
                                       For example, m1 - for 1 minute, H1 - for 1 hour.')
     parser.add_argument('-ip',
@@ -724,7 +724,7 @@ def valid_datetime(check_future: bool):
 
 def add_date_arguments(parser: argparse.ArgumentParser, date_from: bool = True, date_to: bool = True):
     if date_from:
-        parser.add_argument('-datefrom',
+        parser.add_argument('-s','--datefrom',
                             metavar="\"m.d.Y H:M:S\"",
                             help='Date/time from which you want to receive\
                                       historical prices. If you leave this argument as it \
@@ -733,7 +733,7 @@ def add_date_arguments(parser: argparse.ArgumentParser, date_from: bool = True, 
                             type=valid_datetime(True)
                             )
     if date_to:
-        parser.add_argument('-dateto',
+        parser.add_argument('-e','--dateto',
                             metavar="\"m.d.Y H:M:S\"",
                             help='Datetime until which you want to receive \
                                       historical prices. If you leave this argument as it is, \
@@ -745,7 +745,7 @@ def add_date_arguments(parser: argparse.ArgumentParser, date_from: bool = True, 
 
 def add_report_date_arguments(parser: argparse.ArgumentParser, date_from: bool = True, date_to: bool = True):
     if date_from:
-        parser.add_argument('-datefrom',
+        parser.add_argument('-s','--datefrom',
                             metavar="\"m.d.Y H:M:S\"",
                             help='Datetime from which you want to receive\
                                       combo account statement report. If you leave this argument as it \
@@ -754,7 +754,7 @@ def add_report_date_arguments(parser: argparse.ArgumentParser, date_from: bool =
                             type=valid_datetime(True)
                             )
     if date_to:
-        parser.add_argument('-dateto',
+        parser.add_argument('-e','--dateto',
                             metavar="\"m.d.Y H:M:S\"",
                             help='Datetime until which you want to receive \
                                       combo account statement report. If you leave this argument as it is, \
@@ -765,19 +765,19 @@ def add_report_date_arguments(parser: argparse.ArgumentParser, date_from: bool =
 
 
 def add_max_bars_arguments(parser: argparse.ArgumentParser):
-    parser.add_argument('-quotescount',
+    parser.add_argument('-c','--quotescount',
                         metavar="MAX",
-                        default=0,
+                        default=335,
                         type=int,
                         help='Max number of bars. 0 - Not limited')
 
 
-def add_bars_arguments(parser: argparse.ArgumentParser):
-    parser.add_argument('-bars',
-                        metavar="COUNT",
-                        default=3,
-                        type=int,
-                        help='Build COUNT bars. Optional parameter.')
+# def add_bars_arguments(parser: argparse.ArgumentParser):
+#     parser.add_argument('-bars',
+#                         metavar="COUNT",
+#                         default=3,
+#                         type=int,
+#                         help='Build COUNT bars. Optional parameter.')
 
 
 def add_output_argument(parser: argparse.ArgumentParser):
@@ -790,11 +790,11 @@ def add_output_argument(parser: argparse.ArgumentParser):
     Returns:
         None
     """
-    parser.add_argument('-output',
+    parser.add_argument('-o','--output',
                         action='store_true',
                         help='Output file. If specified, output will be written in the filestore.')
     
-    parser.add_argument('-compress',
+    parser.add_argument('-z','--compress',
                         action='store_true',
                         help='Compress the output. If specified, it will also activate the output flag.')
 
@@ -802,7 +802,7 @@ def add_output_argument(parser: argparse.ArgumentParser):
 
 
 def add_quiet_argument(parser):
-    parser.add_argument('-quiet',
+    parser.add_argument('-q','--quiet',
                         action='store_true',
                         help='Suppress all output. If specified, no output will be printed to the console.')
     return parser

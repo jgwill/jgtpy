@@ -125,7 +125,7 @@ def getPH_from_filestore(instrument,timeframe,quiet=True, compressed=False):
   # srcpath=mk_fullpath(instrument,timeframe,'csv',data_path)
   srcpath = create_filestore_path(instrument, timeframe,quiet, compressed)  
   
-  print_quiet(srcpath)
+  print_quiet(quiet,srcpath)
   
   df = read_ohlc_df_from_file(srcpath,quiet,compressed)
   

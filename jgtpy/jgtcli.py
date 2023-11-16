@@ -20,7 +20,7 @@ def parse_args():
 
 def main():
     args = parse_args()
-    instrument = args.i
+    instrument = args.instrument
     timeframe = args.timeframe
     quotes_count = args.quotescount
     date_from = args.datefrom
@@ -32,7 +32,7 @@ def main():
         compress = args.compress
         output = True # in case
     if args.output:
-        output = args.output
+        output = True
 
     try:
         if not quiet:
