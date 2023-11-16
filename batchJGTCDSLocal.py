@@ -13,9 +13,12 @@ data_path = cds.get_data_path()
 instrument="EUR/USD"
 timeframe = "D1"
 
+#H1 H4 D1 m15 m5 W1;do for i in "EUR/USD" "AUD/USD" "USD/CAD" "GBP/USD" "SPX500"
 instruments = ["USD/CAD", "EUR/USD", "GBP/USD", "AUD/USD","NAS100"]
-instruments = ["NAS100"]
+instruments = ["USD/CAD", "EUR/USD", "GBP/USD", "AUD/USD","SPX500"]
+
 timeframes = ["W1","D1", "H4", "H1", "m15","m5"]
+timeframes = ["H1","W1","D1", "H4", "m15"]
 #timeframes = ["M1"]
 
 
