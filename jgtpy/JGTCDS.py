@@ -125,6 +125,12 @@ def create_and_clean_data_from_file_df(instrument, timeframe):
 
 def get_data_path():
     data_path = os.environ.get('JGTPY_DATA', './data')
+    if not os.path.exists(data_path):
+      data_path = os.environ.get('JGTPY_DATA', '../data')
+    
+    if not os.path.exists(data_path):
+      raise Exception("Data directory not found. Please create a directory named 'data' in the current or parent directory, or set the JGTPY_DATA environment variable.")
+    
     data_path = os.path.join(data_path, 'cds')
     return data_path
   

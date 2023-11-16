@@ -74,7 +74,7 @@ def createCDS_for_main(instrument, timeframe, quiet):
     config = jgtfxcommon.readconfig()
     if 'columns_to_remove' in config:  # read it from config otherwise
         col2remove = config['columns_to_remove']
-    cdspath=cds.createFromPDSFileToCDSFile(instrument,timeframe,col2remove,quiet)
+    cdspath=cds.createFromPDSFileToCDSFile(instrument,timeframe,col2remove,True)
     print_quiet(quiet,cdspath)
 
 

@@ -122,3 +122,5 @@ data
 # testing
 test/*.csv
 *.log
+downloadspy
+dist-analyze
