@@ -107,17 +107,17 @@ def print_quiet(quiet,content):
         print(content)
 
 def readconfig():
-    # Try reading config file from current directory
-    config_file = 'config.json'
-    if not os.path.isfile(config_file):
-        # If config file not found, check home directory
-        home_dir = os.path.expanduser("~")
-        config_file = os.path.join(home_dir, 'config.json')
+    # # Try reading config file from current directory
+    # config_file = 'config.json'
+    # if not os.path.isfile(config_file):
+    #     # If config file not found, check home directory
+    #     home_dir = os.path.expanduser("~")
+    #     config_file = os.path.join(home_dir, 'config.json')
 
-    # Read config file
-    with open(config_file, 'r') as file:
-        config = json.load(file)
-        return config
+    # # Read config file
+    # with open(config_file, 'r') as file:
+    config = jgtfxcommon.readconfig()
+    return config
 
 
 def get_price_history(instrument, timeframe, datefrom=None, dateto=None,quotes_count_spec=None,quiet=True):

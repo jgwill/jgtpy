@@ -1,4 +1,6 @@
 import jgtpy
+
+from jgtpy import jgtconstants as constants
 from jgtpy import jgtfxcommon
 import argparse
 
@@ -14,6 +16,7 @@ def parse_args():
     jgtfxcommon.add_max_bars_arguments(parser)
     jgtfxcommon.add_output_argument(parser)
     jgtfxcommon.add_quiet_argument(parser)
+    jgtfxcommon.add_cds_argument(parser)
     args = parser.parse_args()
     return args
 
@@ -25,9 +28,13 @@ def main():
     quotes_count = args.quotescount
     date_from = args.datefrom
     date_to = args.dateto
-    output=None
+    process_cds=args.cds
+    output=False
     compress=False
     quiet=False
+    
+    if process_cds:
+        output=True
     if args.compress:
         compress = args.compress
         output = True # in case
@@ -35,16 +42,16 @@ def main():
         output = True
 
     try:
-        if not quiet:
-            print("Getting for : " + instrument + "_" + timeframe)
+        
+        print_quiet(quiet,"Getting for : " + instrument + "_" + timeframe)
+        
         if output :
-            fpath=pds.getPH2file(instrument,timeframe,quotes_count,date_from,date_to,False,quiet,compress)
-            if not quiet:
-                print(fpath)
+            fpath=pds.getPH2file(instrument,timeframe,quotes_count,date_from,date_to,False,quiet,compress)            
+            print_quiet(quiet,fpath)
+            createCDS_for_main(instrument,timeframe,quiet)
         else:
             p=pds.getPH(instrument,timeframe,quotes_count,date_from,date_to,False,quiet)
-            if not quiet:
-                print(p)
+            print_quiet(quiet,p)
             
     except Exception as e:
         jgtfxcommon.print_exception(e)
@@ -59,3 +66,19 @@ def main():
 
 # print("")
 # #input("Done! Press enter key to exit\n")
+
+def createCDS_for_main(instrument, timeframe, quiet):
+    # implementation goes here
+    from jgtpy import JGTCDS as cds
+    col2remove=constants.columns_to_remove
+    config = jgtfxcommon.readconfig()
+    if config.columns_to_remove: #read it from config otherwise
+        col2remove=config.columns_to_remove
+    cdspath=cds.createFromPDSFileToCDSFile(instrument,timeframe,col2remove,quiet)
+    print_quiet(quiet,cdspath)
+
+
+
+def print_quiet(quiet,content):
+    if not quiet:
+        print(content)

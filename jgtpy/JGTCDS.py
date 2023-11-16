@@ -2,6 +2,8 @@
 
 from . import JGTPDS as pds
 from . import JGTIDS as ids
+#from . import jgtconstants
+#.columns_to_remove as columns_to_remove
 
 import pandas as pd
 import os
@@ -12,7 +14,17 @@ def startSession():
 def stopSession():
   pds.disconnect()
 # %%
-
+def createFromPDSFileToCDSFile(instrument,timeframe,columns_to_remove=None,quiet=True):
+  c=createFromPDSFile(instrument,timeframe,quiet)
+  # Remove the specified columns
+  if columns_to_remove is not None:
+    c = c.drop(columns=columns_to_remove, errors='ignore')
+  # Define the file path based on the environment variable or local path
+  data_path_cds = get_data_path()
+  fpath=pds.mk_fullpath(instrument,timeframe,'csv',data_path_cds)
+  c.to_csv(fpath)
+  return fpath
+  
 def createFromPDSFile(instrument,timeframe,quiet=True):
   """Create CDS (Chaos Data Service) with Fresh Data on the filestore
 

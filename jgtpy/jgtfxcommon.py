@@ -18,6 +18,7 @@
 
 from typing import List
 from enum import Enum
+import json
 
 from forexconnect import fxcorepy
 
@@ -807,6 +808,12 @@ def add_quiet_argument(parser):
                         help='Suppress all output. If specified, no output will be printed to the console.')
     return parser
 
+def add_cds_argument(parser):
+    parser.add_argument('-cds','--cds',
+                        action='store_true',
+                        help='Action the creation of CDS')
+    return parser
+
 
 def print_exception(exception: Exception):
     logging.error("Exception: {0}\n{1}".format(exception, traceback.format_exc()))
@@ -870,3 +877,19 @@ def convert_timeframe_to_seconds(unit: fxcorepy.O2GTimeFrameUnit, size: int):
         step = 1
     return step * current_size
 #------------------------#
+
+
+
+
+def readconfig():
+    # Try reading config file from current directory
+    config_file = 'config.json'
+    if not os.path.isfile(config_file):
+        # If config file not found, check home directory
+        home_dir = os.path.expanduser("~")
+        config_file = os.path.join(home_dir, 'config.json')
+
+    # Read config file
+    with open(config_file, 'r') as file:
+        config = json.load(file)
+        return config

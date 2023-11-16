@@ -4,6 +4,8 @@ nonTradingZoneColor = 'gray'
 sellingZoneColor = 'red'
 buyingZoneColor = 'green'
 
+# List of columns to remove
+columns_to_remove = ['aofvalue', 'aofhighao', 'aoflowao', 'aofhigh', 'aoflow', 'aocolor', 'accolor','fdbbhigh','fdbblow','fdbshigh','fdbslow']
 
 indicator_currentDegree_alligator_jaw_column_name = 'jaw' # 13 periods moving average, shifted 8 bars into the future
 indicator_currentDegree_alligator_teeth_column_name = 'teeth' # 8 periods moving average, shifted 5 bars into the future
