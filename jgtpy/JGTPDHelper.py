@@ -15,8 +15,8 @@ def jgtpd_drop_col_by_name(dfsrc,colname,axis = 1,quiet=False):
   if colname in dfsrc.columns:
     return dfsrc.drop(dfsrc.loc[:, colname:colname].columns,axis = axis)
   else:
-    if not quiet:
-      print('Col:' + colname + ' was not there')
+    # if not quiet:
+    #   print('Col:' + colname + ' was not there')
     return dfsrc
 
 def _ids_cleanse_ao_peak_secondary_columns(dfsrc,quiet=False):
