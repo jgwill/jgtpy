@@ -27,11 +27,40 @@
 #     valid_datetime, add_date_arguments, add_report_date_arguments, add_max_bars_arguments, add_bars_arguments, \
 #     print_exception, session_status_changed, diff_month, convert_timeframe_to_seconds
 
+import os
+import platform
+
+class NotCompatibleException(Exception):
+    pass
 
 #from jgtpy.common_samples import common_samples
 from .jgtetl import svc_offset_dt_by_tf as etl_offset_dt_by_tf,offsetdt as etl_offsetdt
 from .JGTCore import __version__ #,json2dict,jsonfile2prop,json2prop,jsonfile2dict,d2p,fixdtindf,offsetdt
 #from .JGTConfig import getenv,setreal,setdemo,env
+
+if platform.system() == 'Linux':
+  origin_work_dir = os.getcwd()
+  here = os.path.abspath(os.path.dirname(__file__))
+  os.chdir(here)
+  import forexconnect
+  os.chdir(origin_work_dir)   
+
+else:
+  try:
+    import forexconnect 
+  except:
+    print("----------------------------------------------------------------")
+    print("---Failed to load forexconnect --- Please Install forexconnect")
+    print("--------- > pip install forexconnect")
+    print("--------")
+    print("-----WINDOWS USER : ----")
+    print("--If you are on an above Windows Python 3.7, it wont work.  I made forexconnect to work on later than 3.7 only on Linux, sorry guys, migrate on Linux ;)")
+    print("-----------------------------------------")
+    raise NotCompatibleException("Forexconnect is not compatible with your current environment.")
+
+
+
+# os.chdir(origin_work_dir)   
 
 from .JGTPDS import getPH as get_price, stayConnectedSetter as set_stay_connected, disconnect,connect as on,disconnect as off, status as connection_status,  getPH2file as get_price_to_file, getPHByRange as get_price_range 
 #mk_fn,mk_fullpath,getSubscribed,getPH,getPHByRange,tryConnect
@@ -40,3 +69,4 @@ from .JGTCDS import create as createCDS,createByRange,createFromDF,startSession,
 
 # from .jgtcli import main as __main__
 #from jgtpy.jgtconstants import *
+

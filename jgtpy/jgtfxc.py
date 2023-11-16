@@ -1,11 +1,43 @@
 # jgtfxc.py
 
 import os
+import platform
+
 import json
 #import datetime
 from datetime import datetime
 import pandas as pd
-from forexconnect import ForexConnect, fxcorepy
+
+
+
+# origin_work_dir = os.getcwd()
+# here = os.path.abspath(os.path.dirname(__file__))
+# print("-----------------------------")
+# print(here)
+# print("-----------------------------")
+
+# path_forexconnect = os.path.join(here, "forexconnect")
+
+# if platform.system() == 'Windows':
+#     path_forexconnect = os.path.join(here, 'lib', 'windows', 'mylib.dll')
+# elif platform.system() == 'Linux':
+#     path_forexconnect = os.path.join(here, 'lib', 'linux', 'mylib.so')
+# else:
+#     raise RuntimeError('Unsupported platform')
+
+
+# os.chdir(path_forexconnect)
+
+# from forexconnect import ForexConnect, fxcorepy
+if platform.system() == 'Windows':
+    from forexconnect import ForexConnect, fxcorepy
+else: 
+    if platform.system() == 'Linux':
+        from jgtpy.forexconnect import ForexConnect, fxcorepy
+
+
+
+# os.chdir(origin_work_dir)   
 
 #@STCGoal Future use
 #import forexconnect as fxcon
