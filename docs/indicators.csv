@@ -1,0 +1,21 @@
+Name;Title;Description;Question;Notes
+Date;Date;This is the timestamp for each data entry.;;
+Volume;Trading Volume;This is the trading volume for the corresponding timestamp.;;
+Open;Opening Price;The opening price at the beginning of the period.;;
+High;Highest Price;The highest price during the period.;;
+Low;Lowest Price;The lowest price during the period.;;
+Close;Closing Price;The closing price at the end of the period.;;
+Median;Median Price;The median price during the period.;;
+ac;Acceleration/Deceleration Indicator;Measures the speed of momentum. Helps to determine whether the momentum is increasing or decreasing.;;Test
+jaw;Alligator Jaw;Part of the Alligator indicator. Represents 13 periods moving average, shifted 8 bars into the future.;;
+teeth;Alligator Teeth;Part of the Alligator indicator. Represents 8 periods moving average, shifted 5 bars into the future.;;
+lips;Alligator Lips;Part of the Alligator indicator. Represents 5 periods moving average, shifted 3 bars into the future.;;
+bjaw;Six Degrees Larger Alligator Jaw;Part of the Alligator indicator for a six degrees larger period. Represents 89 periods moving average, shifted 55 bars into the future.;;
+bteeth;Six Degrees Larger Alligator Teeth;Part of the Alligator indicator for a six degrees larger period. Represents 55 periods moving average, shifted 34 bars into the future.;;
+blips;Six Degrees Larger Alligator Lips;Part of the Alligator indicator for a six degrees larger period. Represents 34 periods moving average, shifted 21 bars into the future.;;
+ao;Awesome Oscillator;A momentum indicator that uses price change for the calculation designed to signal the market momentum's strength and possible points of trend reversals.;;
+aoaz;AO Above Zero;Indicates whether the Awesome Oscillator is above zero.;;
+aobz;AO Below Zero;Indicates whether the Awesome Oscillator is below zero.;;
+zlc;Zero Line Cross;A trade signal which occurs when the indicator crosses the zero line.;;
+fh, fl, fh3, fl3, fh5, fl5, fh8, fl8, fh13, fl13, fh21, fl21, fh34, fl34, fh55, fl55, fh89, fl89;Fractal Highs and Lows;Represent various degrees of fractal highs and lows. Fractal highs and lows are extreme points in the market where a reversal can occur.;;
+aof, aofvalue;AO Fractal Peak and Value;Represent the peak of the Awesome Oscillator's momentum and the corresponding value.;;
