@@ -27,14 +27,14 @@ if 'OPENAI_API_KEY' not in os.environ:
 api_key=os.getenv('OPENAI_API_KEY')
 
 
-client = OpenAI(api_key=api_key)
-
-
-# The rest of your code...
-
 # Create directory if not exists
 if not os.path.exists('./_snote_content_cache'):
     os.makedirs('./_snote_content_cache')
+
+
+client = OpenAI(api_key=api_key)
+
+
 
 # Load summaries and hashes of previously processed URLs, if the file exists
 try:
