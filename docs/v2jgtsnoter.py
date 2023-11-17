@@ -1,3 +1,7 @@
+# IMPORTANT NOTE: This is a simplified example and might not work correctly 
+# without further adjustments. It also does not include error handling and 
+# might exceed the rate limits or the maximum input size of the OpenAI API.
+
 import csv
 import requests
 from bs4 import BeautifulSoup
@@ -5,17 +9,21 @@ import os
 import urllib.parse
 import hashlib
 import json
+import openai
+
+# Set the OpenAI API key
+openai.api_key = 'your-api-key'
 
 # Create directory if not exists
 if not os.path.exists('./_snote_content_cache'):
     os.makedirs('./_snote_content_cache')
 
-# Load hashes of previously processed URLs, if the file exists
+# Load summaries and hashes of previously processed URLs, if the file exists
 try:
-    with open('./_snote_content_cache/hashes.json', 'r') as hashes_file:
-        hashes = json.load(hashes_file)
+    with open('./_snote_content_cache/data.json', 'r') as data_file:
+        data = json.load(data_file)
 except FileNotFoundError:
-    hashes = {}
+    data = {}
 
 with open('jgtsnoter.csv', 'r') as csv_file:
     csv_reader = csv.reader(csv_file)
@@ -38,8 +46,8 @@ with open('jgtsnoter.csv', 'r') as csv_file:
         # Hash the content of the page
         content_hash = hashlib.md5(response.text.encode()).hexdigest()
 
-        # If the content has changed or it's a new URL, save the new content
-        if url not in hashes or hashes[url] != content_hash:
+        # If the content has changed or it's a new URL, save the new content and get a new summary
+        if url not in data or data[url]['hash'] != content_hash:
             # Save the HTML content into a file
             with open(f'./_snote_content_cache/{url_hash}.html', 'w') as html_file:
                 html_file.write(soup.prettify())
@@ -53,17 +61,29 @@ with open('jgtsnoter.csv', 'r') as csv_file:
                 with open(f'./_snote_content_cache/{img_filename}', 'wb') as img_file:
                     img_file.write(img_response.content)
 
-            # Update the hash of the content
-            hashes[url] = content_hash
-        else: # Advise skipping files that have not changed
-            print(f'Skipping {url}')
+            # Get a summary of the new content
+            new_summary = openai.Completion.create(engine="text-davinci-002", prompt=response.text[:5000], temperature=0.3, max_tokens=100)
 
-    # Save the hashes of the processed URLs
-    with open('./_snote_content_cache/hashes.json', 'w') as hashes_file:
-        json.dump(hashes, hashes_file)
+            # If the URL was processed before, identify changes
+            changes = ''
+            if url in data:
+                old_summary = data[url]['summary']
+                # This is a simple way to identify changes and might not work well for complex text
+                changes = ' '.join(set(new_summary.split()) - set(old_summary.split()))
+
+            # Update the data of the URL
+            data[url] = {'hash': content_hash, 'summary': new_summary, 'changes': changes}
+
+    # Save the data of the processed URLs
+    with open('./_snote_content_cache/data.json', 'w') as data_file:
+        json.dump(data, data_file)
 
     # Create index-snote.md
     with open('index-snote.md', 'w') as md_file:
+        md_file.write('| Title | Summary | Changes |\n')
+        md_file.write('|-------|---------|---------|\n')
         for link, title in link_titles:
             url_hash = hashlib.md5(link.encode()).hexdigest()
-            md_file.write(f'- [{title}](./_snote_content_cache/{url_hash}.html)\n')
+            summary = data[link]['summary'] if link in data else ''
+            changes = data[link]['changes'] if link in data else ''
+            md_file.write(f'| [{title}](./_snote_content_cache/{url_hash}.html) | {summary} | {changes} |\n')
