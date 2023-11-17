@@ -10,6 +10,7 @@ import urllib.parse
 import hashlib
 import json
 from openai import OpenAI
+import snoterupdate
 
 
 # Set the OpenAI API key
@@ -50,7 +51,11 @@ with open('jgtsnoter.csv', 'r') as csv_file:
         url = row[0]
         response = requests.get(url)
         soup = BeautifulSoup(response.text, 'html.parser')
-
+        # print(response.text[:5000])
+        # print("---------------------------------------------------  ")
+        # print(soup.prettify()[:5000])
+        # print("---------------------------------------------------  ")
+        
         # Extract the title of the page
         title = soup.title.string if soup.title else url
         print("Processing: " +title + " :: " + url)
@@ -102,13 +107,7 @@ with open('jgtsnoter.csv', 'r') as csv_file:
     # Save the data of the processed URLs
     with open('./_snote_content_cache/data.json', 'w') as data_file:
         json.dump(data, data_file)
+    
 
-    # Create index-snote.md
-    with open('index-snote.md', 'w') as md_file:
-        md_file.write('| Title | Summary | Changes |\n')
-        md_file.write('|-------|---------|---------|\n')
-        for link, title in link_titles:
-            url_hash = hashlib.md5(link.encode()).hexdigest()
-            summary = data[link]['summary'] if link in data else ''
-            changes = data[link]['changes'] if link in data else ''
-            md_file.write(f'| [{title}](./_snote_content_cache/{url_hash}.html) | {summary} | {changes} |\n')
+    # Call the function from snoterupdate.py
+    snoterupdate.generate_markdown(link_titles, data)
