@@ -1,6 +1,9 @@
 import hashlib
 import json
 
+from bs4 import BeautifulSoup
+
+
 def generate_markdown():
     # Load summaries and hashes of previously processed URLs, if the file exists
     try:
@@ -14,11 +17,21 @@ def generate_markdown():
     link_titles = [(url, info.get('title', url)) for url, info in data.items()]
 
     # Create index-snote.md
+
     with open('index-snote.md', 'w') as md_file:
         for link, title in link_titles:
             url_hash = hashlib.md5(link.encode()).hexdigest()
             summary = data[link]['summary'] if link in data else ''
             changes = data[link]['changes'] if link in data else ''
+
+            # Parse and clean up the summary and changes with BeautifulSoup
+            summary = BeautifulSoup(str(summary), 'html.parser').get_text(separator=' ')
+            changes = BeautifulSoup(changes, 'html.parser').get_text(separator=' ')
+
+            # Replace problematic markdown characters
+            summary = summary.replace("`", "'").replace("```", "'")
+            changes = changes.replace("`", "'").replace("```", "'")
+
             md_file.write(f'# [{title}](./_snote_content_cache/{url_hash}.html)\n')
             md_file.write(f'## Summary\n')
             md_file.write(f'{summary}\n')

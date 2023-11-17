@@ -81,7 +81,7 @@ with open('jgtsnoter.csv', 'r') as csv_file:
             # Get a summary of the new content
             prompt_text = response.text[:5000]
             completion = client.completions.create(
-                engine="text-davinci-002",
+                model="text-davinci-002",
                 prompt=prompt_text,
                 temperature=0.3,
                 max_tokens=100
