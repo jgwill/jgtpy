@@ -27,5 +27,17 @@ def convert_csv_to_markdown(filename):
   csv_to_markdown(input_file)
 
 
-convert_csv_to_markdown('indicators.csv')
-convert_csv_to_markdown('signals.csv')
+import glob
+
+def convert_all_csv_to_markdown():
+  script_dir = os.path.dirname(os.path.realpath(__file__))
+  csv_files = glob.glob(os.path.join(script_dir, '*.csv'))
+
+  for csv_file in csv_files:
+    convert_csv_to_markdown(csv_file)
+    
+    
+convert_all_csv_to_markdown()
+# Converting files
+# convert_csv_to_markdown('indicators.csv')
+# convert_csv_to_markdown('signals.csv')
