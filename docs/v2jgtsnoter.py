@@ -9,7 +9,8 @@ import os
 import urllib.parse
 import hashlib
 import json
-import openai
+from openai import OpenAI
+
 
 # Set the OpenAI API key
 import os
@@ -22,8 +23,11 @@ load_dotenv()
 if 'OPENAI_API_KEY' not in os.environ:
     home_dir = os.path.expanduser("~")
     load_dotenv(os.path.join(home_dir, '.env'))
+api_key=os.getenv('OPENAI_API_KEY')
 
-openai.api_key = os.getenv('OPENAI_API_KEY')
+
+client = OpenAI(api_key=api_key)
+
 
 # The rest of your code...
 
@@ -49,7 +53,7 @@ with open('jgtsnoter.csv', 'r') as csv_file:
 
         # Extract the title of the page
         title = soup.title.string if soup.title else url
-
+        print("Processing: " +title + " :: " + url)
         # Store the link and its title
         link_titles.append((url, title))
 
@@ -75,7 +79,15 @@ with open('jgtsnoter.csv', 'r') as csv_file:
                     img_file.write(img_response.content)
 
             # Get a summary of the new content
-            new_summary = openai.Completion.create(engine="text-davinci-002", prompt=response.text[:5000], temperature=0.3, max_tokens=100)
+            prompt_text = response.text[:5000]
+            completion = client.completions.create(
+                engine="text-davinci-002",
+                prompt=prompt_text,
+                temperature=0.3,
+                max_tokens=100
+            )
+
+            new_summary = completion.choices[0].text.strip() if completion.choices else ""
 
             # If the URL was processed before, identify changes
             changes = ''
