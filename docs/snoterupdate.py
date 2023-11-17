@@ -15,14 +15,15 @@ def generate_markdown():
 
     # Create index-snote.md
     with open('index-snote.md', 'w') as md_file:
-        md_file.write('| Title | Summary | Changes |\n')
-        md_file.write('|-------|---------|---------|\n')
         for link, title in link_titles:
             url_hash = hashlib.md5(link.encode()).hexdigest()
             summary = data[link]['summary'] if link in data else ''
             changes = data[link]['changes'] if link in data else ''
-            md_file.write(f'| [{title}](./_snote_content_cache/{url_hash}.html) | {summary} | {changes} |\n')
-
+            md_file.write(f'# [{title}](./_snote_content_cache/{url_hash}.html)\n')
+            md_file.write(f'## Summary\n')
+            md_file.write(f'{summary}\n')
+            md_file.write(f'### Changes\n')
+            md_file.write(f'{changes}\n\n')
     print('Markdown file generated successfully.')
 
 # Call the function
