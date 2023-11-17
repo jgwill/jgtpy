@@ -54,17 +54,21 @@ def main():
     try:
         
         print_quiet(quiet,"Getting for : " + instrument + "_" + timeframe)
-        
-        if output :
-            fpath=pds.getPH2file(instrument,timeframe,quotes_count,date_from,date_to,False,quiet,compress)            
-            print_quiet(quiet,fpath)
-            createCDS_for_main(instrument,timeframe,quiet,verbose_level)
-        else:
-            p=pds.getPH(instrument,timeframe,quotes_count,date_from,date_to,False,quiet)
-            if verbose_level > 0:
-                print(p)
-           
-            
+        instruments = instrument.split(',')
+        timeframes = timeframe.split(',')
+
+        pds.stayConnectedSetter(True)
+        for instrument in instruments:
+            for timeframe in timeframes:
+                if output:
+                    fpath = pds.getPH2file(instrument, timeframe, quotes_count, date_from, date_to, False, quiet, compress)
+                    print_quiet(quiet, fpath)
+                    createCDS_for_main(instrument, timeframe, quiet, verbose_level)
+                else:
+                    p = pds.getPH(instrument, timeframe, quotes_count, date_from, date_to, False, quiet)
+                    if verbose_level > 0:
+                        print(p)
+        pds.disconnect()  
     except Exception as e:
         jgtfxcommon.print_exception(e)
 

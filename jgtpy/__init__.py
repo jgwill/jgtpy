@@ -60,7 +60,9 @@ else:
     print("--------- > pip install forexconnect")
     print("--------")
     print("-----WINDOWS USER : ----")
-    print("--If you are on an above Windows Python 3.7, it wont work.  I made forexconnect to work on later than 3.7 only on Linux, sorry guys, migrate on Linux ;)")
+    print("--If you are on an above Windows Python 3.7, it wont work.  ")
+    print("--I made forexconnect to work on later than 3.7 only on Linux, ")
+    print("-- sorry guys, migrate on Linux ;) or get involved migrating it ;) ")
     print("-----------------------------------------")
     raise NotCompatibleException("Forexconnect is not compatible with your current environment.")
 
