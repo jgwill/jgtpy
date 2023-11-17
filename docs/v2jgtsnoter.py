@@ -12,7 +12,20 @@ import json
 import openai
 
 # Set the OpenAI API key
-openai.api_key = 'your-api-key'
+import os
+from dotenv import load_dotenv
+
+# Load .env file from the current directory
+load_dotenv()
+
+# If the OPENAI_API_KEY is not found, try to load it from the .env file in the HOME directory
+if 'OPENAI_API_KEY' not in os.environ:
+    home_dir = os.path.expanduser("~")
+    load_dotenv(os.path.join(home_dir, '.env'))
+
+openai.api_key = os.getenv('OPENAI_API_KEY')
+
+# The rest of your code...
 
 # Create directory if not exists
 if not os.path.exists('./_snote_content_cache'):
