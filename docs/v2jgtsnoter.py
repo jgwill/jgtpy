@@ -102,7 +102,7 @@ with open('jgtsnoter.csv', 'r') as csv_file:
                 changes = ' '.join(set(new_summary.split()) - set(old_summary.split()))
 
             # Update the data of the URL
-            data[url] = {'hash': content_hash, 'summary': new_summary, 'changes': changes}
+            data[url] = {'hash': content_hash, 'summary': new_summary, 'changes': changes, 'title': title}
 
     # Save the data of the processed URLs
     with open('./_snote_content_cache/data.json', 'w') as data_file:
