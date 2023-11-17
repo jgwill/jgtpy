@@ -5,6 +5,9 @@ def csv_to_markdown(csv_filepath):
   # reading csv file
   df = pd.read_csv(csv_filepath, delimiter=';')
   
+  # replace NaN values with empty string
+  df.fillna('', inplace=True)
+  
   # converting the dataframe to markdown
   markdown_table = df.to_markdown(index=False)
 
