@@ -1,2 +1,2 @@
 #python -i -c "import pandas as pd; import numpy as np;import jgtpy.JGTPDS as pds;import jgtpy.JGTIDS as ids;import jgtpy.JGTCDS as cds"
-python -i -c "import pandas as pd; import numpy as np;import jgtpy.JGTPDS as pds;import jgtpy.JGTIDS as ids;import jgtpy.JGTCDS as cds;instrument='EUR/USD';timeframe='D1';print('variable instrument,timeframe are defined.  imported  pds,ids,cds');import jgtpy;i=instrument;t=timeframe"
+python -i -c "import pandas as pd; import numpy as np;import jgtpy.JGTPDS as pds;import jgtpy.JGTIDS as ids;import jgtpy.JGTCDS as cds;instrument='EUR/USD';timeframe='D1';print('variable instrument,timeframe are defined.  imported  pds,ids,cds');import jgtpy;i=instrument;t=timeframe;import jgtpy.jgtfxc as jfx"

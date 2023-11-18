@@ -1,0 +1,9 @@
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.        
+langchain 0.0.330 requires aiohttp<4.0.0,>=3.8.3, which is not installed.
+langchain 0.0.330 requires anyio<4.0, which is not installed.
+langchain 0.0.330 requires async-timeout<5.0.0,>=4.0.0; python_version < "3.11", which is not installed.
+langchain 0.0.330 requires PyYAML>=5.3, which is not installed.
+langchain 0.0.330 requires requests<3,>=2, which is not installed.
+huggingface-hub 0.16.4 requires packaging>=20.9, which is not installed.
+huggingface-hub 0.16.4 requires tqdm>=4.42.1, which is not installed.
+langchain 0.0.330 requires anyio<4.0, but you have anyio 4.0.0 which is incompatible.
