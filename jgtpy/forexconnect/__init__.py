@@ -17,7 +17,8 @@ if platform.system() == 'Windows':
     # os.environ['PATH'] += os.pathsep + lib_path  # Add lib_path to PATH
     #from .lib.windows import ForexConnect as fxfuck
     print(lib_path)
-    from .lib.windows import *
+    from .lib.windows import fxcorepy as fxcorepy
+    # from .lib.windows import *
 elif platform.system() == 'Linux':
     #print("----------------Linux------------")
     lib_path = os.path.join(here, 'lib', 'linux')

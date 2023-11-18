@@ -77,3 +77,9 @@ signalBuy_zoneSinal_column_name = 'bz'
 # Saucer signal
 signalSell_saucer_column_name = 'ss'
 signalBuy_saucer_column_name = 'sb'
+
+
+
+
+
+

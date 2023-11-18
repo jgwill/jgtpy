@@ -28,6 +28,7 @@
 import os
 import platform
 import sys
+from . import jgtflags
 
 class NotCompatibleException(Exception):
     pass
@@ -51,11 +52,14 @@ if platform.system() == 'Linux':
 
 else:
   try:
-    import forexconnect 
+    try:
+      from . import forexconnect       
+    except:
+     from jgtpy import forexconnect 
   except:
     print("----------------------------------------------------------------")
     print("---Failed to load forexconnect --- Please Install forexconnect")
-    print("--------- > pip install forexconnect")
+    print("--------- > pip install forexconnect (only an python =< 3.7)")
     print("--------")
     print("-----WINDOWS USER : ----")
     print("--If you are on an above Windows Python 3.7, it wont work.  ")
