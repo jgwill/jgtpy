@@ -13,11 +13,18 @@ if platform.system() == 'Windows':
     print("----------------Windows------------")
     lib_path = os.path.join(here, 'lib', 'windows')
     os.chdir(lib_path)
+    #os.add_dll_directory(lib_path)
     # sys.path.append(lib_path)
     # os.environ['PATH'] += os.pathsep + lib_path  # Add lib_path to PATH
     #from .lib.windows import ForexConnect as fxfuck
-    print(lib_path)
-    from .lib.windows import fxcorepy as fxcorepy
+    #print(lib_path)
+    try:
+    #      #import forexconnect
+        from .lib.windows import fxcorepy 
+    except:
+        pass
+        #from . import fxcorepy
+         
     # from .lib.windows import *
 elif platform.system() == 'Linux':
     #print("----------------Linux------------")

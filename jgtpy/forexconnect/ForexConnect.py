@@ -5,7 +5,10 @@ import logging
 from datetime import datetime
 
 import numpy as np
-from . import fxcorepy
+try:
+    from . import fxcorepy
+except:
+    pass
 from .TableManagerListener import TableManagerListener
 from .SessionStatusListener import SessionStatusListener
 from .errors import (RequestFailedError,
