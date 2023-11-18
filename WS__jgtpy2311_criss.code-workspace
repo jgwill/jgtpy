@@ -1,0 +1,34 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../o/pys"
+		},
+		{
+			"path": "../jgtapy-jgwill"
+		},
+		{
+			"path": "data/pds"
+		},
+		{
+			"path": "data/cds"
+		},
+		{
+			"path": "../forex-connect-gehtsoft-jgwill/samples/Python"
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"**/.git": true,
+			"**/.svn": true,
+			"**/.hg": true,
+			"**/CVS": true,
+			"**/.DS_Store": true,
+			"**/Thumbs.db": true,
+			"dist": true
+		},
+		"explorerExclude.backup": {}
+	}
+}
