@@ -33,29 +33,58 @@ def startSession():
 def stopSession():
   pds.disconnect()
 # %%
-def createFromPDSFileToCDSFile(instrument,timeframe,columns_to_remove=None,quiet=True):
-  c=createFromPDSFile(instrument,timeframe,quiet)
+def createFromPDSFileToCDSFile(instrument, timeframe, columns_to_remove=None, quiet=True):
+  """
+  Create a CDS file from a PDS file.
+
+  Parameters:
+  - instrument (str): The instrument name.
+  - timeframe (str): The timeframe of the data.
+  - columns_to_remove (list, optional): List of column names to remove from the CDS file. Default is None.
+  - quiet (bool, optional): If True, suppresses the output. Default is True.
+
+  Returns:
+  - fpath (str): The file path of the created CDS file.
+  - c (DataFrame): The DataFrame containing the data.
+
+  """
+  c = createFromPDSFile(instrument, timeframe, quiet)
+
   # Remove the specified columns
   if columns_to_remove is not None:
     c = c.drop(columns=columns_to_remove, errors='ignore')
-  
+
   # Reset the index
   try:
     c.reset_index(inplace=True)
-  except: 
+  except:
     pass
-  # Define the file path based on the environment variable or local path
-  data_path_cds = get_data_path()
-  fpath=pds.mk_fullpath(instrument,timeframe,'csv',data_path_cds)
-  c.to_csv(fpath)
-  return fpath,c
 
-def readCDSFile(instrument,timeframe,columns_to_remove=None,quiet=True):
   # Define the file path based on the environment variable or local path
   data_path_cds = get_data_path()
-  fpath=pds.mk_fullpath(instrument,timeframe,'csv',data_path_cds)
-  c=pd.read_csv(fpath)
-  
+  fpath = pds.mk_fullpath(instrument, timeframe, 'csv', data_path_cds)
+  c.to_csv(fpath)
+
+  return fpath, c
+
+def readCDSFile(instrument, timeframe, columns_to_remove=None, quiet=True):
+  """
+  Read a CDS file and return a pandas DataFrame.
+
+  Parameters:
+  instrument (str): The instrument name.
+  timeframe (str): The timeframe of the data.
+  columns_to_remove (list, optional): List of column names to remove from the DataFrame. Default is None.
+  quiet (bool, optional): If True, suppresses the output messages. Default is True.
+
+  Returns:
+  pandas.DataFrame: The DataFrame containing the CDS data.
+  """
+  # Define the file path based on the environment variable or local path
+  data_path_cds = get_data_path()
+  fpath = pds.mk_fullpath(instrument, timeframe, 'csv', data_path_cds)
+  c = pd.read_csv(fpath)
+
   # Set 'Date' as the index
   c.set_index('Date', inplace=True)
   # Remove the specified columns
