@@ -8,6 +8,25 @@ import jgtpy.JGTIDS as ids
 import pandas as pd
 import os
 
+
+
+from .jgtconstants import (
+    signalCode_fractalDivergentBar_column_name,
+    signalSell_fractalDivergentBar_column_name,
+    signalBuy_fractalDivergentBar_column_name,
+    signalSell_fractal_column_name,
+    signalBuy_fractal_column_name,
+    signal_zcol_column_name,
+    signalSell_zoneSignal_column_name,
+    signalBuy_zoneSinal_column_name,
+    signalBuy_zeroLineCrossing_column_name,
+    signalSell_zeroLineCrossing_column_name,
+    signalSell_AC_deceleration_column_name,
+    signalBuy_AC_acceleration_column_name,
+    signalSell_saucer_column_name,
+    signalBuy_saucer_column_name,
+)
+
 def startSession():
   pds.connect()
   
@@ -19,12 +38,31 @@ def createFromPDSFileToCDSFile(instrument,timeframe,columns_to_remove=None,quiet
   # Remove the specified columns
   if columns_to_remove is not None:
     c = c.drop(columns=columns_to_remove, errors='ignore')
+  
+  # Reset the index
+  try:
+    c.reset_index(inplace=True)
+  except: 
+    pass
   # Define the file path based on the environment variable or local path
   data_path_cds = get_data_path()
   fpath=pds.mk_fullpath(instrument,timeframe,'csv',data_path_cds)
   c.to_csv(fpath)
-  return fpath
+  return fpath,c
+
+def readCDSFile(instrument,timeframe,columns_to_remove=None,quiet=True):
+  # Define the file path based on the environment variable or local path
+  data_path_cds = get_data_path()
+  fpath=pds.mk_fullpath(instrument,timeframe,'csv',data_path_cds)
+  c=pd.read_csv(fpath)
   
+  # Set 'Date' as the index
+  c.set_index('Date', inplace=True)
+  # Remove the specified columns
+  if columns_to_remove is not None:
+    c = c.drop(columns=columns_to_remove, errors='ignore')
+  return c
+
 def createFromPDSFile(instrument,timeframe,quiet=True):
   """Create CDS (Chaos Data Service) with Fresh Data on the filestore
 

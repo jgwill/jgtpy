@@ -4,12 +4,6 @@
 			"path": "."
 		},
 		{
-			"path": "../o/pys"
-		},
-		{
-			"path": "../jgtapy-jgwill"
-		},
-		{
 			"path": "data/pds"
 		},
 		{
@@ -17,6 +11,9 @@
 		},
 		{
 			"path": "../forex-connect-gehtsoft-jgwill/samples/Python"
+		},
+		{
+			"path": "../rnn-mastery"
 		}
 	],
 	"settings": {
