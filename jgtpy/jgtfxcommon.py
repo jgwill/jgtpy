@@ -911,6 +911,7 @@ def convert_timeframe_to_seconds(unit: fxcorepy.O2GTimeFrameUnit, size: int):
 JGT_CONFIG_JSON_SECRET=None
 
 def readconfig(json_config_str=None):
+    global JGT_CONFIG_JSON_SECRET
     # Try reading config file from current directory
 
     if json_config_str is not None:
@@ -930,6 +931,7 @@ def readconfig(json_config_str=None):
     if os.path.isfile(config_file):
         with open(config_file, 'r') as f:
             config = json.load(f)
+            return config
     else:
         # If config file not found, check home directory
         home_dir = os.path.expanduser("~")
@@ -939,16 +941,19 @@ def readconfig(json_config_str=None):
                 config = json.load(f)
         else:
             # If config file still not found, try reading from environment variable
-            config_json = os.getenv('JGT_CONFIG_JSON_SECRET')
-            if config_json:
-                config = json.loads(config_json)
+            config_json_str = os.getenv('JGT_CONFIG_JSON_SECRET')
+            if config_json_str:
+                config = json.loads(config_json_str)
+                return config
 
-    if config is None:
-        raise Exception("Configuration not found")
 
     # Now you can use the config dictionary in your application
 
     # Read config file
     with open(config_file, 'r') as file:
         config = json.load(file)
-        return config
+        
+    if config is None:
+        raise Exception("Configuration not found")
+    
+    return config

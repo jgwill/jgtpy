@@ -26,6 +26,8 @@ elif platform.system() == 'Linux':
          #import forexconnect
          from .lib.linux import fxcorepy as fxcorepy
     except:
+        print("-----------EXCEPTION --- #import forexconnect")
+        print("---from .lib.linux import fxcorepy as fxcorepy---")
         #import jgtpy.forexconnect as forexconnect
         from jgtpy.forexconnect.lib.linux import fxcorepy as fxcorepy
         

@@ -125,3 +125,5 @@ test/*.csv
 downloadspy
 dist-analyze
 books
+docs/_cache*
+docs/_snote*

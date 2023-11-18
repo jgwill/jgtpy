@@ -73,10 +73,11 @@ def login_forexconnect(user_id, password, url, connection, quiet=False):
     jgtfxcommon.quiet=quiet
     fx = ForexConnect()
     try:
-        fx.login(user_id, password, url, connection, "", "", jgtfxcommon.session_status_changed)
-        session_status= jgtfxcommon.get_connection_status()
+        fx.login(user_id=user_id,password=password,url=url,connection=connection, pin="", session_id="", session_status_callback=jgtfxcommon.session_status_changed)
+        #session_status= jgtfxcommon.get_connection_status()
     except Exception as e:
         jgtfxcommon.print_exception(e)
+        print("------bahhhhhhhhhhhh----------")
     return fx
 config=None
 #@STCIssue Matching our original connect
@@ -98,6 +99,8 @@ def connect(quiet=True,json_config_str=None):
     quotes_count = config['quotes_count']
 
     fx = login_forexconnect(str_user_id, str_password, str_url, str_connection,quiet=quiet)
+    
+    return fx
 
 
 def logout_forexconnect(fx,quiet=False):
@@ -149,7 +152,9 @@ def status1(quiet=True):
 def print_quiet(quiet,content):
     if not quiet:
         print(content)
+
 config=None
+
 def readconfig(json_config_str=None):
     global config
     # # Try reading config file from current directory
@@ -173,8 +178,9 @@ def get_price_history(instrument, timeframe, datefrom=None, dateto=None,quotes_c
         quotes_count_spec=quotes_count
 
     connect(quiet=quiet)
-     
-
+    # if home_dir/.jgt/iprops make it and run a save of this instrument properties
+    iprop=get_instrument_properties(instrument,quiet)
+    
     try:
         print_quiet(quiet,"Requesting a price history...")
   
@@ -233,15 +239,28 @@ def get_price_history_printed(instrument, timeframe, datefrom=None, dateto=None)
 
 #fx
 def getAccount():
-    account = fx.getAccount()
-    print(account)
-    return account
+    # account = fx.getAccount()
+    # print(account)
+    # return account
+    print("Not implemented yet")
 
 def getSubscribedSymbols():
-    symbols = fx.getSubscribedSymbols()
-    print(symbols)
-    return symbols
+    if fx is None:
+        connect()
+    # symbols = fx.getSubscribedSymbols()
+    # print(symbols)
+    #return symbols
+    print("Not implemented yet")
 
+
+def get_pipsize(s_instrument):
+    if fx is None:
+        connect()
+    table_manager = fx.table_manager
+    offers_table = table_manager.get_table(ForexConnect.OFFERS)
+    for offer_row in offers_table:
+        if offer_row.instrument == s_instrument:
+            return offer_row.PointSize
 
 
 
@@ -253,3 +272,49 @@ def parse_date(date_str):
             except ValueError:
                 pass
         raise ValueError('no valid date format found')
+    
+
+def get_instrument_properties(instrument, quiet=False):
+    # Define the path to the directory
+    home_dir = os.path.expanduser("~")
+    dir_path = os.path.join(home_dir, '.jgt', 'iprops')
+    instrument_properties = {}
+    instrument_filename = instrument.replace('/', '-')
+    
+    # Check if the directory exists
+    if not os.path.exists(dir_path):
+        # If not, create it
+        os.makedirs(dir_path)
+    
+    iprop_dir_path = os.path.join(dir_path, f'{instrument_filename}.json')
+    # Check if the file exists
+    if not os.path.exists(iprop_dir_path):
+        # If not, create the directory if it doesn't exist
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
+
+        # Define the instrument properties
+        # Replace with your actual instrument properties
+        pipsize = get_pipsize(instrument)
+        instrument_properties = {
+            "pipsize": pipsize
+            # Add more properties as needed
+        }
+
+        # Replace forward slash with hyphen in the instrument name
+
+        # Save the instrument properties to the file
+        with open(iprop_dir_path, 'w') as f:
+            json.dump(instrument_properties, f)
+
+        if not quiet:
+            print(f"Instrument properties for {instrument} saved.")
+    else:
+        # Read the instrument properties from the file
+        with open(iprop_dir_path, 'r') as f:
+            instrument_properties = json.load(f)
+
+        if not quiet:
+            print(f"Instrument properties for {instrument} read.")
+    return instrument_properties
+    

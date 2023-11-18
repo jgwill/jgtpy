@@ -344,3 +344,78 @@ def print_quiet(quiet,content):
         
 class PDSRangeNotAvailableException(Exception):
     pass
+
+
+
+def get_instrument_properties(instrument, quiet=False):
+  return jfx.get_instrument_properties(instrument, quiet)
+    # # Define the path to the directory
+    # home_dir = os.path.expanduser("~")
+    # dir_path = os.path.join(home_dir, '.jgt', 'iprops')
+    # instrument_properties = {}
+    # instrument_filename = instrument.replace('/', '-')
+    
+    # # Check if the directory exists
+    # if not os.path.exists(dir_path):
+    #     # If not, create it
+    #     os.makedirs(dir_path)
+    
+    # iprop_dir_path = os.path.join(dir_path, f'{instrument_filename}.json')
+    # # Check if the file exists
+    # if not os.path.exists(iprop_dir_path):
+    #     # If not, create the directory if it doesn't exist
+    #     if not os.path.exists(dir_path):
+    #         os.makedirs(dir_path)
+
+    #     # Define the instrument properties
+    #     # Replace with your actual instrument properties
+    #     pipsize = get_pipsize(instrument)
+    #     instrument_properties = {
+    #         "pipsize": pipsize
+    #         # Add more properties as needed
+    #     }
+
+    #     # Replace forward slash with hyphen in the instrument name
+
+    #     # Save the instrument properties to the file
+    #     with open(iprop_dir_path, 'w') as f:
+    #         json.dump(instrument_properties, f)
+
+    #     if not quiet:
+    #         print(f"Instrument properties for {instrument} saved.")
+    # else:
+    #     # Read the instrument properties from the file
+    #     with open(iprop_dir_path, 'r') as f:
+    #         instrument_properties = json.load(f)
+
+    #     if not quiet:
+    #         print(f"Instrument properties for {instrument} read.")
+    # return instrument_properties
+
+
+# Might move to JGTTDS later
+def get_price_plus_minus_ticks(instrument, ticks_multiplier, context_price, direction_side):
+  """
+  Gets the price value plus or minus a defined number of ticks.
+
+  Args:
+  instrument: The instrument to trade.
+  ticks_multiplier: The number of ticks to add or subtract.
+  context_price: The current price of the instrument.
+  direction_side: The direction side to use ('S' for minus, 'B' for plus).
+
+  Returns:
+  The price value plus or minus the defined number of ticks.
+  """
+  instrument_properties = pds.get_instrument_properties(instrument)
+  tick_size = instrument_properties.pipsize * ticks_multiplier
+  if direction_side == 'S':
+    price_minus_ticks = context_price - (ticks_multiplier * tick_size)
+    return price_minus_ticks
+  elif direction_side == 'B':
+    price_plus_ticks = context_price + (ticks_multiplier * tick_size)
+    return price_plus_ticks
+  else:
+    raise ValueError("Invalid direction side. Must be 'S' or 'B'.")
+
+
