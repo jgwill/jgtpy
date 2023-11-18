@@ -6,6 +6,16 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 import os
 
+
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv(os.path.join(os.path.expanduser("~"), '.env'))
+
+# Get the API key from the environment variable
+GCP_PTO_READ_MAIL_API_KEY = os.getenv('GCP_PTO_READ_MAIL_API_KEY')
+
 # If modifying these SCOPES, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
@@ -31,7 +41,11 @@ def read_emails():
         with open('token.pickle', 'wb') as token:
             pickle.dump(creds, token)
 
-    service = build('gmail', 'v1', credentials=creds)
+    #service = build('gmail', 'v1', credentials=creds)
+        
+    # Use the API key in your application
+    service = build('gmail', 'v1', developerKey=GCP_PTO_READ_MAIL_API_KEY)
+
 
     # Call the Gmail API
     results = service.users().messages().list(userId='me').execute()

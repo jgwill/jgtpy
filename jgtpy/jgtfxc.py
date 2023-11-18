@@ -78,17 +78,18 @@ def login_forexconnect(user_id, password, url, connection, quiet=False):
     except Exception as e:
         jgtfxcommon.print_exception(e)
     return fx
-
+config=None
 #@STCIssue Matching our original connect
-def connect(quiet=True):
-    global fx,quotes_count
+def connect(quiet=True,json_config_str=None):
+    global fx,quotes_count,config
     
     if fx is not None or jgtfxcommon.get_connection_status()== "CONNECTED":
         if not quiet:
             print("Already connected")
         return
     
-    config=readconfig()
+    if config is None:
+        config=readconfig(json_config_str)
 
     str_user_id = config['user_id']
     str_password = config['password']
@@ -148,8 +149,9 @@ def status1(quiet=True):
 def print_quiet(quiet,content):
     if not quiet:
         print(content)
-
-def readconfig():
+config=None
+def readconfig(json_config_str=None):
+    global config
     # # Try reading config file from current directory
     # config_file = 'config.json'
     # if not os.path.isfile(config_file):
@@ -159,7 +161,8 @@ def readconfig():
 
     # # Read config file
     # with open(config_file, 'r') as file:
-    config = jgtfxcommon.readconfig()
+    if config is None:
+        config = jgtfxcommon.readconfig(json_config_str)
     return config
 
 

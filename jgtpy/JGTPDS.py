@@ -22,7 +22,7 @@ renameColumns=True
 addOhlc=True
 stayConnected=False
 
-def stayConnectedSetter(_v):
+def stayConnectedSetter(_v,json_config_str=None):
   global stayConnected
   stayConnected=_v
   jfx.stayConnected=_v
@@ -85,8 +85,8 @@ def getSubscribed():
   return "REQUIRE UPGRADE FOR THIS FUNCTION (fxcmpy DEPRECRATED)"
   #return jfx.con.get_instruments_for_candles()
 
-def connect(quiet=True):  
-  return jfx.connect(quiet)
+def connect(quiet=True,json_config_str=None):  
+  return jfx.connect(quiet,json_config_str)
 
 def disconnect(quiet=True):
   return jfx.disconnect(quiet)

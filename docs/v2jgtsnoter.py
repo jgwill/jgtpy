@@ -5,6 +5,7 @@
 import csv
 import requests
 from bs4 import BeautifulSoup
+import html2text
 import os
 import urllib.parse
 import hashlib
@@ -36,11 +37,14 @@ def download_images(soup, url):
 
         with open(f'./_snote_content_cache/{img_filename}', 'wb') as img_file:
             img_file.write(img_response.content)
-
+            
 def clean_url_response2text(response):
     soup = BeautifulSoup(response.text, 'html.parser')
-    clean_text = soup.get_text(separator=' ')
-    return clean_text[:5000]
+    html_text = str(soup)
+    markdown_text = html2text.html2text(html_text)
+    return markdown_text[:5000]
+    
+
 
 def get_summary(response, temperature=0.5):
     prompt_text = clean_url_response2text(response)
@@ -143,7 +147,8 @@ with open('jgtsnoter.csv', 'r') as csv_file:
     
 
     # Call the function from snoterupdate.py
-    snoterupdate.generate_markdown(link_titles, data)
+    #snoterupdate.generate_markdown(link_titles, data)
+snoterupdate.generate_markdown()
     
     
     

@@ -1,4 +1,7 @@
 
+"""
+This module contains constant values used in JGTpy trading system. It includes colors for non-trading zone, selling zone, and buying zone. It also includes a list of columns to remove, column names for various indicators, and signal data frame columns naming.
+"""
 nonTradingZoneColor = 'gray'
 
 sellingZoneColor = 'red'
