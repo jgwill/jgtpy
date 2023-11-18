@@ -25,7 +25,7 @@ class ForexConnect:
     _SESSION = None
     _STATUS_LISTENER = None
     _TABLE_MANAGER_LISTENER = None
-    _START_URL = "http://fxcorporate.com/Hosts.jsp"
+    _START_URL = "https://fxcorporate.com/Hosts.jsp"
     _LISTENER = None
 
     OFFERS = fxcorepy.O2GTableType.OFFERS
