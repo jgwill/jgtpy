@@ -239,6 +239,7 @@ def ids_add_indicators_LEGACY(dfsrc,
   enableMFI (bool, optional): Whether to enable the Money Flow Index indicator. Defaults to False.
   dropnavalue (bool, optional): Whether to drop rows with NaN values. Defaults to True.
   quiet (bool, optional): Whether to suppress print statements. Defaults to False.
+  addAlligatorOffsetInFutur (bool, optional): Whether to add the Alligator offset in the future. Defaults to True.
 
   Returns:
   pandas.DataFrame: The input DataFrame with added technical indicators.
@@ -286,8 +287,8 @@ def ids_add_indicators_LEGACY(dfsrc,
   if not quiet:
     print("done adding indicators :)")
   
-  if addAlligatorOffsetInFutur:
-    _offset_alligator_tmpcol_in_futur(dfresult)
+  # if addAlligatorOffsetInFutur:
+  #   _offset_alligator_tmpcol_in_futur(dfresult)
   return dfresult
 
 def _offset_alligator_tmpcol_in_futur(dfsrc):
