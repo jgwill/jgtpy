@@ -24,7 +24,9 @@
 			"**/CVS": true,
 			"**/.DS_Store": true,
 			"**/Thumbs.db": true,
-			"dist": true
+			"dist": true,
+			"**/build": true,
+			"build": true
 		},
 		"explorerExclude.backup": {}
 	}

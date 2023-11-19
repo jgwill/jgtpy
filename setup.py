@@ -9,7 +9,6 @@ from jgtpy import __version__ as version
 
 INSTALL_REQUIRES = [
     'pandas>=0.25.1',
-    'forexconnect>=1.6.43', 
     'python-dotenv>=0.19.2',
     'kaleido>=0.2.1',
     'matplotlib>=3.3.1',

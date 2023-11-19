@@ -228,7 +228,8 @@ def ids_add_indicators_LEGACY(dfsrc,
                        enableGatorOscillator=False,
                        enableMFI=False,
                        dropnavalue=True,
-                       quiet=False):
+                       quiet=False,
+                       addAlligatorOffsetInFutur=True):
   """
   Adds various technical indicators to the input DataFrame. Is the same as in the jgtapy.legacy module.
 
@@ -266,20 +267,56 @@ def ids_add_indicators_LEGACY(dfsrc,
   if enableGatorOscillator:
     
     i.gator(period_jaws=13, period_teeth=8, period_lips=5, shift_jaws=8, shift_teeth=5, shift_lips=3, column_name_val1=indicator_gatorOscillator_low_column_name, column_name_val2=indicator_gatorOscillator_high_column_name)
+
   if enableMFI:
-    
     i.bw_mfi(column_name=indicator_mfi_marketFacilitationIndex_column_name)
-  _df=i.df
+  
+  if addAlligatorOffsetInFutur:
+    _add_alligator_tmpcol_offset_in_futur(i)
+  
+  dfresult = i.df
+
+
   if dropnavalue:
-    _df = _df.dropna()
+    dfresult = dfresult.dropna()
   try: 
-    _df=_df.set_index('Date')
+    dfresult = dfresult.set_index('Date')
   except TypeError:
     pass
   if not quiet:
     print("done adding indicators :)")
-  return _df
+  
+  if addAlligatorOffsetInFutur:
+    _offset_alligator_tmpcol_in_futur(dfresult)
+  return dfresult
 
+def _offset_alligator_tmpcol_in_futur(dfsrc):
+  dfsrc['jaws_tmp2'] = dfsrc['jaws_tmp'].shift(8)
+  dfsrc['teeth_tmp2'] = dfsrc['teeth_tmp'].shift(5)
+  dfsrc['lips_tmp2'] = dfsrc['lips_tmp'].shift(3)
+  
+  return dfsrc
+
+def _add_alligator_tmpcol_offset_in_futur(i):
+  
+  i.smma( 8, 'jaws_tmp', 'Median')
+  i.smma( 5, 'teeth_tmp', 'Median')
+  i.smma( 3, 'lips_tmp', 'Median')
+  #df=i.df
+  # Define the logic for adding alligator offset in the future
+  # ...
+  #indicator_currentDegree_alligator_jaw_column_name
+  # from jgtapy.utils import  calculate_smma
+  # df_j = calculate_smma(df['Median'], 8, 'jaws_tmp', median_col)
+  # df_t = calculate_smma(df_median, period_teeth, column_name_teeth, median_col)
+  # df_l = calculate_smma(df_median, period_lips, column_name_lips, median_col)
+
+  # # Shift SMMAs
+  # df_j[column_name_jaws] = df_j[column_name_jaws].shift(shift_jaws)
+  # df_t[column_name_teeth] = df_t[column_name_teeth].shift(shift_teeth)
+  # df_l[column_name_lips] = df_l[column_name_lips].shift(shift_lips)
+
+  return i
 
 # %%
 #@title Pandas JGT Utilities
@@ -923,8 +960,8 @@ def jgti_add_zlc_plus_other_AO_signal(dfsrc,dropsecondaries=True,quiet=True):
     
     
     dfsrc.at[i,indicator_zeroLineCross_column_name] = zlcCode  
-    dfsrc.at[i,signalBuy_zeroLineCrossing_column_name] = isZLCBuy
-    dfsrc.at[i,signalSell_zeroLineCrossing_column_name] = isZLCSell
+    dfsrc.at[i,signalBuy_zeroLineCrossing_column_name] = float(isZLCBuy)
+    dfsrc.at[i,signalSell_zeroLineCrossing_column_name] = float(isZLCSell)
 
     #Coloring AO
     if caogreen:
@@ -957,7 +994,7 @@ def jgti_add_zlc_plus_other_AO_signal(dfsrc,dropsecondaries=True,quiet=True):
     
     #Sell Zone Signal
    
-    dfsrc.at[i,signalSell_zoneSignal_column_name]=redZone
+    dfsrc.at[i,signalSell_zoneSignal_column_name]=float(redZone)
     
     #Buy Zone Signal
     dfsrc.at[i, signalBuy_zoneSinal_column_name] = float(greenZone)
@@ -980,7 +1017,7 @@ def jgti_add_zlc_plus_other_AO_signal(dfsrc,dropsecondaries=True,quiet=True):
     dfsrc.at[i, signalSell_AC_deceleration_column_name] = float(acSell)
     
     #AC Buy Signal (Acceleration)
-    dfsrc.at[i,signalBuy_AC_acceleration_column_name]=acBuy
+    dfsrc.at[i,signalBuy_AC_acceleration_column_name]=float(acBuy)
     
     if acSell and not quiet:
       print("AC Sell Signal with AC Bellow Zero Line "+ str(i))
