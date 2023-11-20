@@ -1,58 +1,14 @@
 from typing import Callable, Dict, Any
 import atexit
 import threading
-import os
-import platform
 import logging
 from datetime import datetime
 
 import numpy as np
-from jgtpy.forexconnect import fxcorepy
-
-
-# origin_work_dir = os.getcwd()
-# here = os.path.abspath(os.path.dirname(__file__))
-
-# os.chdir(here)
-
-# lib_path = os.path.join(here, "lib")
-
-# if platform.system() == 'Windows':
-#     print("----------------Windows------------")
-#     lib_path = os.path.join(here, 'lib', 'windows')
-#     os.chdir(lib_path)
-#     #os.add_dll_directory(lib_path)
-#     # sys.path.append(lib_path)
-#     # os.environ['PATH'] += os.pathsep + lib_path  # Add lib_path to PATH
-#     #from .lib.windows import ForexConnect as fxfuck
-#     #print(lib_path)
-#     try:
-#     #      #import forexconnect
-#         from .lib.windows import fxcorepy 
-#     except:
-#         pass
-#         #from . import fxcorepy
-         
-#     # from .lib.windows import *
-# elif platform.system() == 'Linux':
-#     #print("----------------Linux------------")
-#     lib_path = os.path.join(here, 'lib', 'linux')
-#     os.chdir(lib_path)
-#     try:
-#          #import forexconnect
-#          from .lib.linux import fxcorepy as fxcorepy
-#     except:
-#         print("-----------EXCEPTION --- #import forexconnect")
-#         print("---from .lib.linux import fxcorepy as fxcorepy---")
-#         #import jgtpy.forexconnect as forexconnect
-#         from jgtpy.forexconnect.lib.linux import fxcorepy as fxcorepy
-        
-# else:
-#     raise RuntimeError('Unsupported platform')
-
-
-# os.chdir(here)
-
+try:
+    from . import fxcorepy
+except:
+    pass
 from .TableManagerListener import TableManagerListener
 from .SessionStatusListener import SessionStatusListener
 from .errors import (RequestFailedError,

@@ -2,55 +2,48 @@ import os
 import platform
 import sys
 
-
 origin_work_dir = os.getcwd()
 here = os.path.abspath(os.path.dirname(__file__))
+
 os.chdir(here)
-print("forexconnect::"+here)
-try:
-    lib_path = os.path.join(here, "lib/linux")
-    sys.path.append(lib_path)
-    from jgtpy import fxcorepy
-except:
-    from jgtpy.forexconnect.lib.linux import fxcorepy as fxcorepy
-# if platform.system() == 'Windows':
-#     print("----------------Windows------------")
-#     # lib_path = os.path.join(here, 'lib', 'windows')
-#     # os.chdir(lib_path)
-#     #os.add_dll_directory(lib_path)
-#     # sys.path.append(lib_path)
-#     # os.environ['PATH'] += os.pathsep + lib_path  # Add lib_path to PATH
-#     #from .lib.windows import ForexConnect as fxfuck
-#     #print(lib_path)
-#     try:
-#     #      #import forexconnect
-#         #from .lib.windows import fxcorepy 
-#         from jgtpy import fxcorepy
-#     except:
-#         from jgtpy.forexconnect.lib.windows import fxcorepy as fxcorepy
-#         #from . import fxcorepy
+
+lib_path = os.path.join(here, "lib")
+
+if platform.system() == 'Windows':
+    print("----------------Windows------------")
+    lib_path = os.path.join(here, 'lib', 'windows')
+    os.chdir(lib_path)
+    #os.add_dll_directory(lib_path)
+    # sys.path.append(lib_path)
+    # os.environ['PATH'] += os.pathsep + lib_path  # Add lib_path to PATH
+    #from .lib.windows import ForexConnect as fxfuck
+    #print(lib_path)
+    try:
+    #      #import forexconnect
+        from .lib.windows import fxcorepy 
+    except:
+        pass
+        #from . import fxcorepy
          
-#     # from .lib.windows import *
-# elif platform.system() == 'Linux':
-#     #print("----------------Linux------------")
-#     # lib_path = os.path.join(here, 'lib', 'linux')
-#     # os.chdir(lib_path)
-#     try:
-#         from jgtpy import fxcorepy
-#          #import forexconnect
-#         #  from .lib.linux import fxcorepy as fxcorepy
-#         # from jgtpy.forexconnect.lib.linux import fxcorepy as fxcorepy
-#     except:
-#         print("-----------EXCEPTION --- #import forexconnect")
-#         #import jgtpy.forexconnect as forexconnect
-#         from jgtpy.forexconnect.lib.linux import fxcorepy as fxcorepy
+    # from .lib.windows import *
+elif platform.system() == 'Linux':
+    #print("----------------Linux------------")
+    lib_path = os.path.join(here, 'lib', 'linux')
+    os.chdir(lib_path)
+    try:
+         #import forexconnect
+         from .lib.linux import fxcorepy as fxcorepy
+    except:
+        print("-----------EXCEPTION --- #import forexconnect")
+        print("---from .lib.linux import fxcorepy as fxcorepy---")
+        #import jgtpy.forexconnect as forexconnect
+        from jgtpy.forexconnect.lib.linux import fxcorepy as fxcorepy
         
-# else:
-#     raise RuntimeError('Unsupported platform')
+else:
+    raise RuntimeError('Unsupported platform')
 
-
-os.chdir(origin_work_dir)   
-
+#print(lib_path)
+os.chdir(here)
 #from .lib import fxcorepy
 from .ForexConnect import ForexConnect
 from .TableManagerListener import TableManagerListener
