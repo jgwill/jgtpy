@@ -38,30 +38,32 @@ from .jgtetl import svc_offset_dt_by_tf as etl_offset_dt_by_tf,offsetdt as etl_o
 from .JGTCore import __version__ #,json2dict,jsonfile2prop,json2prop,jsonfile2dict,d2p,fixdtindf,offsetdt
 #from .JGTConfig import getenv,setreal,setdemo,env
 
+origin_work_dir = os.getcwd()
+here = os.path.abspath(os.path.dirname(__file__))
+os.chdir(here)
+print(here)
 if platform.system() == 'Linux':
-  #sys.path.append(os.path.abspath('./'))
+  lib_path = os.path.join(here, "forexconnect/lib/linux")
+  sys.path.append(lib_path)
 
-  origin_work_dir = os.getcwd()
-  here = os.path.abspath(os.path.dirname(__file__))
-  os.chdir(here)
   try:
-     from . import forexconnect
+     from .forexconnect.lib.linux import fxcorepy as fxcorepy
   except:
-     from jgtpy import forexconnect 
-  os.chdir(origin_work_dir)   
+     from jgtpy.forexconnect.lib.linux import fxcorepy as fxcorepy
+    
 
 else:
   try:
     try:
-      from . import forexconnect       
+     from .forexconnect.lib.linux import fxcorepy as fxcorepy
     except:
-     from jgtpy import forexconnect 
+      from jgtpy.forexconnect.lib.linux import fxcorepy as fxcorepy
   except:
     print("----------------------------------------------------------------")
     print("---Failed to load forexconnect --- Please Install forexconnect")
     print("--------- > pip install forexconnect (only an python =< 3.7)")
     print("--------")
-    print("-----WINDOWS USER : ----")
+    print("-----WINDOWS or Darwin USER : ----")
     print("--If you are on an above Windows Python 3.7, it wont work.  ")
     print("--I made forexconnect to work on later than 3.7 only on Linux, ")
     print("-- sorry guys, migrate on Linux ;) or get involved migrating it ;) ")
@@ -69,8 +71,8 @@ else:
     raise NotCompatibleException("Forexconnect is not compatible with your current environment.")
 
 
-
-# os.chdir(origin_work_dir)   
+# print(origin_work_dir)
+os.chdir(origin_work_dir)   
 from .jgtfxcommon import JGT_CONFIG_JSON_SECRET
 
 
