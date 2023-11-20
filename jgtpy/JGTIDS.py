@@ -416,37 +416,37 @@ def _ids_add_fdb_column_logics(dfsrc,
       LowisAboveLips  = dfsrc.at[i,'LowisAboveLips']
 
       #default values 
-      dfsrc.at[i, signalBuy_fractalDivergentBar_column_name] = float(False)
-      dfsrc.at[i, signalSell_fractalDivergentBar_column_name] = float(False)
+      dfsrc.at[i, signalBuy_fractalDivergentBar_column_name] = 0
+      dfsrc.at[i, signalSell_fractalDivergentBar_column_name] = 0
       dfsrc.at[i,signalCode_fractalDivergentBar_column_name] = 0 
 
       ##################################################
       #########   FDBB
-      isFDB = False
+      isFDB = 0
       isFDBCode = 0
       high=0
       low=0
       if HighisBellowLips and LowIsLower and ClosedAboveMedian   :
-          isFDB = True
+          isFDB = 1
           isFDBCode = 1
           high  = dfsrc.at[i,'High']
           low  = dfsrc.at[i,'Low']
       dfsrc.at[i,'fdbbhigh'] = high 
       dfsrc.at[i,'fdbblow'] = low 
       
-      dfsrc.at[i,signalBuy_fractalDivergentBar_column_name] = float(isFDB)    
+      dfsrc.at[i,signalBuy_fractalDivergentBar_column_name] = isFDB  
       dfsrc.at[i,signalCode_fractalDivergentBar_column_name] = isFDBCode   # So we have All
       isAfdbb = isFDB
       ##################################################
       #########   FDBS
       
       if not isAfdbb:
-        isFDB = False    
+        isFDB = 0    
         isFDBCode = 0
         high=0
         low=0
         if LowisAboveLips and HighIsHigher and ClosedBellowMedian   :
-            isFDB = True
+            isFDB = 1
             isFDBCode = -1
             high  = dfsrc.at[i,'High']
             low  = dfsrc.at[i,'Low']
@@ -454,7 +454,7 @@ def _ids_add_fdb_column_logics(dfsrc,
         dfsrc.at[i,'fdbshigh'] = high 
         dfsrc.at[i,'fdbslow'] = low 
         
-        dfsrc.at[i,signalSell_fractalDivergentBar_column_name] = float(isFDB)
+        dfsrc.at[i,signalSell_fractalDivergentBar_column_name] = isFDB
         dfsrc.at[i,signalCode_fractalDivergentBar_column_name] = isFDBCode
   if _dropIntermediariesColumns:
     dfsrc = _ids_clear_fdb_intermediaries_columns(dfsrc,quiet=quiet)
@@ -677,9 +677,16 @@ def tocds(dfsrc):
   dfires = jgti_add_zlc_plus_other_AO_signal(dfires,quiet=True)
   dfires = pds_cleanse_original_columns(dfires,quiet=True)
   dfires = __ids_cleanse_ao_peak_secondary_columns(dfires,quiet=True)
+  dfires = __format_boolean_columns_to_int(dfires,quiet=True)
   return dfires
 
 
+def __format_boolean_columns_to_int(dfsrc, quiet=True):
+  for col in dfsrc.columns:
+    if dfsrc[col].dtype == bool:
+      dfsrc[col] = dfsrc[col].astype(int)
+  return dfsrc
+  
 
 
 
@@ -899,9 +906,11 @@ def jgti_add_zlc_plus_other_AO_signal(dfsrc,dropsecondaries=True,quiet=True):
   if not quiet:
     print('----added shofted range AO')
 
-  dfsrc[indicator_AO_aboveZero_column_name]= dfsrc[indicator_AO_awesomeOscillator_column_name]>0 # AO Above Zero
-  dfsrc[indicator_AO_bellowZero_column_name]= dfsrc[indicator_AO_awesomeOscillator_column_name]<0 # AO Bellow Zero
-  #_df[signalBuy_zeroLineCrossing_column_name]=_df[_df[indicator_AO_awesomeOscillator_column_name]]
+  # AO Above Zero
+  dfsrc[indicator_AO_aboveZero_column_name]= (dfsrc[indicator_AO_awesomeOscillator_column_name]>0 ).astype(int) 
+  # AO Bellow Zero
+  dfsrc[indicator_AO_bellowZero_column_name]= (dfsrc[indicator_AO_awesomeOscillator_column_name] < 0).astype(int) 
+  
   c=0
   xc=len(dfsrc)
   for i,row in dfsrc.iterrows():
@@ -948,21 +957,21 @@ def jgti_add_zlc_plus_other_AO_signal(dfsrc,dropsecondaries=True,quiet=True):
     aobz=dfsrc.at[i,indicator_AO_bellowZero_column_name]
 
     #ZLC
-    isZLCBuy = False
-    isZLCSell = False
+    isZLCBuy = 0
+    isZLCSell = 0
     zlcCode=0
-    if pao1 > 0 and aobz == True:
+    if pao1 > 0 and aobz == 1:
       zlcCode = -1
-      isZLCSell=True
-    if pao1 < 0 and aoaz == True:
+      isZLCSell=1
+    if pao1 < 0 and aoaz == 1:
       zlcCode = 1
-      isZLCBuy=True
+      isZLCBuy=1
     
     
     
     dfsrc.at[i,indicator_zeroLineCross_column_name] = zlcCode  
-    dfsrc.at[i,signalBuy_zeroLineCrossing_column_name] = float(isZLCBuy)
-    dfsrc.at[i,signalSell_zeroLineCrossing_column_name] = float(isZLCSell)
+    dfsrc.at[i,signalBuy_zeroLineCrossing_column_name] = isZLCBuy
+    dfsrc.at[i,signalSell_zeroLineCrossing_column_name] = isZLCSell
 
     #Coloring AO
     if caogreen:
@@ -981,44 +990,44 @@ def jgti_add_zlc_plus_other_AO_signal(dfsrc,dropsecondaries=True,quiet=True):
 
     zoneColor = nonTradingZoneColor                #default Zone Color
     
-    redZone = False
+    redZone = 0
     if cacred and caored and pac1red and pao1red:
-      redZone=True
+      redZone=1
       zoneColor = sellingZoneColor
 
-    greenZone = False
+    greenZone = 0
     if cacgreen and caogreen and pac1green and pao1green:
-      greenZone=True
+      greenZone=1
       zoneColor=buyingZoneColor
       
     dfsrc.at[i,signal_zcol_column_name] = zoneColor
     
     #Sell Zone Signal
    
-    dfsrc.at[i,signalSell_zoneSignal_column_name]=float(redZone)
+    dfsrc.at[i,signalSell_zoneSignal_column_name]= redZone
     
     #Buy Zone Signal
-    dfsrc.at[i, signalBuy_zoneSinal_column_name] = float(greenZone)
+    dfsrc.at[i, signalBuy_zoneSinal_column_name] = greenZone
     
     #AC Sell / Buy  3 AC Against AO af AC Bellow, 2 if above
-    acSell = False
+    acSell = 0
     msgacSignal = "No "
     if cacred and pac1red and caogreen and pao1green:
-      acSell=True      
+      acSell=1      
       if cac < 0 and pac2green:# We require 3 bars red on the AC When bellow zero
-        acSell=False
-    acBuy = False
+        acSell=0
+    acBuy = 0
     if cacgreen and pac1green and caored and pao1red:
-      acBuy=True
+      acBuy=1
       if cac>0 and pac2red:        
-        acBuy=False
+        acBuy=0
     
     #AC Sell Signal (Deceleration)
     
-    dfsrc.at[i, signalSell_AC_deceleration_column_name] = float(acSell)
+    dfsrc.at[i, signalSell_AC_deceleration_column_name] = acSell
     
     #AC Buy Signal (Acceleration)
-    dfsrc.at[i,signalBuy_AC_acceleration_column_name]=float(acBuy)
+    dfsrc.at[i,signalBuy_AC_acceleration_column_name]=acBuy
     
     if acSell and not quiet:
       print("AC Sell Signal with AC Bellow Zero Line "+ str(i))
@@ -1027,16 +1036,16 @@ def jgti_add_zlc_plus_other_AO_signal(dfsrc,dropsecondaries=True,quiet=True):
     
     #Saucer Strategy
     # More on Saucer Strategy : http://simp.ly/p/2K1HBr
-    saucerSell=False
+    saucerSell=0
     if cao < 0 and caored and pao1green and pao2green :
-      saucerSell=True
+      saucerSell=1
       
-    saucerBuy=False
+    saucerBuy=0
     if cao > 0 and caogreen and pao1red and pao2red:
-      saucerBuy=True
+      saucerBuy=1
     
-    dfsrc.at[i,signalSell_saucer_column_name]=float(saucerSell)
-    dfsrc.at[i,signalBuy_saucer_column_name]=float(saucerBuy)
+    dfsrc.at[i,signalSell_saucer_column_name]=saucerSell
+    dfsrc.at[i,signalBuy_saucer_column_name]=saucerBuy
     
     # What Happens on the Next PLUS 35 Periods ??
     if c < xc - 35:

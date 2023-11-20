@@ -124,11 +124,7 @@ def createFromDF(df, quiet=True):
   
   if df.index.name == 'Date':
       df.reset_index(inplace=True)
-  dfi=ids.ids_add_indicators(df,quiet=quiet)
-  dfi=ids.cds_add_signals_to_indicators(dfi,quiet=quiet)
-  dfi=ids.jgti_add_zlc_plus_other_AO_signal(dfi,quiet=quiet)
-  dfi=ids.pds_cleanse_original_columns(dfi,quiet=quiet)
-  dfi =ids.__ids_cleanse_ao_peak_secondary_columns(dfi,quiet=True)
+  dfi=ids.tocds(df,quiet=quiet) 
   return dfi
 
 
