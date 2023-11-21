@@ -1,11 +1,14 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../'))
+sys.path.insert(0, os.path.abspath('../jgtpy'))
 from jgtpy import __version__
+from jgtpy import jgtfxc,JGTPDS,JGTIDS,JGTCDS,jgtetl
+
 autodoc_mock_imports = ['pandas']
 
 project = 'jgtpy'
-copyright = '2022, Guillaume Isabellle'
+copyright = '2023, Guillaume Isabelle'
 author = 'Guillaume Isabelle'
 
 extensions = [
@@ -39,4 +42,12 @@ latex_documents = [
    'JGTPy Contributors', 'manual'),
 ]
 
-intersphinx_mapping = {'http://docs.python.org/': None}
+# Updated format
+#intersphinx_mapping = {'python': ('http://docs.python.org/', None)}
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3', None),
+    'numpy': ('https://numpy.org/doc/stable', None),
+    'pandas': ('https://pandas.pydata.org/pandas-docs/stable', None
+    'jgtapy': ('https://jgtapy.jgwill.com', None
+}
+
