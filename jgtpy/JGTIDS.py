@@ -1,9 +1,8 @@
 
-# %%
-#@title FDB Intermediary values
-#@title Add Indicators Columns
 import pandas as pd
 import datetime
+from .JGTPDHelper import jgtpd_drop_col_by_name,ids_cleanse_ao_peak_secondary_columns,pds_cleanse_original_columns,pds_cleanse_extra_columns
+
 from jgtapy import Indicators
 import os
 
@@ -164,7 +163,7 @@ def pds_get_dt_from_and_to_for_now_live_price(_timeframe, _nbbar2retrieve=335, q
   Returns:
     tuple: A tuple containing the start and end datetime strings in the format '%m.%d.%Y %H:%M:%S'.
   """
-  _nbmintf = getMinByTF(_timeframe)
+  nbmintf = getMinByTF(_timeframe)
   now = datetime.datetime.now(datetime.timezone.utc)
   if not quiet:
     print('Now is: ' + str(now))
@@ -176,8 +175,8 @@ def pds_get_dt_from_and_to_for_now_live_price(_timeframe, _nbbar2retrieve=335, q
     weekdayoffset = 1440
   if chkweekday == 0:
     weekdayoffset = 2840
-  _idsIndiPrepNbBars = 90
-  dtminute = datetime.timedelta(minutes=_nbmintf*(_nbbar2retrieve+weekdayoffset+_idsIndiPrepNbBars))
+  idsIndiPrepNbBars = 90
+  dtminute = datetime.timedelta(minutes=nbmintf*(_nbbar2retrieve+weekdayoffset+idsIndiPrepNbBars))
   datefromobj = now - dtminute
   datefrom = datefromobj.strftime(_dtformat)
   nowstring = now.strftime(_dtformat)
@@ -200,7 +199,7 @@ def ids_add_indicators(dfsrc,
   Adds technical indicators to a given DataFrame.
 
   Args:
-  __df (pandas.DataFrame): The DataFrame to which the indicators will be added.
+  dfsrc (pandas.DataFrame): The DataFrame to which the indicators will be added.
   enableGatorOscillator (bool, optional): Whether to enable the Gator Oscillator indicator. Defaults to False.
   enableMFI (bool, optional): Whether to enable the Money Flow Index indicator. Defaults to False.
   dropnavalue (bool, optional): Whether to drop rows with NaN values. Defaults to True.
@@ -239,7 +238,7 @@ def ids_add_indicators_LEGACY(dfsrc,
   enableMFI (bool, optional): Whether to enable the Money Flow Index indicator. Defaults to False.
   dropnavalue (bool, optional): Whether to drop rows with NaN values. Defaults to True.
   quiet (bool, optional): Whether to suppress print statements. Defaults to False.
-  addAlligatorOffsetInFutur (bool, optional): Whether to add the Alligator offset in the future. Defaults to True.
+  addAlligatorOffsetInFutur (bool, optional): (NOT IMPLEMENTED) Whether to add the Alligator offset in the future. Defaults to True.
 
   Returns:
   pandas.DataFrame: The input DataFrame with added technical indicators.
@@ -297,6 +296,7 @@ def _offset_alligator_tmpcol_in_futur(dfsrc):
   dfsrc['lips_tmp2'] = dfsrc['lips_tmp'].shift(3)
   
   return dfsrc
+
 
 def _add_alligator_tmpcol_offset_in_futur(i):
   
@@ -481,7 +481,7 @@ def jgtids_mk_ao_fractal_peak(dfsrc,
   """ Make the AO Fractal Peak
 
     Args:
-         _df (DataFrame source)
+         dfsrc (DataFrame source)
          ctxcolname (column name from)
          poscolprefix (prefix positive (futur) ao sec col )
          negcolprefix (prefix negative (past) ao sec col )          
@@ -643,7 +643,7 @@ def jgtids_mk_ao_fractal_peak(dfsrc,
   l_df = len(dfsrc)
   if not quiet:
     print("Total Peak - Up:" + str(countUpPeak) + ", Dn: " + str(countDownPeak) + " on total: " + str(l_df))
-  dfsrc=__ids_cleanse_ao_peak_secondary_columns(dfsrc,True)
+  dfsrc=ids_cleanse_ao_peak_secondary_columns(dfsrc,True)
   return dfsrc
 
 
@@ -676,7 +676,7 @@ def tocds(dfsrc):
   dfires = cds_add_signals_to_indicators(dfires,quiet=True)
   dfires = jgti_add_zlc_plus_other_AO_signal(dfires,quiet=True)
   dfires = pds_cleanse_original_columns(dfires,quiet=True)
-  dfires = __ids_cleanse_ao_peak_secondary_columns(dfires,quiet=True)
+  dfires = ids_cleanse_ao_peak_secondary_columns(dfires,quiet=True)
   dfires = __format_boolean_columns_to_int(dfires,quiet=True)
   return dfires
 
@@ -698,197 +698,24 @@ def __format_boolean_columns_to_int(dfsrc, quiet=True):
 
 #@title PD Columen Cleanup Functions
 
-def jgtpd_drop_col_by_name(_df,colname,_axis = 1,quiet=False):
-  """Drop Column in DF by Name
+# def jgtpd_drop_col_by_name(dfsrc,colname,axis = 1,quiet=False):
+#   """Drop Column in DF by Name
 
-  Args:
-        _df (DataFrame source)
-        ctxcolname (column name from)
-        _axis (  axis)
-        quiet (quiet output)
+#   Args:
+#         dfsrc (DataFrame source)
+#         ctxcolname (column name from)
+#         axis (  axis)
+#         quiet (quiet output)
         
-  Returns:
-    Clean DataFrame 
-  """
-  if colname in _df.columns:
-    return _df.drop(_df.loc[:, colname:colname].columns,axis = _axis)
-  else:
-    # if not quiet:
-    #   print('Col:' + colname + ' was not there')
-    return _df
-
-def __ids_cleanse_ao_peak_secondary_columns(dfsrc,quiet=False):
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p0',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p1',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p2',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p3',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p4',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p5',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p6',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p7',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p8',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p9',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p10',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p11',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p12',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p13',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p14',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p15',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p16',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p17',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p18',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p19',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p20',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p21',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p22',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p23',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p24',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p25',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p26',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p27',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p28',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p29',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'p30',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n0',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n1',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n2',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n3',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n4',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n5',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n6',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n7',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n8',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n9',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n10',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n11',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n12',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n13',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n14',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n15',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n16',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n17',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n18',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n19',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n20',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n21',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n22',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n23',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n24',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n25',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n26',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n27',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n28',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n29',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'n30',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao0',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao1',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao2',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao3',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao4',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao5',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao6',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao7',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao8',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao9',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao10',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao11',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao12',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao13',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao14',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao15',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao16',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao17',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao18',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao19',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao20',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao21',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao22',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao23',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao24',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao25',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao26',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao27',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao28',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao29',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pao30',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao0',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao1',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao2',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao3',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao4',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao5',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao6',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao7',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao8',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao9',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao10',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao11',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao12',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao13',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao14',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao15',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao16',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao17',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao18',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao19',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao20',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao21',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao22',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao23',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao24',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao25',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao26',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao27',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao28',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao29',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nao30',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pac0',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pac',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pac1',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pac2',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pac3',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pac4',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pac5',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pac6',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pac7',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pac8',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'pac9',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nac',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nac0',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nac1',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nac2',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nac3',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nac4',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nac5',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nac6',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nac7',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nac8',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'nac9',1,quiet) 
-  return dfsrc
-
-def pds_cleanse_original_columns(dfsrc,quiet=True):
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'AskHigh',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'BidHigh',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'AskLow',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'BidLow',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'AskClose',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'BidClose',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'BidOpen',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'AskOpen',1,quiet)
-  return dfsrc
-
-def pds_cleanse_extra_columns(dfsrc,quiet=True):
-  dfsrc=pds_cleanse_original_columns(dfsrc,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'LowisBellowJaw',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'HighisAboveJaw',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'LowisBellowTeeth',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'HighisAboveTeeth',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'HighisAboveLips',1,quiet)
-  dfsrc=jgtpd_drop_col_by_name(dfsrc,'LowisBellowLips',1,quiet)
-  dfsrc=__ids_cleanse_ao_peak_secondary_columns(dfsrc,quiet)
-  if not quiet:
-    print("Columns cleanup was executed")
-  return dfsrc
+#   Returns:
+#     Clean DataFrame 
+#   """
+#   if colname in dfsrc.columns:
+#     return dfsrc.drop(dfsrc.loc[:, colname:colname].columns,axis = axis)
+#   else:
+#     # if not quiet:
+#     #   print('Col:' + colname + ' was not there')
+#     return dfsrc
 
 
 

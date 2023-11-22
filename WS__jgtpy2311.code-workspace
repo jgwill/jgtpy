@@ -16,10 +16,7 @@
 			"path": "../rnn-mastery"
 		},
 		{
-			"path": "../../../../Users/jeang/Dropbox/w/o/strategies/standard"
-		},
-		{
-			"path": "B:/Dropbox/w/o/strategies/standard"
+			"path": "../jgtstrategies"
 		}
 	],
 	"settings": {
@@ -34,6 +31,7 @@
 			"**/build": true,
 			"build": true
 		},
-		"explorerExclude.backup": {}
+		"explorerExclude.backup": {},
+		"terminal.integrated.defaultProfile.windows": "Ubuntu-20.04 (WSL)"
 	}
 }

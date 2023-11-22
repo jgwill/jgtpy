@@ -1,4 +1,5 @@
-from __init__ import env,jsonfile2prop,d2p,createByRange
+#from __init__ import env,jsonfile2prop,d2p,createByRange
+from . import env,jsonfile2prop,d2p,createByRange
 
 import pandas as pd
 from functools import reduce

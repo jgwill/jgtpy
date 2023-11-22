@@ -5,17 +5,16 @@ import pandas as pd
 import os
 from . import JGTPDHelper as jpd
 from . import jgtfxc as jfx
-from . import JGTConfig as jgtcnf
+from .JGTConfig import local_fn_compression,get_pov_local_data_filename
 from .JGTPDHelper import *
 from .jgtfxc import *
-from .JGTConfig import *
+# from .JGTConfig import *
 
 # import .JGTPDHelper as jpd
 
 # #import jgtpy.JGTFXCMWrapper as jfx
 # import .jgtfxc as jfx
 
-# import .JGTConfig as jgtcnf
 
 
 renameColumns=True
@@ -101,8 +100,8 @@ def status(quiet=True):
   return jfx.status(quiet)
 
 def getPH_from_local1(instrument,timeframe):
-  srcpath=jgtcnf.get_pov_local_data_filename(instrument,timeframe)
-  df=pd.read_csv(srcpath,compression=jgtcnf.local_fn_compression,index_col='Date')
+  srcpath=get_pov_local_data_filename(instrument,timeframe)
+  df=pd.read_csv(srcpath,compression=local_fn_compression,index_col='Date')
   return df
 
 
@@ -159,7 +158,7 @@ def read_ohlc_df_from_file(srcpath, quiet=True, compressed=False,with_index=True
   try:
     if compressed:
       print_quiet(quiet, "Reading compressed: " + srcpath + " ")
-      df = pd.read_csv(srcpath, compression=jgtcnf.local_fn_compression)
+      df = pd.read_csv(srcpath, compression=local_fn_compression)
     else:
       print_quiet(quiet, "Reading uncompressed csv file: " + srcpath)
       df = pd.read_csv(srcpath)
@@ -204,7 +203,7 @@ def write_df_to_filestore(df, instrument, timeframe, compressed=False, quiet=Tru
   fpath =  create_filestore_path(instrument, timeframe,quiet, compressed)
   
   if compressed:
-    df.to_csv(fpath, compression=jgtcnf.local_fn_compression)
+    df.to_csv(fpath, compression=local_fn_compression)
   else:
     df.to_csv(fpath)
   
@@ -407,7 +406,7 @@ def get_price_plus_minus_ticks(instrument, ticks_multiplier, context_price, dire
   Returns:
   The price value plus or minus the defined number of ticks.
   """
-  instrument_properties = pds.get_instrument_properties(instrument)
+  instrument_properties = get_instrument_properties(instrument)
   tick_size = instrument_properties.pipsize * ticks_multiplier
   if direction_side == 'S':
     price_minus_ticks = context_price - (ticks_multiplier * tick_size)

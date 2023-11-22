@@ -19,7 +19,7 @@ def jgtpd_drop_col_by_name(dfsrc,colname,axis = 1,quiet=False):
     #   print('Col:' + colname + ' was not there')
     return dfsrc
 
-def _ids_cleanse_ao_peak_secondary_columns(dfsrc,quiet=False):
+def ids_cleanse_ao_peak_secondary_columns(dfsrc,quiet=False):
   dfsrc=jgtpd_drop_col_by_name(dfsrc,'p0',1,quiet)
   dfsrc=jgtpd_drop_col_by_name(dfsrc,'p1',1,quiet)
   dfsrc=jgtpd_drop_col_by_name(dfsrc,'p2',1,quiet)
@@ -187,7 +187,7 @@ def pds_cleanse_extra_columns(dfsrc,quiet=True):
   dfsrc=jgtpd_drop_col_by_name(dfsrc,'HighisAboveTeeth',1,quiet)
   dfsrc=jgtpd_drop_col_by_name(dfsrc,'HighisAboveLips',1,quiet)
   dfsrc=jgtpd_drop_col_by_name(dfsrc,'LowisBellowLips',1,quiet)
-  dfsrc=_ids_cleanse_ao_peak_secondary_columns(dfsrc,quiet)
+  dfsrc=ids_cleanse_ao_peak_secondary_columns(dfsrc,quiet)
   if not quiet:
     print("Columns cleanup was executed")
   return dfsrc
