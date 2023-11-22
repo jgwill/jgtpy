@@ -10,7 +10,7 @@ from pathlib import Path
 import pathlib
 
 
-DROPBOX_ACCESS_TOKEN=jgtc.DROPBOX_ACCESS_TOKEN
+_DROPBOX_ACCESS_TOKEN=jgtc._DROPBOX_ACCESS_TOKEN
 def mkdir_existok(tpath):
     pathlib.Path(tpath).mkdir(parents=True, exist_ok=True)
      
@@ -46,7 +46,7 @@ def dropbox_connect():
     """Create a connection to Dropbox."""
 
     try:
-        dbx = dropbox.Dropbox(DROPBOX_ACCESS_TOKEN)
+        dbx = dropbox.Dropbox(_DROPBOX_ACCESS_TOKEN)
     except AuthError as e:
         print('Error connecting to Dropbox with access token: ' + str(e))
     return dbx

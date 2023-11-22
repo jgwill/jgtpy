@@ -22,10 +22,10 @@ def getenv(tvar):
 
 #@DEPRECATED: 
 
-FXCM_TOKEN_REST_API_DEMO = os.getenv('FXCM_TOKEN_REST_API_DEMO')
-FXCM_TOKEN_REST_API_REAL = os.getenv('FXCM_TOKEN_REST_API_REAL')
-FXCM_DROPBOX_ACCESS_TOKEN = os.getenv('FXCM_DROPBOX_ACCESS_TOKEN')
-DROPBOX_ACCESS_TOKEN= FXCM_DROPBOX_ACCESS_TOKEN
+_FXCM_TOKEN_REST_API_DEMO = os.getenv('FXCM_TOKEN_REST_API_DEMO')
+_FXCM_TOKEN_REST_API_REAL = os.getenv('FXCM_TOKEN_REST_API_REAL')
+_FXCM_DROPBOX_ACCESS_TOKEN = os.getenv('FXCM_DROPBOX_ACCESS_TOKEN')
+_DROPBOX_ACCESS_TOKEN= _FXCM_DROPBOX_ACCESS_TOKEN
 # print(FXCM_TOKEN_REST_API_DEMO)
 
 local_fn_compression='gzip'
@@ -47,21 +47,21 @@ phurlbase=CDS_URL_BASE
 DROPBOX_ETC_PATH= '/w/etc/'
 
 #@title Demo Token
-tokendemo =FXCM_TOKEN_REST_API_DEMO
-tokenreal=FXCM_TOKEN_REST_API_REAL
+_tokendemo =_FXCM_TOKEN_REST_API_DEMO
+_tokenreal=_FXCM_TOKEN_REST_API_REAL
 
-token=tokendemo #default
+_token=_tokendemo #default
 if os.getenv('usereal') == 'True' :
-  token=tokenreal
+  _token=_tokenreal
   print('TRADING REAL ACTIVATED')
 
 def setreal():
-  global token
-  token=tokenreal
+  global _token
+  _token=_tokenreal
 
 def setdemo():
-  global token
-  token=tokendemo
+  global _token
+  _token=_tokendemo
 
 
 # %%

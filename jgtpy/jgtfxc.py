@@ -79,24 +79,24 @@ def login_forexconnect(user_id, password, url, connection, quiet=False):
         jgtfxcommon.print_exception(e)
         print("------bahhhhhhhhhhhh----------")
     return fx
-config=None
+_config=None
 #@STCIssue Matching our original connect
 def connect(quiet=True,json_config_str=None):
-    global fx,quotes_count,config
+    global fx,quotes_count,_config
     
     if fx is not None or jgtfxcommon.get_connection_status()== "CONNECTED":
         if not quiet:
             print("Already connected")
         return
     
-    if config is None:
-        config=readconfig(json_config_str)
+    if _config is None:
+        _config=readconfig(json_config_str)
 
-    str_user_id = config['user_id']
-    str_password = config['password']
-    str_url = config['url']
-    str_connection = config['connection']
-    quotes_count = config['quotes_count']
+    str_user_id = _config['user_id']
+    str_password = _config['password']
+    str_url = _config['url']
+    str_connection = _config['connection']
+    quotes_count = _config['quotes_count']
 
     fx = login_forexconnect(str_user_id, str_password, str_url, str_connection,quiet=quiet)
     
@@ -153,10 +153,10 @@ def print_quiet(quiet,content):
     if not quiet:
         print(content)
 
-config=None
+_config=None
 
 def readconfig(json_config_str=None):
-    global config
+    global _config
     # # Try reading config file from current directory
     # config_file = 'config.json'
     # if not os.path.isfile(config_file):
@@ -166,9 +166,9 @@ def readconfig(json_config_str=None):
 
     # # Read config file
     # with open(config_file, 'r') as file:
-    if config is None:
-        config = jgtfxcommon.readconfig(json_config_str)
-    return config
+    if _config is None:
+        _config = jgtfxcommon.readconfig(json_config_str)
+    return _config
 
 
 def get_price_history(instrument, timeframe, datefrom=None, dateto=None,quotes_count_spec=None,quiet=True):
