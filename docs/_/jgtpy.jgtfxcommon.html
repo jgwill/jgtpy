@@ -1,0 +1,298 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module jgtpy.jgtfxcommon</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="jgtpy.html"><font color="#ffffff">jgtpy</font></a>.jgtfxcommon</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/jgi/anaconda3/envs/jgtpy310/lib/python3.10/site-packages/jgtpy/jgtfxcommon.py">/home/jgi/anaconda3/envs/jgtpy310/lib/python3.10/site-packages/jgtpy/jgtfxcommon.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="__main__.html">__main__</a><br>
+<a href="argparse.html">argparse</a><br>
+<a href="datetime.html">datetime</a><br>
+</td><td width="25%" valign=top><a href="forexconnect.lib.linux.fxcorepy.html">forexconnect.lib.linux.fxcorepy</a><br>
+<a href="json.html">json</a><br>
+<a href="logging.html">logging</a><br>
+</td><td width="25%" valign=top><a href="os.html">os</a><br>
+<a href="sys.html">sys</a><br>
+<a href="traceback.html">traceback</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">builtins.object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="jgtpy.jgtfxcommon.html#BatchOrderMonitor">BatchOrderMonitor</a>
+</font></dt><dt><font face="helvetica, arial"><a href="jgtpy.jgtfxcommon.html#OrderMonitor">OrderMonitor</a>
+</font></dt><dt><font face="helvetica, arial"><a href="jgtpy.jgtfxcommon.html#OrderMonitorNetting">OrderMonitorNetting</a>
+</font></dt><dt><font face="helvetica, arial"><a href="jgtpy.jgtfxcommon.html#TableListenerContainer">TableListenerContainer</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="BatchOrderMonitor">class <strong>BatchOrderMonitor</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#BatchOrderMonitor">BatchOrderMonitor</a>()&nbsp;-&amp;gt;&nbsp;None<br>
+&nbsp;<br>
+<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="BatchOrderMonitor-__init__"><strong>__init__</strong></a>(self) -&gt; None</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="BatchOrderMonitor-is_own_request"><strong>is_own_request</strong></a>(self, request_id: str) -&gt; bool</dt></dl>
+
+<dl><dt><a name="BatchOrderMonitor-on_closed_trade_added"><strong>on_closed_trade_added</strong></a>(self, close_trade_row: forexconnect.lib.linux.fxcorepy.O2GClosedTradeRow) -&gt; None</dt></dl>
+
+<dl><dt><a name="BatchOrderMonitor-on_message_added"><strong>on_message_added</strong></a>(self, message: forexconnect.lib.linux.fxcorepy.O2GMessageRow) -&gt; None</dt></dl>
+
+<dl><dt><a name="BatchOrderMonitor-on_order_added"><strong>on_order_added</strong></a>(self, order: forexconnect.lib.linux.fxcorepy.O2GOrderRow) -&gt; None</dt></dl>
+
+<dl><dt><a name="BatchOrderMonitor-on_order_deleted"><strong>on_order_deleted</strong></a>(self, order: forexconnect.lib.linux.fxcorepy.O2GOrderRow) -&gt; None</dt></dl>
+
+<dl><dt><a name="BatchOrderMonitor-on_request_completed"><strong>on_request_completed</strong></a>(self, request_id: str, response: forexconnect.lib.linux.fxcorepy.O2GResponse) -&gt; None</dt></dl>
+
+<dl><dt><a name="BatchOrderMonitor-on_request_failed"><strong>on_request_failed</strong></a>(self, request_id: str) -&gt; None</dt></dl>
+
+<dl><dt><a name="BatchOrderMonitor-on_trade_added"><strong>on_trade_added</strong></a>(self, trade_row: forexconnect.lib.linux.fxcorepy.O2GTradeRow) -&gt; None</dt></dl>
+
+<dl><dt><a name="BatchOrderMonitor-remove_request_id"><strong>remove_request_id</strong></a>(self, request_id: str) -&gt; None</dt></dl>
+
+<dl><dt><a name="BatchOrderMonitor-set_request_ids"><strong>set_request_ids</strong></a>(self, request_ids: List[str]) -&gt; None</dt></dl>
+
+<hr>
+Readonly properties defined here:<br>
+<dl><dt><strong>is_batch_executed</strong></dt>
+</dl>
+<dl><dt><strong>monitors</strong></dt>
+</dl>
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="OrderMonitor">class <strong>OrderMonitor</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#OrderMonitor">OrderMonitor</a>(order:&nbsp;forexconnect.lib.linux.fxcorepy.O2GOrderRow)&nbsp;-&amp;gt;&nbsp;None<br>
+&nbsp;<br>
+<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="OrderMonitor-__init__"><strong>__init__</strong></a>(self, order: forexconnect.lib.linux.fxcorepy.O2GOrderRow) -&gt; None</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="OrderMonitor-check_and_store_message"><strong>check_and_store_message</strong></a>(self, message: forexconnect.lib.linux.fxcorepy.O2GMessageRow) -&gt; bool</dt></dl>
+
+<dl><dt><a name="OrderMonitor-on_closed_trade_added"><strong>on_closed_trade_added</strong></a>(self, closed_trade: forexconnect.lib.linux.fxcorepy.O2GClosedTradeRow) -&gt; None</dt></dl>
+
+<dl><dt><a name="OrderMonitor-on_message_added"><strong>on_message_added</strong></a>(self, message: forexconnect.lib.linux.fxcorepy.O2GMessageRow) -&gt; None</dt></dl>
+
+<dl><dt><a name="OrderMonitor-on_order_deleted"><strong>on_order_deleted</strong></a>(self, order: forexconnect.lib.linux.fxcorepy.O2GOrderRow) -&gt; None</dt></dl>
+
+<dl><dt><a name="OrderMonitor-on_trade_added"><strong>on_trade_added</strong></a>(self, trade: forexconnect.lib.linux.fxcorepy.O2GTradeRow) -&gt; None</dt></dl>
+
+<dl><dt><a name="OrderMonitor-set_result"><strong>set_result</strong></a>(self, success: bool) -&gt; None</dt></dl>
+
+<hr>
+Static methods defined here:<br>
+<dl><dt><a name="OrderMonitor-is_closing_order"><strong>is_closing_order</strong></a>(order: forexconnect.lib.linux.fxcorepy.O2GOrderRow) -&gt; bool</dt></dl>
+
+<dl><dt><a name="OrderMonitor-is_opening_order"><strong>is_opening_order</strong></a>(order: forexconnect.lib.linux.fxcorepy.O2GOrderRow) -&gt; bool</dt></dl>
+
+<hr>
+Readonly properties defined here:<br>
+<dl><dt><strong>closed_trade_rows</strong></dt>
+</dl>
+<dl><dt><strong>is_all_trades_received</strong></dt>
+</dl>
+<dl><dt><strong>is_order_completed</strong></dt>
+</dl>
+<dl><dt><strong>order_row</strong></dt>
+</dl>
+<dl><dt><strong>reject_amount</strong></dt>
+</dl>
+<dl><dt><strong>reject_message</strong></dt>
+</dl>
+<dl><dt><strong>result</strong></dt>
+</dl>
+<dl><dt><strong>trade_rows</strong></dt>
+</dl>
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>ExecutionResult</strong> = &lt;enum 'ExecutionResult'&gt;<dd><tt>An&nbsp;enumeration.</tt></dl>
+
+<dl><dt><strong>OrderState</strong> = &lt;enum 'OrderState'&gt;<dd><tt>An&nbsp;enumeration.</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="OrderMonitorNetting">class <strong>OrderMonitorNetting</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#OrderMonitorNetting">OrderMonitorNetting</a>(order:&nbsp;forexconnect.lib.linux.fxcorepy.O2GOrderRow,&nbsp;i_net_position_amount:&nbsp;int&nbsp;=&nbsp;0)&nbsp;-&amp;gt;&nbsp;None<br>
+&nbsp;<br>
+<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="OrderMonitorNetting-__init__"><strong>__init__</strong></a>(self, order: forexconnect.lib.linux.fxcorepy.O2GOrderRow, i_net_position_amount: int = 0) -&gt; None</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="OrderMonitorNetting-check_and_store_message"><strong>check_and_store_message</strong></a>(self, message: forexconnect.lib.linux.fxcorepy.O2GMessageRow) -&gt; bool</dt></dl>
+
+<dl><dt><a name="OrderMonitorNetting-on_closed_trade_added"><strong>on_closed_trade_added</strong></a>(self, closed_trade: forexconnect.lib.linux.fxcorepy.O2GClosedTradeRow) -&gt; None</dt><dd><tt>#&nbsp;Process&nbsp;trade&nbsp;closing&nbsp;during&nbsp;order&nbsp;execution</tt></dd></dl>
+
+<dl><dt><a name="OrderMonitorNetting-on_message_added"><strong>on_message_added</strong></a>(self, message: forexconnect.lib.linux.fxcorepy.O2GMessageRow) -&gt; None</dt></dl>
+
+<dl><dt><a name="OrderMonitorNetting-on_order_deleted"><strong>on_order_deleted</strong></a>(self, order: forexconnect.lib.linux.fxcorepy.O2GOrderRow) -&gt; None</dt><dd><tt>#&nbsp;Process&nbsp;order&nbsp;deletion&nbsp;as&nbsp;result&nbsp;of&nbsp;execution</tt></dd></dl>
+
+<dl><dt><a name="OrderMonitorNetting-on_trade_added"><strong>on_trade_added</strong></a>(self, trade: forexconnect.lib.linux.fxcorepy.O2GTradeRow) -&gt; None</dt><dd><tt>#&nbsp;Process&nbsp;trade&nbsp;adding&nbsp;during&nbsp;order&nbsp;execution</tt></dd></dl>
+
+<dl><dt><a name="OrderMonitorNetting-on_trade_updated"><strong>on_trade_updated</strong></a>(self, trade_row: forexconnect.lib.linux.fxcorepy.O2GTradeRow) -&gt; None</dt><dd><tt>#&nbsp;Process&nbsp;trade&nbsp;updating&nbsp;during&nbsp;order&nbsp;execution</tt></dd></dl>
+
+<dl><dt><a name="OrderMonitorNetting-set_result"><strong>set_result</strong></a>(self, success: bool) -&gt; None</dt></dl>
+
+<hr>
+Static methods defined here:<br>
+<dl><dt><a name="OrderMonitorNetting-is_closing_order"><strong>is_closing_order</strong></a>(order: forexconnect.lib.linux.fxcorepy.O2GOrderRow) -&gt; bool</dt></dl>
+
+<dl><dt><a name="OrderMonitorNetting-is_opening_order"><strong>is_opening_order</strong></a>(order: forexconnect.lib.linux.fxcorepy.O2GOrderRow) -&gt; bool</dt></dl>
+
+<hr>
+Readonly properties defined here:<br>
+<dl><dt><strong>closed_trade_rows</strong></dt>
+</dl>
+<dl><dt><strong>is_all_trades_received</strong></dt>
+</dl>
+<dl><dt><strong>is_order_completed</strong></dt>
+</dl>
+<dl><dt><strong>order_row</strong></dt>
+</dl>
+<dl><dt><strong>reject_amount</strong></dt>
+</dl>
+<dl><dt><strong>reject_message</strong></dt>
+</dl>
+<dl><dt><strong>result</strong></dt>
+</dl>
+<dl><dt><strong>trade_rows</strong></dt>
+</dl>
+<dl><dt><strong>updated_trade_rows</strong></dt>
+</dl>
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>ExecutionResult</strong> = &lt;enum 'ExecutionResult'&gt;<dd><tt>An&nbsp;enumeration.</tt></dl>
+
+<dl><dt><strong>OrderState</strong> = &lt;enum 'OrderState'&gt;<dd><tt>An&nbsp;enumeration.</tt></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="TableListenerContainer">class <strong>TableListenerContainer</strong></a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#TableListenerContainer">TableListenerContainer</a>(response_listener,&nbsp;fx)<br>
+&nbsp;<br>
+<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="TableListenerContainer-__init__"><strong>__init__</strong></a>(self, response_listener, fx)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="TableListenerContainer-set_request_id"><strong>set_request_id</strong></a>(self, request_id)</dt></dl>
+
+<dl><dt><a name="TableListenerContainer-subscribe_events"><strong>subscribe_events</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="TableListenerContainer-unsubscribe_events"><strong>unsubscribe_events</strong></a>(self)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-add_account_arguments"><strong>add_account_arguments</strong></a>(parser: argparse.ArgumentParser)</dt></dl>
+ <dl><dt><a name="-add_candle_open_price_mode_argument"><strong>add_candle_open_price_mode_argument</strong></a>(parser: argparse.ArgumentParser)</dt></dl>
+ <dl><dt><a name="-add_cds_argument"><strong>add_cds_argument</strong></a>(parser)</dt></dl>
+ <dl><dt><a name="-add_date_arguments"><strong>add_date_arguments</strong></a>(parser: argparse.ArgumentParser, date_from: bool = True, date_to: bool = True)</dt></dl>
+ <dl><dt><a name="-add_direction_rate_lots_arguments"><strong>add_direction_rate_lots_arguments</strong></a>(parser: argparse.ArgumentParser, direction: bool = True, rate: bool = True, lots: bool = True)</dt></dl>
+ <dl><dt><a name="-add_instrument_timeframe_arguments"><strong>add_instrument_timeframe_arguments</strong></a>(parser: argparse.ArgumentParser, timeframe: bool = True)</dt></dl>
+ <dl><dt><a name="-add_main_arguments"><strong>add_main_arguments</strong></a>(parser: argparse.ArgumentParser)</dt></dl>
+ <dl><dt><a name="-add_max_bars_arguments"><strong>add_max_bars_arguments</strong></a>(parser: argparse.ArgumentParser)</dt></dl>
+ <dl><dt><a name="-add_output_argument"><strong>add_output_argument</strong></a>(parser: argparse.ArgumentParser)</dt><dd><tt>Adds&nbsp;an&nbsp;output&nbsp;argument&nbsp;to&nbsp;the&nbsp;given&nbsp;argument&nbsp;parser.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;parser&nbsp;(argparse.ArgumentParser):&nbsp;The&nbsp;argument&nbsp;parser&nbsp;to&nbsp;add&nbsp;the&nbsp;output&nbsp;argument&nbsp;to.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;None</tt></dd></dl>
+ <dl><dt><a name="-add_report_date_arguments"><strong>add_report_date_arguments</strong></a>(parser: argparse.ArgumentParser, date_from: bool = True, date_to: bool = True)</dt></dl>
+ <dl><dt><a name="-add_verbose_argument"><strong>add_verbose_argument</strong></a>(parser)</dt></dl>
+ <dl><dt><a name="-convert_timeframe_to_seconds"><strong>convert_timeframe_to_seconds</strong></a>(unit: forexconnect.lib.linux.fxcorepy.O2GTimeFrameUnit, size: int)</dt><dd><tt>#@STCIssue&nbsp;in&nbsp;less&nbsp;todo</tt></dd></dl>
+ <dl><dt><a name="-diff_month"><strong>diff_month</strong></a>(year: int, month: int, date2: &lt;module 'datetime' from '/home/jgi/anaconda3/envs/jgtpy310/lib/python3.10/datetime.py'&gt;)</dt></dl>
+ <dl><dt><a name="-get_connection_status"><strong>get_connection_status</strong></a>()</dt></dl>
+ <dl><dt><a name="-print_exception"><strong>print_exception</strong></a>(exception: Exception)</dt></dl>
+ <dl><dt><a name="-readconfig"><strong>readconfig</strong></a>(json_config_str=None)</dt></dl>
+ <dl><dt><a name="-session_status_changed"><strong>session_status_changed</strong></a>(session: forexconnect.lib.linux.fxcorepy.O2GSession, status: forexconnect.lib.linux.fxcorepy.O2GSessionStatus)</dt><dd><tt>#&nbsp;function&nbsp;for&nbsp;print&nbsp;available&nbsp;descriptors</tt></dd></dl>
+ <dl><dt><a name="-valid_datetime"><strong>valid_datetime</strong></a>(check_future: bool)</dt></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>JGT_CONFIG_JSON_SECRET</strong> = None<br>
+<strong>List</strong> = typing.List<br>
+<strong>connection_status</strong> = 'DISCONNECTED'<br>
+<strong>console</strong> = &lt;StreamHandler &lt;stdout&gt; (INFO)&gt;<br>
+<strong>quiet</strong> = False</td></tr></table>
+</body></html>
