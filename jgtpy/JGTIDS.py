@@ -671,10 +671,10 @@ def cds_add_signals_to_indicators(dfires,_aopeak_range=28,quiet=False):
 
 
 
-def tocds(dfsrc):
-  dfires = ids_add_indicators(dfsrc,quiet=True)
-  dfires = cds_add_signals_to_indicators(dfires,quiet=True)
-  dfires = jgti_add_zlc_plus_other_AO_signal(dfires,quiet=True)
+def tocds(dfsrc,quiet=True):
+  dfires = ids_add_indicators(dfsrc,quiet=quiet)
+  dfires = cds_add_signals_to_indicators(dfires,quiet=quiet)
+  dfires = jgti_add_zlc_plus_other_AO_signal(dfires,quiet=quiet)
   dfires = pds_cleanse_original_columns(dfires,quiet=True)
   dfires = ids_cleanse_ao_peak_secondary_columns(dfires,quiet=True)
   dfires = __format_boolean_columns_to_int(dfires,quiet=True)

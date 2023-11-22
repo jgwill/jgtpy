@@ -1,1 +1,1 @@
-jgtcli -i "USD/CAD" -t "m5" -o
+jgtcli -i "USD/CAD" -t "m5" -o -cds
