@@ -30,7 +30,7 @@ from . import jgtflags
 
 # from forexconnect import ForexConnect, fxcorepy
 if platform.system() == 'Windows':
-    from forexconnect import ForexConnect, fxcorepy
+    from .forexconnect import ForexConnect, fxcorepy
 else: 
     if platform.system() == 'Linux':
         try:
