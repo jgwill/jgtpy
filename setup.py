@@ -13,7 +13,9 @@ INSTALL_REQUIRES = [
     'kaleido>=0.2.1',
     'matplotlib>=3.3.1',
     'plotly>=5.18.0',
-    'jgtapy>=1.9.12'
+    'jgtapy>=1.9.12',
+    'dropbox>=11.36.2',
+    'mplfinance>=0.12.10b0'
 ]
 
 EXTRAS_DEV_LINT = [
