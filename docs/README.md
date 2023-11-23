@@ -1,5 +1,6 @@
 # Comming
 
+![Alt text](bear.png)
 
 ## Early doc
 
@@ -14,7 +15,7 @@
 
 ## Text
 
-* [Fractal_Trading_Strategies_231117](Fractal_Trading_Strategies_231117.md)
+<!-- * [Fractal_Trading_Strategies_231117](Fractal_Trading_Strategies_231117.md) -->
 
 
 ----
