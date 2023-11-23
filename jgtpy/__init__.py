@@ -85,7 +85,16 @@ def h(instrument,timeframe,quote_count=335,start=None,end=None,quiet=True):
 
 from .JGTIDS import tocds as tocds
 #mk_fn,mk_fullpath,getSubscribed,getPH,getPHByRange,tryConnect
-from .JGTCDS import create as createCDS,createByRange,createFromDF,startSession,stopSession,getLast,getPresentBar,getPresentBarAsList,getLastCompletedBarAsList,createFromDF,createFromFile_and_clean_and_save_data as fromfile,createFromFile_and_clean_and_save_data as ff
+from .JGTCDS import create as createCDS,createByRange,createFromDF,startSession,stopSession,getLast,getPresentBar,getPresentBarAsList,getLastCompletedBarAsList,createFromDF,createFromFile_and_clean_and_save_data as fromfile,createFromFile_and_clean_and_save_data as ff,createFromDF as fp
+
+def help():
+    print(".h(i,t,400)\t\tGet Prices (PDS): \n\t\t\tjgtpy.h(instrument,timeframe,quote_count=335,start=None,end=None,quiet=True)")
+    print("\t\t\t\t\treturn DataFrame of PDS Type")
+    print("\t\t\t\t\t(Will connect and stay connected)")
+    print(".fp(df)\t\t Create CDS from PDS DF \n\t\t\tjgtpy.fp(df [pd.DataFrame])")
+    print("\t\t\t\t\treturn DataFrame of CDS Type")
+    print(".off()\t\t Disconnect (Bugged)\n\t\t\tjgtpy.off()")
+
 # from jgtpy.JGTADS import ads_chart_pto,retrieve_n_chart as ads_retrieve_n_chart
 
 # from .jgtcli import main as __main__
