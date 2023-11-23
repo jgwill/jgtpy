@@ -838,6 +838,7 @@ def add_verbose_argument(parser):
 def add_cds_argument(parser):
     parser.add_argument('-cds','--cds',
                         action='store_true',
+                        default=False,
                         help='Action the creation of CDS')
     return parser
 

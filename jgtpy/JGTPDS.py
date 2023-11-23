@@ -195,8 +195,12 @@ def getPH_to_filestore(instrument, timeframe, quote_count=335, start=None, end=N
   df=getPH(instrument,timeframe,quote_count,start,end,False,quiet)
   #print(df)
   # Define the file path based on the environment variable or local path
-  fpath = write_df_to_filestore(df, instrument, timeframe, compressed)
-  return fpath
+  if df is not None:
+      fpath = write_df_to_filestore(df, instrument, timeframe, compressed)
+      return fpath
+  else:
+      print("No data from getPH from getPH_to_filestore")
+  return ""
 
 def write_df_to_filestore(df, instrument, timeframe, compressed=False, quiet=True):
   
@@ -213,6 +217,8 @@ def write_df_to_filestore(df, instrument, timeframe, compressed=False, quiet=Tru
 def create_filestore_path(instrument, timeframe,quiet=True, compressed=False):
     # Define the file path based on the environment variable or local path
     data_path = get_data_path()
+    print(data_path)
+
     ext = 'csv'
     if compressed:
         ext = 'csv.gz'
