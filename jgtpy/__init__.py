@@ -81,7 +81,7 @@ def up():
     sc(False)
 def h(instrument,timeframe,quote_count=335,start=None,end=None,quiet=True):
         stay()
-        ph((instrument,timeframe,quote_count,start,end,False,quiet))
+        ph(instrument,timeframe,quote_count,start,end,False,quiet)
 
 from .JGTIDS import tocds as tocds
 #mk_fn,mk_fullpath,getSubscribed,getPH,getPHByRange,tryConnect
