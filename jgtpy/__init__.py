@@ -79,6 +79,9 @@ def stay():
     sc(True)
 def up():
     sc(False)
+def h((instrument,timeframe,quote_count=335,start=None,end=None,quiet=True):
+        ph((instrument,timeframe,quote_count,start,end,False,quiet))
+
 from .JGTIDS import tocds as tocds
 #mk_fn,mk_fullpath,getSubscribed,getPH,getPHByRange,tryConnect
 from .JGTCDS import create as createCDS,createByRange,createFromDF,startSession,stopSession,getLast,getPresentBar,getPresentBarAsList,getLastCompletedBarAsList,createFromDF,createFromFile_and_clean_and_save_data as fromfile,createFromFile_and_clean_and_save_data as ff
