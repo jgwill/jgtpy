@@ -74,14 +74,16 @@ else:
 from .jgtfxcommon import _JGT_CONFIG_JSON_SECRET
 
 
-from .JGTPDS import getPH as get_price, stayConnectedSetter as set_stay_connected, disconnect,connect as on,disconnect as off, status as connection_status,  getPH2file as get_price_to_file, getPHByRange as get_price_range, stayConnectedSetter as sc,getPH as ph
+from .JGTPDS import getPH as get_price, stayConnectedSetter as set_stay_connected, disconnect,connect as on,disconnect as off, status as connection_status,  getPH2file as get_price_to_file, getPHByRange as get_price_range, stayConnectedSetter as sc,getPH as ph,getPH_to_filestore as ph2fs
 def stay():
     sc(True)
 def up():
     sc(False)
 def h(instrument,timeframe,quote_count=335,start=None,end=None,quiet=True):
         stay()
-        return ph(instrument,timeframe,quote_count,start,end,False,quiet)
+        #df= ph(instrument,timeframe,quote_count,start,end,False,quiet)
+        fpath,df = ph2fs(instrument,timeframe,quote_count,start,end,False,quiet)
+        return df
 
 from .JGTIDS import tocds as tocds
 #mk_fn,mk_fullpath,getSubscribed,getPH,getPHByRange,tryConnect
