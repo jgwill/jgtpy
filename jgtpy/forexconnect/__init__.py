@@ -34,16 +34,21 @@ elif platform.system() == 'Linux':
          #import forexconnect
          from .lib.linux import fxcorepy as fxcorepy
     except:
-        print("-----------EXCEPTION --- #import forexconnect")
-        print("---from .lib.linux import fxcorepy as fxcorepy---")
-        #import jgtpy.forexconnect as forexconnect
-        from jgtpy.forexconnect.lib.linux import fxcorepy as fxcorepy
+        try:
+            print("-----------EXCEPTION --- #import forexconnect")
+            print("---from .lib.linux import fxcorepy as fxcorepy---")
+            #import jgtpy.forexconnect as forexconnect
+            from jgtpy.forexconnect.lib.linux import fxcorepy as fxcorepy
+        except:
+            from . import fxcorepy
         
 else:
     raise RuntimeError('Unsupported platform')
 
 #print(lib_path)
 os.chdir(here)
+os.chdir(origin_work_dir)
+
 #from .lib import fxcorepy
 from .ForexConnect import ForexConnect
 from .TableManagerListener import TableManagerListener
