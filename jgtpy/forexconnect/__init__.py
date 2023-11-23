@@ -20,7 +20,7 @@ if platform.system() == 'Windows':
     #print(lib_path)
     try:
     #      #import forexconnect
-        from .lib.windows import fxcorepy 
+        from .lib.windows import fxcorepy as fxcorepy
     except:
         pass
         #from . import fxcorepy

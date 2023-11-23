@@ -6,7 +6,7 @@ from datetime import datetime
 
 import numpy as np
 try:
-    from . import fxcorepy
+    from . import fxcorepy as fxcorepy
 except:
     pass
 from .TableManagerListener import TableManagerListener
