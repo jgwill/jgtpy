@@ -1,10 +1,10 @@
 import jgtpy
 
-from jgtpy import jgtconstants as constants
-from jgtpy import jgtfxcommon
+from . import jgtconstants as constants
+from . import jgtfxcommon
 import argparse
 
-from jgtpy import JGTPDS as pds
+from . import JGTPDS as pds
 
 import pandas as pd
 

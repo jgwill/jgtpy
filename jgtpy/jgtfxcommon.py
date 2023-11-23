@@ -908,20 +908,20 @@ def convert_timeframe_to_seconds(unit: fxcorepy.O2GTimeFrameUnit, size: int):
 #------------------------#
 
 
-JGT_CONFIG_JSON_SECRET=None
+_JGT_CONFIG_JSON_SECRET=None
 
 def readconfig(json_config_str=None):
-    global JGT_CONFIG_JSON_SECRET
+    global _JGT_CONFIG_JSON_SECRET
     # Try reading config file from current directory
 
     if json_config_str is not None:
         config = json.loads(json_config_str)
-        JGT_CONFIG_JSON_SECRET=json_config_str
+        _JGT_CONFIG_JSON_SECRET=json_config_str
         return config
 
 
-    if JGT_CONFIG_JSON_SECRET is not None:
-        config = json.loads(JGT_CONFIG_JSON_SECRET)
+    if _JGT_CONFIG_JSON_SECRET is not None:
+        config = json.loads(_JGT_CONFIG_JSON_SECRET)
         return config
     
     # Otherwise, try reading config file from current directory, home or env var

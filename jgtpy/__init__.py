@@ -71,7 +71,7 @@ else:
 
 
 # os.chdir(origin_work_dir)   
-from .jgtfxcommon import JGT_CONFIG_JSON_SECRET
+from .jgtfxcommon import _JGT_CONFIG_JSON_SECRET
 
 
 from .JGTPDS import getPH as get_price, stayConnectedSetter as set_stay_connected, disconnect,connect as on,disconnect as off, status as connection_status,  getPH2file as get_price_to_file, getPHByRange as get_price_range 

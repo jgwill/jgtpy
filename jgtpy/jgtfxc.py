@@ -8,6 +8,8 @@ import json
 from datetime import datetime,timezone
 import pandas as pd
 
+from .jgtfxcommon import get_connection_status,get_connection_status
+
 from . import jgtflags
 
 # origin_work_dir = os.getcwd()
@@ -64,13 +66,18 @@ fx=None
 quotes_count=None
 stayConnected=False
 session=None
-session_status=None
-def get_session_status():
-    return jgtfxcommon.get_connection_status()
+#session_status=None
+#def get_session_status():
+    #return get_connection_status()
 
 def login_forexconnect(user_id, password, url, connection, quiet=False):
     global session,fx    
     jgtfxcommon.quiet=quiet
+    if fx is not None:
+        try:
+            fx.logout()
+        except:
+            pass
     fx = ForexConnect()
     try:
         fx.login(user_id=user_id,password=password,url=url,connection=connection, pin="", session_id="", session_status_callback=jgtfxcommon.session_status_changed)
@@ -84,7 +91,7 @@ _config=None
 def connect(quiet=True,json_config_str=None):
     global fx,quotes_count,_config
     
-    if fx is not None or jgtfxcommon.get_connection_status()== "CONNECTED":
+    if fx is not None or get_connection_status()== "CONNECTED":
         if not quiet:
             print("Already connected")
         return
@@ -97,6 +104,7 @@ def connect(quiet=True,json_config_str=None):
     str_url = _config['url']
     str_connection = _config['connection']
     quotes_count = _config['quotes_count']
+    
 
     fx = login_forexconnect(str_user_id, str_password, str_url, str_connection,quiet=quiet)
     
@@ -105,9 +113,12 @@ def connect(quiet=True,json_config_str=None):
 
 def logout_forexconnect(fx,quiet=False):
     try:
-        fx.logout()
+        if fx is not None:
+            fx.logout()
         fx=None
-        session_status= jgtfxcommon.get_connection_status()
+        #@STCIssue on How we deal with status
+        #session_status=get_connection_status()
+        #session_status="DISCONNECTED"
         return True
     except Exception as e:
         jgtfxcommon.print_exception(e)
