@@ -8,6 +8,9 @@
 		},
 		{
 			"path": "../jgtstrategies"
+		},
+		{
+			"path": "../../lampyno2"
 		}
 	],
 	"settings": {
