@@ -11,7 +11,6 @@ import urllib.parse
 import hashlib
 import json
 from openai import OpenAI
-import snoterupdate
 
 
 # Set the OpenAI API key
@@ -22,12 +21,32 @@ from dotenv import load_dotenv
 model_to_use="text-davinci-002"
 
 
+scache_folder='./_snote_content_cache'
+def get_file_full_path_basename(url_hash):
+    return f'{scache_folder}/{url_hash}'
 
-
+import html2text
+import re
+import os
+        
+        
     
-def save_html_content(url_hash, soup):
-    with open(f'./_snote_content_cache/{url_hash}.html', 'w') as html_file:
+def save_html_content(url_hash, soup,title=None):
+    _file_full_path_base=get_file_full_path_basename(url_hash)
+    with open(_file_full_path_base + '.html', 'w') as html_file:
         html_file.write(soup.prettify())
+    #Convert using html2text each soup content
+    txt = html2text.html2text(str(soup))
+    with open(_file_full_path_base + '.md', 'w') as txt_file:
+        txt_file.write(txt)
+    if title:
+        #Save file with title in a subfolder in $scache_folder/bytitle
+        safe_filename = re.sub(r'[^\w\s-]', '', title).strip().replace(' ', '_')
+        safe_md_fullpath = os.path.join(scache_folder, 'bytitle', safe_filename + '.md')
+        with open(safe_md_fullpath, 'w') as txt_file:
+            txt_file.write(txt)
+        
+    
 
 def download_images(soup, url):
     for img in soup.find_all('img'):
@@ -35,7 +54,7 @@ def download_images(soup, url):
         img_filename = hashlib.md5(img_url.encode()).hexdigest()
         img_response = requests.get(img_url)
 
-        with open(f'./_snote_content_cache/{img_filename}', 'wb') as img_file:
+        with open(f'{scache_folder}/{img_filename}', 'wb') as img_file:
             img_file.write(img_response.content)
             
 def clean_url_response2text(response):
@@ -82,8 +101,8 @@ api_key=os.getenv('OPENAI_API_KEY')
 
 
 # Create directory if not exists
-if not os.path.exists('./_snote_content_cache'):
-    os.makedirs('./_snote_content_cache')
+if not os.path.exists('{scache_folder}'):
+    os.makedirs('{scache_folder}')
 
 
 client = OpenAI(api_key=api_key)
@@ -92,7 +111,7 @@ client = OpenAI(api_key=api_key)
 
 # Load summaries and hashes of previously processed URLs, if the file exists
 try:
-    with open('./_snote_content_cache/data.json', 'r') as data_file:
+    with open('{scache_folder}/data.json', 'r') as data_file:
         data = json.load(data_file)
 except FileNotFoundError:
     data = {}
@@ -125,8 +144,12 @@ with open('jgtsnoter.csv', 'r') as csv_file:
         # If the content has changed or it's a new URL, save the new content and get a new summary
         if url not in data or data[url]['hash'] != content_hash:
             # Save the HTML content into a file
-            save_html_content(url_hash, soup)
+            save_html_content(url_hash, soup,title)
+            
             download_images(soup, url)
+            
+            
+            
             
             new_summary = get_summary(response)
 
@@ -142,13 +165,17 @@ with open('jgtsnoter.csv', 'r') as csv_file:
             data[url] = {'hash': content_hash, 'summary': new_summary, 'changes': changes, 'title': title}
 
     # Save the data of the processed URLs
-    with open('./_snote_content_cache/data.json', 'w') as data_file:
+    with open('{scache_folder}/data.json', 'w') as data_file:
         json.dump(data, data_file)
     
 
     # Call the function from snoterupdate.py
     #snoterupdate.generate_markdown(link_titles, data)
-snoterupdate.generate_markdown()
+
+
+from snoterupdate import generate_markdown
+#@STCStatus it runs it in the file when importing
+#generate_markdown()
     
     
     
