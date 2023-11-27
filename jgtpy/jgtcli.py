@@ -27,8 +27,11 @@ def main():
     instrument = args.instrument
     timeframe = args.timeframe
     quotes_count = args.quotescount
-    date_from = args.datefrom.replace('/', '.')
-    date_to = args.dateto.replace('/', '.')
+    if date_from:
+        date_from = args.datefrom.replace('/', '.')
+    if date_to:
+        date_to = args.dateto.replace('/', '.')
+
     process_cds=args.cds
     output=False
     compress=False
