@@ -1,6 +1,11 @@
 import os
 import platform
 import sys
+import warnings
+
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", ".*already registered; second conversion method ignored.*")
+    # your code here
 
 origin_work_dir = os.getcwd()
 here = os.path.abspath(os.path.dirname(__file__))

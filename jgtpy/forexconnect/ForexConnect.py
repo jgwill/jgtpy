@@ -3,6 +3,12 @@ import atexit
 import threading
 import logging
 from datetime import datetime
+import warnings
+
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", category=RuntimeWarning, module="importlib._bootstrap")
+    # your code here
+
 
 import numpy as np
 try:

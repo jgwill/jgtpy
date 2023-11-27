@@ -1,5 +1,14 @@
 import requests
 import json
+import warnings
+
+import warnings
+
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", category=RuntimeWarning, module="importlib._bootstrap")
+    # your code here
+
+
 
 response = requests.post('http://localhost:5000/getPH', json={'instrument': 'EUR/USD', 'timeframe': 'H4'})
 #print(response.json())
@@ -16,9 +25,20 @@ print("---- from file store route ---")
 import pandas as pd
 
 #response = requests.post('http://localhost:5000/getPH_from_filestore', json={'instrument': 'EUR/USD', 'timeframe': 'H4', 'quiet': True, 'compressed': False, 'with_index': True}) df = pd.read_json(response.text, orient='split')
-import requests
-import pandas as pd
+
 from io import StringIO
+
+print("-----------------------from market data ---------------")
+response = requests.post('http://localhost:5000/getPH',
+                         json={'instrument': 'EUR/USD',
+                               'timeframe': 'H4'})
+                             
+df = pd.read_json(StringIO(response.text), orient='split')
+
+print(df)
+
+
+print("-----------------------from filestore ---------------")
 
 response = requests.post('http://localhost:5000/getPH_from_filestore',
                          json={'instrument': 'EUR/USD',

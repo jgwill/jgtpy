@@ -1,6 +1,13 @@
 from flask import Flask, jsonify, request
 from jgtpy import sc,up,h,stay
 
+
+import warnings
+
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", category=RuntimeWarning, module="importlib._bootstrap")
+    # your code here# your code here
+
 from subprocess import check_output
 import shlex
 
@@ -25,7 +32,8 @@ def fetch_getPH():
     instrument = data['instrument']
     timeframe = data['timeframe']
     #result = h(instrument, timeframe)
-    df = getPH_from_filestore(instrument, timeframe)
+    #df = getPH_from_filestore(instrument, timeframe)
+    df = getPH(instrument, timeframe)
     result = df.to_csv()
     print(result)
     #return jsonify(result)  # Assuming the result can be serialized into JSON

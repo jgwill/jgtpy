@@ -8,6 +8,13 @@ import json
 from datetime import datetime,timezone
 import pandas as pd
 
+import warnings
+
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", category=RuntimeWarning, module="importlib._bootstrap")
+    # your code here
+
+
 from .jgtfxcommon import get_connection_status,get_connection_status
 
 from . import jgtflags

@@ -30,6 +30,13 @@ import platform
 import sys
 from . import jgtflags
 
+
+import warnings
+
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", category=RuntimeWarning, module="importlib._bootstrap")
+    # your code here
+
 class NotCompatibleException(Exception):
     pass
 
