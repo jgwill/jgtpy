@@ -17,23 +17,34 @@ from openai import OpenAI
 import os
 from dotenv import load_dotenv
 
-
-model_to_use="text-davinci-002"
-
-
-scache_folder='./_snote_content_cache'
-def get_file_full_path_basename(url_hash):
-    return f'{scache_folder}/{url_hash}'
-
 import html2text
 import re
 import os
+
+model_to_use = "text-davinci-002"
+
+
+
+snote_cache_folder_name = '_snote_content_cache'
+snote_cache_folder = os.path.join(os.getcwd(), snote_cache_folder_name)
+
+print(snote_cache_folder)
+os.makedirs(snote_cache_folder, exist_ok=True)
+
+def get_file_full_path_basename(url_hash):
+    return f'{snote_cache_folder}/{url_hash}'
+
         
         
     
 def save_html_content(url_hash, soup,title=None):
     _file_full_path_base=get_file_full_path_basename(url_hash)
-    with open(_file_full_path_base + '.html', 'w') as html_file:
+    
+    html_file_fullpath = _file_full_path_base + '.html'
+    print("-------save_html_content----html_file_fullpath-----")
+    print(html_file_fullpath)
+    
+    with open(html_file_fullpath, 'w') as html_file:
         html_file.write(soup.prettify())
     #Convert using html2text each soup content
     txt = html2text.html2text(str(soup))
@@ -42,7 +53,8 @@ def save_html_content(url_hash, soup,title=None):
     if title:
         #Save file with title in a subfolder in $scache_folder/bytitle
         safe_filename = re.sub(r'[^\w\s-]', '', title).strip().replace(' ', '_')
-        safe_md_fullpath = os.path.join(scache_folder, 'bytitle', safe_filename + '.md')
+        safe_md_fullpath = os.path.join(snote_cache_folder, 'bytitle', safe_filename + '.md')
+        os.makedirs(os.path.dirname(safe_md_fullpath), exist_ok=True)
         with open(safe_md_fullpath, 'w') as txt_file:
             txt_file.write(txt)
         
@@ -54,7 +66,7 @@ def download_images(soup, url):
         img_filename = hashlib.md5(img_url.encode()).hexdigest()
         img_response = requests.get(img_url)
 
-        with open(f'{scache_folder}/{img_filename}', 'wb') as img_file:
+        with open(f'{snote_cache_folder}/{img_filename}', 'wb') as img_file:
             img_file.write(img_response.content)
             
 def clean_url_response2text(response):
@@ -97,7 +109,7 @@ if 'OPENAI_API_KEY' not in os.environ:
     home_dir = os.path.expanduser("~")
     load_dotenv(os.path.join(home_dir, '.env'))
     
-api_key=os.getenv('OPENAI_API_KEY')
+_api_key=os.getenv('OPENAI_API_KEY')
 
 
 # Create directory if not exists
@@ -105,12 +117,13 @@ if not os.path.exists('{scache_folder}'):
     os.makedirs('{scache_folder}')
 
 
-client = OpenAI(api_key=api_key)
+client = OpenAI(api_key=_api_key)
 
 
 
 # Load summaries and hashes of previously processed URLs, if the file exists
 try:
+    print('Load summaries and hashes of previously processed URLs, if the file exists')
     with open('{scache_folder}/data.json', 'r') as data_file:
         data = json.load(data_file)
 except FileNotFoundError:
@@ -142,7 +155,12 @@ with open('jgtsnoter.csv', 'r') as csv_file:
         content_hash = hashlib.md5(response.text.encode()).hexdigest()
 
         # If the content has changed or it's a new URL, save the new content and get a new summary
+        print('  Checking if hash changed :' + content_hash)
+        
         if url not in data or data[url]['hash'] != content_hash:
+            
+            print( '             '+  content_hash +  ' ::    Not in content Hash')
+            
             # Save the HTML content into a file
             save_html_content(url_hash, soup,title)
             

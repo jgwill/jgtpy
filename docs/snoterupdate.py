@@ -3,13 +3,20 @@ import json
 
 from bs4 import BeautifulSoup
 
+import os
 
-def generate_markdown(data_file_path='./_snote_content_cache/data.json'):
+snote_cache_folder_name = '_snote_content_cache'
+snote_cache_folder = os.path.join(os.getcwd(), snote_cache_folder_name)
+
+print(snote_cache_folder)
+
+def generate_markdown(data_file_path='_snote_content_cache/data.json'):
     # Load summaries and hashes of previously processed URLs, if the file exists
     try:
         with open(data_file_path, 'r') as data_file:
             data = json.load(data_file)
     except FileNotFoundError:
+        print(data_file_path)
         print("FileNotFoundError: [Errno 2] No such file or directory: './_snote_content_cache/data.json'")
         return
 
@@ -44,4 +51,4 @@ def generate_markdown(data_file_path='./_snote_content_cache/data.json'):
     print('Markdown file generated successfully.')
 
 # Call the function
-generate_markdown()
+generate_markdown(snote_cache_folder)
