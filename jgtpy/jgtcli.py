@@ -50,8 +50,10 @@ def main():
         output = True
 
     if verbose_level > 1:
-        print("Date from : " + str(date_from))
-        print("Date to : " + str(date_to))
+        if date_from:
+            print("Date from : " + str(date_from))
+        if date_to:
+            print("Date to : " + str(date_to))
 
 
     try:
