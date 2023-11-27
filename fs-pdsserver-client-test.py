@@ -5,7 +5,7 @@ import pandas as pd
 from io import StringIO
 
 
-print("-----------Run CLI---------")
+#print("-----------Run CLI---------")
 
 import requests
 
