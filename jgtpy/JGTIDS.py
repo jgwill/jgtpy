@@ -189,6 +189,7 @@ def pds_get_dt_from_and_to_for_now_live_price(_timeframe, _nbbar2retrieve=335, q
 
 
 
+
 def ids_add_indicators(dfsrc,
                        enableGatorOscillator=False,
                        enableMFI=False,
@@ -210,21 +211,37 @@ def ids_add_indicators(dfsrc,
   Returns:
   pandas.DataFrame: The DataFrame with the added indicators.
   """
+  # Check if 'Date' is the index column
   if 'Date' in dfsrc.index.names:
     # Reset the index to remove 'Date' as the index column
     dfsrc = dfsrc.reset_index()
+  dfresult=None
   if not useLEGACY: # Because jgtapy has to be upgraded with new column name, we wont use it until our next release
-    return Indicators.jgt_create_ids_indicators_as_dataframe(dfsrc,
+    dfresult= Indicators.jgt_create_ids_indicators_as_dataframe(dfsrc,
                        enableGatorOscillator,
                        enableMFI,                          
                        cleanupOriginalColumn,                    
                        quiet)
   else:
-    return ids_add_indicators_LEGACY(dfsrc,
+    dfresult= ids_add_indicators_LEGACY(dfsrc,
                        enableGatorOscillator,
                        enableMFI,
                        dropnavalue,
                        quiet)
+  
+  return round_columns(dfresult)
+
+def round_columns(df):
+  for col in df.columns:
+    if df[col].dtype == 'float64' and df[col].apply(lambda x: x % 1 != 0).any():
+      df[col] = df[col].round(decimals=10)
+      df[col] = df[col].apply(lambda x: 0 if 'e' in str(x) else x)
+  return df
+# def round_columns(df):
+#   for col in df.columns:
+#     if df[col].dtype == 'float64' and df[col].apply(lambda x: x % 1 != 0).any():
+#       df[col] = df[col].round(decimals=10)
+#   return df
 
 def ids_add_indicators_LEGACY(dfsrc,
                        enableGatorOscillator=False,
