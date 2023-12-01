@@ -210,6 +210,9 @@ def ids_add_indicators(dfsrc,
   Returns:
   pandas.DataFrame: The DataFrame with the added indicators.
   """
+  if 'Date' in dfsrc.index.names:
+    # Reset the index to remove 'Date' as the index column
+    dfsrc = dfsrc.reset_index()
   if not useLEGACY: # Because jgtapy has to be upgraded with new column name, we wont use it until our next release
     return Indicators.jgt_create_ids_indicators_as_dataframe(dfsrc,
                        enableGatorOscillator,
