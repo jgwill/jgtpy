@@ -237,11 +237,6 @@ def round_columns(df):
       df[col] = df[col].round(decimals=10)
       df[col] = df[col].apply(lambda x: 0 if 'e' in str(x) else x)
   return df
-# def round_columns(df):
-#   for col in df.columns:
-#     if df[col].dtype == 'float64' and df[col].apply(lambda x: x % 1 != 0).any():
-#       df[col] = df[col].round(decimals=10)
-#   return df
 
 def ids_add_indicators_LEGACY(dfsrc,
                        enableGatorOscillator=False,
