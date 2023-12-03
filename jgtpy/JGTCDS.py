@@ -1,6 +1,6 @@
 # %%
 
-import jgtpy.JGTPDS as pds
+import jgtfxcon.JGTPDS as pds
 import jgtpy.JGTIDS as ids
 #from . import jgtconstants
 #.columns_to_remove as columns_to_remove

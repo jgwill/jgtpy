@@ -12,7 +12,7 @@ from subprocess import check_output
 import shlex
 
 
-from jgtpy.JGTPDS import getPH, mk_fn, mk_fullpath,getPH_to_filestore as ph2fs,getPH_from_filestore
+from jgtfxcon.JGTPDS import getPH, mk_fn, mk_fullpath,getPH_to_filestore as ph2fs,getPH_from_filestore
 
 #stayConnectedSetter(True)
 

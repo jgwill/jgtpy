@@ -1,4 +1,4 @@
-import JGTPDS as pds
+from jgtfxcon import JGTPDS as pds
 
 
 
