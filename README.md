@@ -1,6 +1,6 @@
 
 
-# jgtpy
+# jgtpy (ids)
 
 Enhanced JGTPy CDS, IDS, PDS Services
 
