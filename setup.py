@@ -16,16 +16,15 @@ INSTALL_REQUIRES = [
     'jgtapy>=1.9.12',
     'dropbox>=11.36.2',
     'mplfinance>=0.12.10b0',
-    'anyio>=4.1.0',
+    'anyio>=3.7.1',
     'packaging>=23.2',
     'tqdm>=4.66.1',
     'aiohttp>=3.9.1',
-    'anyio>=4.1.0',
     'async-timeout>=4.0.3',
     'PyYAML>=6.0.1',
     'pydantic>=2.5.2',
     'pydantic_core>=2.14.5',
-    'jgtfxcon>=0.1.91'
+    'jgtfxcon>=0.1.93'
 ]
 
 EXTRAS_DEV_LINT = [
