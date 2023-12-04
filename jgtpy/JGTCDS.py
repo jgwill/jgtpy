@@ -1,7 +1,8 @@
 # %%
 
-import jgtfxcon.JGTPDS as pds
+#import jgtfxcon.JGTPDS as pds
 import jgtpy.JGTIDS as ids
+import jgtpy.JGTPDSP as pds
 #from . import jgtconstants
 #.columns_to_remove as columns_to_remove
 
@@ -27,11 +28,6 @@ from .jgtconstants import (
     signalBuy_saucer_column_name,
 )
 
-def startSession():
-  pds.connect()
-  
-def stopSession():
-  pds.disconnect()
 # %%
 def createFromPDSFileToCDSFile(instrument, timeframe, columns_to_remove=None, quiet=True):
   """
@@ -141,7 +137,7 @@ def create(instrument,timeframe,nb2retrieve=335,stayConnected=False,quiet=True):
   Returns:
       pandas.DataFrame: CDS DataFrame
   """
-  pds.stayConnected=stayConnected
+  
   df=pds.getPH(instrument,timeframe,nb2retrieve,with_index=False,quiet=quiet)
   dfi=createFromDF(df,quiet=quiet)
   return dfi
@@ -278,3 +274,6 @@ def checkFDB(_instrument,_timeframe):
 def print_quiet(quiet,content):
     if not quiet:
         print(content)
+
+
+
