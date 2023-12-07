@@ -17,6 +17,9 @@ addOhlc=True
 cleanseOriginalColumns=True
 useLocal=True
 
+def getPH(instrument,timeframe,quote_count=335,start=None,end=None,with_index=True,quiet=True):
+  return getPH_from_filestore(instrument,timeframe,quote_count,start,end,with_index,quiet)
+
 def getPH_from_filestore(instrument,timeframe,quiet=True, compressed=False,with_index=True):
   """
   Retrieves OHLC data for a given instrument and timeframe from the filestore.
