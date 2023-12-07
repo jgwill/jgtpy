@@ -7,6 +7,7 @@ from . import JGTPDHelper as jpd
 
 from .JGTConfig import local_fn_compression,get_pov_local_data_filename
 from .JGTPDHelper import *
+from datetime import datetime
 
 
 
@@ -17,22 +18,52 @@ addOhlc=True
 cleanseOriginalColumns=True
 useLocal=True
 
-def getPH(instrument,timeframe,quote_count=335,start=None,end=None,with_index=True,quiet=True):
+
+def getPH(instrument, timeframe, quote_count=335, start=None, end=None, with_index=True, quiet=True):
+  #@STCissue quote_count is ignored or irrelevant in start/end
   #@a Adequate start and end from the stored file
-  
-  df= getPH_from_filestore(instrument,timeframe,quiet,False,with_index)
+
+  df = getPH_from_filestore(instrument, timeframe, quiet, False, with_index)
+  if not quiet:
+    print(df.columns)
+    print(df.index)
+    print("------------------------------------")
   
   if start is not None:
-    if end is None: #end is not provided
-      end=dt.datetime.now()
-    df=select_start_end(df,start,end)
-  
+    #@STCIssue Not supported supplying the 'end' with a count
+    if end is None:  # end is not provided
+      end = datetime.now()
+    
+    if not quiet:
+      print("start: " + str(start))
+      print("end: " + str(end))
+    df = select_start_end(df, start, end)
+
   return df
 
-def select_start_end(df, start, end):
-  mask = (df['Date'] >= start) & (df['Date'] <= end)
+def select_start_end(df, start, end=None):
+  if end is None:  # end is not provided
+    end = datetime.now()
+  
+  if 'Date' in df.columns:
+    mask = (df['Date'] >= start) & (df['Date'] <= end)
+  else:
+    mask = (df.index >= start) & (df.index <= end)
+  
   selected_df = df.loc[mask]
   return selected_df
+
+
+def str_to_datetime(date_str):
+    formats = ['%m.%d.%Y %H:%M:%S', '%Y-%m-%d %H:%M:%S', '%Y/%m/%d %H:%M:%S', '%Y/%m/%d', '%Y-%m-%d']
+    
+    for fmt in formats:
+        try:
+            return datetime.strptime(date_str, fmt)
+        except ValueError:
+            continue
+    return None
+
 
 def getPH_from_filestore(instrument,timeframe,quiet=True, compressed=False,with_index=True):
   """
