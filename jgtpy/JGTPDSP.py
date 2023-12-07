@@ -18,7 +18,11 @@ cleanseOriginalColumns=True
 useLocal=True
 
 def getPH(instrument,timeframe,quote_count=335,start=None,end=None,with_index=True,quiet=True):
-  return getPH_from_filestore(instrument,timeframe,quote_count,start,end,with_index,quiet)
+  #@a Adequate start and end from the stored file
+  
+  df= getPH_from_filestore(instrument,timeframe,quiet,False,with_index)
+  
+  return df
 
 def getPH_from_filestore(instrument,timeframe,quiet=True, compressed=False,with_index=True):
   """
