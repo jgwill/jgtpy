@@ -129,3 +129,6 @@ docs/_cache*
 docs/_snote*
 jgtpy/*.html
 jgtpy/*.rst
+
+output* 
+
