@@ -22,7 +22,17 @@ def getPH(instrument,timeframe,quote_count=335,start=None,end=None,with_index=Tr
   
   df= getPH_from_filestore(instrument,timeframe,quiet,False,with_index)
   
+  if start is not None:
+    if end is None: #end is not provided
+      end=dt.datetime.now()
+    df=select_start_end(df,start,end)
+  
   return df
+
+def select_start_end(df, start, end):
+  mask = (df['Date'] >= start) & (df['Date'] <= end)
+  selected_df = df.loc[mask]
+  return selected_df
 
 def getPH_from_filestore(instrument,timeframe,quiet=True, compressed=False,with_index=True):
   """
