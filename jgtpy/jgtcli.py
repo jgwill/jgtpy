@@ -42,7 +42,7 @@ def main():
     quiet=False
     if verbose_level == 0:
         quiet=True
-    print("Verbose level : " + str(verbose_level))
+    #print("Verbose level : " + str(verbose_level))
     if process_cds:
         print("Processing CDS")
         output=True
