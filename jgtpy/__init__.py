@@ -39,7 +39,7 @@ from .JGTCore import __version__ #,json2dict,jsonfile2prop,json2prop,jsonfile2di
 
 
 
-
+import jgtwslhelper as wsl
 
 from .JGTIDS import tocds as tocds
 #mk_fn,mk_fullpath,getSubscribed,getPH,getPHByRange,tryConnect
