@@ -14,7 +14,7 @@ def pwsd_wsl_run_command(bash_command_to_run):
 def run(bash_command):
     return pwsd_wsl_run_command(bash_command)
 
-def jgtfxcli_wsl(cli_path, instrument, timeframe, quote_count, verbose_level):
+def jgtfxcli_wsl1(cli_path, instrument, timeframe, quote_count, verbose_level):
     if cli_path == "" or cli_path is None:
         cli_path = "/home/jgi/.local/bin/jgtfxcli"
     bash_command_to_run = f"pwd;{cli_path} -i '{instrument}' -t '{timeframe}' -c {quote_count} -o -v {verbose_level}"
@@ -25,7 +25,7 @@ def jgtfxcli_wsl(cli_path, instrument, timeframe, quote_count, verbose_level):
     return result.stdout.decode("utf-8")
 
 
-def jgtfxcli_wsl2(instrument, timeframe, quote_count,cli_path="", verbose_level=0):
+def jgtfxcli_wsl(instrument, timeframe, quote_count,cli_path="", verbose_level=0):
     if cli_path == "" or cli_path is None:
         cli_path = '$HOME/.local/bin/jgtfxcli'
         #cli_path = "/home/jgi/.local/bin/jgtfxcli"
