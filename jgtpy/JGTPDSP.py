@@ -19,7 +19,7 @@ cleanseOriginalColumns=True
 useLocal=True
 
 
-def getPH(instrument, timeframe, quote_count=335, start=None, end=None, with_index=True, quiet=True):
+def getPH(instrument, timeframe, quote_count=335, start=None, end=None, with_index=True, quiet=True,convert_date_index_to_dt=True):
   #@STCissue quote_count is ignored or irrelevant in start/end
   #@a Adequate start and end from the stored file
 
@@ -38,7 +38,9 @@ def getPH(instrument, timeframe, quote_count=335, start=None, end=None, with_ind
       print("start: " + str(start))
       print("end: " + str(end))
     df = select_start_end(df, start, end)
-
+  
+  if convert_date_index_to_dt:
+    df['Date'] = pd.to_datetime(df['Date'])
   return df
 
 def select_start_end(df, start, end=None):
