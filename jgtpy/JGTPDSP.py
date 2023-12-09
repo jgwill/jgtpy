@@ -23,7 +23,7 @@ def getPH(instrument, timeframe, quote_count=335, start=None, end=None, with_ind
   #@STCissue quote_count is ignored or irrelevant in start/end
   #@a Adequate start and end from the stored file
 
-  df = getPH_from_filestore(instrument, timeframe, quiet, False, with_index)
+  df = getPH_from_filestore(instrument, timeframe, quiet, False, with_index,convert_date_index_to_dt)
   if not quiet:
     print(df.columns)
     print(df.index)
@@ -39,8 +39,7 @@ def getPH(instrument, timeframe, quote_count=335, start=None, end=None, with_ind
       print("end: " + str(end))
     df = select_start_end(df, start, end)
   
-  if convert_date_index_to_dt:
-    df['Date'] = pd.to_datetime(df['Date'])
+
   return df
 
 def select_start_end(df, start, end=None):
@@ -67,7 +66,7 @@ def str_to_datetime(date_str):
     return None
 
 
-def getPH_from_filestore(instrument,timeframe,quiet=True, compressed=False,with_index=True):
+def getPH_from_filestore(instrument,timeframe,quiet=True, compressed=False,with_index=True,convert_date_index_to_dt=True):
   """
   Retrieves OHLC data for a given instrument and timeframe from the filestore.
 
@@ -77,6 +76,7 @@ def getPH_from_filestore(instrument,timeframe,quiet=True, compressed=False,with_
     quiet (bool, optional): Whether to suppress print statements. Defaults to True.
     compressed (bool, optional): Whether the data is compressed. Defaults to False.
     with_index (bool, optional): Whether to include the index in the returned DataFrame. Defaults to True.
+    convert_date_index_to_dt  (bool, optional): convert index Date to dt
 
   Returns:
     pandas.DataFrame: The OHLC data for the given instrument and timeframe.
@@ -85,14 +85,15 @@ def getPH_from_filestore(instrument,timeframe,quiet=True, compressed=False,with_
   
   print_quiet(quiet,srcpath)
   
-  df = read_ohlc_df_from_file(srcpath,quiet,compressed,with_index)
+  df = read_ohlc_df_from_file(srcpath,quiet,compressed,with_index,convert_date_index_to_dt)
+
   
   return df
 
 
 
 
-def read_ohlc_df_from_file(srcpath, quiet=True, compressed=False,with_index=True):
+def read_ohlc_df_from_file(srcpath, quiet=True, compressed=False,with_index=True,convert_date_index_to_dt=True):
   """
   Reads an OHLC (Open-High-Low-Close) +Date as DataFrame index from a CSV file.
 
@@ -115,6 +116,8 @@ def read_ohlc_df_from_file(srcpath, quiet=True, compressed=False,with_index=True
     print(f"An error occurred while reading the file: {e}")
     df = None
   
+  if convert_date_index_to_dt:
+    df.index = pd.to_datetime(df.index)
   if with_index:
     if 'Date' in df.columns:
       df.set_index('Date', inplace=True)
@@ -134,6 +137,8 @@ def create_filestore_path(instrument, timeframe,quiet=True, compressed=False):
     if compressed:
         ext = 'csv.gz'
     fpath = mk_fullpath(instrument, timeframe, ext, data_path)
+    if os.name == 'nt':
+      fpath = fpath.replace('/', '\\')
     return fpath
   
   
