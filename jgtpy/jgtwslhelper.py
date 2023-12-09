@@ -69,6 +69,7 @@ def execute_wsl_command_v1_with_cd(directory, command_to_execute):
         print("Error:", result.stderr.decode("utf-8"))
 
 
+minimum_quote_count = 335
 
 # Define the dividers for each timeframe
 timeframe_dividers = {
