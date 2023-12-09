@@ -115,12 +115,12 @@ def read_ohlc_df_from_file(srcpath, quiet=True, compressed=False,with_index=True
   except Exception as e:
     print(f"An error occurred while reading the file: {e}")
     df = None
-  
-  if convert_date_index_to_dt:
-    df.index = pd.to_datetime(df.index)
   if with_index:
     if 'Date' in df.columns:
       df.set_index('Date', inplace=True)
+      
+      if convert_date_index_to_dt:
+        df.index = pd.to_datetime(df.index)
     else:
       raise ValueError("Column 'Date' is not present in the DataFrame")
 
