@@ -157,6 +157,8 @@ def mk_fn(instrument,timeframe,ext):
 def mk_fullpath(instrument,timeframe,ext,path):
   fn=mk_fn(instrument,timeframe,ext)
   rpath= os.path.join(path,fn)
+  if os.name == 'nt':
+    rpath= rpath.replace('/', '\\')
   #path + '/'+fn
   return rpath
 #.replace('..','.').replace('//','/')
@@ -166,11 +168,15 @@ def mk_fullpath(instrument,timeframe,ext,path):
 
 
 def get_data_path():
-    data_path = os.environ.get('JGTPY_DATA', './data')
+    default_dot = './data'
+    default_dotdot = '../data'
+    data_path = os.environ.get('JGTPY_DATA', default_dot)
 
     if not os.path.exists(data_path):
-      data_path = os.environ.get('JGTPY_DATA', '../data')
+      data_path = os.environ.get('JGTPY_DATA', default_dotdot)
       
+    if os.name == 'nt':
+      data_path = data_path.replace('/', '\\')
 
     if not os.path.exists(data_path):
       raise Exception("Data directory not found. Please create a directory named 'data' in the current or parent directory, or set the JGTPY_DATA environment variable.")
