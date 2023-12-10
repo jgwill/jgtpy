@@ -37,7 +37,7 @@ def main():
 
     process_cds=args.cds
     #output=False
-    compress=False
+    #compress=False
     verbose_level = args.verbose
     quiet=False
     if verbose_level == 0:
@@ -46,8 +46,8 @@ def main():
     if process_cds:
         print("Processing CDS")
         output=True
-    if args.compress:
-        compress = args.compress
+    #if args.compress:
+    #    compress = args.compress
     #     output = True # in case
     # if args.output:
     #     output = True
