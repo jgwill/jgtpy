@@ -1,7 +1,7 @@
 import jgtpy
 
 from . import jgtconstants as constants
-from . import jgtfxcommon
+from . import jgtcommon as jgtcommon
 import argparse
 
 from . import JGTPDSP as pds
@@ -11,13 +11,13 @@ import pandas as pd
 def parse_args():
     parser = argparse.ArgumentParser(description='Process command parameters.')
     #jgtfxcommon.add_main_arguments(parser)
-    jgtfxcommon.add_instrument_timeframe_arguments(parser)
-    jgtfxcommon.add_date_arguments(parser)
-    jgtfxcommon.add_max_bars_arguments(parser)
-    jgtfxcommon.add_output_argument(parser)
+    jgtcommon.add_instrument_timeframe_arguments(parser)
+    jgtcommon.add_date_arguments(parser)
+    jgtcommon.add_max_bars_arguments(parser)
+    #jgtcommon.add_output_argument(parser)
     #jgtfxcommon.add_quiet_argument(parser)
-    jgtfxcommon.add_verbose_argument(parser)
-    jgtfxcommon.add_cds_argument(parser)
+    jgtcommon.add_verbose_argument(parser)
+    jgtcommon.add_cds_argument(parser)
     args = parser.parse_args()
     return args
 
@@ -36,7 +36,7 @@ def main():
         date_to = args.dateto.replace('/', '.')
 
     process_cds=args.cds
-    output=False
+    #output=False
     compress=False
     verbose_level = args.verbose
     quiet=False
@@ -48,9 +48,9 @@ def main():
         output=True
     if args.compress:
         compress = args.compress
-        output = True # in case
-    if args.output:
-        output = True
+    #     output = True # in case
+    # if args.output:
+    #     output = True
 
     if verbose_level > 1:
         if date_from:
@@ -65,20 +65,17 @@ def main():
         instruments = instrument.split(',')
         timeframes = timeframe.split(',')
 
-        pds.stayConnectedSetter(True)
+
         for instrument in instruments:
             for timeframe in timeframes:
-                if output:
-                    fpath = pds.getPH2file(instrument, timeframe, quotes_count, date_from, date_to, False, quiet, compress)
-                    print_quiet(quiet, fpath)
-                    createCDS_for_main(instrument, timeframe, quiet, verbose_level)
-                else:
-                    p = pds.getPH(instrument, timeframe, quotes_count, date_from, date_to, False, quiet)
-                    if verbose_level > 0:
-                        print(p)
-        pds.disconnect()  
+                createCDS_for_main(instrument, timeframe, quiet, verbose_level)
+                # else:
+                #     p = pds.getPH(instrument, timeframe, quotes_count, date_from, date_to, False, quiet)
+                #     if verbose_level > 0:
+                #         print(p)
+         
     except Exception as e:
-        jgtfxcommon.print_exception(e)
+        jgtcommon.print_exception(e)
 
     #try:
     #    jgtpy.off()
@@ -95,7 +92,7 @@ def createCDS_for_main(instrument, timeframe, quiet, verbose_level=0):
     # implementation goes here
     from jgtpy import JGTCDS as cds
     col2remove=constants.columns_to_remove
-    config = jgtfxcommon.readconfig()
+    config = jgtcommon.readconfig()
     if 'columns_to_remove' in config:  # read it from config otherwise
         col2remove = config['columns_to_remove']
     quietting=True
