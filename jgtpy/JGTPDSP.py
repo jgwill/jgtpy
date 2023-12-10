@@ -2,8 +2,8 @@
 import datetime as dt
 import pandas as pd
 import os
+import json
 from . import JGTPDHelper as jpd
-
 
 from .JGTConfig import local_fn_compression,get_pov_local_data_filename
 from .JGTPDHelper import *
@@ -192,7 +192,23 @@ def get_data_path():
     return data_path
   
   
-  
+
+
+def get_instrument_properties(instrument, quiet=False,from_file=True):
+  if not from_file:
+    print("NOT SUPORTED in PDSP")
+  else:
+    
+    # # Define the path to the directory
+    home_dir = os.path.expanduser("~")
+    dir_path = os.path.join(home_dir, '.jgt', 'iprops')
+    instrument_properties = {}
+    instrument_filename = instrument.replace('/', '-')
+    #     # Read the instrument properties from the file
+    iprop_dir_path = os.path.join(dir_path, f'{instrument_filename}.json')
+    with open(iprop_dir_path, 'r') as f:
+      instrument_properties = json.load(f)
+    return instrument_properties
 
 
 def print_quiet(quiet,content):
