@@ -657,23 +657,7 @@ def plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=T
   fdb_tick_offset = average_bar_height  # pipsize * 111
   fdb_offset_value = average_bar_height / 2  # pipsize * fdb_tick_offset
 
-  fdbb_up_plot = mpf.make_addplot(
-      data_last_selection[_fdbb_coln] + fdb_offset_value,
-      panel=main_plot_panel_id,
-      type="scatter",
-      markersize=fdb_marker_size,
-      marker=fdb_signal_marker,
-      color=fdb_signal_buy_color,
-  )
-
-  fdbs_down_plot = mpf.make_addplot(
-      data_last_selection[_fdbs_coln] - fdb_offset_value,
-      panel=main_plot_panel_id,
-      type="scatter",
-      markersize=fdb_marker_size,
-      marker=fdb_signal_marker,
-      color=fdb_signal_sell_color,
-  )
+  fdbb_up_plot, fdbs_down_plot = make_plot__fdb_signals(fdb_signal_buy_color, fdb_signal_sell_color, fdb_marker_size, fdb_signal_marker, _fdbb_coln, _fdbs_coln, main_plot_panel_id, data_last_selection, fdb_offset_value)
 
 
   #%% Make Fractals plot
@@ -864,6 +848,56 @@ def plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=T
   if show_plot:
       plt.show()
   return fig,axes
+
+
+def make_plot__fdb_signals(fdb_signal_buy_color, fdb_signal_sell_color, fdb_marker_size, fdb_signal_marker, fdbb_coln, fdbs_coln, main_plot_panel_id, data_last_selection, fdb_offset_value):
+        """
+        Creates scatter plots for FDB buy and sell signals based on the given parameters.
+
+        Args:
+                fdb_signal_buy_color (str): Color of the scatter plot for buy signals.
+                fdb_signal_sell_color (str): Color of the scatter plot for sell signals.
+                fdb_marker_size (int): Size of the markers in the scatter plot.
+                fdb_signal_marker (str): Marker style for the scatter plot.
+                fdbb_coln (str): Column name for buy signals in the data.
+                fdbs_coln (str): Column name for sell signals in the data.
+                main_plot_panel_id (int): ID of the main plot panel.
+                data_last_selection (pandas.DataFrame): Data containing the buy and sell signals.
+                fdb_offset_value (float): Offset value to adjust the scatter plot positions.
+
+        Returns:
+                tuple: A tuple containing the scatter plot for buy signals and the scatter plot for sell signals.
+        """
+        
+        fdbb_up_plot = make_plot_fdbb_signal(fdb_signal_buy_color, fdb_marker_size, fdb_signal_marker, fdbb_coln, main_plot_panel_id, data_last_selection, fdb_offset_value)
+
+        fdbs_down_plot = make_plot_fdbs_signal(fdb_signal_sell_color, fdb_marker_size, fdb_signal_marker, fdbs_coln, main_plot_panel_id, data_last_selection, fdb_offset_value)
+        
+        return fdbb_up_plot,fdbs_down_plot
+
+def make_plot_fdbs_signal(fdb_signal_sell_color, fdb_marker_size, fdb_signal_marker, fdbs_coln, main_plot_panel_id, data_last_selection, fdb_offset_value):
+    fdbs_down_plot = mpf.make_addplot(
+            data_last_selection[fdbs_coln] - fdb_offset_value,
+            panel=main_plot_panel_id,
+            type="scatter",
+            markersize=fdb_marker_size,
+            marker=fdb_signal_marker,
+            color=fdb_signal_sell_color,
+    )
+
+    return fdbs_down_plot
+
+def make_plot_fdbb_signal(fdb_signal_buy_color, fdb_marker_size, fdb_signal_marker, fdbb_coln, main_plot_panel_id, data_last_selection, fdb_offset_value):
+    fdbb_up_plot = mpf.make_addplot(
+            data_last_selection[fdbb_coln] + fdb_offset_value,
+            panel=main_plot_panel_id,
+            type="scatter",
+            markersize=fdb_marker_size,
+            marker=fdb_signal_marker,
+            color=fdb_signal_buy_color,
+    )
+
+    return fdbb_up_plot
   #return plt
 
 
