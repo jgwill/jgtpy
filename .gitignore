@@ -133,3 +133,7 @@ jgtpy/*.rst
 output* 
 
 output*.csv
+
+./output*
+output.txt
+
