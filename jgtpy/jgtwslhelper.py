@@ -4,16 +4,48 @@ import sys
 import os
 
 
-def pwsd_wsl_run_command(bash_command_to_run):
+import platform
+
+def pwsd_wsl_run_command1(bash_command_to_run):
     powershell_command = 'wsl.exe bash -c \'' + bash_command_to_run + '\''
     result = subprocess.run(
         ["pwsh.exe", "-Command", powershell_command], stdout=subprocess.PIPE, shell=True
     )
     return result.stdout.decode("utf-8")
 
-def run(bash_command):
-    return pwsd_wsl_run_command(bash_command)
 
+
+
+
+def run_bash_command_by_platform(bash_cmd):
+    if platform.system() == "Windows":
+        shell = os.environ.get('COMSPEC', 'cmd.exe')
+        if 'powershell' in shell.lower():
+            # The interpreter is PowerShell            
+            return subprocess.run(bash_cmd, shell=True, stdout=subprocess.PIPE).stdout.decode("utf-8")
+        else:
+            # The interpreter is cmd.exe
+            return wsl_run_bash_on_cmd(bash_cmd)
+    else:
+        # The system is Linux
+        return subprocess.run(bash_cmd, shell=True, stdout=subprocess.PIPE).stdout.decode("utf-8")
+    
+def wsl_run_bash_on_cmd(bash_cmd):   
+    
+    powershell_command = 'wsl.exe bash -c \'' + bash_cmd + '\''
+    result = subprocess.run(
+        ["pwsh.exe", "-Command", powershell_command], stdout=subprocess.PIPE, shell=True
+    )
+    return result.stdout.decode("utf-8")
+
+
+
+def run(bash_command):
+    return run_bash_command_by_platform(bash_command)
+
+
+    
+    
 def jgtfxcli_wsl1(cli_path, instrument, timeframe, quote_count, verbose_level):
     if cli_path == "" or cli_path is None or cli_path == 0:
         cli_path = "/home/jgi/.local/bin/jgtfxcli"
@@ -26,11 +58,11 @@ def jgtfxcli_wsl1(cli_path, instrument, timeframe, quote_count, verbose_level):
 
 
 def jgtfxcli_wsl(instrument, timeframe, quote_count,cli_path="", verbose_level=0):
-    if cli_path == "" or cli_path is None:
+    if cli_path == "" or cli_path is None or cli_path == 0 or cli_path == '0':
         cli_path = '$HOME/.local/bin/jgtfxcli'
         #cli_path = "/home/jgi/.local/bin/jgtfxcli"
     bash_command_to_run = f"pwd;{cli_path} -i \"{instrument}\" -t \"{timeframe}\" -c {quote_count} -o -v {verbose_level}"
-    return pwsd_wsl_run_command(bash_command_to_run)
+    return run_bash_command_by_platform(bash_command_to_run)
 
 def jgtfxcli(instrument, timeframe, quote_count,cli_path="", verbose_level=0):
     return jgtfxcli_wsl(instrument,timeframe,quote_count,cli_path,verbose_level)
