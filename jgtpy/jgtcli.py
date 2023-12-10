@@ -1,10 +1,10 @@
 import jgtpy
 
 from . import jgtconstants as constants
-from jgtfxcon import jgtfxcommon
+from . import jgtfxcommon
 import argparse
 
-from jgtfxcon import JGTPDS as pds
+from . import JGTPDSP as pds
 
 import pandas as pd
 
@@ -80,10 +80,10 @@ def main():
     except Exception as e:
         jgtfxcommon.print_exception(e)
 
-    try:
-        jgtpy.off()
-    except Exception as e:
-        jgtfxcommon.print_exception(e)
+    #try:
+    #    jgtpy.off()
+    #except Exception as e:
+    #    jgtfxcommon.print_exception(e)
 
 # if __name__ == "__main__":
 #     main()
