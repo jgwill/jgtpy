@@ -280,3 +280,54 @@ def diff_month(year: int, month: int, date2: datetime):
 
 
 
+
+
+_JGT_CONFIG_JSON_SECRET=None
+
+def readconfig(json_config_str=None):
+    global _JGT_CONFIG_JSON_SECRET
+    # Try reading config file from current directory
+
+    if json_config_str is not None:
+        config = json.loads(json_config_str)
+        _JGT_CONFIG_JSON_SECRET=json_config_str
+        return config
+
+
+    if _JGT_CONFIG_JSON_SECRET is not None:
+        config = json.loads(_JGT_CONFIG_JSON_SECRET)
+        return config
+    
+    # Otherwise, try reading config file from current directory, home or env var
+    config_file = 'config.json'
+    config = None
+
+    if os.path.isfile(config_file):
+        with open(config_file, 'r') as f:
+            config = json.load(f)
+            return config
+    else:
+        # If config file not found, check home directory
+        home_dir = os.path.expanduser("~")
+        config_file = os.path.join(home_dir, 'config.json')
+        if os.path.isfile(config_file):
+            with open(config_file, 'r') as f:
+                config = json.load(f)
+        else:
+            # If config file still not found, try reading from environment variable
+            config_json_str = os.getenv('JGT_CONFIG_JSON_SECRET')
+            if config_json_str:
+                config = json.loads(config_json_str)
+                return config
+
+
+    # Now you can use the config dictionary in your application
+
+    # Read config file
+    with open(config_file, 'r') as file:
+        config = json.load(file)
+        
+    if config is None:
+        raise Exception("Configuration not found")
+    
+    return config
