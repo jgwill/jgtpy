@@ -384,15 +384,30 @@ def jgtxplot18c_231209(instrument,timeframe,nb_bar_on_chart = 375,recreate_data 
           l.warning("Could not get DF, trying to run thru WSL the update")
           jgtpy.wsl.jgtfxcli(instrument, timeframe, nb_bar_on_chart+35)
           df = pds.getPH(instrument,timeframe,nb_bar_on_chart)
-              
-      data = cds.createFromDF(df)
+      # Select the last 400 bars of the data
+      try:
+          selected = df.iloc[-nb_bar_on_chart-120:].copy()
+      except:
+          selected = df.copy()
+          l.warning("Could not select the desired amount of bars, trying anyway with what we have")
+          pass
+      #print(selected)
+      data = cds.createFromDF(selected)
       if cache_data:
           data.to_csv(fnpath)
   
   return plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart,show_plot)
 
-def plot_from_pds_df(pdata,instrument,timeframe,nb_bar_on_chart = 375,show_plot=True): 
-  data = cds.createFromDF(pdata)
+def plot_from_pds_df(pdata,instrument,timeframe,nb_bar_on_chart = 375,show_plot=True):
+  # Select the last 400 bars of the data
+  try:
+      selected = pdata.iloc[-nb_bar_on_chart-120:].copy()
+  except:
+      selected = pdata.copy()
+      l.warning("Could not select the desired amount of bars, trying anyway with what we have")
+      pass
+  
+  data = cds.createFromDF(selected)
   return plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart,show_plot)
   
   
@@ -444,9 +459,7 @@ def plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=T
   ac_signals_marker_size = 24
   saucer_marker_size = 48
   fractal_degreehigher_marker_size = 20
-
-
-
+  
   fdb_signal_marker = "o"
   fractal_up_marker="^"
   fractal_up_marker_higher= "^"
@@ -492,7 +505,7 @@ def plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=T
 
   # Select the last 400 bars of the data
   try:
-      data_last_selection = data.iloc[-nb_bar_on_chart:]
+      data_last_selection = data.iloc[-nb_bar_on_chart:].copy()
   except:
       l.warning("Could not select the desired amount of bars, trying anyway with what we have")
       pass
@@ -586,6 +599,7 @@ def plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=T
   data_last_selection.loc[:,_saucer_s_coln] = np.where(data_last_selection[_saucer_s_coln] == 1.0, ao_min, np.nan)
 
   saucer_offset_value = 0
+  
   # Make Buy Signal plot
   sb_plot = mpf.make_addplot(
       data_last_selection[_saucer_b_coln] + saucer_offset_value,
@@ -595,6 +609,7 @@ def plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=T
       marker="|",
       color="g",
   )
+  
   # Make Sell Signal plot
   ss_plot = mpf.make_addplot(
       data_last_selection[_saucer_s_coln] - saucer_offset_value,
@@ -689,22 +704,7 @@ def plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=T
 
 
 
-  fractal_up_plot = mpf.make_addplot(
-      data_last_selection[fh_col_dim] + fractal_offset_value,
-      panel=main_plot_panel_id,
-      type="scatter",
-      markersize=fractal_marker_size,
-      marker=fractal_up_marker,
-      color=fractal_up_color,
-  )
-  fractal_down_plot = mpf.make_addplot(
-      data_last_selection[fl_col_dim],
-      panel=main_plot_panel_id,
-      type="scatter",
-      markersize=fractal_marker_size,
-      marker=fractal_dn_marker,
-      color=fractal_dn_color,
-  )
+  fractal_up_plot, fractal_down_plot = make_plot__fractals_indicator(fractal_up_color, fractal_dn_color, fractal_marker_size, fractal_up_marker, fractal_dn_marker, fh_col_dim, fl_col_dim, main_plot_panel_id, data_last_selection, fractal_offset_value)
 
   #%% Fractal higher dim
 
@@ -728,29 +728,14 @@ def plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=T
   #%% PLot higher fractal
 
 
-  fractal_up_plot_higher = mpf.make_addplot(
-      data_last_selection[fh_col_dim_higher] + fractal_offset_value,
-      panel=main_plot_panel_id,
-      type="scatter",
-      markersize=fractal_degreehigher_marker_size,
-      marker=fractal_up_marker_higher,
-      color=fractal_up_color_higher,
-  )
-  fractal_down_plot_higher = mpf.make_addplot(
-      data_last_selection[fl_col_dim_higher],
-      panel=main_plot_panel_id,
-      type="scatter",
-      markersize=fractal_degreehigher_marker_size,
-      marker=fractal_dn_marker_higher,
-      color=fractal_dn_color_higher,
-  )
+  fractal_up_plot_higher, fractal_down_plot_higher = make_plot_fractals_degreehigher_indicator(fractal_dn_color_higher, fractal_up_color_higher, fractal_degreehigher_marker_size, fractal_up_marker_higher, fractal_dn_marker_higher, fh_col_dim_higher, fl_col_dim_higher, main_plot_panel_id, data_last_selection, fractal_offset_value)
 
 
 
 
 
   #%% Print Mean
-  l.debug("Mean: " + (price_mean).astype(str))
+  #l.debug("Mean: " + (price_mean).astype(str))
 
 
   #%% Plotting
@@ -848,6 +833,46 @@ def plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=T
   if show_plot:
       plt.show()
   return fig,axes
+
+def make_plot_fractals_degreehigher_indicator(fractal_dn_color_higher, fractal_up_color_higher, fractal_degreehigher_marker_size, fractal_up_marker_higher, fractal_dn_marker_higher, fh_col_dim_higher, fl_col_dim_higher, main_plot_panel_id, data_last_selection, fractal_offset_value):
+    fractal_up_plot_higher = mpf.make_addplot(
+      data_last_selection[fh_col_dim_higher] + fractal_offset_value,
+      panel=main_plot_panel_id,
+      type="scatter",
+      markersize=fractal_degreehigher_marker_size,
+      marker=fractal_up_marker_higher,
+      color=fractal_up_color_higher,
+  )
+    fractal_down_plot_higher = mpf.make_addplot(
+      data_last_selection[fl_col_dim_higher],
+      panel=main_plot_panel_id,
+      type="scatter",
+      markersize=fractal_degreehigher_marker_size,
+      marker=fractal_dn_marker_higher,
+      color=fractal_dn_color_higher,
+  )
+    
+    return fractal_up_plot_higher,fractal_down_plot_higher
+
+def make_plot__fractals_indicator(fractal_up_color, fractal_dn_color, fractal_marker_size, fractal_up_marker, fractal_dn_marker, fh_col_dim, fl_col_dim, main_plot_panel_id, data_last_selection, fractal_offset_value):
+    fractal_up_plot = mpf.make_addplot(
+      data_last_selection[fh_col_dim] + fractal_offset_value,
+      panel=main_plot_panel_id,
+      type="scatter",
+      markersize=fractal_marker_size,
+      marker=fractal_up_marker,
+      color=fractal_up_color,
+  )
+    fractal_down_plot = mpf.make_addplot(
+      data_last_selection[fl_col_dim],
+      panel=main_plot_panel_id,
+      type="scatter",
+      markersize=fractal_marker_size,
+      marker=fractal_dn_marker,
+      color=fractal_dn_color,
+  )
+    
+    return fractal_up_plot,fractal_down_plot
 
 
 def make_plot__fdb_signals(fdb_signal_buy_color, fdb_signal_sell_color, fdb_marker_size, fdb_signal_marker, fdbb_coln, fdbs_coln, main_plot_panel_id, data_last_selection, fdb_offset_value):
