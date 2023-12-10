@@ -368,7 +368,7 @@ def update(_f4,_ch,_cw,showlegent=False,xaxis_rangeslider_visible=False):
 from jgtpy import jgtconstants as c
 
 
-def jgtxplot18c_231209(instrument,timeframe,nb_bar_on_chart = 375,recreate_data = True):
+def jgtxplot18c_231209(instrument,timeframe,nb_bar_on_chart = 375,recreate_data = True,show_plot=True):
   cache_data=False
   cache_dir = "cache"
   fn =  instrument.replace("/", "-") + "_" + timeframe + ".csv"
@@ -861,18 +861,18 @@ def plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart = 375):
   # Set the font size of the Date column
   axes[main_plot_panel_id].tick_params(axis="x", labelsize=6)
 
-  
-  plt.show()
+  if show_plot:
+      plt.show()
   return fig,axes
   #return plt
 
 
 # %% ALias function (future name)
 
-def plotcdf(data,instrument, timeframe, nb_bar_on_chart=375):
-  return plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart)
+def plotcdf(data,instrument, timeframe, nb_bar_on_chart=375,show_plot=True):
+  return plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart,show_plot)
 
-def plot(instrument, timeframe, nb_bar_on_chart=375, recreate_data=True):
+def plot(instrument, timeframe, nb_bar_on_chart=375, recreate_data=True,show_plot=True):
   """
   Plot the chart for a given instrument and timeframe.
 
@@ -886,7 +886,7 @@ def plot(instrument, timeframe, nb_bar_on_chart=375, recreate_data=True):
   - fig: The figure object of the chart.
   - axes: The axes object of the chart.
   """
-  fig, axes = jgtxplot18c_231209(instrument, timeframe, nb_bar_on_chart, recreate_data)
+  fig, axes = jgtxplot18c_231209(instrument, timeframe, nb_bar_on_chart, recreate_data,show_plot)
   return fig, axes
 
 
