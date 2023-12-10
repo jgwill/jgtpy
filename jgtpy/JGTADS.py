@@ -389,14 +389,14 @@ def jgtxplot18c_231209(instrument,timeframe,nb_bar_on_chart = 375,recreate_data 
       if cache_data:
           data.to_csv(fnpath)
   
-  return plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart)
+  return plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart,show_plot)
 
-def plot_from_pds_df(pdata,instrument,timeframe,nb_bar_on_chart = 375): 
+def plot_from_pds_df(pdata,instrument,timeframe,nb_bar_on_chart = 375,show_plot=True): 
   data = cds.createFromDF(pdata)
-  return plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart)
+  return plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart,show_plot)
   
   
-def plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart = 375):
+def plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=True):
   # Load dataset
   iprop = pds.get_instrument_properties(instrument)
   l.debug(iprop)
@@ -872,23 +872,23 @@ def plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart = 375):
 def plotcdf(data,instrument, timeframe, nb_bar_on_chart=375,show_plot=True):
   return plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart,show_plot)
 
-def plot(instrument, timeframe, nb_bar_on_chart=375, recreate_data=True,show_plot=True):
-  """
-  Plot the chart for a given instrument and timeframe.
+def plot(instrument, timeframe, nb_bar_on_chart=375, recreate_data=True, show_plot=True):
+    """
+    Plot the chart for a given instrument and timeframe.
 
-  Parameters:
-  - instrument (str): The name of the instrument.
-  - timeframe (str): The timeframe for the chart.
-  - nb_bar_on_chart (int): The number of bars to display on the chart. Default is 375.
-  - recreate_data (bool): Whether to recreate the data for the chart. Default is True.
+    Parameters:
+    instrument (str): The name of the instrument.
+    timeframe (str): The timeframe for the chart.
+    nb_bar_on_chart (int, optional): The number of bars to display on the chart. Default is 375.
+    recreate_data (bool, optional): Whether to recreate the data for the chart. Default is True.
+    show_plot (bool, optional): Whether to display the plot. Default is True.
 
-  Returns:
-  - fig: The figure object of the chart.
-  - axes: The axes object of the chart.
-  """
-  fig, axes = jgtxplot18c_231209(instrument, timeframe, nb_bar_on_chart, recreate_data,show_plot)
-  return fig, axes
-
+    Returns:
+    fig: The figure object of the plot.
+    axes: The axes object of the plot.
+    """
+    fig, axes = jgtxplot18c_231209(instrument, timeframe, nb_bar_on_chart, recreate_data, show_plot)
+    return fig, axes
 
   
 
