@@ -5,17 +5,22 @@ from jgtpy import JGTPDSP as pds
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import os
 
-instrument = "AUD/USD"
 # %% Load data and plot all in one operation
+instrument = "GBP/USD"
 show_plot=True
 m1p=pds.getPH(instrument, "M1")
 
-#%% Plot all charts in one operation
+# Create the output directory if it doesn't exist
+output_dir = './output'
+os.makedirs(output_dir, exist_ok=True)
 
-#M1c, M1a = ads.plot_from_pds_df(m1p,instrument, "M1", show_plot=show_plot)
+# Plot and save the chart
 M1c, M1a = ads.plot(instrument, "M1", show_plot=show_plot)
+#plt.savefig(f'{output_dir}/{instrument}_M1.png')
 
+#%% Other plots
 w1, w1a = ads.plot(instrument, "W1", show_plot=show_plot)
 d1, d1a = ads.plot(instrument, "D1", show_plot=show_plot)
 

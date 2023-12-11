@@ -369,34 +369,37 @@ from jgtpy import jgtconstants as c
 
 
 def jgtxplot18c_231209(instrument,timeframe,nb_bar_on_chart = 375,recreate_data = True,show_plot=True):
-  cache_data=False
-  cache_dir = "cache"
-  fn =  instrument.replace("/", "-") + "_" + timeframe + ".csv"
-  fnpath = os.path.join(cache_dir,fn)
-  l.info("fnpath:"+ fnpath)
+    cache_data=False
+    cache_dir = "cache"
+    if cache_data:
+        os.makedirs(cache_dir, exist_ok=True)
 
-  #%% Load data
-  l.info("-----------------  CDS  -----------------")
-  if recreate_data:
-      try:
-          df = pds.getPH(instrument,timeframe,nb_bar_on_chart)
-      except:
-          l.warning("Could not get DF, trying to run thru WSL the update")
-          jgtpy.wsl.jgtfxcli(instrument, timeframe, nb_bar_on_chart+35)
-          df = pds.getPH(instrument,timeframe,nb_bar_on_chart)
-      # Select the last 400 bars of the data
-      try:
-          selected = df.iloc[-nb_bar_on_chart-120:].copy()
-      except:
-          selected = df.copy()
-          l.warning("Could not select the desired amount of bars, trying anyway with what we have")
-          pass
-      #print(selected)
-      data = cds.createFromDF(selected)
-      if cache_data:
-          data.to_csv(fnpath)
-  
-  return plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart,show_plot)
+    fn =  instrument.replace("/", "-") + "_" + timeframe + ".csv"
+    fnpath = os.path.join(cache_dir,fn)
+    l.info("fnpath:"+ fnpath)
+
+    #%% Load data
+    l.info("-----------------  CDS  -----------------")
+    if recreate_data:
+        try:
+            df = pds.getPH(instrument,timeframe,nb_bar_on_chart)
+        except:
+            l.warning("Could not get DF, trying to run thru WSL the update")
+            jgtpy.wsl.jgtfxcli(instrument, timeframe, nb_bar_on_chart+35)
+            df = pds.getPH(instrument,timeframe,nb_bar_on_chart)
+        # Select the last 400 bars of the data
+        try:
+            selected = df.iloc[-nb_bar_on_chart-120:].copy()
+        except:
+            selected = df.copy()
+            l.warning("Could not select the desired amount of bars, trying anyway with what we have")
+            pass
+        #print(selected)
+        data = cds.createFromDF(selected)
+        if cache_data:
+            data.to_csv(fnpath)
+    
+    return plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart,show_plot)
 
 def plot_from_pds_df(pdata,instrument,timeframe,nb_bar_on_chart = 375,show_plot=True):
   # Select the last 400 bars of the data
