@@ -137,3 +137,5 @@ output*.csv
 ./output*
 output.txt
 
+*.swp.p
+
