@@ -41,13 +41,14 @@ def createFromPDSFileToCDSFile(instrument, timeframe, columns_to_remove=None, qu
   - timeframe (str): The timeframe of the data.
   - columns_to_remove (list, optional): List of column names to remove from the CDS file. Default is None.
   - quiet (bool, optional): If True, suppresses the output. Default is True.
+  - tlid_range (str, optional): The TLID range to retrieve. Default is None.
 
   Returns:
   - fpath (str): The file path of the created CDS file.
   - c (DataFrame): The DataFrame containing the data.
 
   """
-  c = createFromPDSFile(instrument, timeframe, quiet)
+  c = createFromPDSFile(instrument, timeframe, quiet,tlid_range=tlid_range)
 
   # Remove the specified columns
   if columns_to_remove is not None:
@@ -98,12 +99,13 @@ def createFromPDSFile(instrument,timeframe,quiet=True,tlid_range=None):
       instrument (str): symbol
       timeframe (str): TF
       quiet (bool,optional): Output quiet
+      tlid_range (str,optional): TLID range
 
   Returns:
       pandas.DataFrame: CDS DataFrame
   """
   try:
-    df=pds.getPH_from_filestore(instrument,timeframe,quiet=quiet)
+    df=pds.getPH_from_filestore(instrument,timeframe,quiet=quiet,tlid_range=tlid_range)
     if not quiet:
       print(df)
   

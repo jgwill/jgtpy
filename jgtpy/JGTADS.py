@@ -17,6 +17,7 @@ import JGTPDSP as pds
 import JGTIDS as ids
 from JGTIDS import getMinByTF
 import JGTCDS as cds
+import jgtwslhelper as wsl
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 
@@ -391,7 +392,7 @@ def jgtxplot18c_231209(instrument,timeframe,nb_bar_on_chart = 375,recreate_data 
             df = pds.getPH(instrument,timeframe,nb_bar_on_chart)
         except:
             l.warning("Could not get DF, trying to run thru WSL the update")
-            jgtpy.wsl.jgtfxcli(instrument, timeframe, nb_bar_on_chart+35)
+            wsl.jgtfxcli(instrument, timeframe, nb_bar_on_chart+35)
             df = pds.getPH(instrument,timeframe,nb_bar_on_chart)
         # Select the last 400 bars of the data
         try:

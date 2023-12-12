@@ -2,7 +2,10 @@ import subprocess
 import sys
 
 import os
+import sys
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
+import jgtcommon
 
 import platform
 
@@ -57,15 +60,38 @@ def jgtfxcli_wsl1(cli_path, instrument, timeframe, quote_count, verbose_level):
     return result.stdout.decode("utf-8")
 
 
+def resolve_cli_path(cli_path):
+    if cli_path == "" or cli_path is None or cli_path == 0 or cli_path == '0':
+        cli_path = '$HOME/.local/bin/jgtfxcli'
+    return cli_path #@STCIssue Should install : pip install --user jgtfxcon    (if not found)
+
 def jgtfxcli_wsl(instrument, timeframe, quote_count,cli_path="", verbose_level=0):
+    cli_path=resolve_cli_path(cli_path)
     if cli_path == "" or cli_path is None or cli_path == 0 or cli_path == '0':
         cli_path = '$HOME/.local/bin/jgtfxcli'
         #cli_path = "/home/jgi/.local/bin/jgtfxcli"
     bash_command_to_run = f"pwd;{cli_path} -i \"{instrument}\" -t \"{timeframe}\" -c {quote_count} -o -v {verbose_level}"
     return run_bash_command_by_platform(bash_command_to_run)
 
+
+def _mkbash_cmd_string_jgtfxcli_range(instrument, timeframe,tlid_range=None,cli_path="", verbose_level=0):
+    cli_path=resolve_cli_path(cli_path)
+    
+    date_from,date_to=jgtcommon.tlid_range_to_jgtfxcon_start_end_str(tlid_range)
+    
+    bash_command_to_run = f"pwd;{cli_path} -i \"{instrument}\" -t \"{timeframe}\" -s {date_from} -e {date_to} -o -v {verbose_level}"
+    return bash_command_to_run
+
+def jgtfxcli_wsl_range(instrument, timeframe, quote_count,tlid_range=None,cli_path="", verbose_level=0):
+    bash_command_to_run = _mkbash_cmd_string_jgtfxcli_range(instrument, timeframe, quote_count,tlid_range,cli_path, verbose_level)
+    return run_bash_command_by_platform(bash_command_to_run)
+
 def jgtfxcli(instrument, timeframe, quote_count,cli_path="", verbose_level=0):
     return jgtfxcli_wsl(instrument,timeframe,quote_count,cli_path,verbose_level)
+
+def getPH(instrument, timeframe, quote_count,tlid_range=None, verbose_level=0):
+    return jgtfxcli_wsl_range(instrument, timeframe, quote_count,tlid_range,"", verbose_level)
+
 
 def wsl_cd(directory):
     # Define the command to be executed

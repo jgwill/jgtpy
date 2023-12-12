@@ -143,14 +143,22 @@ def tlid_range_to_start_end_datetime(tlid_range: str):
     if len(end_str) == 6:
         date_format_end = "%y%m%d"
     
-    
+    #print(date_format_end)
     try:
         start_dt =  datetime.datetime.strptime(start_str, date_format_start)
         end_dt = datetime.datetime.strptime(end_str, date_format_end)
         return start_dt,end_dt
     except ValueError:
-        pass
-    return None
+        return None
+
+def tlid_range_to_jgtfxcon_start_end_str(tlid_range: str):
+    date_format_fxcon = '%m.%d.%Y %H:%M:%S'
+    start_dt,end_dt = tlid_range_to_start_end_datetime(tlid_range)
+    #print(str(start_dt),str(end_dt))
+    if start_dt is None or end_dt is None:
+        return None,None
+    else:
+        return str(start_dt.strftime(date_format_fxcon)),str(end_dt.strftime(date_format_fxcon))
 
 def tlid_dt_to_string(dt):
     return dt.strftime("%y%m%d%H%M")
