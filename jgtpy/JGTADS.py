@@ -23,7 +23,7 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 
 import os
 
-import kaleido
+#import kaleido
 import plotly
 
 import JGTConfig as jgtc

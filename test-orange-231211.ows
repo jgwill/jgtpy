@@ -90,8 +90,8 @@ jAJiepRLAYwDYWNzlEsBjANhY2KUSwGMAnNzlEsBjAJzYpRLAXWMBW1ldGFzlH2UdWJhdS4=
 </properties>
 		<properties node_id="7" format="literal">{'_session_items': [], '_session_items_v2': [({'type': 'AbsPath', 'path': 'C:/usr/src/_jgt/ids/data/cds/GBP-USD_D1.csv'}, {'encoding': 'utf-8', 'delimiter': ',', 'quotechar': '"', 'doublequote': True, 'skipinitialspace': True, 'quoting': 0, 'columntypes': [{'start': 0, 'stop': 53, 'value': 'Auto'}], 'rowspec': [{'start': 0, 'stop': 1, 'value': 'Header'}], 'decimal_separator': '.', 'group_separator': ''})], 'compatibility_mode': False, 'controlAreaVisible': True, 'dialog_state': {'directory': 'C:/usr/src/_jgt/ids/data/cds', 'filter': 'Text - comma separated (*.csv, *)'}, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x034\x00\x00\x01c\x00\x00\x04K\x00\x00\x02\xb5\x00\x00\x035\x00\x00\x01\x80\x00\x00\x04J\x00\x00\x02\xb4\x00\x00\x00\x00\x00\x00\x00\x00\x07\x80\x00\x00\x035\x00\x00\x01\x80\x00\x00\x04J\x00\x00\x02\xb4', '__version__': 3}</properties>
 		<properties node_id="8" format="pickle">gASVeQMAAAAAAAB9lCiMEmNvbnRyb2xBcmVhVmlzaWJsZZSIjA1oaWRlX3JfbGFiZWxzlIiME3Nh
-dmVkV2lkZ2V0R2VvbWV0cnmUQ0IB2dDLAAMAAAAAAkEAAAEDAAAFPgAAAxQAAAJCAAABIAAABT0A
-AAMTAAAAAAAAAAAHgAAAAkIAAAEgAAAFPQAAAxOUjAtfX3ZlcnNpb25fX5RLAYwQY29udGV4dF9z
+dmVkV2lkZ2V0R2VvbWV0cnmUQ0IB2dDLAAMAAP/////////6AAAHgAAABBsAAAAAAAAAFwAAB38A
+AAQaAAAAAAAAAAAHgAAAAAAAAAAXAAAHfwAABBqUjAtfX3ZlcnNpb25fX5RLAYwQY29udGV4dF9z
 ZXR0aW5nc5RdlIwVb3Jhbmdld2lkZ2V0LnNldHRpbmdzlIwHQ29udGV4dJSTlCmBlH2UKIwGdmFs
 dWVzlH2UKIwSX3BlbmRpbmdfc2VsZWN0aW9ulE5K/v///4aUjAthZ2dyZWdhdGlvbpSMCk1lYW4g
 dmFsdWWUSv7///+GlIwPYmlubmVyX3NldHRpbmdzlH2UKIwBeJRLAIwBcpRLAHVK/v///4aUjAlj

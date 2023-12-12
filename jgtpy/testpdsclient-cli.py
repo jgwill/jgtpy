@@ -4,8 +4,8 @@ import os
 # Add the parent directory to the sys.path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from jgtpy import pdsclient
-from jgtpy import jgt2312
+import pdsclient
+import jgt2312
 
 # Use the ProxyClient
 

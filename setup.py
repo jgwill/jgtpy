@@ -10,7 +10,7 @@ from jgtpy import __version__ as version
 INSTALL_REQUIRES = [
     'pandas>=0.25.1',
     'python-dotenv>=0.19.2',
-    'kaleido>=0.2.1',
+    #'kaleido>=0.2.1',
     'matplotlib>=3.3.1',
     'plotly>=5.18.0',
     'jgtapy>=1.9.12',
