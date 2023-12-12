@@ -1,7 +1,12 @@
+
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
 from . import env,jsonfile2prop,d2p,createByRange
 import pandas as pd
 from functools import reduce
-from . import jgtetl
+import jgtetl
 # from jgtpy import env 
 ctx=d2p(env)
 

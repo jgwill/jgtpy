@@ -6,11 +6,17 @@ import pandas as pd
 import warnings
 import matplotlib.pyplot as plt
 import mplfinance as mpf
-import jgtpy
-import jgtpy.JGTPDSP as pds
-import jgtpy.JGTIDS as ids
-from jgtpy.JGTIDS import getMinByTF
-import jgtpy.JGTCDS as cds
+
+
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
+#import jgtpy
+import JGTPDSP as pds
+import JGTIDS as ids
+from JGTIDS import getMinByTF
+import JGTCDS as cds
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 
@@ -19,7 +25,7 @@ import os
 import kaleido
 import plotly
 
-import jgtpy.JGTConfig as jgtc
+import JGTConfig as jgtc
 
 
 import plotly.graph_objects as go
@@ -63,7 +69,7 @@ cdtformat="%Y-%m-%d"
 
 
 
-from .jgtconstants import (
+from jgtconstants import (
   sellingZoneColor,
   buyingZoneColor,
 )
@@ -73,7 +79,7 @@ from .jgtconstants import (
 # Import statements for jgtconstants.py variables
 
 
-from .jgtconstants import (
+from jgtconstants import (
     indicator_currentDegree_alligator_jaw_column_name,
     indicator_currentDegree_alligator_teeth_column_name,
     indicator_currentDegree_alligator_lips_column_name,
@@ -115,7 +121,7 @@ from .jgtconstants import (
 #@title SIGNAL's Data Frame Columns naming
 # Import statements for jgtconstants.py variables
 
-from .jgtconstants import (
+from jgtconstants import (
     signalCode_fractalDivergentBar_column_name,
     signalSell_fractalDivergentBar_column_name,
     signalBuy_fractalDivergentBar_column_name,

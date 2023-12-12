@@ -3,13 +3,17 @@ import datetime as dt
 import pandas as pd
 import os
 import json
-from . import JGTPDHelper as jpd
+import sys
 
-from .JGTConfig import local_fn_compression,get_pov_local_data_filename
-from .JGTPDHelper import *
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
+import JGTPDHelper as jpd
+
+from JGTConfig import local_fn_compression,get_pov_local_data_filename
+from JGTPDHelper import *
 from datetime import datetime
-from . import jgtcommon
-from . import jgtos
+import jgtcommon
+import jgtos
 
 renameColumns=True
 addOhlc=True
@@ -82,13 +86,15 @@ def getPH_from_filestore(instrument,timeframe,quiet=True, compressed=False,with_
   Returns:
     pandas.DataFrame: The OHLC data for the given instrument and timeframe.
   """  
-  srcpath = create_filestore_path(instrument, timeframe,quiet, compressed)  
+  srcpath = create_filestore_path(instrument, timeframe,quiet, compressed,tlid_range=tlid_range)  
   
   print_quiet(quiet,srcpath)
   
-  df = read_ohlc_df_from_file(srcpath,quiet,compressed,with_index,convert_date_index_to_dt)
-
-  
+  df = None
+  try:
+    df = read_ohlc_df_from_file(srcpath,quiet,compressed,with_index,convert_date_index_to_dt)
+  except:
+    pass 
   return df
 
 
@@ -106,6 +112,7 @@ def read_ohlc_df_from_file(srcpath, quiet=True, compressed=False,with_index=True
   Returns:
     pandas.DataFrame: The OHLC DataFrame.
   """
+  df = None
   try:
     if compressed:
       print_quiet(quiet, "Reading compressed: " + srcpath + " ")
@@ -124,13 +131,12 @@ def read_ohlc_df_from_file(srcpath, quiet=True, compressed=False,with_index=True
         df.index = pd.to_datetime(df.index)
     else:
       raise ValueError("Column 'Date' is not present in the DataFrame")
-
   return df
 
 
 
-def create_filestore_path(instrument, timeframe,quiet=True, compressed=False,tlid_range=None):
-  return jgtos.create_filestore_path(instrument,timeframe,quiet,compressed,tlid_range)
+def create_filestore_path(instrument, timeframe,quiet=True, compressed=False,tlid_range=None,output_path=None):
+  return jgtos.create_filestore_path(instrument,timeframe,quiet,compressed,tlid_range,output_path)
   
   
 def mk_fn(instrument,timeframe,ext="csv"):

@@ -2,7 +2,11 @@ import requests
 import json
 import os
 
-from . import jgt2312
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
+import jgt2312
 
 class JGTPDSProxyClient:
     def __init__(self, base_url):

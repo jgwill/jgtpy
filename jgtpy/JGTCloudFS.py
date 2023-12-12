@@ -1,11 +1,17 @@
+
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
 import JGTConfig as jgtc
 import dropbox
 import pathlib
 from dropbox.exceptions import AuthError
 import pandas as pd
 #@title Functions DROPBOX Api
-import jgtpy.JGTCore as jko
-import os
+
+import JGTCore as jko
+
 from pathlib import Path
 import pathlib
 

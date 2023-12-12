@@ -1,17 +1,20 @@
 # %%
 
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
 #import jgtfxcon.JGTPDS as pds
-import jgtpy.JGTIDS as ids
-import jgtpy.JGTPDSP as pds
+import JGTIDS as ids
+import JGTPDSP as pds
 #from . import jgtconstants
 #.columns_to_remove as columns_to_remove
 
 import pandas as pd
-import os
 
 
 
-from .jgtconstants import (
+from jgtconstants import (
     signalCode_fractalDivergentBar_column_name,
     signalSell_fractalDivergentBar_column_name,
     signalBuy_fractalDivergentBar_column_name,
@@ -29,7 +32,7 @@ from .jgtconstants import (
 )
 
 # %%
-def createFromPDSFileToCDSFile(instrument, timeframe, columns_to_remove=None, quiet=True):
+def createFromPDSFileToCDSFile(instrument, timeframe, columns_to_remove=None, quiet=True,tlid_range=None):
   """
   Create a CDS file from a PDS file.
 
@@ -88,7 +91,7 @@ def readCDSFile(instrument, timeframe, columns_to_remove=None, quiet=True):
     c = c.drop(columns=columns_to_remove, errors='ignore')
   return c
 
-def createFromPDSFile(instrument,timeframe,quiet=True):
+def createFromPDSFile(instrument,timeframe,quiet=True,tlid_range=None):
   """Create CDS (Chaos Data Service) with Fresh Data on the filestore
 
   Args:
@@ -99,12 +102,15 @@ def createFromPDSFile(instrument,timeframe,quiet=True):
   Returns:
       pandas.DataFrame: CDS DataFrame
   """
-  df=pds.getPH_from_filestore(instrument,timeframe,quiet=quiet)
-  if not quiet:
-    print(df)
+  try:
+    df=pds.getPH_from_filestore(instrument,timeframe,quiet=quiet)
+    if not quiet:
+      print(df)
   
-  dfi=createFromDF(df,quiet=quiet)
-  return dfi
+    dfi=createFromDF(df,quiet=quiet)
+    return dfi
+  except:
+    return None
 
 def createFromDF(df, quiet=True):
   """

@@ -1,10 +1,16 @@
 
+
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
+
 import pandas as pd
 import datetime
-from .JGTPDHelper import jgtpd_drop_col_by_name,ids_cleanse_ao_peak_secondary_columns,pds_cleanse_original_columns,pds_cleanse_extra_columns
+from JGTPDHelper import jgtpd_drop_col_by_name,ids_cleanse_ao_peak_secondary_columns,pds_cleanse_original_columns,pds_cleanse_extra_columns
 
 from jgtapy import Indicators
-import os
+
 
 # %%
 #@title Vars
@@ -14,7 +20,7 @@ _dtformat = '%m.%d.%Y %H:%M:%S'
 #@title INDICATOR's Data Frame Columns naming
 # Import statements for jgtconstants.py variables
 
-from .jgtconstants import (
+from jgtconstants import (
     indicator_currentDegree_alligator_jaw_column_name,
     indicator_currentDegree_alligator_teeth_column_name,
     indicator_currentDegree_alligator_lips_column_name,
@@ -56,13 +62,13 @@ from .jgtconstants import (
 #@title SIGNAL's Data Frame Columns naming
 # Import statements for jgtconstants.py variables
 
-from .jgtconstants import (
+from jgtconstants import (
     nonTradingZoneColor,
     sellingZoneColor,
     buyingZoneColor,
 )
 
-from .jgtconstants import (
+from jgtconstants import (
     signalCode_fractalDivergentBar_column_name,
     signalSell_fractalDivergentBar_column_name,
     signalBuy_fractalDivergentBar_column_name,

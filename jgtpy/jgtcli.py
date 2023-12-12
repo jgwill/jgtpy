@@ -1,10 +1,15 @@
 import jgtpy
 
-from . import jgtconstants as constants
-from . import jgtcommon as jgtcommon
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
+import jgtconstants as constants
+import jgtcommon as jgtcommon
 import argparse
 
-from . import JGTPDSP as pds
+import JGTPDSP as pds
+import JGTCDS as cds
 
 import pandas as pd
 
@@ -13,6 +18,7 @@ def parse_args():
     #jgtfxcommon.add_main_arguments(parser)
     jgtcommon.add_instrument_timeframe_arguments(parser)
     jgtcommon.add_date_arguments(parser)
+    jgtcommon.add_tlid_range_argument(parser)
     jgtcommon.add_max_bars_arguments(parser)
     #jgtcommon.add_output_argument(parser)
     #jgtfxcommon.add_quiet_argument(parser)
@@ -29,6 +35,10 @@ def main():
     quotes_count = args.quotescount
     date_from = None
     date_to = None
+    tlid_range = None
+    if args.tlidrange:
+        #@STCGoal Get range prices from cache or request new
+        tlid_range = args.tlidrange
 
     if args.datefrom:
         date_from = args.datefrom.replace('/', '.')
@@ -68,7 +78,7 @@ def main():
 
         for instrument in instruments:
             for timeframe in timeframes:
-                createCDS_for_main(instrument, timeframe, quiet, verbose_level)
+                createCDS_for_main(instrument, timeframe, quiet, verbose_level,tlid_range)
                 # else:
                 #     p = pds.getPH(instrument, timeframe, quotes_count, date_from, date_to, False, quiet)
                 #     if verbose_level > 0:
@@ -88,9 +98,8 @@ def main():
 # print("")
 # #input("Done! Press enter key to exit\n")
 
-def createCDS_for_main(instrument, timeframe, quiet, verbose_level=0):
+def createCDS_for_main(instrument, timeframe, quiet, verbose_level=0,tlid_range=None):
     # implementation goes here
-    from jgtpy import JGTCDS as cds
     col2remove=constants.columns_to_remove
     config = jgtcommon.readconfig()
     if 'columns_to_remove' in config:  # read it from config otherwise

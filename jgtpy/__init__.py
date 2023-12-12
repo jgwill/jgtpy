@@ -20,7 +20,13 @@
 import os
 import platform
 import sys
-from . import jgtflags
+
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
+
+import jgtflags
 
 
 import warnings
@@ -33,17 +39,17 @@ class NotCompatibleException(Exception):
     pass
 
 #from jgtpy.common_samples import common_samples
-from .jgtetl import svc_offset_dt_by_tf as etl_offset_dt_by_tf,offsetdt as etl_offsetdt
-from .JGTCore import __version__ #,json2dict,jsonfile2prop,json2prop,jsonfile2dict,d2p,fixdtindf,offsetdt
+from jgtetl import svc_offset_dt_by_tf as etl_offset_dt_by_tf,offsetdt as etl_offsetdt
+from JGTCore import __version__ #,json2dict,jsonfile2prop,json2prop,jsonfile2dict,d2p,fixdtindf,offsetdt
 #from .JGTConfig import getenv,setreal,setdemo,env
 
 
 
-from . import jgtwslhelper as wsl
+import jgtwslhelper as wsl
 
-from .JGTIDS import tocds as tocds
+from JGTIDS import tocds as tocds
 #mk_fn,mk_fullpath,getSubscribed,getPH,getPHByRange,tryConnect
-from .JGTCDS import create as createCDS,createByRange,createFromDF,getLast,getPresentBar,getPresentBarAsList,getLastCompletedBarAsList,createFromDF,createFromFile_and_clean_and_save_data as fromfile,createFromFile_and_clean_and_save_data as ff,createFromDF as fp
+from JGTCDS import create as createCDS,createByRange,createFromDF,getLast,getPresentBar,getPresentBarAsList,getLastCompletedBarAsList,createFromDF,createFromFile_and_clean_and_save_data as fromfile,createFromFile_and_clean_and_save_data as ff,createFromDF as fp
 
 def help():
     print(".h(i,t,400)\t\tGet Prices (PDS): \n\t\t\tjgtpy.h(instrument,timeframe,quote_count=335,start=None,end=None,quiet=True)")

@@ -1,14 +1,22 @@
 import os
 import datetime
 
+import sys
+import os
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
 import jgtcommon
 
 
 def create_filestore_path(
-    instrument, timeframe, quiet=True, compressed=False, tlid_range=None
+    instrument, timeframe, quiet=True, compressed=False, tlid_range=None,output_path=None
 ):
     # Define the file path based on the environment variable or local path
-    data_path = get_data_path()
+    if output_path is None:
+        data_path = get_data_path()
+    else: # get path from var in os
+        data_path = output_path
+        
     if not quiet:
         print(data_path)
 
