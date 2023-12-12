@@ -1,13 +1,14 @@
-import jgtpy
-
+#!/usr/bin/env python3
 import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
+# import .
+
 import jgtconstants as constants
 import jgtcommon as jgtcommon
 import argparse
-
+import jgtwslhelper as wsl
 import JGTPDSP as pds
 import JGTCDS as cds
 
@@ -39,6 +40,11 @@ def main():
     if args.tlidrange:
         #@STCGoal Get range prices from cache or request new
         tlid_range = args.tlidrange
+        print("FUTURE Support for tlid range")
+        tmpcmd = wsl._mkbash_cmd_string_jgtfxcli_range(instrument,timeframe,tlid_range)
+        print("> " + tmpcmd)
+        print("-----------Stay tune -------- Quitting for now")
+        return
 
     if args.datefrom:
         date_from = args.datefrom.replace('/', '.')
