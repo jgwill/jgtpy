@@ -15,9 +15,7 @@ INSTALL_REQUIRES = [
     'plotly>=5.18.0',
     'jgtapy>=1.9.12',
     'dropbox>=11.36.2',
-    'mplfinance>=0.12.10b0',
-    'opencv-python>=4.8.1.78',
-    'tlid>=0.0.6'
+    'mplfinance>=0.12.10b0'
 ]
 
 EXTRAS_DEV_LINT = [
@@ -28,7 +26,6 @@ EXTRAS_DEV_LINT = [
 EXTRAS_DEV_TEST = [
     "coverage",
     "pytest>=3.10",
-    "unittest2"
 ]
 
 EXTRAS_DEV_DOCS = [
@@ -36,8 +33,6 @@ EXTRAS_DEV_DOCS = [
     "sphinx",
     "sphinx_rtd_theme>=0.4.0",
 ]
-
-
 
 setup(
     name='jgtpy',
@@ -48,6 +43,7 @@ setup(
     author_email='jgi@jgwill.com',
     url='https://github.com/jgwill/jgtpy',
     packages=find_packages(include=['jgtpy'], exclude=['*test*']),
+    # packages=find_packages(include=['jgtpy', 'jgtpy.forexconnect', 'jgtpy.forexconnect.lib', 'jgtpy.forexconnect.lib.windows', 'jgtpy.forexconnect.lib.linux'], exclude=['*test*']),
     install_requires=INSTALL_REQUIRES,
     entry_points={
         'console_scripts': ['jgtcli=jgtpy.jgtcli:main'],

@@ -3,7 +3,8 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
-from . import env,jsonfile2prop,d2p,createByRange
+from JGTCore import env,jsonfile2prop,d2p
+from JGTCDS import createByRange
 import pandas as pd
 from functools import reduce
 import jgtetl
