@@ -15,7 +15,8 @@ INSTALL_REQUIRES = [
     'plotly>=5.18.0',
     'jgtapy>=1.9.12',
     'dropbox>=11.36.2',
-    'mplfinance>=0.12.10b0'
+    'mplfinance>=0.12.10b0',
+    'tlid>=0.0.1'
 ]
 
 EXTRAS_DEV_LINT = [
