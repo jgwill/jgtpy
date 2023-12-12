@@ -8,8 +8,8 @@ from . import JGTPDHelper as jpd
 from .JGTConfig import local_fn_compression,get_pov_local_data_filename
 from .JGTPDHelper import *
 from datetime import datetime
-
-
+from . import jgtcommon
+from . import jgtos
 
 renameColumns=True
 addOhlc=True
@@ -66,7 +66,7 @@ def str_to_datetime(date_str):
     return None
 
 
-def getPH_from_filestore(instrument,timeframe,quiet=True, compressed=False,with_index=True,convert_date_index_to_dt=True):
+def getPH_from_filestore(instrument,timeframe,quiet=True, compressed=False,with_index=True,convert_date_index_to_dt=True,tlid_range=None):
   """
   Retrieves OHLC data for a given instrument and timeframe from the filestore.
 
@@ -77,6 +77,7 @@ def getPH_from_filestore(instrument,timeframe,quiet=True, compressed=False,with_
     compressed (bool, optional): Whether the data is compressed. Defaults to False.
     with_index (bool, optional): Whether to include the index in the returned DataFrame. Defaults to True.
     convert_date_index_to_dt  (bool, optional): convert index Date to dt
+    tlid_range (str, optional): Select a range on disk or return None if unavailable
 
   Returns:
     pandas.DataFrame: The OHLC data for the given instrument and timeframe.
@@ -128,27 +129,31 @@ def read_ohlc_df_from_file(srcpath, quiet=True, compressed=False,with_index=True
 
 
 
-def create_filestore_path(instrument, timeframe,quiet=True, compressed=False):
+def create_filestore_path(instrument, timeframe,quiet=True, compressed=False,tlid_range=None):
     # Define the file path based on the environment variable or local path
     data_path = get_data_path()
-    print(data_path)
+    if not quiet:
+      print(data_path)
 
     ext = 'csv'
     if compressed:
         ext = 'csv.gz'
-    fpath = mk_fullpath(instrument, timeframe, ext, data_path)
+    
+    fpath = mk_fullpath(instrument, timeframe, ext, data_path,tlid_range=tlid_range)
+   
+    
     if os.name == 'nt':
       fpath = fpath.replace('/', '\\')
     return fpath
   
   
-def mk_fn(instrument,timeframe,ext):
+def mk_fn(instrument,timeframe,ext="csv"):
   """Make a file name with instrument and timeframe
 
   Args:
-      _instrument (str): symbol
-      _timeframe (str): TF
-      _ext (str): ext name "csv"
+      instrument (str): symbol
+      timeframe (str): TF
+      ext (str): ext name "csv"
 
   Returns:
       str: file name
@@ -161,8 +166,27 @@ def mk_fn(instrument,timeframe,ext):
   return _fn.replace('..','.')
 
 
-def mk_fullpath(instrument,timeframe,ext,path):
-  fn=mk_fn(instrument,timeframe,ext)
+def mk_fn_range(instrument, timeframe, start: datetime, end: datetime,ext="csv"):
+    _tf = timeframe
+    _i= instrument.replace('/','-')
+    if timeframe == 'm1':
+      _tf = timeframe.replace('m1','mi1')
+    start_str = jgtcommon.tlid_dt_to_string(start)
+    end_str = jgtcommon.tlid_dt_to_string(end)
+    _fn=  f"{_i}_{_tf}_{start_str}_{end_str}.{ext}"
+    # _fn= _i + '_' + _tf + '.' + ext
+    _fn= _fn.replace('..','.')
+    _fn= _fn.replace('/','-')
+    return _fn
+
+
+def mk_fullpath(instrument,timeframe,ext,path,tlid_range=None):
+  if tlid_range is None:
+    fn=mk_fn(instrument,timeframe,ext)
+  else:
+    start_dt,end_dt = jgtcommon.tlid_range_to_start_end_datetime(tlid_range=tlid_range)
+    #print(str(start_dt),str(end_dt))
+    fn = mk_fn_range(instrument, timeframe, start_dt, end_dt,ext)
   rpath= os.path.join(path,fn)
   if os.name == 'nt':
     rpath= rpath.replace('/', '\\')
