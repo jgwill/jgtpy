@@ -37,6 +37,8 @@ EXTRAS_DEV_DOCS = [
     "sphinx_rtd_theme>=0.4.0",
 ]
 
+
+
 setup(
     name='jgtpy',
     version=version,
@@ -46,13 +48,15 @@ setup(
     author_email='jgi@jgwill.com',
     url='https://github.com/jgwill/jgtpy',
     packages=find_packages(include=['jgtpy'], exclude=['*test*']),
-    # packages=find_packages(include=['jgtpy', 'jgtpy.forexconnect', 'jgtpy.forexconnect.lib', 'jgtpy.forexconnect.lib.windows', 'jgtpy.forexconnect.lib.linux'], exclude=['*test*']),
     install_requires=INSTALL_REQUIRES,
     entry_points={
         'console_scripts': ['jgtcli=jgtpy.jgtcli:main'],
     },
     extras_require={
-        'dev': (EXTRAS_DEV_LINT + EXTRAS_DEV_TEST + EXTRAS_DEV_DOCS)
+        'dev': (EXTRAS_DEV_LINT + EXTRAS_DEV_TEST + EXTRAS_DEV_DOCS),
+        'dev-lint': EXTRAS_DEV_LINT,
+        'dev-test': EXTRAS_DEV_TEST,
+        'dev-docs': EXTRAS_DEV_DOCS,
     },
     license='MIT',
     keywords='data',
