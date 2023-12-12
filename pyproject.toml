@@ -21,6 +21,7 @@ dependencies = [
   	'matplotlib>=3.3.1',
   	'plotly>=5.18.0',
   	'mplfinance>=0.12.10b0',
+	'opencv-python>=4.8.1.78',
 	'tlid>=0.0.1'
 ]	
 

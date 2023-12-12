@@ -16,6 +16,7 @@ INSTALL_REQUIRES = [
     'jgtapy>=1.9.12',
     'dropbox>=11.36.2',
     'mplfinance>=0.12.10b0',
+    'opencv-python>=4.8.1.78',
     'tlid>=0.0.1'
 ]
 
