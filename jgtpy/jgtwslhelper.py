@@ -79,7 +79,7 @@ def _mkbash_cmd_string_jgtfxcli_range(instrument, timeframe,tlid_range=None,cli_
     
     date_from,date_to=jgtcommon.tlid_range_to_jgtfxcon_start_end_str(tlid_range)
     
-    bash_command_to_run = f"pwd;{cli_path} -i \"{instrument}\" -t \"{timeframe}\" -s {date_from} -e {date_to} -o -v {verbose_level}"
+    bash_command_to_run = f"pwd;{cli_path} -i \"{instrument}\" -t \"{timeframe}\" -s \"{date_from}\" -e \"{date_to}\" -o -v {verbose_level}"
     return bash_command_to_run
 
 def jgtfxcli_wsl_range(instrument, timeframe, quote_count,tlid_range=None,cli_path="", verbose_level=0):
