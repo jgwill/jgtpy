@@ -17,7 +17,7 @@ INSTALL_REQUIRES = [
     'dropbox>=11.36.2',
     'mplfinance>=0.12.10b0',
     'opencv-python>=4.8.1.78',
-    'tlid>=0.0.1'
+    'tlid>=0.0.6'
 ]
 
 EXTRAS_DEV_LINT = [
