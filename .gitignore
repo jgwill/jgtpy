@@ -139,3 +139,5 @@ output.txt
 
 *.swp.p
 
+criss/pyproject.toml
+criss/setup.py
