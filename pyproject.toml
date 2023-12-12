@@ -10,7 +10,7 @@ authors = [
 ]
 
 description = "Enhanced JGTPy CDS, IDS, PDS Services"
-readme = "README.md"
+readme = "README.rst"
 requires-python = ">=3.7"
 dependencies = [
   	'pandas>=0.25.1',
@@ -22,7 +22,7 @@ dependencies = [
   	'plotly>=5.18.0',
   	'mplfinance>=0.12.10b0',
 	  'opencv-python>=4.8.1.78',
-	  'tlid>=0.0.6'
+	  'tlid>=0.0.6',
 ]	
 
 classifiers = [
@@ -30,6 +30,45 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+dynamic = ["optional-dependencies"]
+
+
+[project.optional-dependencies]
+dev = ["flake8<3.7.0,>=3.6.0", "isort<4.4.0,>=4.3.4", "coverage", "pytest>=3.10", "readme_renderer", "sphinx", "sphinx_rtd_theme>=0.4.0"]
+dev-lint = ["flake8<3.7.0,>=3.6.0", "isort<4.4.0,>=4.3.4"]
+dev-test = ["coverage", "pytest>=3.10"]
+dev-docs = ["readme_renderer", "sphinx", "sphinx_rtd_theme>=0.4.0"]
+
+
+
+[project.extras]
+dev = ["flake8<3.7.0,>=3.6.0", "isort<4.4.0,>=4.3.4", "coverage", "pytest>=3.10", "readme_renderer", "sphinx", "sphinx_rtd_theme>=0.4.0"]
+dev-lint = ["flake8<3.7.0,>=3.6.0", "isort<4.4.0,>=4.3.4"]
+dev-test = ["coverage", "pytest>=3.10"]
+dev-docs = ["readme_renderer", "sphinx", "sphinx_rtd_theme>=0.4.0"]
+
+
+
+
+
+
+
+[project.license]
+text = """
+MIT License
+
+Copyright (c) 2022 Guillaume Isabelle
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+"""
 
 [project.urls]
 "Homepage" = "https://github.com/jgwill/jgtpy"
