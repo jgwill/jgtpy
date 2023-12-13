@@ -375,7 +375,8 @@ def update(_f4,_ch,_cw,showlegent=False,xaxis_rangeslider_visible=False):
 from jgtpy import jgtconstants as c
 
 
-def jgtxplot18c_231209(instrument,timeframe,nb_bar_on_chart = 375,recreate_data = True,show_plot=True):
+
+def prepare_cds_for_ads_data(instrument, timeframe, nb_bar_on_chart, recreate_data=True):
     cache_data=False
     cache_dir = "cache"
     if cache_data:
@@ -405,8 +406,13 @@ def jgtxplot18c_231209(instrument,timeframe,nb_bar_on_chart = 375,recreate_data 
         data = cds.createFromDF(selected)
         if cache_data:
             data.to_csv(fnpath)
-    
-    return plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart,show_plot)
+    return data
+
+
+def jgtxplot18c_231209(instrument,timeframe,nb_bar_on_chart = 375,recreate_data = True,show_plot=True):
+    data = prepare_cds_for_ads_data(instrument, timeframe, nb_bar_on_chart, recreate_data)
+    return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show_plot)
+
 
 def plot_from_pds_df(pdata,instrument,timeframe,nb_bar_on_chart = 375,show_plot=True):
   # Select the last 400 bars of the data
@@ -418,10 +424,10 @@ def plot_from_pds_df(pdata,instrument,timeframe,nb_bar_on_chart = 375,show_plot=
       pass
   
   data = cds.createFromDF(selected)
-  return plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart,show_plot)
+  return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show_plot)
   
   
-def plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=True):
+def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=True):
   # Load dataset
   iprop = pds.get_instrument_properties(instrument)
   l.debug(iprop)
@@ -939,7 +945,7 @@ def make_plot_fdbb_signal(fdb_signal_buy_color, fdb_marker_size, fdb_signal_mark
 # %% ALias function (future name)
 
 def plotcdf(data,instrument, timeframe, nb_bar_on_chart=375,show_plot=True):
-  return plot_from_ids_df(data,instrument,timeframe,nb_bar_on_chart,show_plot)
+  return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show_plot)
 
 def plot(instrument, timeframe, nb_bar_on_chart=375, recreate_data=True, show_plot=True):
     """
