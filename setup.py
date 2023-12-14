@@ -33,6 +33,8 @@ EXTRAS_DEV_DOCS = [
     "readme_renderer",
     "sphinx",
     "sphinx_rtd_theme>=0.4.0",
+    "html2text>=2020.1.16",
+    "html2markdown>=0.1.7",
 ]
 
 setup(
