@@ -119,13 +119,14 @@ def write_to_debug_file(choices):
 
 def get_summary(response, temperature=0.5):
     prompt_text = clean_url_response2text(response)
-    print(prompt_text)
+    #print(prompt_text)
     completion = client.completions.create(
         model=model_to_use,
-        prompt="You summarize the following text in 200 caracters: " + prompt_text,
+        prompt="You summarize the following text in 300 caracters: " + prompt_text,
         temperature=temperature,
     )
     write_to_debug_file(completion.choices)
+    #return [choice.text.strip() for choice in completion.choices] if completion.choices else []
     return completion.choices[0].text.strip() if completion.choices else ""
 
 
