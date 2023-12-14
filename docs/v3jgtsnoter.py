@@ -69,12 +69,44 @@ def download_images(soup, url):
 
         with open(f'{snote_cache_folder}/{img_filename}', 'wb') as img_file:
             img_file.write(img_response.content)
-            
+
+def write_to_debug_file_text(text):
+    with open('debug-summary-completion.choices.txt', 'a') as f:         
+         f.write("DEBUG TEXT:: " + text  + os.linesep)   
+
+import re
+
+def is_markdown(text):
+    # Check for headers, links, lists, bold/italic text
+    patterns = [
+        r"^# .+",  # headers
+        r"\[.+\]\(.+\)",  # links
+        r"^- .+",  # lists
+        r"\*.+\*",  # bold/italic text
+    ]
+    for pattern in patterns:
+        if re.search(pattern, text, re.MULTILINE):
+            return True
+    return False
 def clean_url_response2text(response):
-    soup = BeautifulSoup(response.text, 'html.parser')
-    html_text = str(soup)
-    markdown_text = html2text.html2text(html_text)
-    return markdown_text[:5000]
+    try:
+        soup = BeautifulSoup(response.text, 'html.parser')
+        html_text = str(soup)
+        markdown_text = html2text.html2text(html_text)
+        _res =  markdown_text[:10000]
+        write_to_debug_file_text(_res)
+        return _res
+    except:
+        try: 
+            my_text = response
+            
+            markdown_text = my_text if is_markdown(my_text) else html2text.html2text(my_text)
+            _res = markdown_text[:5000]
+            write_to_debug_file_text( "DEBUG EXECEP1:" + _res)
+            return _res
+        except:
+            write_to_debug_file_text(response)
+            return response
     
 
 
@@ -82,17 +114,20 @@ def clean_url_response2text(response):
 def write_to_debug_file(choices):
     with open('debug-summary-completion.choices.txt', 'a') as f:
         for choice in choices:
-            f.write(choice.text.strip() + os.linesep)
+            f.write("DEBUG CHOICE::" + choice.text.strip() + os.linesep)
+
 
 def get_summary(response, temperature=0.5):
     prompt_text = clean_url_response2text(response)
+    print(prompt_text)
     completion = client.completions.create(
         model=model_to_use,
-        prompt=prompt_text,
+        prompt="You summarize the following text in 200 caracters: " + prompt_text,
         temperature=temperature,
     )
     write_to_debug_file(completion.choices)
     return completion.choices[0].text.strip() if completion.choices else ""
+
 
 def get_summary_diff(new_text, old_text, temperature=0.5):
     prompt_text = f"You tell me a summary of the changes between new and old text bellow : \n\n\nNEW TEXT: {new_text}\n\nOLD TEXT: {old_text}"
@@ -127,81 +162,83 @@ if not os.path.exists(f'{snote_cache_folder}'):
 client = OpenAI(api_key=_api_key)
 
 
-
-# Load summaries and hashes of previously processed URLs, if the file exists
-try:
-    print('Load summaries and hashes of previously processed URLs, if the file exists')
-    with open('{snote_cache_folder}/data.json', 'r') as data_file:
-        data = json.load(data_file)
-except FileNotFoundError:
-    data = {}
-
-with open(snoter_datasource_csv, 'r') as csv_file:
-    csv_reader = csv.reader(csv_file)
-    link_titles = []
-
-    for row in csv_reader:
-        url = row[0]
-        response = requests.get(url)
-        soup = BeautifulSoup(response.text, 'html.parser')
-        # print(response.text[:5000])
-        # print("---------------------------------------------------  ")
-        # print(soup.prettify()[:5000])
-        # print("---------------------------------------------------  ")
+def main():
         
-        # Extract the title of the page
-        title = soup.title.string if soup.title else url
-        print("Processing: " +title + " :: " + url)
-        # Store the link and its title
-        link_titles.append((url, title))
+    # Load summaries and hashes of previously processed URLs, if the file exists
+    try:
+        print('Load summaries and hashes of previously processed URLs, if the file exists')
+        with open('{snote_cache_folder}/data.json', 'r') as data_file:
+            data = json.load(data_file)
+    except FileNotFoundError:
+        data = {}
 
-        # Create a hash of the URL to use as the filename
-        url_hash = hashlib.md5(url.encode()).hexdigest()
+    with open(snoter_datasource_csv, 'r') as csv_file:
+        csv_reader = csv.reader(csv_file)
+        link_titles = []
 
-        # Hash the content of the page
-        content_hash = hashlib.md5(response.text.encode()).hexdigest()
+        for row in csv_reader:
+            url = row[0]
+            response = requests.get(url)
+            soup = BeautifulSoup(response.text, 'html.parser')
+            # print(response.text[:5000])
+            # print("---------------------------------------------------  ")
+            # print(soup.prettify()[:5000])
+            # print("---------------------------------------------------  ")
+            
+            # Extract the title of the page
+            title = soup.title.string if soup.title else url
+            print("Processing: " +title + " :: " + url)
+            # Store the link and its title
+            link_titles.append((url, title))
 
-        # If the content has changed or it's a new URL, save the new content and get a new summary
-        print('  Checking if hash changed :' + content_hash)
-        
-        if url not in data or data[url]['hash'] != content_hash:
-            
-            print( '             '+  content_hash +  ' ::    Not in content Hash')
-            
-            # Save the HTML content into a file
-            save_html_content(url_hash, soup,title)
-            
-            download_images(soup, url)
-            
-            
-            
-            
-            new_summary = get_summary(response)
+            # Create a hash of the URL to use as the filename
+            url_hash = hashlib.md5(url.encode()).hexdigest()
 
-            # If the URL was processed before, identify changes
-            changes = ''
-            if url in data:
-                old_summary = data[url]['summary']
-                # Evolved way to identify changes using AI
-                changes = get_summary_diff(old_summary, new_summary)
+            # Hash the content of the page
+            content_hash = hashlib.md5(response.text.encode()).hexdigest()
+
+            # If the content has changed or it's a new URL, save the new content and get a new summary
+            print('  Checking if hash changed :' + content_hash)
+            
+            if url not in data or data[url]['hash'] != content_hash:
                 
+                print( '             '+  content_hash +  ' ::    Not in content Hash')
+                
+                # Save the HTML content into a file
+                save_html_content(url_hash, soup,title)
+                
+                download_images(soup, url)
+                
+                
+                
+                
+                new_summary = get_summary(response)
 
-            # Update the data of the URL
-            data[url] = {'hash': content_hash, 'summary': new_summary, 'changes': changes, 'title': title}
+                # If the URL was processed before, identify changes
+                changes = ''
+                if url in data:
+                    old_summary = data[url]['summary']
+                    # Evolved way to identify changes using AI
+                    changes = get_summary_diff(old_summary, new_summary)
+                    
 
-    # Save the data of the processed URLs
-    with open(f'{snote_cache_folder}/data.json', 'w') as data_file:
-        json.dump(data, data_file)
-    
+                # Update the data of the URL
+                data[url] = {'hash': content_hash, 'summary': new_summary, 'changes': changes, 'title': title}
 
-    # Call the function from snoterupdate.py
-    #snoterupdate.generate_markdown(link_titles, data)
+        # Save the data of the processed URLs
+        with open(f'{snote_cache_folder}/data.json', 'w') as data_file:
+            json.dump(data, data_file)
+        
+
+        # Call the function from snoterupdate.py
+        #snoterupdate.generate_markdown(link_titles, data)
 
 
-from snoterupdate import generate_markdown
-#@STCStatus it runs it in the file when importing
-#generate_markdown()
+    from snoterupdate import generate_markdown
+    #@STCStatus it runs it in the file when importing
+    #generate_markdown()
+        
+        
     
-    
-    
-    
+if __name__ == "__main__":
+    main()
