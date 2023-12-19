@@ -193,7 +193,7 @@ def valid_datetime(check_future: bool):
 
 
 def add_tlid_range_argument(parser: argparse.ArgumentParser):
-    print("Tlid range active")
+    #print("Tlid range active")
     parser.add_argument('-r', '--range', type=str, required=False, dest='tlidrange',
                         help='TLID range in the format YYMMDDHHMM_YYMMDDHHMM.')
 
