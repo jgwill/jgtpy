@@ -113,6 +113,10 @@ def createFromDF(df, quiet=True):
   if df.index.name == c.date_column_name:
       df.reset_index(inplace=True)
   dfi=ids.tocds(df,quiet=quiet) 
+  try:
+    dfi.set_index(c.date_column_name, inplace=True)
+  except:
+    pass
   return dfi
 
 
