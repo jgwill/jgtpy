@@ -141,3 +141,8 @@ output.txt
 
 criss/pyproject.toml
 criss/setup.py
+**/zold
+*buildout*
+
+docs
+
