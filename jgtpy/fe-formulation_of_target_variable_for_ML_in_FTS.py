@@ -19,6 +19,7 @@ df = pd.read_csv("Data.csv")
 # Define the window range for monitoring price movement
 WINDOW_MIN = 90
 WINDOW_MAX = 140
+pipsize = 0.0001
 
 def calculate_target_variable(df):
     # Initialize the target column with NaN values
@@ -32,7 +33,8 @@ def calculate_target_variable(df):
             for i in range(index + WINDOW_MIN, min(max_range, len(df))):
                 # Check if an opposing sell signal is found
                 if df.at[i, 'fdbs'] == 1:
-                    df.at[index, 'target'] = df.at[i, 'Close'] - row['Close']
+                    t= (df.at[i, 'High'] - row['Low']) / pipsize
+                    df.at[index, 'target'] = round(t,2)
                     break
         # Check for a sell signal
         elif row['fdbs'] == 1:
@@ -40,7 +42,8 @@ def calculate_target_variable(df):
             for i in range(index + WINDOW_MIN, min(max_range, len(df))):
                 # Check if an opposing buy signal is found
                 if df.at[i, 'fdbb'] == 1:
-                    df.at[index, 'target'] = row['Close'] - df.at[i, 'Close']
+                    t=((row['Low'] - df.at[i, 'High']) * -1) / pipsize
+                    df.at[index, 'target'] = round(t,2)
                     break
 
     # Handle cases where the price exceeds the signal bar's range
@@ -56,6 +59,8 @@ def calculate_target_variable(df):
 df = calculate_target_variable(df)
 
 # Output the first few rows to verify the target variable
+columns_to_drop = ['jaws_tmp', 'teeth_tmp', 'lips_tmp', 'fdb', 'zcol']
+df = df.drop(columns=columns_to_drop)
 print(df.head())
 
 df.to_csv("fe-form___output.csv")
