@@ -1,5 +1,5 @@
 import subprocess
-import sys
+
 
 import os
 import sys
@@ -70,7 +70,7 @@ def jgtfxcli_wsl(instrument, timeframe, quote_count,cli_path="", verbose_level=0
     if cli_path == "" or cli_path is None or cli_path == 0 or cli_path == '0':
         cli_path = '$HOME/.local/bin/jgtfxcli'
         #cli_path = "/home/jgi/.local/bin/jgtfxcli"
-    bash_command_to_run = f"pwd;{cli_path} -i \"{instrument}\" -t \"{timeframe}\" -c {quote_count} -o -v {verbose_level}"
+    bash_command_to_run = f"pwd;{cli_path} -i \"{instrument}\" -t \"{timeframe}\" -c {quote_count} -v {verbose_level}"
     return run_bash_command_by_platform(bash_command_to_run)
 
 
@@ -79,7 +79,7 @@ def _mkbash_cmd_string_jgtfxcli_range(instrument, timeframe,tlid_range=None,cli_
     
     date_from,date_to=jgtcommon.tlid_range_to_jgtfxcon_start_end_str(tlid_range)
     
-    bash_command_to_run = f"pwd;{cli_path} -i \"{instrument}\" -t \"{timeframe}\" -s \"{date_from}\" -e \"{date_to}\" -o -v {verbose_level}"
+    bash_command_to_run = f"pwd;{cli_path} -i \"{instrument}\" -t \"{timeframe}\" -s \"{date_from}\" -e \"{date_to}\" -v {verbose_level}"
     return bash_command_to_run
 
 def jgtfxcli_wsl_range(instrument, timeframe, quote_count,tlid_range=None,cli_path="", verbose_level=0):

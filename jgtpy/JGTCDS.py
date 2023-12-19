@@ -12,24 +12,8 @@ import JGTPDSP as pds
 
 import pandas as pd
 
+import jgtconstants as c
 
-
-from jgtconstants import (
-    signalCode_fractalDivergentBar_column_name,
-    signalSell_fractalDivergentBar_column_name,
-    signalBuy_fractalDivergentBar_column_name,
-    signalSell_fractal_column_name,
-    signalBuy_fractal_column_name,
-    signal_zcol_column_name,
-    signalSell_zoneSignal_column_name,
-    signalBuy_zoneSinal_column_name,
-    signalBuy_zeroLineCrossing_column_name,
-    signalSell_zeroLineCrossing_column_name,
-    signalSell_AC_deceleration_column_name,
-    signalBuy_AC_acceleration_column_name,
-    signalSell_saucer_column_name,
-    signalBuy_saucer_column_name,
-)
 
 # %%
 def createFromPDSFileToCDSFile(instrument, timeframe, columns_to_remove=None, quiet=True,tlid_range=None):
@@ -85,8 +69,8 @@ def readCDSFile(instrument, timeframe, columns_to_remove=None, quiet=True):
   fpath = pds.mk_fullpath(instrument, timeframe, 'csv', data_path_cds)
   c = pd.read_csv(fpath)
 
-  # Set 'Date' as the index
-  c.set_index('Date', inplace=True)
+  # Set c.date_column_name as the index
+  c.set_index(c.date_column_name, inplace=True)
   # Remove the specified columns
   if columns_to_remove is not None:
     c = c.drop(columns=columns_to_remove, errors='ignore')
@@ -126,7 +110,7 @@ def createFromDF(df, quiet=True):
     pandas.DataFrame: The new DataFrame with indicators, signals, and cleansed columns added.
   """
   
-  if df.index.name == 'Date':
+  if df.index.name == c.date_column_name:
       df.reset_index(inplace=True)
   dfi=ids.tocds(df,quiet=quiet) 
   return dfi
@@ -185,7 +169,7 @@ def create_and_clean_data_from_file_df(instrument, timeframe):
         c = c.drop(columns=columns_to_remove, errors='ignore')
 
     # Set 'Date' as the index
-    c.set_index('Date', inplace=True)
+    c.set_index(c.date_column_name, inplace=True)
 
     return c
 
@@ -242,14 +226,14 @@ def getLast(_df):
   return _df.iloc[-1]
 
 def getPresentBar(_df):
-  r= _df#['High','Low',indicator_AO_awesomeOscillator_column_name,signalCode_fractalDivergentBar_column_name,indicator_AC_accelerationDeceleration_column_name]
+  r= _df#['High','Low',c.indicator_AO_awesomeOscillator_column_name,c.signalCode_fractalDivergentBar_column_name,c.indicator_AC_accelerationDeceleration_column_name]
   return r.iloc[-1:]
 
 def getPresentBarAsList(_df):
   _paf =_df.iloc[-1:]
   _pa = _paf.to_dict(orient='list')
   _dtctx=str(_paf.index.values[0])
-  _pa['Date'] = _dtctx
+  _pa[c.date_column_name] = _dtctx
   return _pa
 
 
@@ -257,7 +241,7 @@ def getLastCompletedBarAsList(_df):
   _paf =_df.iloc[-2:-1]
   _pa = _paf.to_dict(orient='list')
   _dtctx=str(_paf.index.values[0])
-  _pa['Date'] = _dtctx
+  _pa[c.date_column_name] = _dtctx
   return _pa
 
 
@@ -267,9 +251,9 @@ def getLastCompletedBarAsList(_df):
 def checkFDB(_instrument,_timeframe):
   _df=create(_instrument)
   pa = getPresentBarAsList(_df)
-  isfdb = pa[signalCode_fractalDivergentBar_column_name][0]  != 0.0
-  fdb = pa[signalCode_fractalDivergentBar_column_name]
-  dtctx = pa['Date']
+  isfdb = pa[c.signalCode_fractalDivergentBar_column_name][0]  != 0.0
+  fdb = pa[c.signalCode_fractalDivergentBar_column_name]
+  dtctx = pa[c.date_column_name]
   if isfdb:
     print(_instrument + "_" + _timeframe + " : We Have a Signal : " + dtctx)
     return True
