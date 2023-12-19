@@ -156,21 +156,25 @@ def get_data_path():
   
   
 
-
+import iprops
 def get_instrument_properties(instrument, quiet=False,from_file=True):
   if not from_file:
     print("NOT SUPORTED in PDSP")
   else:
     
     # # Define the path to the directory
-    home_dir = os.path.expanduser("~")
-    dir_path = os.path.join(home_dir, '.jgt', 'iprops')
     instrument_properties = {}
-    instrument_filename = instrument.replace('/', '-')
-    #     # Read the instrument properties from the file
-    iprop_dir_path = os.path.join(dir_path, f'{instrument_filename}.json')
-    with open(iprop_dir_path, 'r') as f:
-      instrument_properties = json.load(f)
+    try:
+      instrument_properties = iprops.get_iprop(instrument)
+      instrument_properties["pipsize"] = instrument_properties["pips"]
+    except:
+      home_dir = os.path.expanduser("~")
+      dir_path = os.path.join(home_dir, '.jgt', 'iprops')
+      instrument_filename = instrument.replace('/', '-')
+      #     # Read the instrument properties from the file
+      iprop_dir_path = os.path.join(dir_path, f'{instrument_filename}.json')
+      with open(iprop_dir_path, 'r') as f:
+        instrument_properties = json.load(f)
     return instrument_properties
 
 

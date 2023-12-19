@@ -1,4 +1,4 @@
-#@title Plotly
+#@title ADS
 
 #%% Imports
 import numpy as np
@@ -13,7 +13,7 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 #import jgtpy
-import JGTPDSP as pds
+import JGTPDSP as pds 
 import JGTIDS as ids
 from JGTIDS import getMinByTF
 import JGTCDS as cds

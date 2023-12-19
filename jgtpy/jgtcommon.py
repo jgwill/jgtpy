@@ -42,7 +42,8 @@ try :
     console.setLevel(logging.INFO)
     logging.getLogger('').addHandler(console)
 except:
-    print('logging failed - dont worry')
+    #print('logging failed - dont worry')
+    pass
 
 def add_main_arguments(parser: argparse.ArgumentParser):
     parser.add_argument('--login',
