@@ -35,8 +35,11 @@ def createFromPDSFileToCDSFile(instrument, timeframe, columns_to_remove=None, qu
   c = createFromPDSFile(instrument, timeframe, quiet,tlid_range=tlid_range)
 
   # Remove the specified columns
-  if columns_to_remove is not None:
-    c = c.drop(columns=columns_to_remove, errors='ignore')
+  try:
+    if columns_to_remove is not None:
+      c = c.drop(columns=columns_to_remove, errors='ignore')
+  except:
+    pass
 
   # # Reset the index
   # try:
@@ -72,8 +75,11 @@ def readCDSFile(instrument, timeframe, columns_to_remove=None, quiet=True):
   # Set c.date_column_name as the index
   c.set_index(c.date_column_name, inplace=True)
   # Remove the specified columns
-  if columns_to_remove is not None:
-    c = c.drop(columns=columns_to_remove, errors='ignore')
+  try:
+    if columns_to_remove is not None:
+      c = c.drop(columns=columns_to_remove, errors='ignore')
+  except:
+    pass
   return c
 
 def createFromPDSFile(instrument,timeframe,quiet=True,tlid_range=None):
