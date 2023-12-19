@@ -7,6 +7,26 @@ nonTradingZoneColor = 'gray'
 sellingZoneColor = 'red'
 buyingZoneColor = 'green'
 
+open_column_name = 'Open'
+close_column_name = 'Close'
+high_column_name = 'High'
+low_column_name = 'Low'
+
+bidopen_column_name = 'BidOpen'
+bidhigh_column_name = 'BidHigh'
+bidlow_column_name = 'BidLow'
+bidclose_column_name = 'BidClose'
+
+askopen_column_name = 'AskOpen'
+askclose_column_name = 'AskClose'
+askhigh_column_name = 'AskHigh'
+asklow_column_name = 'AskLow'
+
+median_column_name = 'Median'
+volume_column_name = 'Volume'
+date_column_name = 'Date'
+bar_height_column_name= "bar_height"
+
 # List of columns to remove
 columns_to_remove = ['aofvalue', 'aofhighao', 'aoflowao', 'aofhigh', 'aoflow', 'aocolor', 'accolor','fdbbhigh','fdbblow','fdbshigh','fdbslow']
 

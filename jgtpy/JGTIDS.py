@@ -20,81 +20,7 @@ _dtformat = '%m.%d.%Y %H:%M:%S'
 #@title INDICATOR's Data Frame Columns naming
 # Import statements for jgtconstants.py variables
 
-from jgtconstants import (
-    indicator_currentDegree_alligator_jaw_column_name,
-    indicator_currentDegree_alligator_teeth_column_name,
-    indicator_currentDegree_alligator_lips_column_name,
-    indicator_sixDegreeLarger_alligator_jaw_column_name,
-    indicator_sixDegreeLarger_alligator_teeth_column_name,
-    indicator_sixDegreeLarger_alligator_lips_column_name,
-    indicator_AO_awesomeOscillator_column_name,
-    indicator_zeroLineCross_column_name,
-    indicator_ao_fractalPeakOfMomentum_column_name,
-    indicator_ao_fractalPeakValue_column_name,
-    indicator_AO_aboveZero_column_name,
-    indicator_AO_bellowZero_column_name,
-    indicator_AC_accelerationDeceleration_column_name,
-    indicator_gatorOscillator_low_column_name,
-    indicator_gatorOscillator_high_column_name,
-    indicator_mfi_marketFacilitationIndex_column_name,
-    indicator_fractal_high_degree2_column_name,
-    indicator_fractal_low_degree2_column_name,
-    indicator_fractal_high_degree3_column_name,
-    indicator_fractal_low_degree3_column_name,
-    indicator_fractal_high_degree5_column_name,
-    indicator_fractal_low_degree5_column_name,
-    indicator_fractal_high_degree8_column_name,
-    indicator_fractal_low_degree8_column_name,
-    indicator_fractal_high_degree13_column_name,
-    indicator_fractal_low_degree13_column_name,
-    indicator_fractal_high_degree21_column_name,
-    indicator_fractal_low_degree21_column_name,
-    indicator_fractal_high_degree34_column_name,
-    indicator_fractal_low_degree34_column_name,
-    indicator_fractal_high_degree55_column_name,
-    indicator_fractal_low_degree55_column_name,
-    indicator_fractal_high_degree89_column_name,
-    indicator_fractal_low_degree89_column_name,
-)
-
-
-# %%
-#@title SIGNAL's Data Frame Columns naming
-# Import statements for jgtconstants.py variables
-
-from jgtconstants import (
-    nonTradingZoneColor,
-    sellingZoneColor,
-    buyingZoneColor,
-)
-
-from jgtconstants import (
-    signalCode_fractalDivergentBar_column_name,
-    signalSell_fractalDivergentBar_column_name,
-    signalBuy_fractalDivergentBar_column_name,
-    signalSell_fractal_column_name,
-    signalBuy_fractal_column_name,
-    signal_zcol_column_name,
-    signalSell_zoneSignal_column_name,
-    signalBuy_zoneSinal_column_name,
-    signalBuy_zeroLineCrossing_column_name,
-    signalSell_zeroLineCrossing_column_name,
-    signalSell_AC_deceleration_column_name,
-    signalBuy_AC_acceleration_column_name,
-    signalSell_saucer_column_name,
-    signalBuy_saucer_column_name,
-)
-
-
-
-
-
-
-
-
-
-
-
+import jgtconstants as c
 
 
 
@@ -102,11 +28,11 @@ from jgtconstants import (
 # %%
 #@title Range shift add col drop na
 #--@STCGoal PDS Utils
-def _jgtpd_col_add_range_shifting_dropnas(dfsrc,ctxcolname=indicator_AO_awesomeOscillator_column_name,colprefix='pao',endrange=10):
+def _jgtpd_col_add_range_shifting_dropnas(dfsrc,ctxcolname=c.indicator_AO_awesomeOscillator_column_name,colprefix='pao',endrange=10):
   return _jgtpd_dropnas_on_any_rows(_jgtpd_col_add_range_shifting(dfsrc,ctxcolname,colprefix,endrange))
 
 #@title BACKWARD Range shift col
-def _jgtpd_col_add_range_shifting(dfsrc,ctxcolname=indicator_AO_awesomeOscillator_column_name,colprefix='pao',endrange=10):
+def _jgtpd_col_add_range_shifting(dfsrc,ctxcolname=c.indicator_AO_awesomeOscillator_column_name,colprefix='pao',endrange=10):
   """Add a BACKWARD range of shifted values
     for a column with a prefixed numbered.
 
@@ -244,6 +170,7 @@ def round_columns(df):
       df[col] = df[col].apply(lambda x: 0 if 'e' in str(x) else x)
   return df
 
+
 def ids_add_indicators_LEGACY(dfsrc,
                        enableGatorOscillator=False,
                        enableMFI=False,
@@ -268,32 +195,36 @@ def ids_add_indicators_LEGACY(dfsrc,
     print("Adding indicators...")
   i=Indicators(dfsrc)
   
-  i.accelerator_oscillator( column_name= indicator_AC_accelerationDeceleration_column_name)
-  i.alligator(period_jaws=13, period_teeth=8, period_lips=5, shift_jaws=8, shift_teeth=5, shift_lips=3, column_name_jaws=indicator_currentDegree_alligator_jaw_column_name, column_name_teeth=indicator_currentDegree_alligator_teeth_column_name, column_name_lips=indicator_currentDegree_alligator_lips_column_name)
+  i.accelerator_oscillator( 
+                           column_name=c. indicator_AC_accelerationDeceleration_column_name)
+  i.alligator(period_jaws=13, period_teeth=8, period_lips=5, shift_jaws=8, shift_teeth=5, shift_lips=3,
+              column_name_jaws=c.indicator_currentDegree_alligator_jaw_column_name, column_name_teeth=c.indicator_currentDegree_alligator_teeth_column_name, column_name_lips=c.indicator_currentDegree_alligator_lips_column_name)
   
   if len(dfsrc) > 375:
-    i.alligator(period_jaws=89, period_teeth=55, period_lips=34, shift_jaws=55, shift_teeth=34, shift_lips=21, column_name_jaws=indicator_sixDegreeLarger_alligator_jaw_column_name, column_name_teeth=indicator_sixDegreeLarger_alligator_teeth_column_name, column_name_lips=indicator_sixDegreeLarger_alligator_lips_column_name)
+    i.alligator(period_jaws=89, period_teeth=55, period_lips=34, shift_jaws=55, shift_teeth=34, shift_lips=21,
+                column_name_jaws=c.indicator_sixDegreeLarger_alligator_jaw_column_name, column_name_teeth=c.indicator_sixDegreeLarger_alligator_teeth_column_name, column_name_lips=c.indicator_sixDegreeLarger_alligator_lips_column_name)
   
-  i.awesome_oscillator(column_name=indicator_AO_awesomeOscillator_column_name)
+  i.awesome_oscillator(
+    column_name=c.indicator_AO_awesomeOscillator_column_name)
   
   # Creating Fractal Indicators for degrees 2,3,5,8,13,21,34,55,89 
-  i.fractals(column_name_high=indicator_fractal_high_degree2_column_name, column_name_low=indicator_fractal_low_degree2_column_name)
-  i.fractals3(column_name_high=indicator_fractal_high_degree3_column_name, column_name_low=indicator_fractal_low_degree3_column_name)
-  i.fractals5(column_name_high=indicator_fractal_high_degree5_column_name, column_name_low=indicator_fractal_low_degree5_column_name)
-  i.fractals8(column_name_high=indicator_fractal_high_degree8_column_name, column_name_low=indicator_fractal_low_degree8_column_name)
-  i.fractals13(column_name_high=indicator_fractal_high_degree13_column_name, column_name_low=indicator_fractal_low_degree13_column_name)
-  i.fractals21(column_name_high=indicator_fractal_high_degree21_column_name, column_name_low=indicator_fractal_low_degree21_column_name)
-  i.fractals34(column_name_high=indicator_fractal_high_degree34_column_name, column_name_low=indicator_fractal_low_degree34_column_name)
-  i.fractals55(column_name_high=indicator_fractal_high_degree55_column_name, column_name_low=indicator_fractal_low_degree55_column_name)
-  i.fractals89(column_name_high=indicator_fractal_high_degree89_column_name, column_name_low=indicator_fractal_low_degree89_column_name)
+  i.fractals(column_name_high=c.indicator_fractal_high_degree2_column_name, column_name_low=c.indicator_fractal_low_degree2_column_name)
+  i.fractals3(column_name_high=c.indicator_fractal_high_degree3_column_name, column_name_low=c.indicator_fractal_low_degree3_column_name)
+  i.fractals5(column_name_high=c.indicator_fractal_high_degree5_column_name, column_name_low=c.indicator_fractal_low_degree5_column_name)
+  i.fractals8(column_name_high=c.indicator_fractal_high_degree8_column_name, column_name_low=c.indicator_fractal_low_degree8_column_name)
+  i.fractals13(column_name_high=c.indicator_fractal_high_degree13_column_name, column_name_low=c.indicator_fractal_low_degree13_column_name)
+  i.fractals21(column_name_high=c.indicator_fractal_high_degree21_column_name, column_name_low=c.indicator_fractal_low_degree21_column_name)
+  i.fractals34(column_name_high=c.indicator_fractal_high_degree34_column_name, column_name_low=c.indicator_fractal_low_degree34_column_name)
+  i.fractals55(column_name_high=c.indicator_fractal_high_degree55_column_name, column_name_low=c.indicator_fractal_low_degree55_column_name)
+  i.fractals89(column_name_high=c.indicator_fractal_high_degree89_column_name, column_name_low=c.indicator_fractal_low_degree89_column_name)
 
   
   if enableGatorOscillator:
     
-    i.gator(period_jaws=13, period_teeth=8, period_lips=5, shift_jaws=8, shift_teeth=5, shift_lips=3, column_name_val1=indicator_gatorOscillator_low_column_name, column_name_val2=indicator_gatorOscillator_high_column_name)
+    i.gator(period_jaws=13, period_teeth=8, period_lips=5, shift_jaws=8, shift_teeth=5, shift_lips=3, column_name_val1=c.indicator_gatorOscillator_low_column_name, column_name_val2=c.indicator_gatorOscillator_high_column_name)
 
   if enableMFI:
-    i.bw_mfi(column_name=indicator_mfi_marketFacilitationIndex_column_name)
+    i.bw_mfi(column_name=c.indicator_mfi_marketFacilitationIndex_column_name)
   
   if addAlligatorOffsetInFutur:
     _add_alligator_tmpcol_offset_in_futur(i)
@@ -440,9 +371,9 @@ def _ids_add_fdb_column_logics(dfsrc,
       LowisAboveLips  = dfsrc.at[i,'LowisAboveLips']
 
       #default values 
-      dfsrc.at[i, signalBuy_fractalDivergentBar_column_name] = 0
-      dfsrc.at[i, signalSell_fractalDivergentBar_column_name] = 0
-      dfsrc.at[i,signalCode_fractalDivergentBar_column_name] = 0 
+      dfsrc.at[i, c.signalBuy_fractalDivergentBar_column_name] = 0
+      dfsrc.at[i, c.signalSell_fractalDivergentBar_column_name] = 0
+      dfsrc.at[i, c.signalCode_fractalDivergentBar_column_name] = 0 
 
       ##################################################
       #########   FDBB
@@ -458,8 +389,8 @@ def _ids_add_fdb_column_logics(dfsrc,
       dfsrc.at[i,'fdbbhigh'] = high 
       dfsrc.at[i,'fdbblow'] = low 
       
-      dfsrc.at[i,signalBuy_fractalDivergentBar_column_name] = isFDB  
-      dfsrc.at[i,signalCode_fractalDivergentBar_column_name] = isFDBCode   # So we have All
+      dfsrc.at[i,c.signalBuy_fractalDivergentBar_column_name] = isFDB  
+      dfsrc.at[i,c.signalCode_fractalDivergentBar_column_name] = isFDBCode   # So we have All
       isAfdbb = isFDB
       ##################################################
       #########   FDBS
@@ -478,8 +409,8 @@ def _ids_add_fdb_column_logics(dfsrc,
         dfsrc.at[i,'fdbshigh'] = high 
         dfsrc.at[i,'fdbslow'] = low 
         
-        dfsrc.at[i,signalSell_fractalDivergentBar_column_name] = isFDB
-        dfsrc.at[i,signalCode_fractalDivergentBar_column_name] = isFDBCode
+        dfsrc.at[i,c.signalSell_fractalDivergentBar_column_name] = isFDB
+        dfsrc.at[i,c.signalCode_fractalDivergentBar_column_name] = isFDBCode
   if _dropIntermediariesColumns:
     dfsrc = _ids_clear_fdb_intermediaries_columns(dfsrc,quiet=quiet)
   return dfsrc
@@ -497,7 +428,7 @@ def _ids_add_fdb_column_logics(dfsrc,
 
 #@title Range shift col
 def jgtids_mk_ao_fractal_peak(dfsrc,
-                              ctxcolname=indicator_AO_awesomeOscillator_column_name,
+                              ctxcolname=c.indicator_AO_awesomeOscillator_column_name,
                               poscolprefix='pao',
                               negcolprefix='nao',
                               endrange=10,
@@ -552,7 +483,7 @@ def jgtids_mk_ao_fractal_peak(dfsrc,
     dt=i
     curHigh= dfsrc.at[i,'High']
     curLow= dfsrc.at[i,'Low']
-    cur=dfsrc.at[i,indicator_AO_awesomeOscillator_column_name]
+    cur=dfsrc.at[i,c.indicator_AO_awesomeOscillator_column_name]
     n9= dfsrc.at[i,'n9']
     n13= dfsrc.at[i,'n13']
     n12= dfsrc.at[i,'n12']
@@ -658,8 +589,8 @@ def jgtids_mk_ao_fractal_peak(dfsrc,
     
     #@STCIssue I question the use of some of these columns, they might be temporary 
     
-    dfsrc.at[i,indicator_ao_fractalPeakOfMomentum_column_name]=barAOF
-    dfsrc.at[i,indicator_ao_fractalPeakValue_column_name]=cur #current AO Value
+    dfsrc.at[i,c.indicator_ao_fractalPeakOfMomentum_column_name]=barAOF
+    dfsrc.at[i,c.indicator_ao_fractalPeakValue_column_name]=cur #current AO Value
     dfsrc.at[i,'aofhighao']=outHighAO  
     dfsrc.at[i,'aoflowao']=outLowAO  
     dfsrc.at[i,'aofhigh']=outHigh  
@@ -686,7 +617,7 @@ def jgtids_mk_ao_fractal_peak(dfsrc,
 def cds_add_signals_to_indicators(dfires,_aopeak_range=28,quiet=False):
   dfires=_ids_add_fdb_column_logics(dfires,quiet=quiet)
   dfires = jgtids_mk_ao_fractal_peak(dfires,
-                                   indicator_AO_awesomeOscillator_column_name,
+                                   c.indicator_AO_awesomeOscillator_column_name,
                                    'p',
                                    'n',
                                    _aopeak_range,
@@ -752,22 +683,24 @@ def __format_boolean_columns_to_int(dfsrc, quiet=True):
 #@title ZLC Buy and Sell v2 2210161707 
 
 def jgti_add_zlc_plus_other_AO_signal(dfsrc,dropsecondaries=True,quiet=True):
-  dfsrc=_jgtpd_col_add_range_shifting(dfsrc,indicator_AO_awesomeOscillator_column_name,'pao',10)
-  dfsrc=_jgtpd_col_add_range_shifting(dfsrc,indicator_AC_accelerationDeceleration_column_name,'pac',4)
+  dfsrc=_jgtpd_col_add_range_shifting(dfsrc,
+                                      c.indicator_AO_awesomeOscillator_column_name,'pao',10)
+  dfsrc=_jgtpd_col_add_range_shifting(dfsrc,
+                                      c.indicator_AC_accelerationDeceleration_column_name,'pac',4)
   if not quiet:
     print('----added shofted range AO')
 
   # AO Above Zero
-  dfsrc[indicator_AO_aboveZero_column_name]= (dfsrc[indicator_AO_awesomeOscillator_column_name]>0 ).astype(int) 
+  dfsrc[c.indicator_AO_aboveZero_column_name]= (dfsrc[c.indicator_AO_awesomeOscillator_column_name]>0 ).astype(int) 
   # AO Bellow Zero
-  dfsrc[indicator_AO_bellowZero_column_name]= (dfsrc[indicator_AO_awesomeOscillator_column_name] < 0).astype(int) 
+  dfsrc[c.indicator_AO_bellowZero_column_name]= (dfsrc[c.indicator_AO_awesomeOscillator_column_name] < 0).astype(int) 
   
   c=0
   xc=len(dfsrc)
   for i,row in dfsrc.iterrows():
     c=c+1
-    cao=dfsrc.at[i,indicator_AO_awesomeOscillator_column_name] # Current AO
-    cac=dfsrc.at[i,indicator_AC_accelerationDeceleration_column_name] # Current AC
+    cao=dfsrc.at[i,c.indicator_AO_awesomeOscillator_column_name] # Current AO
+    cac=dfsrc.at[i,c.indicator_AC_accelerationDeceleration_column_name] # Current AC
     pac1=dfsrc.at[i,'pac1'] # Past AC 1
     pac2=dfsrc.at[i,'pac2'] # Past AC 2
     pac3=dfsrc.at[i,'pac3'] # Past AC 3
@@ -804,8 +737,8 @@ def jgti_add_zlc_plus_other_AO_signal(dfsrc,dropsecondaries=True,quiet=True):
     pac2red= not pac2green
     
     
-    aoaz=dfsrc.at[i,indicator_AO_aboveZero_column_name]
-    aobz=dfsrc.at[i,indicator_AO_bellowZero_column_name]
+    aoaz=dfsrc.at[i,c.indicator_AO_aboveZero_column_name]
+    aobz=dfsrc.at[i,c.indicator_AO_bellowZero_column_name]
 
     #ZLC
     isZLCBuy = 0
@@ -820,9 +753,9 @@ def jgti_add_zlc_plus_other_AO_signal(dfsrc,dropsecondaries=True,quiet=True):
     
     
     
-    dfsrc.at[i,indicator_zeroLineCross_column_name] = zlcCode  
-    dfsrc.at[i,signalBuy_zeroLineCrossing_column_name] = isZLCBuy
-    dfsrc.at[i,signalSell_zeroLineCrossing_column_name] = isZLCSell
+    dfsrc.at[i,c.indicator_zeroLineCross_column_name] = zlcCode  
+    dfsrc.at[i,c.signalBuy_zeroLineCrossing_column_name] = isZLCBuy
+    dfsrc.at[i,c.signalSell_zeroLineCrossing_column_name] = isZLCSell
 
     #Coloring AO
     if caogreen:
@@ -839,26 +772,26 @@ def jgti_add_zlc_plus_other_AO_signal(dfsrc,dropsecondaries=True,quiet=True):
     
     # --@STCIssue Zone  (Not sure, it might have to be ABove or Bellow)
 
-    zoneColor = nonTradingZoneColor                #default Zone Color
+    zoneColor = c.nonTradingZoneColor                #default Zone Color
     
     redZone = 0
     if cacred and caored and pac1red and pao1red:
       redZone=1
-      zoneColor = sellingZoneColor
+      zoneColor = c.sellingZoneColor
 
     greenZone = 0
     if cacgreen and caogreen and pac1green and pao1green:
       greenZone=1
-      zoneColor=buyingZoneColor
+      zoneColor=c.buyingZoneColor
       
-    dfsrc.at[i,signal_zcol_column_name] = zoneColor
+    dfsrc.at[i,c.signal_zcol_column_name] = zoneColor
     
     #Sell Zone Signal
    
-    dfsrc.at[i,signalSell_zoneSignal_column_name]= redZone
+    dfsrc.at[i,c.signalSell_zoneSignal_column_name]= redZone
     
     #Buy Zone Signal
-    dfsrc.at[i, signalBuy_zoneSinal_column_name] = greenZone
+    dfsrc.at[i, c.signalBuy_zoneSinal_column_name] = greenZone
     
     #AC Sell / Buy  3 AC Against AO af AC Bellow, 2 if above
     acSell = 0
@@ -875,10 +808,10 @@ def jgti_add_zlc_plus_other_AO_signal(dfsrc,dropsecondaries=True,quiet=True):
     
     #AC Sell Signal (Deceleration)
     
-    dfsrc.at[i, signalSell_AC_deceleration_column_name] = acSell
+    dfsrc.at[i, c.signalSell_AC_deceleration_column_name] = acSell
     
     #AC Buy Signal (Acceleration)
-    dfsrc.at[i,signalBuy_AC_acceleration_column_name]=acBuy
+    dfsrc.at[i,c.signalBuy_AC_acceleration_column_name]=acBuy
     
     if acSell and not quiet:
       print("AC Sell Signal with AC Bellow Zero Line "+ str(i))
@@ -895,8 +828,8 @@ def jgti_add_zlc_plus_other_AO_signal(dfsrc,dropsecondaries=True,quiet=True):
     if cao > 0 and caogreen and pao1red and pao2red:
       saucerBuy=1
     
-    dfsrc.at[i,signalSell_saucer_column_name]=saucerSell
-    dfsrc.at[i,signalBuy_saucer_column_name]=saucerBuy
+    dfsrc.at[i,c.signalSell_saucer_column_name]=saucerSell
+    dfsrc.at[i,c.signalBuy_saucer_column_name]=saucerBuy
     
     # What Happens on the Next PLUS 35 Periods ??
     if c < xc - 35:

@@ -32,7 +32,21 @@ l.addHandler(console_handler)
 
 
 
+
 def prepare_cds_for_ads_data(instrument, timeframe, nb_bar_on_chart, recreate_data=True):
+    """
+    Prepare CDS (Credit Default Swap) data for ADS (Automated Trading System).
+
+    Args:
+        instrument (str): The instrument symbol.
+        timeframe (str): The timeframe of the data.
+        nb_bar_on_chart (int): The number of bars to display on the chart.
+        recreate_data (bool, optional): Whether to recreate the data. Defaults to True.
+
+    Returns:
+        pandas.DataFrame: The prepared CDS data.
+
+    """
     cache_data=False
     cache_dir = "cache"
     if cache_data:
