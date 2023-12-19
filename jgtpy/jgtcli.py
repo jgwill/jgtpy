@@ -24,7 +24,7 @@ def parse_args():
     #jgtcommon.add_output_argument(parser)
     #jgtfxcommon.add_quiet_argument(parser)
     jgtcommon.add_verbose_argument(parser)
-    jgtcommon.add_cds_argument(parser)
+    #jgtcommon.add_cds_argument(parser)
     args = parser.parse_args()
     return args
 
@@ -51,7 +51,8 @@ def main():
     if args.dateto:
         date_to = args.dateto.replace('/', '.')
 
-    process_cds=args.cds
+    #process_cds=args.cds
+    process_cds=True
     #output=False
     #compress=False
     verbose_level = args.verbose

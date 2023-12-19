@@ -54,15 +54,16 @@ def createFromPDSFileToCDSFile(instrument, timeframe, columns_to_remove=None, qu
   if columns_to_remove is not None:
     c = c.drop(columns=columns_to_remove, errors='ignore')
 
-  # Reset the index
-  try:
-    c.reset_index(inplace=True)
-  except:
-    pass
+  # # Reset the index
+  # try:
+  #   c.reset_index(inplace=True)
+  # except:
+  #   pass
 
   # Define the file path based on the environment variable or local path
   data_path_cds = get_data_path()
   fpath = pds.mk_fullpath(instrument, timeframe, 'csv', data_path_cds)
+  #print(fpath)
   c.to_csv(fpath)
 
   return fpath, c
