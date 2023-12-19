@@ -38,11 +38,11 @@ def createFromPDSFileToCDSFile(instrument, timeframe, columns_to_remove=None, qu
   if columns_to_remove is not None:
     c = c.drop(columns=columns_to_remove, errors='ignore')
 
-  # Reset the index
-  try:
-    c.reset_index(inplace=True)
-  except:
-    pass
+  # # Reset the index
+  # try:
+  #   c.reset_index(inplace=True)
+  # except:
+  #   pass
 
   # Define the file path based on the environment variable or local path
   data_path_cds = get_data_path()
@@ -113,6 +113,7 @@ def createFromDF(df, quiet=True):
   if df.index.name == c.date_column_name:
       df.reset_index(inplace=True)
   dfi=ids.tocds(df,quiet=quiet) 
+  
   try:
     dfi.set_index(c.date_column_name, inplace=True)
   except:
@@ -169,8 +170,12 @@ def create_and_clean_data_from_file_df(instrument, timeframe):
     c = createFromPDSFile(instrument, timeframe)
 
     # Remove specified columns if provided
-    if columns_to_remove:
+    try:
+      if columns_to_remove:
         c = c.drop(columns=columns_to_remove, errors='ignore')
+    except:
+      pass
+        
 
     # Set 'Date' as the index
     c.set_index(c.date_column_name, inplace=True)
