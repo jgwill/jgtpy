@@ -114,8 +114,9 @@ def createCDS_for_main(instrument, timeframe, quiet, verbose_level=0,tlid_range=
     if verbose_level> 1:
         quietting=False
     try: 
-        cdspath=cds.createFromPDSFileToCDSFile(instrument,timeframe,col2remove,quietting)
+        cdspath,c=cds.createFromPDSFileToCDSFile(instrument,timeframe,col2remove,quietting)
         print_quiet(quiet,cdspath)
+        print_quiet(quiet,c)
     except:
         print("Failed to create CDS for : " + instrument + "_" + timeframe)
 
