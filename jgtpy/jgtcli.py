@@ -140,5 +140,5 @@ def print_quiet(quiet,content):
 
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
