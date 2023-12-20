@@ -87,7 +87,7 @@ def plot_from_pds_df(pdata,instrument,timeframe,nb_bar_on_chart = 375,show_plot=
   return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show_plot,plot_ao_peaks=plot_ao_peaks)
   
   
-def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=True,plot_ao_peaks=False):
+def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=True,plot_ao_peaks=True):
     
     """
     Plot OHLC bars, indicators, and signals from a pandas DataFrame.
@@ -690,10 +690,11 @@ def make_plot_fdbb_signal(fdb_signal_buy_color, fdb_marker_size, fdb_signal_mark
 
 # %% ALias function (future name)
 
-def plotcdf(data,instrument, timeframe, nb_bar_on_chart=375,show_plot=True):
-  return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show_plot)
+def plotcdf(data,instrument, timeframe, nb_bar_on_chart=375,show_plot=True,plot_ao_peaks=True):
+  return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show_plot,plot_ao_peaks=plot_ao_peaks)
 
-def plot(instrument, timeframe, nb_bar_on_chart=375, recreate_data=True, show_plot=True):
+
+def plot(instrument, timeframe, nb_bar_on_chart=375, recreate_data=True, show_plot=True,plot_ao_peaks=True):
     """
     Plot the chart for a given instrument and timeframe.
 
@@ -703,12 +704,13 @@ def plot(instrument, timeframe, nb_bar_on_chart=375, recreate_data=True, show_pl
     nb_bar_on_chart (int, optional): The number of bars to display on the chart. Default is 375.
     recreate_data (bool, optional): Whether to recreate the data for the chart. Default is True.
     show_plot (bool, optional): Whether to display the plot. Default is True.
+    plot_ao_peaks (bool, optional): Whether to plot AO peaks. Defaults to False.
 
     Returns:
     fig: The figure object of the plot.
     axes: The axes object of the plot.
     """
-    fig, axes = jgtxplot18c_231209(instrument, timeframe, nb_bar_on_chart, recreate_data, show_plot)
+    fig, axes = jgtxplot18c_231209(instrument, timeframe, nb_bar_on_chart, recreate_data, show_plot,plot_ao_peaks=plot_ao_peaks)
     return fig, axes
 
   
