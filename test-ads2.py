@@ -9,7 +9,7 @@ import os
 
 # %% Load data and plot all in one operation
 instrument = "GBP/USD"
-show_plot=True
+show=True
 m1p=pds.getPH(instrument, "M1")
 
 # Create the output directory if it doesn't exist
@@ -17,18 +17,18 @@ output_dir = './output'
 os.makedirs(output_dir, exist_ok=True)
 
 # Plot and save the chart
-M1c, M1a = ads.plot(instrument, "M1", show_plot=show_plot)
+M1c, M1a = ads.plot(instrument, "M1", show=show)
 #plt.savefig(f'{output_dir}/{instrument}_M1.png')
 
 #%% Other plots
-w1, w1a = ads.plot(instrument, "W1", show_plot=show_plot)
-d1, d1a = ads.plot(instrument, "D1", show_plot=show_plot)
+w1, w1a = ads.plot(instrument, "W1", show=show)
+d1, d1a = ads.plot(instrument, "D1", show=show)
 
-h4, h4a = ads.plot(instrument, "H4", show_plot=show_plot)
-h1, h1a = ads.plot(instrument, "H1", show_plot=show_plot)
-m15, m15a = ads.plot(instrument, "m15", show_plot=show_plot)
-m5, m15a = ads.plot(instrument, "m5", show_plot=show_plot)
-#mi1,mi1a = ads.plot(instrument, "m1", show_plot=show_plot)
+h4, h4a = ads.plot(instrument, "H4", show=show)
+h1, h1a = ads.plot(instrument, "H1", show=show)
+m15, m15a = ads.plot(instrument, "m15", show=show)
+m5, m15a = ads.plot(instrument, "m5", show=show)
+#mi1,mi1a = ads.plot(instrument, "m1", show=show)
 
 # # %% Plot w1, d1,h4, h1 in four subplots
 # print("--------------------------")

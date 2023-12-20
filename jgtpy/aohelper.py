@@ -18,7 +18,7 @@ def pto_add_ao_price_peaks(data: pd.DataFrame,peak_distance=13,peak_width=8,peak
     data['ao_bellow'] = data['ao'].apply(lambda x: x if x < 0 else 0)
     data['ao_bellow'] = data['ao_bellow'] * -1
     data['price_bellow'] = data['Close'] * -1
-    data.to_csv('criss.csv')
+    #data.to_csv('criss.csv')
     
     #data['ao'] = data['ao'] * -1
     # data['Close'] = data['Close'] * -1

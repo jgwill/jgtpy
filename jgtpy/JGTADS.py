@@ -69,12 +69,12 @@ import jgtconstants as c
 
 
 
-def jgtxplot18c_231209(instrument,timeframe,nb_bar_on_chart = 375,recreate_data = True,show_plot=True,plot_ao_peaks=False):
+def jgtxplot18c_231209(instrument,timeframe,nb_bar_on_chart = 375,recreate_data = True,show=True,plot_ao_peaks=False):
     data = ah.prepare_cds_for_ads_data(instrument, timeframe, nb_bar_on_chart, recreate_data)
-    return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show_plot,plot_ao_peaks)
+    return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show,plot_ao_peaks)
 
 
-def plot_from_pds_df(pdata,instrument,timeframe,nb_bar_on_chart = 375,show_plot=True,plot_ao_peaks=True):
+def plot_from_pds_df(pdata,instrument,timeframe,nb_bar_on_chart = 375,show=True,plot_ao_peaks=True):
   # Select the last 400 bars of the data
   try:
       selected = pdata.iloc[-nb_bar_on_chart-120:].copy()
@@ -84,10 +84,10 @@ def plot_from_pds_df(pdata,instrument,timeframe,nb_bar_on_chart = 375,show_plot=
       pass
   
   data = cds.createFromDF(selected)
-  return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show_plot,plot_ao_peaks=plot_ao_peaks)
+  return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show,plot_ao_peaks=plot_ao_peaks)
   
   
-def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=True,plot_ao_peaks=True):
+def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,plot_ao_peaks=True):
     
     """
     Plot OHLC bars, indicators, and signals from a pandas DataFrame.
@@ -97,7 +97,7 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=T
         instrument (str): The instrument symbol.
         timeframe (str): The timeframe of the data.
         nb_bar_on_chart (int, optional): The number of bars to display on the chart. Defaults to 375.
-        show_plot (bool, optional): Whether to display the plot. Defaults to True.
+        show (bool, optional): Whether to display the plot. Defaults to True.
         plot_ao_peaks (bool, optional): Whether to plot AO peaks. Defaults to False.
 
     Returns:
@@ -184,7 +184,7 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=T
     
     plot_style = "yahoo"
     fig_ratio_x = 24
-    fig_ratio_y = 10
+    fig_ratio_y = 12
     
     #%% Select the last 400 bars of the data
     
@@ -571,7 +571,7 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=T
     # Set the font size of the Date column
     axes[main_plot_panel_id].tick_params(axis="x", labelsize=6)
 
-    if show_plot:
+    if show:
         plt.show()
     return fig,axes
 
@@ -690,11 +690,11 @@ def make_plot_fdbb_signal(fdb_signal_buy_color, fdb_marker_size, fdb_signal_mark
 
 # %% ALias function (future name)
 
-def plotcdf(data,instrument, timeframe, nb_bar_on_chart=375,show_plot=True,plot_ao_peaks=True):
-  return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show_plot,plot_ao_peaks=plot_ao_peaks)
+def plotcdf(data,instrument, timeframe, nb_bar_on_chart=375,show=True,plot_ao_peaks=True):
+  return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show,plot_ao_peaks=plot_ao_peaks)
 
 
-def plot(instrument, timeframe, nb_bar_on_chart=375, recreate_data=True, show_plot=True,plot_ao_peaks=True):
+def plot(instrument, timeframe, nb_bar_on_chart=375, recreate_data=True, show=True,plot_ao_peaks=True):
     """
     Plot the chart for a given instrument and timeframe.
 
@@ -703,14 +703,14 @@ def plot(instrument, timeframe, nb_bar_on_chart=375, recreate_data=True, show_pl
     timeframe (str): The timeframe for the chart.
     nb_bar_on_chart (int, optional): The number of bars to display on the chart. Default is 375.
     recreate_data (bool, optional): Whether to recreate the data for the chart. Default is True.
-    show_plot (bool, optional): Whether to display the plot. Default is True.
+    show (bool, optional): Whether to display the plot. Default is True.
     plot_ao_peaks (bool, optional): Whether to plot AO peaks. Defaults to False.
 
     Returns:
     fig: The figure object of the plot.
     axes: The axes object of the plot.
     """
-    fig, axes = jgtxplot18c_231209(instrument, timeframe, nb_bar_on_chart, recreate_data, show_plot,plot_ao_peaks=plot_ao_peaks)
+    fig, axes = jgtxplot18c_231209(instrument, timeframe, nb_bar_on_chart, recreate_data, show,plot_ao_peaks=plot_ao_peaks)
     return fig, axes
 
   
