@@ -18,19 +18,23 @@ import JGTIDS as ids
 from JGTIDS import getMinByTF
 import JGTCDS as cds
 import jgtwslhelper as wsl
+from JGTChartConfig import JGTChartConfig
+
+import adshelper as ah
+import jgtconstants as c
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 
 import os
 
 #import kaleido
-import plotly
+# import plotly
 
 import JGTConfig as jgtc
 
 
-import plotly.graph_objects as go
-import plotly.subplots as sp
+# import plotly.graph_objects as go
+# import plotly.subplots as sp
 
 
 
@@ -63,15 +67,13 @@ cdtformat="%Y-%m-%d"
 
 #%% Props and requests
 
-import adshelper as ah
-import jgtconstants as c
 
 
 
 
-def jgtxplot18c_231209(instrument,timeframe,nb_bar_on_chart = 375,recreate_data = True,show=True,plot_ao_peaks=False):
+def jgtxplot18c_231209(instrument,timeframe,nb_bar_on_chart = 375,recreate_data = True,show=True,plot_ao_peaks=False,cc: JGTChartConfig=None):
     data = ah.prepare_cds_for_ads_data(instrument, timeframe, nb_bar_on_chart, recreate_data)
-    return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show,plot_ao_peaks)
+    return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show,plot_ao_peaks,cc=cc)
 
 
 def plot_from_pds_df(pdata,instrument,timeframe,nb_bar_on_chart = 375,show=True,plot_ao_peaks=True):
@@ -86,7 +88,6 @@ def plot_from_pds_df(pdata,instrument,timeframe,nb_bar_on_chart = 375,show=True,
   data = cds.createFromDF(selected)
   return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show,plot_ao_peaks=plot_ao_peaks)
   
-from JGTChartConfig import JGTChartConfig
 
 def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,plot_ao_peaks=True,cc: JGTChartConfig=None):
     
@@ -100,9 +101,11 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
         nb_bar_on_chart (int, optional): The number of bars to display on the chart. Defaults to 375.
         show (bool, optional): Whether to display the plot. Defaults to True.
         plot_ao_peaks (bool, optional): Whether to plot AO peaks. Defaults to False.
+        cc (JGTChartConfig, optional): The chart configuration object. Defaults to None.
 
     Returns:
-        None
+        fig: The figure object of the plot.
+        axes: The axes object of the plot.
     """
     if cc is None:
         cc= JGTChartConfig()
@@ -698,11 +701,11 @@ def make_plot_fdbb_signal(fdb_signal_buy_color, fdb_marker_size, fdb_signal_mark
 
 # %% ALias function (future name)
 
-def plotcdf(data,instrument, timeframe, nb_bar_on_chart=375,show=True,plot_ao_peaks=True):
-  return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show,plot_ao_peaks=plot_ao_peaks)
+def plotcdf(data,instrument, timeframe, nb_bar_on_chart=375,show=True,plot_ao_peaks=True,cc: JGTChartConfig=None):
+  return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show,plot_ao_peaks=plot_ao_peaks,cc=cc)
 
 
-def plot(instrument, timeframe, nb_bar_on_chart=375, recreate_data=True, show=True,plot_ao_peaks=True):
+def plot(instrument, timeframe, nb_bar_on_chart=375, recreate_data=True, show=True,plot_ao_peaks=True,cc: JGTChartConfig=None):
     """
     Plot the chart for a given instrument and timeframe.
 
@@ -713,12 +716,13 @@ def plot(instrument, timeframe, nb_bar_on_chart=375, recreate_data=True, show=Tr
     recreate_data (bool, optional): Whether to recreate the data for the chart. Default is True.
     show (bool, optional): Whether to display the plot. Default is True.
     plot_ao_peaks (bool, optional): Whether to plot AO peaks. Defaults to False.
+    cc (JGTChartConfig, optional): The chart configuration object. Defaults to None.
 
     Returns:
     fig: The figure object of the plot.
     axes: The axes object of the plot.
     """
-    fig, axes = jgtxplot18c_231209(instrument, timeframe, nb_bar_on_chart, recreate_data, show,plot_ao_peaks=plot_ao_peaks)
+    fig, axes = jgtxplot18c_231209(instrument, timeframe, nb_bar_on_chart, recreate_data, show,plot_ao_peaks=plot_ao_peaks,cc=cc)
     return fig, axes
 
   
