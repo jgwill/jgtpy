@@ -87,7 +87,7 @@ def plot_from_pds_df(pdata,instrument,timeframe,nb_bar_on_chart = 375,show_plot=
   return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show_plot)
   
   
-def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=True):
+def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=True,plot_ao_peaks=False):
   # Load dataset
   iprop = pds.get_instrument_properties(instrument)
   l.debug(iprop)
@@ -261,6 +261,44 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=T
 
   
 
+  #%% ao_peak_above Plot
+  if plot_ao_peaks:
+    ao_peaks_marker_size = 42
+        #%% AO Peaks
+    ao_peak_bellow_coln = 'ao_peak_bellow'
+    ao_peak_above_coln = 'ao_peak_above'
+    
+    # AO Peaks
+    # Align AO Peaks with AO bars if value is '1.0'
+    data_last_selection.loc[:,ao_peak_bellow_coln] = np.where(data_last_selection[ao_peak_bellow_coln] == 1.0, ao_max/2, np.nan)
+    data_last_selection.loc[:,ao_peak_above_coln] = np.where(data_last_selection[ao_peak_above_coln] == 1.0, ao_min/2, np.nan)
+    
+    ao_peak_offset_value = 0
+    ao_peak_above_marker_higher= "^"
+    ao_peak_bellow__marker_higher = "v"
+    
+    # Make AO Peak Bellow plot
+    aopbellow_plot = mpf.make_addplot(
+        data_last_selection[ao_peak_bellow_coln] +ao_peak_offset_value,
+        panel=ao_plot_panel_id,
+        type="scatter",
+        markersize=ao_peaks_marker_size,
+        marker=ao_peak_bellow__marker_higher,
+        color="r",
+    )
+    
+    # Make AO Peak Above plot
+    aopabove_plot = mpf.make_addplot(
+        data_last_selection[ao_peak_above_coln] -ao_peak_offset_value,
+        panel=ao_plot_panel_id,
+        type="scatter",
+        markersize=ao_peaks_marker_size,
+        marker=ao_peak_above_marker_higher,
+        color="g",
+    )
+    
+    
+
   #%% Saucer
   _saucer_b_coln = c.signalBuy_saucer_column_name
   _saucer_s_coln = c.signalSell_saucer_column_name
@@ -428,7 +466,7 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=T
       acs_plot,
       acb_plot,
   ]
-
+  
   
   
   
@@ -448,34 +486,6 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=T
       returnfig=True,
       tight_layout=True,
   )
-
-  # fig, axes = mpf.plot(
-  #     ohlc,
-  #     type=main_plot_type,
-  #     style=plot_style,
-  #     addplot=[
-  #         jaw_plot,
-  #         teeth_plot,
-  #         lips_plot,
-  #         fractal_up_plot,
-  #         fractal_down_plot,
-  #         fractal_up_plot_higher,
-  #         fractal_down_plot_higher,
-  #         fdbb_up_plot,
-  #         fdbs_down_plot,
-  #         sb_plot,
-  #         ss_plot,
-  #         ao_plot,
-  #         ac_plot,
-  #         acs_plot,
-  #         acb_plot,
-  #     ],
-  #     volume=False,
-  #     figratio=(fig_ratio_x, fig_ratio_y),
-  #     title=instrument + "  " + timeframe,
-  #     returnfig=True,
-  #     tight_layout=True,
-  # )
 
   # Set y-axis limits
   axes[main_plot_panel_id].set_ylim(
