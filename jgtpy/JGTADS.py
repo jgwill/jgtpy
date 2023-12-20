@@ -411,9 +411,6 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=T
   )
 
 
-
-
-
   fractal_up_plot, fractal_down_plot = make_plot__fractals_indicator(fractal_up_color, fractal_dn_color, fractal_marker_size, fractal_up_marker, fractal_dn_marker, fh_col_dim, fl_col_dim, main_plot_panel_id, data_last_selection, fractal_offset_value)
 
   #%% Fractal higher dim
@@ -487,11 +484,27 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=T
       tight_layout=True,
   )
 
+  
   # Set y-axis limits
+  main_ymax, main_ymin = axes[main_plot_panel_id].get_ylim()
+  height_minmax = main_ymax - main_ymin
+  tst_v = height_minmax / 8
+  new_y_max = main_ymin - tst_v - fdb_offset_value
+  new_y_min = main_ymax + tst_v + fdb_offset_value
+  #print("mainYMin/low/newmin: " + str(main_ymin) + " / " + str(low_min) + " / " + str(new_y_min))
+  #print("mainYMax/high/newmax :"  +str(main_ymax) + " / " + str(high_max) + " / " + str(new_y_max))
   axes[main_plot_panel_id].set_ylim(
-      low_min - fdb_offset_value - pipsize * 20,
-      high_max + fdb_offset_value + pipsize * 20,
+      new_y_max,
+      new_y_min
   )
+      
+#       low_min - fdb_offset_value - pipsize * 30,
+#       high_max + fdb_offset_value+ pipsize * 33
+#   )
+      
+#       low_min - fdb_offset_value - pipsize * 330,
+#       high_max + fdb_offset_value + pipsize * 330,
+#   )
 
   # Get current x-axis limits
   x_min, x_max = axes[main_plot_panel_id].get_xlim()
@@ -531,7 +544,7 @@ def make_plot_fractals_degreehigher_indicator(fractal_dn_color_higher, fractal_u
       color=fractal_up_color_higher,
   )
     fractal_down_plot_higher = mpf.make_addplot(
-      data_last_selection[fl_col_dim_higher],
+      data_last_selection[fl_col_dim_higher] - fractal_offset_value,
       panel=main_plot_panel_id,
       type="scatter",
       markersize=fractal_degreehigher_marker_size,
@@ -551,7 +564,7 @@ def make_plot__fractals_indicator(fractal_up_color, fractal_dn_color, fractal_ma
       color=fractal_up_color,
   )
     fractal_down_plot = mpf.make_addplot(
-      data_last_selection[fl_col_dim],
+      data_last_selection[fl_col_dim] - fractal_offset_value,
       panel=main_plot_panel_id,
       type="scatter",
       markersize=fractal_marker_size,
