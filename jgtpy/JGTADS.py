@@ -103,6 +103,7 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
     Returns:
         None
     """
+
     # Load dataset
     iprop = pds.get_instrument_properties(instrument)
     l.debug(iprop)
@@ -122,7 +123,8 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
     _ao_coln = c.indicator_AO_awesomeOscillator_column_name
     _ac_coln = c.indicator_AC_accelerationDeceleration_column_name
     
-    
+    fig_ratio_x = 24
+    fig_ratio_y = 12
     ao_upbar_color = "g"
     ao_dnbar_color = "r"
     ac_up_color = "darkgreen"
@@ -151,22 +153,35 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
     fractal_dn_marker_higher = "v"
     fractal_dn_marker = "v"
     ac_signal_marker="o"
+    plot_style = "yahoo"
+    saucer_buy_color = "g"
+    saucer_sell_color= "r"
+    saucer_marker = "|"
+    price_peak_bellow_marker = "o"
+    price_peak_above_marker = "o"
+    price_peak_marker_size = 36
+    price_peak_above_color = "g"
+    price_peak_bellow_color = "r"
+    ao_peaks_marker_size = 42
+    ao_peak_offset_value = 0
+    ao_peak_above_marker_higher= "^"
+    ao_peak_bellow__marker_higher = "v"
     
     #COLUMNS
     _jaw_coln = c.indicator_currentDegree_alligator_jaw_column_name
     _teeth_coln = c.indicator_currentDegree_alligator_teeth_column_name
     _lips_coln = c.indicator_currentDegree_alligator_lips_column_name
     
-    _open_coln = c.open_column_name
-    _high_coln = c.high_column_name
-    _low_coln = c.low_column_name
-    _close_coln = c.close_column_name
-    _barheight_coln = "bar_height"
+    _open_coln = c.OPEN
+    _high_coln = c.HIGH
+    _low_coln = c.LOW
+    _close_coln = c.CLOSE
+    _barheight_coln = c.BAR_HEIGHT #"bar_height"
     
-    fh_col_dim = c.indicator_fractal_high_degree2_column_name
-    fl_col_dim = c.indicator_fractal_low_degree2_column_name
-    fh_col_dim_higher = c.indicator_fractal_high_degree8_column_name
-    fl_col_dim_higher = c.indicator_fractal_low_degree8_column_name
+    fh_col_dim = c.FH
+    fl_col_dim = c.FL
+    fh_col_dim_higher = c.FH8
+    fl_col_dim_higher = c.FL8
     
     
     _fdb_coln = c.signalCode_fractalDivergentBar_column_name
@@ -182,9 +197,7 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
     ao_plot_panel_id=1
     ac_plot_panel_id=2
     
-    plot_style = "yahoo"
-    fig_ratio_x = 24
-    fig_ratio_y = 12
+    
     
     #%% Select the last 400 bars of the data
     
@@ -279,7 +292,6 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
     
     #%% ao_peak_above Plot
     if plot_ao_peaks:
-        ao_peaks_marker_size = 42
             #%% AO Peaks
         ao_peak_bellow_coln = 'ao_peak_bellow'
         ao_peak_above_coln = 'ao_peak_above'
@@ -289,9 +301,7 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
         data_last_selection.loc[:,ao_peak_bellow_coln] = np.where(data_last_selection[ao_peak_bellow_coln] == 1.0, ao_max/2, np.nan)
         data_last_selection.loc[:,ao_peak_above_coln] = np.where(data_last_selection[ao_peak_above_coln] == 1.0, ao_min/2, np.nan)
         
-        ao_peak_offset_value = 0
-        ao_peak_above_marker_higher= "^"
-        ao_peak_bellow__marker_higher = "v"
+
         
         # Make AO Peak Bellow plot
         aopbellow_plot = mpf.make_addplot(
@@ -315,11 +325,6 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
         
         
         
-        price_peak_bellow_marker = "o"
-        price_peak_above_marker = "o"
-        price_peak_marker_size = 36
-        price_peak_above_color = "g"
-        price_peak_bellow_color = "r"
         price_peak_offset_value=average_bar_height / 3 * 5
         
         price_peak_above_coln = 'price_peak_above'
@@ -348,14 +353,16 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
     
     saucer_offset_value = 0
     
+
     # Make Buy Signal plot
+
     sb_plot = mpf.make_addplot(
         data_last_selection[_saucer_b_coln] + saucer_offset_value,
         panel=ao_plot_panel_id,
         type="scatter",
         markersize=saucer_marker_size,
-        marker="|",
-        color="g",
+        marker=saucer_marker,
+        color=saucer_buy_color,
     )
     
     # Make Sell Signal plot
@@ -364,8 +371,8 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
         panel=ao_plot_panel_id,
         type="scatter",
         markersize=saucer_marker_size,
-        marker="|",
-        color="r",
+        marker=saucer_marker,
+        color=saucer_sell_color,
     )
     
     
