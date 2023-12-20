@@ -259,7 +259,7 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=T
 
   # Date,Volume,Open,High,Low,Close,Median,ac,jaw,teeth,lips,bjaw,bteeth,blips,ao,fh,fl,fh3,fl3,fh5,fl5,fh8,fl8,fh13,fl13,fh21,fl21,fh34,fl34,fh55,fl55,fh89,fl89,fdbb,fdbs,fdb,aof,aoaz,aobz,zlc,zlcb,zlcs,zcol,sz,bz,acs,acb,ss,sb
 
-
+  
 
   #%% Saucer
   _saucer_b_coln = c.signalBuy_saucer_column_name
@@ -429,8 +429,13 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=T
       acb_plot,
   ]
 
-  # Filter out empty plots
-  #addplot = [plot for plot in addplot if plot['data'].size > 0]
+  
+  
+  
+  if plot_ao_peaks:
+      addplot.append(aopabove_plot)
+      addplot.append(aopbellow_plot)
+
 
   fig, axes = mpf.plot(
       ohlc,
