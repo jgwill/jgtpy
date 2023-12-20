@@ -1,1 +1,1 @@
-jgtcli -i "USD/CAD" -t "m5" 
+jgtcli -i "EUR/USD" -t "H4" 

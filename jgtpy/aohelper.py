@@ -9,7 +9,6 @@ peak_distance = 13  #distance: Set this to the number of periods that define the
 peak_width=8 #width: This parameter could be used to define the minimum width of the peak in terms of bars. However, for AO and price peaks, the distance parameter may suffice to ensure the peak duration you are seeking. This parameter is optional and can be set or omitted based on the specific requirements.
 
 def pto_add_ao_price_peaks(data,peak_distance=13,peak_width=8,quiet=True):
-    
     data['ao_above'] = data['ao'].apply(lambda x: x if x > 0 else 0)
     data['ao_bellow'] = data['ao'].apply(lambda x: x if x < 0 else 0)
     data['ao_bellow'] = data['ao_bellow'] * -1
@@ -79,19 +78,16 @@ def pto_add_ao_price_peaks(data,peak_distance=13,peak_width=8,quiet=True):
 
     #%% ADd Above Peaks to the data frame
     data['ao_peak_above'] = np.zeros(len(data), dtype=int)
-    #data['price_peak'] = np.zeros(len(data), dtype=bool)
 
     for p in ao_peaks_above:
         data.loc[p, 'ao_peak_above'] = 1
         
     #%% ADd Bellow Peaks to the data frame
     data['ao_peak_bellow'] = np.zeros(len(data), dtype=int)
-    #data['price_peak'] = np.zeros(len(data), dtype=bool)
 
     for p in ao_peaks_bellow:
         data.loc[p, 'ao_peak_bellow'] = 1 
-    # for p in ao_peaks:
-    #     data.loc[p[0], 'ao_peak'] = 1
+
     
     #Cleanup
     data = jgtpd_drop_col_by_name(data,'ao_bellow',1,True)
