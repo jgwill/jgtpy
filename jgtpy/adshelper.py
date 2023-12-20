@@ -9,6 +9,7 @@ import JGTPDSP as pds
 import JGTIDS as ids
 import JGTCDS as cds
 import jgtwslhelper as wsl
+import pandas as pd
 
 
 import logging
@@ -31,6 +32,17 @@ l.addHandler(console_handler)
 
 
 
+def read_csv(csv_fn):
+    df=pd.read_csv(csv_fn)
+    # try:
+    #     df.set_index('Date', inplace=True)
+    # except:
+    #     pass
+    try:
+        df.drop(columns=['Unnamed: 0'],inplace=True)
+    except:
+        pass
+    return df
 
 
 def prepare_cds_for_ads_data(instrument, timeframe, nb_bar_on_chart, recreate_data=True):
