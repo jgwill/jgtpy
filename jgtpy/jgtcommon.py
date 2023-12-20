@@ -89,14 +89,12 @@ def add_candle_open_price_mode_argument(parser: argparse.ArgumentParser):
 def add_instrument_timeframe_arguments(parser: argparse.ArgumentParser, timeframe: bool = True):
     parser.add_argument('-i','--instrument',
                         metavar="INSTRUMENT",
-                        default="EUR/USD",
                         help='An instrument which you want to use in sample. \
                                   For example, "EUR/USD".')
 
     if timeframe:
         parser.add_argument('-t','--timeframe',
                             metavar="TIMEFRAME",
-                            default="m5",
                             help='Time period which forms a single candle. \
                                       For example, m1 - for 1 minute, H1 - for 1 hour.')
     parser.add_argument('-ip',
@@ -296,6 +294,12 @@ def add_cds_argument(parser):
                         help='Action the creation of CDS')
     return parser
 
+def add_ads_argument(parser):
+    parser.add_argument('-ads','--ads',
+                        action='store_true',
+                        default=False,
+                        help='Action the creation of ADS and show the chart')
+    return parser
 def add_iprop_init_argument(parser):
     parser.add_argument('-iprop','--iprop',
                         action='store_true',

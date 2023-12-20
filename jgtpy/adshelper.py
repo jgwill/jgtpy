@@ -80,7 +80,11 @@ def prepare_cds_for_ads_data(instrument, timeframe, nb_bar_on_chart, recreate_da
         # Select the last 400 bars of the data
         try:
             selected = df.iloc[-nb_bar_on_chart-120:].copy()
+            selected.to_csv("output_ads_prep_data.csv")
         except:
+            l.warning("Could not get DF, trying to run thru WSL the update")
+            wsl.jgtfxcli(instrument, timeframe, nb_bar_on_chart+35)
+            df = pds.getPH(instrument,timeframe,nb_bar_on_chart)
             selected = df.copy()
             l.warning("Could not select the desired amount of bars, trying anyway with what we have")
             pass
@@ -91,7 +95,7 @@ def prepare_cds_for_ads_data(instrument, timeframe, nb_bar_on_chart, recreate_da
     return data
 
 
-def get(instrument= "EUR/USD",timeframe="H4",nb_bar_on_chart=1000):
+def get(instrument,timeframe,nb_bar_on_chart=500):
   data = prepare_cds_for_ads_data(instrument, timeframe, nb_bar_on_chart)
   return data
 #p=pds.getPH(instrument,timeframe)

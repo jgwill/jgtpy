@@ -64,7 +64,7 @@ cdtformat="%Y-%m-%d"
 #%% Props and requests
 
 import adshelper as ah
-from jgtpy import jgtconstants as c
+import jgtconstants as c
 
 
 
@@ -88,476 +88,492 @@ def plot_from_pds_df(pdata,instrument,timeframe,nb_bar_on_chart = 375,show_plot=
   
   
 def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=True,plot_ao_peaks=False):
-  # Load dataset
-  iprop = pds.get_instrument_properties(instrument)
-  l.debug(iprop)
-  pipsize = iprop["pipsize"]  # Access 'pipsize' using dictionary-like syntax
-  l.debug(pipsize)
-  
-  # Convert the index to datetime
-  try:
-      data.index = pd.to_datetime(data.index)
-  except:
-      l.error("Error converting index to datetime")
-      pass
-  
-  
-  main_plot_type="ohlc"
-  
-  _ao_coln = c.indicator_AO_awesomeOscillator_column_name
-  _ac_coln = c.indicator_AC_accelerationDeceleration_column_name
-  
-  
-  ao_upbar_color = "g"
-  ao_dnbar_color = "r"
-  ac_up_color = "darkgreen"
-  ac_dn_color = "darkred"
-  fdb_signal_buy_color = "g"
-  fdb_signal_sell_color = "r"
-  jaw_color = "blue"
-  teeth_color = "red"
-  lips_color = "green"
-  fractal_up_color = "blue"
-  fractal_dn_color = "blue"
-  fractal_dn_color_higher = "blue"
-  fractal_up_color_higher = "blue"
-  ac_signal_buy_color = "lightgreen"
-  ac_signal_sell_color = "yellow"
-  
-  fdb_marker_size = 7
-  fractal_marker_size = 8
-  ac_signals_marker_size = 24
-  saucer_marker_size = 48
-  fractal_degreehigher_marker_size = 20
-  
-  fdb_signal_marker = "o"
-  fractal_up_marker="^"
-  fractal_up_marker_higher= "^"
-  fractal_dn_marker_higher = "v"
-  fractal_dn_marker = "v"
-  ac_signal_marker="o"
-  
-  #COLUMNS
-  _jaw_coln = c.indicator_currentDegree_alligator_jaw_column_name
-  _teeth_coln = c.indicator_currentDegree_alligator_teeth_column_name
-  _lips_coln = c.indicator_currentDegree_alligator_lips_column_name
-  
-  _open_coln = c.open_column_name
-  _high_coln = c.high_column_name
-  _low_coln = c.low_column_name
-  _close_coln = c.close_column_name
-  _barheight_coln = "bar_height"
-  
-  fh_col_dim = c.indicator_fractal_high_degree2_column_name
-  fl_col_dim = c.indicator_fractal_low_degree2_column_name
-  fh_col_dim_higher = c.indicator_fractal_high_degree8_column_name
-  fl_col_dim_higher = c.indicator_fractal_low_degree8_column_name
-  
-  
-  _fdb_coln = c.signalCode_fractalDivergentBar_column_name
-  _fdbb_coln = c.signalBuy_fractalDivergentBar_column_name
-  _fdbs_coln = c.signalSell_fractalDivergentBar_column_name
-  
-  
-  _acb_coln = c.signalBuy_AC_acceleration_column_name  
-  _acs_coln = c.signalSell_AC_deceleration_column_name
-  
-  #plot config
-  main_plot_panel_id=0
-  ao_plot_panel_id=1
-  ac_plot_panel_id=2
-  
-  plot_style = "yahoo"
-  fig_ratio_x = 24
-  fig_ratio_y = 10
-  
-  #%% Select the last 400 bars of the data
-  
-  # Select the last 400 bars of the data
-  try:
-      data_last_selection = data.iloc[-nb_bar_on_chart:].copy()
-  except:
-      l.warning("Could not select the desired amount of bars, trying anyway with what we have")
-      data_last_selection = data
-      pass
-  
-  # Make OHLC bars plot
-  ohlc = data_last_selection[[_open_coln, _high_coln, _low_coln, _close_coln]]
-  
-  
-  
-  
-  
-  #%% AO/AC
-  # AO / AC
-  # Calculate the color for 'ao' and 'ac' bar
-  colors_ao = [
-      ao_upbar_color if (data_last_selection[_ao_coln][i] - data_last_selection[_ao_coln][i - 1] > 0) else ao_dnbar_color
-      for i in range(1, len(data_last_selection[_ao_coln]))
-  ]
-  colors_ao.insert(0, ao_dnbar_color)
+    
+    """
+    Plot OHLC bars, indicators, and signals from a pandas DataFrame.
 
-  colors_ac = [
-      ac_up_color
-      if (data_last_selection[_ac_coln][i] - data_last_selection[_ac_coln][i - 1] > 0)
-      else ac_dn_color
-      for i in range(1, len(data_last_selection[_ac_coln]))
-  ]
-  colors_ac.insert(0, ac_dn_color)
-  # Make 'ao' and 'ac' oscillator plot
-  ao_plot = mpf.make_addplot(
-      data_last_selection[_ao_coln], panel=ao_plot_panel_id, color=colors_ao, secondary_y=False, type="bar"
-  )
-  ac_plot = mpf.make_addplot(
-      data_last_selection[_ac_coln], panel=ac_plot_panel_id, color=colors_ac, secondary_y=False, type="bar"
-  )
-  # @STCGoal Make AO/AC signals plotted
-  
-  
-  
-  #%% Alligator
-  
-  #@STCIssue no offset data in, not offset columns: jaws_tmp,teeth_tmp,lips_tmp
-  
-  # Make Alligator's lines plot
-  
-  jaw_plot = mpf.make_addplot(data_last_selection[_jaw_coln], panel=main_plot_panel_id, color=jaw_color)
-  teeth_plot = mpf.make_addplot(data_last_selection[_teeth_coln], panel=main_plot_panel_id, color=teeth_color)
-  lips_plot = mpf.make_addplot(data_last_selection[_lips_coln], panel=main_plot_panel_id, color=lips_color)
-  
-  
-  #%% Offsets and various values
-  # offset
-  
-  min_timeframe = getMinByTF(timeframe)
-  price_mean = data_last_selection[_close_coln].mean()
-  
-  # Calculate the bar height for each row
-  data_last_selection[_barheight_coln] = data_last_selection[_high_coln] - data_last_selection[_low_coln]
-  
-  
-  # Calculate the average bar height
-  average_bar_height = data_last_selection[_barheight_coln].mean()
-  low_min = data_last_selection[_low_coln].min()
-  high_max = data_last_selection[_high_coln].max()
-  ao_max = data_last_selection[_ao_coln].max()
-  ao_min = data_last_selection[_ao_coln].min()
-  ac_max = data_last_selection[_ac_coln].max()
-  ac_min = data_last_selection[_ac_coln].min()
-  
-  
-  #%% FDB
-  
-  
-  # Align fdbb with OHLC bars if value is '1.0'
-  data_last_selection.loc[:,_fdbb_coln] = np.where(
-      data_last_selection[_fdb_coln] == 1.0, data_last_selection[_high_coln], np.nan
-  )
-  data_last_selection.loc[:,_fdbs_coln] = np.where(
-      data_last_selection[_fdb_coln] == -1.0, data_last_selection[_low_coln], np.nan
-  )
-  
-  
-  # Date,Volume,Open,High,Low,Close,Median,ac,jaw,teeth,lips,bjaw,bteeth,blips,ao,fh,fl,fh3,fl3,fh5,fl5,fh8,fl8,fh13,fl13,fh21,fl21,fh34,fl34,fh55,fl55,fh89,fl89,fdbb,fdbs,fdb,aof,aoaz,aobz,zlc,zlcb,zlcs,zcol,sz,bz,acs,acb,ss,sb
-  
-  
-  #%% ao_peak_above Plot
-  if plot_ao_peaks:
-    ao_peaks_marker_size = 42
-        #%% AO Peaks
-    ao_peak_bellow_coln = 'ao_peak_bellow'
-    ao_peak_above_coln = 'ao_peak_above'
+    Args:
+        data (pandas.DataFrame): The input DataFrame containing OHLC data.
+        instrument (str): The instrument symbol.
+        timeframe (str): The timeframe of the data.
+        nb_bar_on_chart (int, optional): The number of bars to display on the chart. Defaults to 375.
+        show_plot (bool, optional): Whether to display the plot. Defaults to True.
+        plot_ao_peaks (bool, optional): Whether to plot AO peaks. Defaults to False.
+
+    Returns:
+        None
+    """
+    # Load dataset
+    iprop = pds.get_instrument_properties(instrument)
+    l.debug(iprop)
+    pipsize = iprop["pipsize"]  # Access 'pipsize' using dictionary-like syntax
+    l.debug(pipsize)
     
-    # AO Peaks
-    # Align AO Peaks with AO bars if value is '1.0'
-    data_last_selection.loc[:,ao_peak_bellow_coln] = np.where(data_last_selection[ao_peak_bellow_coln] == 1.0, ao_max/2, np.nan)
-    data_last_selection.loc[:,ao_peak_above_coln] = np.where(data_last_selection[ao_peak_above_coln] == 1.0, ao_min/2, np.nan)
+    # Convert the index to datetime
+    try:
+        data.index = pd.to_datetime(data.index)
+    except:
+        l.error("Error converting index to datetime")
+        pass
     
-    ao_peak_offset_value = 0
-    ao_peak_above_marker_higher= "^"
-    ao_peak_bellow__marker_higher = "v"
     
-    # Make AO Peak Bellow plot
-    aopbellow_plot = mpf.make_addplot(
-        data_last_selection[ao_peak_bellow_coln] +ao_peak_offset_value,
-        panel=ao_plot_panel_id,
-        type="scatter",
-        markersize=ao_peaks_marker_size,
-        marker=ao_peak_bellow__marker_higher,
-        color="r",
+    main_plot_type="ohlc"
+    
+    _ao_coln = c.indicator_AO_awesomeOscillator_column_name
+    _ac_coln = c.indicator_AC_accelerationDeceleration_column_name
+    
+    
+    ao_upbar_color = "g"
+    ao_dnbar_color = "r"
+    ac_up_color = "darkgreen"
+    ac_dn_color = "darkred"
+    fdb_signal_buy_color = "g"
+    fdb_signal_sell_color = "r"
+    jaw_color = "blue"
+    teeth_color = "red"
+    lips_color = "green"
+    fractal_up_color = "blue"
+    fractal_dn_color = "blue"
+    fractal_dn_color_higher = "blue"
+    fractal_up_color_higher = "blue"
+    ac_signal_buy_color = "lightgreen"
+    ac_signal_sell_color = "yellow"
+    
+    fdb_marker_size = 7
+    fractal_marker_size = 8
+    ac_signals_marker_size = 24
+    saucer_marker_size = 48
+    fractal_degreehigher_marker_size = 20
+    
+    fdb_signal_marker = "o"
+    fractal_up_marker="^"
+    fractal_up_marker_higher= "^"
+    fractal_dn_marker_higher = "v"
+    fractal_dn_marker = "v"
+    ac_signal_marker="o"
+    
+    #COLUMNS
+    _jaw_coln = c.indicator_currentDegree_alligator_jaw_column_name
+    _teeth_coln = c.indicator_currentDegree_alligator_teeth_column_name
+    _lips_coln = c.indicator_currentDegree_alligator_lips_column_name
+    
+    _open_coln = c.open_column_name
+    _high_coln = c.high_column_name
+    _low_coln = c.low_column_name
+    _close_coln = c.close_column_name
+    _barheight_coln = "bar_height"
+    
+    fh_col_dim = c.indicator_fractal_high_degree2_column_name
+    fl_col_dim = c.indicator_fractal_low_degree2_column_name
+    fh_col_dim_higher = c.indicator_fractal_high_degree8_column_name
+    fl_col_dim_higher = c.indicator_fractal_low_degree8_column_name
+    
+    
+    _fdb_coln = c.signalCode_fractalDivergentBar_column_name
+    _fdbb_coln = c.signalBuy_fractalDivergentBar_column_name
+    _fdbs_coln = c.signalSell_fractalDivergentBar_column_name
+    
+    
+    _acb_coln = c.signalBuy_AC_acceleration_column_name  
+    _acs_coln = c.signalSell_AC_deceleration_column_name
+    
+    #plot config
+    main_plot_panel_id=0
+    ao_plot_panel_id=1
+    ac_plot_panel_id=2
+    
+    plot_style = "yahoo"
+    fig_ratio_x = 24
+    fig_ratio_y = 10
+    
+    #%% Select the last 400 bars of the data
+    
+    # Select the last 400 bars of the data
+    try:
+        data_last_selection = data.iloc[-nb_bar_on_chart:].copy()
+        data_last_selection.to_csv("out_data_last_selection.csv")
+    except:
+        l.warning("Could not select the desired amount of bars, trying anyway with what we have")
+        data_last_selection = data
+        pass
+    
+    # Make OHLC bars plot
+    ohlc = data_last_selection[[_open_coln, _high_coln, _low_coln, _close_coln]]
+    
+    
+    
+    
+    
+    #%% AO/AC
+    # AO / AC
+    # Calculate the color for 'ao' and 'ac' bar
+    colors_ao = [
+        ao_upbar_color if (data_last_selection[_ao_coln][i] - data_last_selection[_ao_coln][i - 1] > 0) else ao_dnbar_color
+        for i in range(1, len(data_last_selection[_ao_coln]))
+    ]
+    colors_ao.insert(0, ao_dnbar_color)
+
+    colors_ac = [
+        ac_up_color
+        if (data_last_selection[_ac_coln][i] - data_last_selection[_ac_coln][i - 1] > 0)
+        else ac_dn_color
+        for i in range(1, len(data_last_selection[_ac_coln]))
+    ]
+    colors_ac.insert(0, ac_dn_color)
+    # Make 'ao' and 'ac' oscillator plot
+    ao_plot = mpf.make_addplot(
+        data_last_selection[_ao_coln], panel=ao_plot_panel_id, color=colors_ao, secondary_y=False, type="bar"
+    )
+    ac_plot = mpf.make_addplot(
+        data_last_selection[_ac_coln], panel=ac_plot_panel_id, color=colors_ac, secondary_y=False, type="bar"
+    )
+    # @STCGoal Make AO/AC signals plotted
+    
+    
+    
+    #%% Alligator
+    
+    #@STCIssue no offset data in, not offset columns: jaws_tmp,teeth_tmp,lips_tmp
+    
+    # Make Alligator's lines plot
+    
+    jaw_plot = mpf.make_addplot(data_last_selection[_jaw_coln], panel=main_plot_panel_id, color=jaw_color)
+    teeth_plot = mpf.make_addplot(data_last_selection[_teeth_coln], panel=main_plot_panel_id, color=teeth_color)
+    lips_plot = mpf.make_addplot(data_last_selection[_lips_coln], panel=main_plot_panel_id, color=lips_color)
+    
+    
+    #%% Offsets and various values
+    # offset
+    
+    min_timeframe = getMinByTF(timeframe)
+    price_mean = data_last_selection[_close_coln].mean()
+    
+    # Calculate the bar height for each row
+    data_last_selection[_barheight_coln] = data_last_selection[_high_coln] - data_last_selection[_low_coln]
+    
+    
+    # Calculate the average bar height
+    average_bar_height = data_last_selection[_barheight_coln].mean()
+    low_min = data_last_selection[_low_coln].min()
+    high_max = data_last_selection[_high_coln].max()
+    ao_max = data_last_selection[_ao_coln].max()
+    ao_min = data_last_selection[_ao_coln].min()
+    ac_max = data_last_selection[_ac_coln].max()
+    ac_min = data_last_selection[_ac_coln].min()
+    
+    
+    #%% FDB
+    
+    
+    # Align fdbb with OHLC bars if value is '1.0'
+    data_last_selection.loc[:,_fdbb_coln] = np.where(
+        data_last_selection[_fdb_coln] == 1.0, data_last_selection[_high_coln], np.nan
+    )
+    data_last_selection.loc[:,_fdbs_coln] = np.where(
+        data_last_selection[_fdb_coln] == -1.0, data_last_selection[_low_coln], np.nan
     )
     
-    # Make AO Peak Above plot
-    aopabove_plot = mpf.make_addplot(
-        data_last_selection[ao_peak_above_coln] -ao_peak_offset_value,
+    
+    # Date,Volume,Open,High,Low,Close,Median,ac,jaw,teeth,lips,bjaw,bteeth,blips,ao,fh,fl,fh3,fl3,fh5,fl5,fh8,fl8,fh13,fl13,fh21,fl21,fh34,fl34,fh55,fl55,fh89,fl89,fdbb,fdbs,fdb,aof,aoaz,aobz,zlc,zlcb,zlcs,zcol,sz,bz,acs,acb,ss,sb
+    
+    
+    #%% ao_peak_above Plot
+    if plot_ao_peaks:
+        ao_peaks_marker_size = 42
+            #%% AO Peaks
+        ao_peak_bellow_coln = 'ao_peak_bellow'
+        ao_peak_above_coln = 'ao_peak_above'
+        
+        # AO Peaks
+        # Align AO Peaks with AO bars if value is '1.0'
+        data_last_selection.loc[:,ao_peak_bellow_coln] = np.where(data_last_selection[ao_peak_bellow_coln] == 1.0, ao_max/2, np.nan)
+        data_last_selection.loc[:,ao_peak_above_coln] = np.where(data_last_selection[ao_peak_above_coln] == 1.0, ao_min/2, np.nan)
+        
+        ao_peak_offset_value = 0
+        ao_peak_above_marker_higher= "^"
+        ao_peak_bellow__marker_higher = "v"
+        
+        # Make AO Peak Bellow plot
+        aopbellow_plot = mpf.make_addplot(
+            data_last_selection[ao_peak_bellow_coln] +ao_peak_offset_value,
+            panel=ao_plot_panel_id,
+            type="scatter",
+            markersize=ao_peaks_marker_size,
+            marker=ao_peak_bellow__marker_higher,
+            color="r",
+        )
+        
+        # Make AO Peak Above plot
+        aopabove_plot = mpf.make_addplot(
+            data_last_selection[ao_peak_above_coln] -ao_peak_offset_value,
+            panel=ao_plot_panel_id,
+            type="scatter",
+            markersize=ao_peaks_marker_size,
+            marker=ao_peak_above_marker_higher,
+            color="g",
+        )
+        
+        
+        
+        price_peak_bellow_marker = "o"
+        price_peak_above_marker = "o"
+        price_peak_marker_size = 36
+        price_peak_above_color = "g"
+        price_peak_bellow_color = "r"
+        price_peak_offset_value=average_bar_height / 3 * 5
+        
+        price_peak_above_coln = 'price_peak_above'
+        price_peak_bellow_coln = 'price_peak_bellow'
+        
+        
+        data_last_selection.loc[:,price_peak_above_coln] = np.where(
+            data_last_selection[price_peak_above_coln] == 1.0, data_last_selection[_high_coln], np.nan
+        )
+        data_last_selection.loc[:,price_peak_bellow_coln] = np.where(
+            data_last_selection[price_peak_bellow_coln] == 1.0, data_last_selection[_low_coln], np.nan
+        )
+        
+        price_peak_above_plot, price_peak_bellow_plot = make_plot__price_peaks__indicator(price_peak_above_color, price_peak_bellow_color, price_peak_marker_size, price_peak_above_marker, price_peak_bellow_marker, price_peak_above_coln, price_peak_bellow_coln, main_plot_panel_id, data_last_selection, price_peak_offset_value)
+        
+        
+        
+    #%% Saucer
+    _saucer_b_coln = c.signalBuy_saucer_column_name
+    _saucer_s_coln = c.signalSell_saucer_column_name
+    
+    # Saucer
+    # Align saucer with AO bars if value is '1.0'
+    data_last_selection.loc[:,_saucer_b_coln] = np.where(data_last_selection[_saucer_b_coln] == 1.0, ao_max, np.nan)
+    data_last_selection.loc[:,_saucer_s_coln] = np.where(data_last_selection[_saucer_s_coln] == 1.0, ao_min, np.nan)
+    
+    saucer_offset_value = 0
+    
+    # Make Buy Signal plot
+    sb_plot = mpf.make_addplot(
+        data_last_selection[_saucer_b_coln] + saucer_offset_value,
         panel=ao_plot_panel_id,
         type="scatter",
-        markersize=ao_peaks_marker_size,
-        marker=ao_peak_above_marker_higher,
+        markersize=saucer_marker_size,
+        marker="|",
         color="g",
     )
     
-    
-    
-    price_peak_bellow_marker = "o"
-    price_peak_above_marker = "o"
-    price_peak_marker_size = 36
-    price_peak_above_color = "g"
-    price_peak_bellow_color = "r"
-    price_peak_offset_value=average_bar_height / 3 * 5
-    
-    price_peak_above_coln = 'price_peak_above'
-    price_peak_bellow_coln = 'price_peak_bellow'
-    
-    
-    data_last_selection.loc[:,price_peak_above_coln] = np.where(
-        data_last_selection[price_peak_above_coln] == 1.0, data_last_selection[_high_coln], np.nan
-    )
-    data_last_selection.loc[:,price_peak_bellow_coln] = np.where(
-        data_last_selection[price_peak_bellow_coln] == 1.0, data_last_selection[_low_coln], np.nan
+    # Make Sell Signal plot
+    ss_plot = mpf.make_addplot(
+        data_last_selection[_saucer_s_coln] - saucer_offset_value,
+        panel=ao_plot_panel_id,
+        type="scatter",
+        markersize=saucer_marker_size,
+        marker="|",
+        color="r",
     )
     
-    price_peak_above_plot, price_peak_bellow_plot = make_plot__price_peaks__indicator(price_peak_above_color, price_peak_bellow_color, price_peak_marker_size, price_peak_above_marker, price_peak_bellow_marker, price_peak_above_coln, price_peak_bellow_coln, main_plot_panel_id, data_last_selection, price_peak_offset_value)
+    
+    #%% Outputs checks
+    l.debug("---------------------------------------")
+    l.debug("AC Min/Max: " + str(ac_min) + "/" + str(ac_max))
+    l.debug("---------------------------------------")
+    
+    
+    #%% AC Signal
+    
+    
+    # Align saucer with OHLC bars if value is '1.0'
+    data_last_selection.loc[:,_acb_coln] = np.where(
+        data_last_selection[_acb_coln] == 1.0, data_last_selection[_ac_coln], np.nan
+    )
+    data_last_selection.loc[:,_acs_coln] = np.where(
+        data_last_selection[_acs_coln] == 1.0, data_last_selection[_ac_coln], np.nan
+    )
+
+    sig_ac_offset_value = 0
+
+
+    # Make Buy Signal plot
+    acb_plot = mpf.make_addplot(
+        data_last_selection[_acb_coln] + sig_ac_offset_value,
+        panel=ac_plot_panel_id,
+        type="scatter",
+        markersize=ac_signals_marker_size,
+        marker=ac_signal_marker,
+        color=ac_signal_buy_color,
+    )
+    # Make Sell Signal plot
+    acs_plot = mpf.make_addplot(
+        data_last_selection[_acs_coln] - sig_ac_offset_value,
+        panel=ac_plot_panel_id,
+        type="scatter",
+        markersize=ac_signals_marker_size,
+        marker=ac_signal_marker,
+        color=ac_signal_sell_color,
+    )
+
+
+    #%% Print the summary statistics of the 'ac' column
+    l.debug("Summary Stats:")
+    l.debug(data_last_selection[_ac_coln].describe())
+
+
+
+    #%% Make FDB plot
+
+
+    fdb_tick_offset = average_bar_height  # pipsize * 111
+    fdb_offset_value = average_bar_height / 2  # pipsize * fdb_tick_offset
+
+    fdbb_up_plot, fdbs_down_plot = make_plot__fdb_signals(fdb_signal_buy_color, fdb_signal_sell_color, fdb_marker_size, fdb_signal_marker, _fdbb_coln, _fdbs_coln, main_plot_panel_id, data_last_selection, fdb_offset_value)
+
+
+    #%% Make Fractals plot
+
+
+    fractal_offset_value = average_bar_height / 2  # pipsize * fractal_tick_offset
+
+    fractal_tick_offset = pipsize * 111  # price_mean*10
+
+    # Align fractals with OHLC bars
+
+
+    data_last_selection.loc[:,fh_col_dim] = np.where(
+        (data_last_selection[_high_coln] > data_last_selection[_teeth_coln])
+        & (data_last_selection[fh_col_dim] == True),
+        data_last_selection[_high_coln],
+        np.nan,
+    )
+
+
+    data_last_selection.loc[:,fl_col_dim] = np.where(
+        (data_last_selection[_low_coln] < data_last_selection[_teeth_coln])
+        & (data_last_selection[fl_col_dim] == True),
+        data_last_selection[_low_coln] - fractal_offset_value,
+        np.nan,
+    )
+
+
+    fractal_up_plot, fractal_down_plot = make_plot__fractals_indicator(fractal_up_color, fractal_dn_color, fractal_marker_size, fractal_up_marker, fractal_dn_marker, fh_col_dim, fl_col_dim, main_plot_panel_id, data_last_selection, fractal_offset_value)
+
+    #%% Fractal higher dim
+
+
+    data_last_selection.loc[:,fh_col_dim_higher] = np.where(
+        (data_last_selection[_high_coln] > data_last_selection[_teeth_coln])
+        & (data_last_selection[fh_col_dim_higher] == True),
+        data_last_selection[_high_coln],
+        np.nan,
+    )
+
+
+    data_last_selection.loc[:,fl_col_dim_higher] = np.where(
+        (data_last_selection[_low_coln] < data_last_selection[_teeth_coln])
+        & (data_last_selection[fl_col_dim_higher] == True),
+        data_last_selection[_low_coln] - fractal_offset_value,
+        np.nan,
+    )
+
+
+    #%% PLot higher fractal
+
+
+    fractal_up_plot_higher, fractal_down_plot_higher = make_plot_fractals_degreehigher_indicator(fractal_dn_color_higher, fractal_up_color_higher, fractal_degreehigher_marker_size, fractal_up_marker_higher, fractal_dn_marker_higher, fh_col_dim_higher, fl_col_dim_higher, main_plot_panel_id, data_last_selection, fractal_offset_value)
+
+
+
+
+
+    #%% Print Mean
+    #l.debug("Mean: " + (price_mean).astype(str))
+
+
+    #%% Plotting
+    addplot = [
+        jaw_plot,
+        teeth_plot,
+        lips_plot,
+        fractal_up_plot,
+        fractal_down_plot,
+        fractal_up_plot_higher,
+        fractal_down_plot_higher,
+        fdbb_up_plot,
+        fdbs_down_plot,
+        sb_plot,
+        ss_plot,
+        ao_plot,
+        ac_plot,
+        acs_plot,
+        acb_plot,
+    ]
     
     
     
-  #%% Saucer
-  _saucer_b_coln = c.signalBuy_saucer_column_name
-  _saucer_s_coln = c.signalSell_saucer_column_name
-  
-  # Saucer
-  # Align saucer with AO bars if value is '1.0'
-  data_last_selection.loc[:,_saucer_b_coln] = np.where(data_last_selection[_saucer_b_coln] == 1.0, ao_max, np.nan)
-  data_last_selection.loc[:,_saucer_s_coln] = np.where(data_last_selection[_saucer_s_coln] == 1.0, ao_min, np.nan)
-  
-  saucer_offset_value = 0
-  
-  # Make Buy Signal plot
-  sb_plot = mpf.make_addplot(
-      data_last_selection[_saucer_b_coln] + saucer_offset_value,
-      panel=ao_plot_panel_id,
-      type="scatter",
-      markersize=saucer_marker_size,
-      marker="|",
-      color="g",
-  )
-  
-  # Make Sell Signal plot
-  ss_plot = mpf.make_addplot(
-      data_last_selection[_saucer_s_coln] - saucer_offset_value,
-      panel=ao_plot_panel_id,
-      type="scatter",
-      markersize=saucer_marker_size,
-      marker="|",
-      color="r",
-  )
-  
-  
-  #%% Outputs checks
-  l.debug("---------------------------------------")
-  l.debug("AC Min/Max: " + str(ac_min) + "/" + str(ac_max))
-  l.debug("---------------------------------------")
-  
-  
-  #%% AC Signal
-  
-  
-  # Align saucer with OHLC bars if value is '1.0'
-  data_last_selection.loc[:,_acb_coln] = np.where(
-      data_last_selection[_acb_coln] == 1.0, data_last_selection[_ac_coln], np.nan
-  )
-  data_last_selection.loc[:,_acs_coln] = np.where(
-      data_last_selection[_acs_coln] == 1.0, data_last_selection[_ac_coln], np.nan
-  )
-
-  sig_ac_offset_value = 0
+    
+    if plot_ao_peaks:
+        addplot.append(aopabove_plot)
+        addplot.append(aopbellow_plot)
+        addplot.append(price_peak_above_plot)
+        addplot.append(price_peak_bellow_plot)
 
 
-  # Make Buy Signal plot
-  acb_plot = mpf.make_addplot(
-      data_last_selection[_acb_coln] + sig_ac_offset_value,
-      panel=ac_plot_panel_id,
-      type="scatter",
-      markersize=ac_signals_marker_size,
-      marker=ac_signal_marker,
-      color=ac_signal_buy_color,
-  )
-  # Make Sell Signal plot
-  acs_plot = mpf.make_addplot(
-      data_last_selection[_acs_coln] - sig_ac_offset_value,
-      panel=ac_plot_panel_id,
-      type="scatter",
-      markersize=ac_signals_marker_size,
-      marker=ac_signal_marker,
-      color=ac_signal_sell_color,
-  )
+    fig, axes = mpf.plot(
+        ohlc,
+        type=main_plot_type,
+        style=plot_style,
+        addplot=addplot,
+        volume=False,
+        figratio=(fig_ratio_x, fig_ratio_y),
+        title=instrument + "  " + timeframe,
+        returnfig=True,
+        tight_layout=True,
+    )
+
+    
+    # Set y-axis limits
+    main_ymax, main_ymin = axes[main_plot_panel_id].get_ylim()
+    height_minmax = main_ymax - main_ymin
+    tst_v = height_minmax / 8
+    new_y_max = main_ymin - tst_v - fdb_offset_value
+    new_y_min = main_ymax + tst_v + fdb_offset_value
+    #print("mainYMin/low/newmin: " + str(main_ymin) + " / " + str(low_min) + " / " + str(new_y_min))
+    #print("mainYMax/high/newmax :"  +str(main_ymax) + " / " + str(high_max) + " / " + str(new_y_max))
+    axes[main_plot_panel_id].set_ylim(
+        new_y_min,
+        new_y_max
+    )
+        
+    #       low_min - fdb_offset_value - pipsize * 30,
+    #       high_max + fdb_offset_value+ pipsize * 33
+    #   )
+        
+    #       low_min - fdb_offset_value - pipsize * 330,
+    #       high_max + fdb_offset_value + pipsize * 330,
+    #   )
+
+    # Get current x-axis limits
+    x_min, x_max = axes[main_plot_panel_id].get_xlim()
+
+    axe2ymin, axe2ymax = axes[ac_plot_panel_id].get_ylim()
+    l.debug("axe2ymin: " + str(axe2ymin))
+    l.debug("axe2ymax: " + str(axe2ymax))
+
+    # Calculate new x-axis limit
+    new_x_max = x_max + 8  # Add 8 for future bars
+
+    # Set new x-axis limit
+    axes[main_plot_panel_id].set_xlim(x_min, new_x_max)
 
 
-  #%% Print the summary statistics of the 'ac' column
-  l.debug("Summary Stats:")
-  l.debug(data_last_selection[_ac_coln].describe())
+    # Align the title to the left
+    fig.suptitle(instrument + "  " + timeframe, x=0.05, ha="left")
 
+    # Set the font size of the x-axis labels
+    for ax in axes:
+        ax.tick_params(axis="x", labelsize=6)
 
+    # Set the font size of the Date column
+    axes[main_plot_panel_id].tick_params(axis="x", labelsize=6)
 
-  #%% Make FDB plot
-
-
-  fdb_tick_offset = average_bar_height  # pipsize * 111
-  fdb_offset_value = average_bar_height / 2  # pipsize * fdb_tick_offset
-
-  fdbb_up_plot, fdbs_down_plot = make_plot__fdb_signals(fdb_signal_buy_color, fdb_signal_sell_color, fdb_marker_size, fdb_signal_marker, _fdbb_coln, _fdbs_coln, main_plot_panel_id, data_last_selection, fdb_offset_value)
-
-
-  #%% Make Fractals plot
-
-
-  fractal_offset_value = average_bar_height / 2  # pipsize * fractal_tick_offset
-
-  fractal_tick_offset = pipsize * 111  # price_mean*10
-
-  # Align fractals with OHLC bars
-
-
-  data_last_selection.loc[:,fh_col_dim] = np.where(
-      (data_last_selection[_high_coln] > data_last_selection[_teeth_coln])
-      & (data_last_selection[fh_col_dim] == True),
-      data_last_selection[_high_coln],
-      np.nan,
-  )
-
-
-  data_last_selection.loc[:,fl_col_dim] = np.where(
-      (data_last_selection[_low_coln] < data_last_selection[_teeth_coln])
-      & (data_last_selection[fl_col_dim] == True),
-      data_last_selection[_low_coln] - fractal_offset_value,
-      np.nan,
-  )
-
-
-  fractal_up_plot, fractal_down_plot = make_plot__fractals_indicator(fractal_up_color, fractal_dn_color, fractal_marker_size, fractal_up_marker, fractal_dn_marker, fh_col_dim, fl_col_dim, main_plot_panel_id, data_last_selection, fractal_offset_value)
-
-  #%% Fractal higher dim
-
-
-  data_last_selection.loc[:,fh_col_dim_higher] = np.where(
-      (data_last_selection[_high_coln] > data_last_selection[_teeth_coln])
-      & (data_last_selection[fh_col_dim_higher] == True),
-      data_last_selection[_high_coln],
-      np.nan,
-  )
-
-
-  data_last_selection.loc[:,fl_col_dim_higher] = np.where(
-      (data_last_selection[_low_coln] < data_last_selection[_teeth_coln])
-      & (data_last_selection[fl_col_dim_higher] == True),
-      data_last_selection[_low_coln] - fractal_offset_value,
-      np.nan,
-  )
-
-
-  #%% PLot higher fractal
-
-
-  fractal_up_plot_higher, fractal_down_plot_higher = make_plot_fractals_degreehigher_indicator(fractal_dn_color_higher, fractal_up_color_higher, fractal_degreehigher_marker_size, fractal_up_marker_higher, fractal_dn_marker_higher, fh_col_dim_higher, fl_col_dim_higher, main_plot_panel_id, data_last_selection, fractal_offset_value)
-
-
-
-
-
-  #%% Print Mean
-  #l.debug("Mean: " + (price_mean).astype(str))
-
-
-  #%% Plotting
-  addplot = [
-      jaw_plot,
-      teeth_plot,
-      lips_plot,
-      fractal_up_plot,
-      fractal_down_plot,
-      fractal_up_plot_higher,
-      fractal_down_plot_higher,
-      fdbb_up_plot,
-      fdbs_down_plot,
-      sb_plot,
-      ss_plot,
-      ao_plot,
-      ac_plot,
-      acs_plot,
-      acb_plot,
-  ]
-  
-  
-  
-  
-  if plot_ao_peaks:
-      addplot.append(aopabove_plot)
-      addplot.append(aopbellow_plot)
-      addplot.append(price_peak_above_plot)
-      addplot.append(price_peak_bellow_plot)
-
-
-  fig, axes = mpf.plot(
-      ohlc,
-      type=main_plot_type,
-      style=plot_style,
-      addplot=addplot,
-      volume=False,
-      figratio=(fig_ratio_x, fig_ratio_y),
-      title=instrument + "  " + timeframe,
-      returnfig=True,
-      tight_layout=True,
-  )
-
-  
-  # Set y-axis limits
-  main_ymax, main_ymin = axes[main_plot_panel_id].get_ylim()
-  height_minmax = main_ymax - main_ymin
-  tst_v = height_minmax / 8
-  new_y_max = main_ymin - tst_v - fdb_offset_value
-  new_y_min = main_ymax + tst_v + fdb_offset_value
-  #print("mainYMin/low/newmin: " + str(main_ymin) + " / " + str(low_min) + " / " + str(new_y_min))
-  #print("mainYMax/high/newmax :"  +str(main_ymax) + " / " + str(high_max) + " / " + str(new_y_max))
-  axes[main_plot_panel_id].set_ylim(
-      new_y_max,
-      new_y_min
-  )
-      
-#       low_min - fdb_offset_value - pipsize * 30,
-#       high_max + fdb_offset_value+ pipsize * 33
-#   )
-      
-#       low_min - fdb_offset_value - pipsize * 330,
-#       high_max + fdb_offset_value + pipsize * 330,
-#   )
-
-  # Get current x-axis limits
-  x_min, x_max = axes[main_plot_panel_id].get_xlim()
-
-  axe2ymin, axe2ymax = axes[ac_plot_panel_id].get_ylim()
-  l.debug("axe2ymin: " + str(axe2ymin))
-  l.debug("axe2ymax: " + str(axe2ymax))
-
-  # Calculate new x-axis limit
-  new_x_max = x_max + 8  # Add 8 for future bars
-
-  # Set new x-axis limit
-  axes[main_plot_panel_id].set_xlim(x_min, new_x_max)
-
-
-  # Align the title to the left
-  fig.suptitle(instrument + "  " + timeframe, x=0.05, ha="left")
-
-  # Set the font size of the x-axis labels
-  for ax in axes:
-      ax.tick_params(axis="x", labelsize=6)
-
-  # Set the font size of the Date column
-  axes[main_plot_panel_id].tick_params(axis="x", labelsize=6)
-
-  if show_plot:
-      plt.show()
-  return fig,axes
+    if show_plot:
+        plt.show()
+    return fig,axes
 
 
 

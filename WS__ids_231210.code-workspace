@@ -24,6 +24,7 @@
 			"jgtpy.egg-info": true,
 			"dist": true
 		},
-		"explorerExclude.backup": {}
+		"explorerExclude.backup": {},
+		"editor.tabSize": 2
 	}
 }

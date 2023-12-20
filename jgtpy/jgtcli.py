@@ -1,4 +1,5 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+
 import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
@@ -11,6 +12,7 @@ import argparse
 import jgtwslhelper as wsl
 import JGTPDSP as pds
 import JGTCDS as cds
+import JGTADS as ads
 
 import pandas as pd
 
@@ -24,6 +26,7 @@ def parse_args():
     #jgtcommon.add_output_argument(parser)
     #jgtfxcommon.add_quiet_argument(parser)
     jgtcommon.add_verbose_argument(parser)
+    jgtcommon.add_ads_argument(parser)
     #jgtcommon.add_cds_argument(parser)
     args = parser.parse_args()
     return args
@@ -50,7 +53,11 @@ def main():
         date_from = args.datefrom.replace('/', '.')
     if args.dateto:
         date_to = args.dateto.replace('/', '.')
-
+    
+    show_ads = False
+    if args.ads:
+        show_ads = True
+    
     #process_cds=args.cds
     process_cds=True
     #output=False
@@ -85,7 +92,7 @@ def main():
 
         for instrument in instruments:
             for timeframe in timeframes:
-                createCDS_for_main(instrument, timeframe, quiet, verbose_level,tlid_range)
+                createCDS_for_main(instrument, timeframe, quiet, verbose_level,tlid_range,show_ads,quotes_count)
                 # else:
                 #     p = pds.getPH(instrument, timeframe, quotes_count, date_from, date_to, False, quiet)
                 #     if verbose_level > 0:
@@ -105,7 +112,7 @@ def main():
 # print("")
 # #input("Done! Press enter key to exit\n")
 
-def createCDS_for_main(instrument, timeframe, quiet, verbose_level=0,tlid_range=None):
+def createCDS_for_main(instrument, timeframe, quiet, verbose_level=0,tlid_range=None,show_ads=False,quotes_count=375):
     # implementation goes here
     col2remove=constants.columns_to_remove
     config = jgtcommon.readconfig()
@@ -115,15 +122,23 @@ def createCDS_for_main(instrument, timeframe, quiet, verbose_level=0,tlid_range=
     if verbose_level> 1:
         quietting=False
     try: 
-        cdspath,c=cds.createFromPDSFileToCDSFile(instrument,timeframe,col2remove,quietting)
+        cdspath,c=cds.createFromPDSFileToCDSFile(instrument,timeframe,col2remove)
+        if show_ads:#(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=True,plot_ao_peaks=False)
+            ads.plot_from_cds_df(c,instrument,timeframe,quotes_count,show_plot=True,plot_ao_peaks=True) 
         print_quiet(quiet,cdspath)
         print_quiet(quiet,c)
     except Exception as e:
         print("Failed to create CDS for : " + instrument + "_" + timeframe)
         print("Exception: " + str(e))
+    
 
 
 
 def print_quiet(quiet,content):
     if not quiet:
         print(content)
+
+
+
+if __name__ == "__main__":
+    main()
