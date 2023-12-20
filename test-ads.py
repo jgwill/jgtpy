@@ -1,7 +1,7 @@
 # %% Import packages
 from jgtpy import JGTADS as ads
 from jgtpy import JGTPDSP as pds
-
+from jgtpy import JGTChartConfig as cc
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd

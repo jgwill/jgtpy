@@ -302,8 +302,8 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
         
         # AO Peaks
         # Align AO Peaks with AO bars if value is '1.0'
-        data_last_selection.loc[:,ao_peak_bellow_coln] = np.where(data_last_selection[ao_peak_bellow_coln] == 1.0, ao_max/2, np.nan)
-        data_last_selection.loc[:,ao_peak_above_coln] = np.where(data_last_selection[ao_peak_above_coln] == 1.0, ao_min/2, np.nan)
+        data_last_selection.loc[:,ao_peak_bellow_coln] = np.where(data_last_selection[ao_peak_bellow_coln] == 1.0, ao_max/1.5, np.nan)
+        data_last_selection.loc[:,ao_peak_above_coln] = np.where(data_last_selection[ao_peak_above_coln] == 1.0, ao_min/1.5, np.nan)
         
 
         
