@@ -11,6 +11,8 @@ from JGTPDHelper import jgtpd_drop_col_by_name,ids_cleanse_ao_peak_secondary_col
 
 from jgtapy import Indicators
 
+from scipy.signal import find_peaks
+from aohelper import pto_add_ao_price_peaks
 
 # %%
 #@title Vars
@@ -695,13 +697,14 @@ def cds_add_signals_to_indicators(dfires,_aopeak_range=28,quiet=False):
 
 
 
-def tocds(dfsrc,quiet=True):
+def tocds(dfsrc,quiet=True,peak_distance=13,peak_width=8):
   dfires = ids_add_indicators(dfsrc,quiet=quiet)
   dfires = cds_add_signals_to_indicators(dfires,quiet=quiet)
   dfires = jgti_add_zlc_plus_other_AO_signal(dfires,quiet=quiet)
   dfires = pds_cleanse_original_columns(dfires,quiet=True)
   dfires = ids_cleanse_ao_peak_secondary_columns(dfires,quiet=True)
   dfires = __format_boolean_columns_to_int(dfires,quiet=True)
+  dfires = pto_add_ao_price_peaks(dfires,peak_distance=peak_distance,peak_width=peak_width,quiet=True)
   return dfires
 
 
