@@ -86,8 +86,9 @@ def plot_from_pds_df(pdata,instrument,timeframe,nb_bar_on_chart = 375,show=True,
   data = cds.createFromDF(selected)
   return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show,plot_ao_peaks=plot_ao_peaks)
   
-  
-def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,plot_ao_peaks=True):
+from JGTChartConfig import JGTChartConfig
+
+def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,plot_ao_peaks=True,cc: JGTChartConfig=None):
     
     """
     Plot OHLC bars, indicators, and signals from a pandas DataFrame.
@@ -103,7 +104,8 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
     Returns:
         None
     """
-
+    if cc is None:
+        cc= JGTChartConfig()
     # Load dataset
     iprop = pds.get_instrument_properties(instrument)
     l.debug(iprop)
@@ -123,49 +125,48 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
     _ao_coln = c.indicator_AO_awesomeOscillator_column_name
     _ac_coln = c.indicator_AC_accelerationDeceleration_column_name
     
-    fig_ratio_x = 24
-    fig_ratio_y = 12
-    ao_upbar_color = "g"
-    ao_dnbar_color = "r"
-    ac_up_color = "darkgreen"
-    ac_dn_color = "darkred"
-    fdb_signal_buy_color = "g"
-    fdb_signal_sell_color = "r"
-    jaw_color = "blue"
-    teeth_color = "red"
-    lips_color = "green"
-    fractal_up_color = "blue"
-    fractal_dn_color = "blue"
-    fractal_dn_color_higher = "blue"
-    fractal_up_color_higher = "blue"
-    ac_signal_buy_color = "lightgreen"
-    ac_signal_sell_color = "yellow"
+    fig_ratio_x = cc.fig_ratio_x
+    fig_ratio_y = cc.fig_ratio_y
+    ao_upbar_color = cc.ao_upbar_color
+    ao_dnbar_color = cc.ao_dnbar_color
+    ac_up_color = cc.ac_up_color
+    ac_dn_color = cc.ac_dn_color
+    fdb_signal_buy_color = cc.fdb_signal_buy_color
+    fdb_signal_sell_color = cc.fdb_signal_sell_color
+    jaw_color = cc.jaw_color
+    teeth_color = cc.teeth_color
+    lips_color = cc.lips_color
+    fractal_up_color = cc.fractal_up_color
+    fractal_dn_color = cc.fractal_dn_color
+    fractal_dn_color_higher = cc.fractal_dn_color_higher
+    fractal_up_color_higher = cc.fractal_up_color_higher
+    ac_signal_buy_color = cc.ac_signal_buy_color
+    ac_signal_sell_color = cc.ac_signal_sell_color
+    fdb_marker_size = cc.fdb_marker_size
+    fractal_marker_size = cc.fractal_marker_size
+    ac_signals_marker_size = cc.ac_signals_marker_size
+    saucer_marker_size = cc.saucer_marker_size
+    fractal_degreehigher_marker_size = cc.fractal_degreehigher_marker_size
+    fdb_signal_marker = cc.fdb_signal_marker
+    fractal_up_marker = cc.fractal_up_marker
+    fractal_up_marker_higher = cc.fractal_up_marker_higher
+    fractal_dn_marker_higher = cc.fractal_dn_marker_higher
+    fractal_dn_marker = cc.fractal_dn_marker
+    ac_signal_marker = cc.ac_signal_marker
+    plot_style = cc.plot_style
+    saucer_buy_color = cc.saucer_buy_color
+    saucer_sell_color = cc.saucer_sell_color
+    saucer_marker = cc.saucer_marker
+    price_peak_bellow_marker = cc.price_peak_bellow_marker
+    price_peak_above_marker = cc.price_peak_above_marker
+    price_peak_marker_size = cc.price_peak_marker_size
+    price_peak_above_color = cc.price_peak_above_color
+    price_peak_bellow_color = cc.price_peak_bellow_color
+    ao_peaks_marker_size = cc.ao_peaks_marker_size
+    ao_peak_offset_value = cc.ao_peak_offset_value
+    ao_peak_above_marker_higher = cc.ao_peak_above_marker_higher
+    ao_peak_bellow__marker_higher = cc.ao_peak_bellow__marker_higher
     
-    fdb_marker_size = 7
-    fractal_marker_size = 8
-    ac_signals_marker_size = 24
-    saucer_marker_size = 48
-    fractal_degreehigher_marker_size = 20
-    
-    fdb_signal_marker = "o"
-    fractal_up_marker="^"
-    fractal_up_marker_higher= "^"
-    fractal_dn_marker_higher = "v"
-    fractal_dn_marker = "v"
-    ac_signal_marker="o"
-    plot_style = "yahoo"
-    saucer_buy_color = "g"
-    saucer_sell_color= "r"
-    saucer_marker = "|"
-    price_peak_bellow_marker = "o"
-    price_peak_above_marker = "o"
-    price_peak_marker_size = 36
-    price_peak_above_color = "g"
-    price_peak_bellow_color = "r"
-    ao_peaks_marker_size = 42
-    ao_peak_offset_value = 0
-    ao_peak_above_marker_higher= "^"
-    ao_peak_bellow__marker_higher = "v"
     
     #COLUMNS
     _jaw_coln = c.indicator_currentDegree_alligator_jaw_column_name
