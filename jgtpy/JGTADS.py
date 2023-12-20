@@ -69,9 +69,9 @@ from jgtpy import jgtconstants as c
 
 
 
-def jgtxplot18c_231209(instrument,timeframe,nb_bar_on_chart = 375,recreate_data = True,show_plot=True):
+def jgtxplot18c_231209(instrument,timeframe,nb_bar_on_chart = 375,recreate_data = True,show_plot=True,plot_ao_peaks=False):
     data = ah.prepare_cds_for_ads_data(instrument, timeframe, nb_bar_on_chart, recreate_data)
-    return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show_plot)
+    return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show_plot,plot_ao_peaks)
 
 
 def plot_from_pds_df(pdata,instrument,timeframe,nb_bar_on_chart = 375,show_plot=True):
@@ -84,7 +84,7 @@ def plot_from_pds_df(pdata,instrument,timeframe,nb_bar_on_chart = 375,show_plot=
       pass
   
   data = cds.createFromDF(selected)
-  return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show_plot)
+  return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show_plot,plot_ao_peaks=True)
   
   
 def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show_plot=True,plot_ao_peaks=False):
