@@ -89,7 +89,7 @@ def plot_from_pds_df(pdata,instrument,timeframe,nb_bar_on_chart = 375,show=True,
   return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show,plot_ao_peaks=plot_ao_peaks)
   
 
-def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,plot_ao_peaks=True,cc: JGTChartConfig=None):
+def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = -1,show=True,plot_ao_peaks=True,cc: JGTChartConfig=None):
     
     """
     Plot OHLC bars, indicators, and signals from a pandas DataFrame.
@@ -125,8 +125,11 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
     
     main_plot_type="ohlc"
     
-    _ao_coln = c.indicator_AO_awesomeOscillator_column_name
-    _ac_coln = c.indicator_AC_accelerationDeceleration_column_name
+    if nb_bar_on_chart==-1:
+        nb_bar_on_chart = cc.nb_bar_on_chart
+        
+    AO = c.AO
+    AC = c.AC
     
     fig_ratio_x = cc.fig_ratio_x
     fig_ratio_y = cc.fig_ratio_y
@@ -172,29 +175,29 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
     
     
     #COLUMNS
-    _jaw_coln = c.indicator_currentDegree_alligator_jaw_column_name
-    _teeth_coln = c.indicator_currentDegree_alligator_teeth_column_name
-    _lips_coln = c.indicator_currentDegree_alligator_lips_column_name
+    JAW = c.JAW
+    TEETH = c.TEETH
+    LIPS = c.LIPS
     
-    _open_coln = c.OPEN
-    _high_coln = c.HIGH
-    _low_coln = c.LOW
-    _close_coln = c.CLOSE
-    _barheight_coln = c.BAR_HEIGHT #"bar_height"
+    OPEN = c.OPEN
+    HIGH = c.HIGH
+    LOW = c.LOW
+    CLOSE = c.CLOSE
+    BAR_HEIGHT = c.BAR_HEIGHT #"bar_height"
     
-    fh_col_dim = c.FH
-    fl_col_dim = c.FL
-    fh_col_dim_higher = c.FH8
-    fl_col_dim_higher = c.FL8
-    
-    
-    _fdb_coln = c.signalCode_fractalDivergentBar_column_name
-    _fdbb_coln = c.signalBuy_fractalDivergentBar_column_name
-    _fdbs_coln = c.signalSell_fractalDivergentBar_column_name
+    FH = c.FH
+    FL = c.FL
+    FHH = c.FH8
+    FLH = c.FL8
     
     
-    _acb_coln = c.signalBuy_AC_acceleration_column_name  
-    _acs_coln = c.signalSell_AC_deceleration_column_name
+    FDB = c.FDB
+    FDBB = c.FDBB
+    FDBS = c.FDBS
+    
+    
+    ACB = c.ACB  
+    ACS = c.ACS
     
     #plot config
     main_plot_panel_id=0
@@ -208,14 +211,14 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
     # Select the last 400 bars of the data
     try:
         data_last_selection = data.iloc[-nb_bar_on_chart:].copy()
-        data_last_selection.to_csv("out_data_last_selection.csv")
+        #data_last_selection.to_csv("out_data_last_selection.csv")
     except:
         l.warning("Could not select the desired amount of bars, trying anyway with what we have")
         data_last_selection = data
         pass
     
     # Make OHLC bars plot
-    ohlc = data_last_selection[[_open_coln, _high_coln, _low_coln, _close_coln]]
+    ohlc = data_last_selection[[OPEN, HIGH, LOW, CLOSE]]
     
     
     
@@ -225,24 +228,24 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
     # AO / AC
     # Calculate the color for 'ao' and 'ac' bar
     colors_ao = [
-        ao_upbar_color if (data_last_selection[_ao_coln][i] - data_last_selection[_ao_coln][i - 1] > 0) else ao_dnbar_color
-        for i in range(1, len(data_last_selection[_ao_coln]))
+        ao_upbar_color if (data_last_selection[AO][i] - data_last_selection[AO][i - 1] > 0) else ao_dnbar_color
+        for i in range(1, len(data_last_selection[AO]))
     ]
     colors_ao.insert(0, ao_dnbar_color)
 
     colors_ac = [
         ac_up_color
-        if (data_last_selection[_ac_coln][i] - data_last_selection[_ac_coln][i - 1] > 0)
+        if (data_last_selection[AC][i] - data_last_selection[AC][i - 1] > 0)
         else ac_dn_color
-        for i in range(1, len(data_last_selection[_ac_coln]))
+        for i in range(1, len(data_last_selection[AC]))
     ]
     colors_ac.insert(0, ac_dn_color)
     # Make 'ao' and 'ac' oscillator plot
     ao_plot = mpf.make_addplot(
-        data_last_selection[_ao_coln], panel=ao_plot_panel_id, color=colors_ao, secondary_y=False, type="bar"
+        data_last_selection[AO], panel=ao_plot_panel_id, color=colors_ao, secondary_y=False, type="bar"
     )
     ac_plot = mpf.make_addplot(
-        data_last_selection[_ac_coln], panel=ac_plot_panel_id, color=colors_ac, secondary_y=False, type="bar"
+        data_last_selection[AC], panel=ac_plot_panel_id, color=colors_ac, secondary_y=False, type="bar"
     )
     # @STCGoal Make AO/AC signals plotted
     
@@ -254,40 +257,40 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
     
     # Make Alligator's lines plot
     
-    jaw_plot = mpf.make_addplot(data_last_selection[_jaw_coln], panel=main_plot_panel_id, color=jaw_color)
-    teeth_plot = mpf.make_addplot(data_last_selection[_teeth_coln], panel=main_plot_panel_id, color=teeth_color)
-    lips_plot = mpf.make_addplot(data_last_selection[_lips_coln], panel=main_plot_panel_id, color=lips_color)
+    jaw_plot = mpf.make_addplot(data_last_selection[JAW], panel=main_plot_panel_id, color=jaw_color)
+    teeth_plot = mpf.make_addplot(data_last_selection[TEETH], panel=main_plot_panel_id, color=teeth_color)
+    lips_plot = mpf.make_addplot(data_last_selection[LIPS], panel=main_plot_panel_id, color=lips_color)
     
     
     #%% Offsets and various values
     # offset
     
     min_timeframe = getMinByTF(timeframe)
-    price_mean = data_last_selection[_close_coln].mean()
+    price_mean = data_last_selection[CLOSE].mean()
     
     # Calculate the bar height for each row
-    data_last_selection[_barheight_coln] = data_last_selection[_high_coln] - data_last_selection[_low_coln]
+    data_last_selection[BAR_HEIGHT] = data_last_selection[HIGH] - data_last_selection[LOW]
     
     
     # Calculate the average bar height
-    average_bar_height = data_last_selection[_barheight_coln].mean()
-    low_min = data_last_selection[_low_coln].min()
-    high_max = data_last_selection[_high_coln].max()
-    ao_max = data_last_selection[_ao_coln].max()
-    ao_min = data_last_selection[_ao_coln].min()
-    ac_max = data_last_selection[_ac_coln].max()
-    ac_min = data_last_selection[_ac_coln].min()
+    average_bar_height = data_last_selection[BAR_HEIGHT].mean()
+    low_min = data_last_selection[LOW].min()
+    high_max = data_last_selection[HIGH].max()
+    ao_max = data_last_selection[AO].max()
+    ao_min = data_last_selection[AO].min()
+    ac_max = data_last_selection[AC].max()
+    ac_min = data_last_selection[AC].min()
     
     
     #%% FDB
     
     
     # Align fdbb with OHLC bars if value is '1.0'
-    data_last_selection.loc[:,_fdbb_coln] = np.where(
-        data_last_selection[_fdb_coln] == 1.0, data_last_selection[_high_coln], np.nan
+    data_last_selection.loc[:,FDBB] = np.where(
+        data_last_selection[FDB] == 1.0, data_last_selection[HIGH], np.nan
     )
-    data_last_selection.loc[:,_fdbs_coln] = np.where(
-        data_last_selection[_fdb_coln] == -1.0, data_last_selection[_low_coln], np.nan
+    data_last_selection.loc[:,FDBS] = np.where(
+        data_last_selection[FDB] == -1.0, data_last_selection[LOW], np.nan
     )
     
     
@@ -297,19 +300,19 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
     #%% ao_peak_above Plot
     if plot_ao_peaks:
             #%% AO Peaks
-        ao_peak_bellow_coln = 'ao_peak_bellow'
-        ao_peak_above_coln = 'ao_peak_above'
+        AO_PEAK_BELLOW = c.AO_PEAK_BELLOW#'ao_peak_bellow'
+        AO_PEAK_ABOVE = c.AO_PEAK_ABOVE#'ao_peak_above'
         
         # AO Peaks
         # Align AO Peaks with AO bars if value is '1.0'
-        data_last_selection.loc[:,ao_peak_bellow_coln] = np.where(data_last_selection[ao_peak_bellow_coln] == 1.0, ao_max/1.5, np.nan)
-        data_last_selection.loc[:,ao_peak_above_coln] = np.where(data_last_selection[ao_peak_above_coln] == 1.0, ao_min/1.5, np.nan)
+        data_last_selection.loc[:,AO_PEAK_BELLOW] = np.where(data_last_selection[AO_PEAK_BELLOW] == 1.0, ao_max/1.5, np.nan)
+        data_last_selection.loc[:,AO_PEAK_ABOVE] = np.where(data_last_selection[AO_PEAK_ABOVE] == 1.0, ao_min/1.5, np.nan)
         
 
         
         # Make AO Peak Bellow plot
         aopbellow_plot = mpf.make_addplot(
-            data_last_selection[ao_peak_bellow_coln] +ao_peak_offset_value,
+            data_last_selection[AO_PEAK_BELLOW] +ao_peak_offset_value,
             panel=ao_plot_panel_id,
             type="scatter",
             markersize=ao_peaks_marker_size,
@@ -319,7 +322,7 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
         
         # Make AO Peak Above plot
         aopabove_plot = mpf.make_addplot(
-            data_last_selection[ao_peak_above_coln] -ao_peak_offset_value,
+            data_last_selection[AO_PEAK_ABOVE] -ao_peak_offset_value,
             panel=ao_plot_panel_id,
             type="scatter",
             markersize=ao_peaks_marker_size,
@@ -331,29 +334,29 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
         
         price_peak_offset_value=average_bar_height / 3 * 5
         
-        price_peak_above_coln = 'price_peak_above'
-        price_peak_bellow_coln = 'price_peak_bellow'
+        PRICE_PEAK_ABOVE = c.PRICE_PEAK_ABOVE #'price_peak_above'
+        PRICE_PEAK_BELLOW = c.PRICE_PEAK_BELLOW #'price_peak_bellow'
         
         
-        data_last_selection.loc[:,price_peak_above_coln] = np.where(
-            data_last_selection[price_peak_above_coln] == 1.0, data_last_selection[_high_coln], np.nan
+        data_last_selection.loc[:,PRICE_PEAK_ABOVE] = np.where(
+            data_last_selection[PRICE_PEAK_ABOVE] == 1.0, data_last_selection[HIGH], np.nan
         )
-        data_last_selection.loc[:,price_peak_bellow_coln] = np.where(
-            data_last_selection[price_peak_bellow_coln] == 1.0, data_last_selection[_low_coln], np.nan
+        data_last_selection.loc[:,PRICE_PEAK_BELLOW] = np.where(
+            data_last_selection[PRICE_PEAK_BELLOW] == 1.0, data_last_selection[LOW], np.nan
         )
         
-        price_peak_above_plot, price_peak_bellow_plot = make_plot__price_peaks__indicator(price_peak_above_color, price_peak_bellow_color, price_peak_marker_size, price_peak_above_marker, price_peak_bellow_marker, price_peak_above_coln, price_peak_bellow_coln, main_plot_panel_id, data_last_selection, price_peak_offset_value)
+        price_peak_above_plot, price_peak_bellow_plot = make_plot__price_peaks__indicator(price_peak_above_color, price_peak_bellow_color, price_peak_marker_size, price_peak_above_marker, price_peak_bellow_marker, PRICE_PEAK_ABOVE, PRICE_PEAK_BELLOW, main_plot_panel_id, data_last_selection, price_peak_offset_value)
         
         
         
     #%% Saucer
-    _saucer_b_coln = c.signalBuy_saucer_column_name
-    _saucer_s_coln = c.signalSell_saucer_column_name
+    SB = c.SB
+    SS = c.SS
     
     # Saucer
     # Align saucer with AO bars if value is '1.0'
-    data_last_selection.loc[:,_saucer_b_coln] = np.where(data_last_selection[_saucer_b_coln] == 1.0, ao_max, np.nan)
-    data_last_selection.loc[:,_saucer_s_coln] = np.where(data_last_selection[_saucer_s_coln] == 1.0, ao_min, np.nan)
+    data_last_selection.loc[:,SB] = np.where(data_last_selection[SB] == 1.0, ao_max, np.nan)
+    data_last_selection.loc[:,SS] = np.where(data_last_selection[SS] == 1.0, ao_min, np.nan)
     
     saucer_offset_value = 0
     
@@ -361,7 +364,7 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
     # Make Buy Signal plot
 
     sb_plot = mpf.make_addplot(
-        data_last_selection[_saucer_b_coln] + saucer_offset_value,
+        data_last_selection[SB] + saucer_offset_value,
         panel=ao_plot_panel_id,
         type="scatter",
         markersize=saucer_marker_size,
@@ -371,7 +374,7 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
     
     # Make Sell Signal plot
     ss_plot = mpf.make_addplot(
-        data_last_selection[_saucer_s_coln] - saucer_offset_value,
+        data_last_selection[SS] - saucer_offset_value,
         panel=ao_plot_panel_id,
         type="scatter",
         markersize=saucer_marker_size,
@@ -390,11 +393,11 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
     
     
     # Align saucer with OHLC bars if value is '1.0'
-    data_last_selection.loc[:,_acb_coln] = np.where(
-        data_last_selection[_acb_coln] == 1.0, data_last_selection[_ac_coln], np.nan
+    data_last_selection.loc[:,ACB] = np.where(
+        data_last_selection[ACB] == 1.0, data_last_selection[AC], np.nan
     )
-    data_last_selection.loc[:,_acs_coln] = np.where(
-        data_last_selection[_acs_coln] == 1.0, data_last_selection[_ac_coln], np.nan
+    data_last_selection.loc[:,ACS] = np.where(
+        data_last_selection[ACS] == 1.0, data_last_selection[AC], np.nan
     )
 
     sig_ac_offset_value = 0
@@ -402,7 +405,7 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
 
     # Make Buy Signal plot
     acb_plot = mpf.make_addplot(
-        data_last_selection[_acb_coln] + sig_ac_offset_value,
+        data_last_selection[ACB] + sig_ac_offset_value,
         panel=ac_plot_panel_id,
         type="scatter",
         markersize=ac_signals_marker_size,
@@ -411,7 +414,7 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
     )
     # Make Sell Signal plot
     acs_plot = mpf.make_addplot(
-        data_last_selection[_acs_coln] - sig_ac_offset_value,
+        data_last_selection[ACS] - sig_ac_offset_value,
         panel=ac_plot_panel_id,
         type="scatter",
         markersize=ac_signals_marker_size,
@@ -422,7 +425,7 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
 
     #%% Print the summary statistics of the 'ac' column
     l.debug("Summary Stats:")
-    l.debug(data_last_selection[_ac_coln].describe())
+    l.debug(data_last_selection[AC].describe())
 
 
 
@@ -432,7 +435,7 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
     fdb_tick_offset = average_bar_height  # pipsize * 111
     fdb_offset_value = average_bar_height / 2  # pipsize * fdb_tick_offset
 
-    fdbb_up_plot, fdbs_down_plot = make_plot__fdb_signals(fdb_signal_buy_color, fdb_signal_sell_color, fdb_marker_size, fdb_signal_marker, _fdbb_coln, _fdbs_coln, main_plot_panel_id, data_last_selection, fdb_offset_value)
+    fdbb_up_plot, fdbs_down_plot = make_plot__fdb_signals(fdb_signal_buy_color, fdb_signal_sell_color, fdb_marker_size, fdb_signal_marker, FDBB, FDBS, main_plot_panel_id, data_last_selection, fdb_offset_value)
 
 
     #%% Make Fractals plot
@@ -445,39 +448,39 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
     # Align fractals with OHLC bars
 
 
-    data_last_selection.loc[:,fh_col_dim] = np.where(
-        (data_last_selection[_high_coln] > data_last_selection[_teeth_coln])
-        & (data_last_selection[fh_col_dim] == True),
-        data_last_selection[_high_coln],
+    data_last_selection.loc[:,FH] = np.where(
+        (data_last_selection[HIGH] > data_last_selection[TEETH])
+        & (data_last_selection[FH] == True),
+        data_last_selection[HIGH],
         np.nan,
     )
 
 
-    data_last_selection.loc[:,fl_col_dim] = np.where(
-        (data_last_selection[_low_coln] < data_last_selection[_teeth_coln])
-        & (data_last_selection[fl_col_dim] == True),
-        data_last_selection[_low_coln] - fractal_offset_value,
+    data_last_selection.loc[:,FL] = np.where(
+        (data_last_selection[LOW] < data_last_selection[TEETH])
+        & (data_last_selection[FL] == True),
+        data_last_selection[LOW] - fractal_offset_value,
         np.nan,
     )
 
 
-    fractal_up_plot, fractal_down_plot = make_plot__fractals_indicator(fractal_up_color, fractal_dn_color, fractal_marker_size, fractal_up_marker, fractal_dn_marker, fh_col_dim, fl_col_dim, main_plot_panel_id, data_last_selection, fractal_offset_value)
+    fractal_up_plot, fractal_down_plot = make_plot__fractals_indicator(fractal_up_color, fractal_dn_color, fractal_marker_size, fractal_up_marker, fractal_dn_marker, FH, FL, main_plot_panel_id, data_last_selection, fractal_offset_value)
 
     #%% Fractal higher dim
 
 
-    data_last_selection.loc[:,fh_col_dim_higher] = np.where(
-        (data_last_selection[_high_coln] > data_last_selection[_teeth_coln])
-        & (data_last_selection[fh_col_dim_higher] == True),
-        data_last_selection[_high_coln],
+    data_last_selection.loc[:,FHH] = np.where(
+        (data_last_selection[HIGH] > data_last_selection[TEETH])
+        & (data_last_selection[FHH] == True),
+        data_last_selection[HIGH],
         np.nan,
     )
 
 
-    data_last_selection.loc[:,fl_col_dim_higher] = np.where(
-        (data_last_selection[_low_coln] < data_last_selection[_teeth_coln])
-        & (data_last_selection[fl_col_dim_higher] == True),
-        data_last_selection[_low_coln] - fractal_offset_value,
+    data_last_selection.loc[:,FLH] = np.where(
+        (data_last_selection[LOW] < data_last_selection[TEETH])
+        & (data_last_selection[FLH] == True),
+        data_last_selection[LOW] - fractal_offset_value,
         np.nan,
     )
 
@@ -485,7 +488,7 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,p
     #%% PLot higher fractal
 
 
-    fractal_up_plot_higher, fractal_down_plot_higher = make_plot_fractals_degreehigher_indicator(fractal_dn_color_higher, fractal_up_color_higher, fractal_degreehigher_marker_size, fractal_up_marker_higher, fractal_dn_marker_higher, fh_col_dim_higher, fl_col_dim_higher, main_plot_panel_id, data_last_selection, fractal_offset_value)
+    fractal_up_plot_higher, fractal_down_plot_higher = make_plot_fractals_degreehigher_indicator(fractal_dn_color_higher, fractal_up_color_higher, fractal_degreehigher_marker_size, fractal_up_marker_higher, fractal_dn_marker_higher, FHH, FLH, main_plot_panel_id, data_last_selection, fractal_offset_value)
 
 
 

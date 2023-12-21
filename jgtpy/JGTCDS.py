@@ -13,23 +13,8 @@ import JGTPDSP as pds
 import pandas as pd
 
 
+import jgtconstants as c
 
-from jgtconstants import (
-    signalCode_fractalDivergentBar_column_name,
-    signalSell_fractalDivergentBar_column_name,
-    signalBuy_fractalDivergentBar_column_name,
-    signalSell_fractal_column_name,
-    signalBuy_fractal_column_name,
-    signal_zcol_column_name,
-    signalSell_zoneSignal_column_name,
-    signalBuy_zoneSinal_column_name,
-    signalBuy_zeroLineCrossing_column_name,
-    signalSell_zeroLineCrossing_column_name,
-    signalSell_AC_deceleration_column_name,
-    signalBuy_AC_acceleration_column_name,
-    signalSell_saucer_column_name,
-    signalBuy_saucer_column_name,
-)
 
 # %%
 def createFromPDSFileToCDSFile(instrument, timeframe, columns_to_remove=None, quiet=True,tlid_range=None):
@@ -48,11 +33,11 @@ def createFromPDSFileToCDSFile(instrument, timeframe, columns_to_remove=None, qu
   - c (DataFrame): The DataFrame containing the data.
 
   """
-  c = createFromPDSFile(instrument, timeframe, quiet,tlid_range=tlid_range)
+  cdf = createFromPDSFile(instrument, timeframe, quiet,tlid_range=tlid_range)
 
   # Remove the specified columns
   if columns_to_remove is not None:
-    c = c.drop(columns=columns_to_remove, errors='ignore')
+    cdf = cdf.drop(columns=columns_to_remove, errors='ignore')
 
   # # Reset the index
   # try:
@@ -64,9 +49,9 @@ def createFromPDSFileToCDSFile(instrument, timeframe, columns_to_remove=None, qu
   data_path_cds = get_data_path()
   fpath = pds.mk_fullpath(instrument, timeframe, 'csv', data_path_cds)
   #print(fpath)
-  c.to_csv(fpath)
+  cdf.to_csv(fpath)
 
-  return fpath, c
+  return fpath, cdf
 
 def readCDSFile(instrument, timeframe, columns_to_remove=None, quiet=True):
   """
@@ -84,14 +69,14 @@ def readCDSFile(instrument, timeframe, columns_to_remove=None, quiet=True):
   # Define the file path based on the environment variable or local path
   data_path_cds = get_data_path()
   fpath = pds.mk_fullpath(instrument, timeframe, 'csv', data_path_cds)
-  c = pd.read_csv(fpath)
+  cdf = pd.read_csv(fpath)
 
   # Set 'Date' as the index
-  c.set_index('Date', inplace=True)
+  cdf.set_index('Date', inplace=True)
   # Remove the specified columns
   if columns_to_remove is not None:
-    c = c.drop(columns=columns_to_remove, errors='ignore')
-  return c
+    cdf = cdf.drop(columns=columns_to_remove, errors='ignore')
+  return cdf
 
 def createFromPDSFile(instrument,timeframe,quiet=True,tlid_range=None):
   """Create CDS (Chaos Data Service) with Fresh Data on the filestore
@@ -179,16 +164,16 @@ def createByRange(instrument,timeframe,start,end,stayConnected=False,quiet=True)
 columns_to_remove = ['aofvalue', 'aofhighao', 'aoflowao', 'aofhigh', 'aoflow', 'aocolor', 'accolor', 'fdbbhigh', 'fdbblow', 'fdbshigh', 'fdbslow']
 def create_and_clean_data_from_file_df(instrument, timeframe):
     # Create DataFrame from PDS file
-    c = createFromPDSFile(instrument, timeframe)
+    cdf = createFromPDSFile(instrument, timeframe)
 
     # Remove specified columns if provided
     if columns_to_remove:
-        c = c.drop(columns=columns_to_remove, errors='ignore')
+        cdf = cdf.drop(columns=columns_to_remove, errors='ignore')
 
     # Set 'Date' as the index
-    c.set_index('Date', inplace=True)
+    cdf.set_index(c.DATE, inplace=True)
 
-    return c
+    return cdf
 
 
 def get_data_path():
@@ -213,11 +198,11 @@ def _save_cds_data_to_file(df, instrument, timeframe):
 
 def createFromFile_and_clean_and_save_data(instrument, timeframe):
     # Create DataFrame from PDS file
-    c =create_and_clean_data_from_file_df(instrument, timeframe)
-    _save_cds_data_to_file(c, instrument, timeframe)
+    cdf =create_and_clean_data_from_file_df(instrument, timeframe)
+    _save_cds_data_to_file(cdf, instrument, timeframe)
 
 
-    return c
+    return cdf
 
 
 
@@ -268,9 +253,9 @@ def getLastCompletedBarAsList(_df):
 def checkFDB(_instrument,_timeframe):
   _df=create(_instrument)
   pa = getPresentBarAsList(_df)
-  isfdb = pa[signalCode_fractalDivergentBar_column_name][0]  != 0.0
-  fdb = pa[signalCode_fractalDivergentBar_column_name]
-  dtctx = pa['Date']
+  isfdb = pa[c.FDB][0]  != 0.0
+  fdb = pa[c.FDB]
+  dtctx = pa[c.DATE]
   if isfdb:
     print(_instrument + "_" + _timeframe + " : We Have a Signal : " + dtctx)
     return True
