@@ -1,11 +1,15 @@
 class JGTChartConfig:
   def __init__(self):
+    self.nb_bar_on_chart = 375
+    self.jaw_line_width = 1
+    self.teeth_line_width = 1
+    self.lips_line_width = 1
     self.fig_ratio_x = 24
     self.fig_ratio_y = 14
     self.fdb_marker_size = 7
     self.fractal_marker_size = 6
     self.ac_signals_marker_size = 32
-    self.saucer_marker_size = 32
+    self.saucer_marker_size = 16
     self.fractal_degreehigher_marker_size = 20
     self.price_peak_marker_size = 36
     self.ao_peaks_marker_size = 42

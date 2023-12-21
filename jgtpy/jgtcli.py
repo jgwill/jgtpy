@@ -122,11 +122,11 @@ def createCDS_for_main(instrument, timeframe, quiet, verbose_level=0,tlid_range=
     if verbose_level> 1:
         quietting=False
     try: 
-        cdspath,c=cds.createFromPDSFileToCDSFile(instrument,timeframe,col2remove)
+        cdspath,cdf=cds.createFromPDSFileToCDSFile(instrument,timeframe,col2remove)
         if show_ads:#(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,plot_ao_peaks=False)
-            ads.plot_from_cds_df(c,instrument,timeframe,quotes_count,show=True,plot_ao_peaks=True) 
+            ads.plot_from_cds_df(cdf,instrument,timeframe,quotes_count,show=True,plot_ao_peaks=True) 
         print_quiet(quiet,cdspath)
-        print_quiet(quiet,c)
+        print_quiet(quiet,cdf)
     except Exception as e:
         print("Failed to create CDS for : " + instrument + "_" + timeframe)
         print("Exception: " + str(e))

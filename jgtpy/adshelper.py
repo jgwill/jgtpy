@@ -84,8 +84,12 @@ def prepare_cds_for_ads_data(instrument, timeframe, nb_bar_on_chart, recreate_da
         except:
             l.warning("Could not get DF, trying to run thru WSL the update")
             wsl.jgtfxcli(instrument, timeframe, nb_bar_on_chart+35)
-            df = pds.getPH(instrument,timeframe,nb_bar_on_chart)
-            selected = df.copy()
+            try:
+                df = pds.getPH(instrument,timeframe,nb_bar_on_chart)
+                selected = df.copy()
+            except:
+                l.warning("Twice :(Could not select the desired amount of bars, trying anyway with what we have")
+                pass
             l.warning("Could not select the desired amount of bars, trying anyway with what we have")
             pass
         #print(selected)

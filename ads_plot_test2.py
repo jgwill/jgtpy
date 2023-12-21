@@ -7,7 +7,7 @@ i=instrument
 t=timeframe
 #df=pd.read_csv('./data/pds/EUR-USD_H4.csv')
 #c=ids.tocds(df)
-c=pd.read_csv("./data/cds/EUR-USD_H4.csv")
+c=pd.read_csv("../data/cds/EUR-USD_H4.csv")
 import jgtpy.JGTADS as ads;import jgtpy.adshelper as ah
 
 ads.plot_from_cds_df(c,i,t,plot_ao_peaks=True)
