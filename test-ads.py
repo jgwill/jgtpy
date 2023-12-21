@@ -6,15 +6,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-instrument = "AUD/USD"
+instrument = "EUR/USD"
+instrument = "XAU/USD"
+instrument = "SPX500"
 # %% Load data and plot all in one operation
 show=True
 m1p=pds.getPH(instrument, "M1")
 
 #%% Plot all charts in one operation
 cc = JGTChartConfig.JGTChartConfig()
+cc.saucer_marker_size = 14
 cc.fig_ratio_x = 24
-cc.fig_ratio_y = 16
+cc.fig_ratio_y = 18
+cc.plot_style = "yahoo"
 
 #M1c, M1a = ads.plot_from_pds_df(m1p,instrument, "M1", show=show)
 M1c, M1a = ads.plot(instrument, "M1", show=show,cc=cc)
