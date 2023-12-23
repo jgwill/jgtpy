@@ -23,6 +23,9 @@ from JGTChartConfig import JGTChartConfig
 import adshelper as ah
 import jgtconstants as c
 
+AO = c.AO
+AC = c.AC
+
 warnings.filterwarnings("ignore", category=FutureWarning)
 
 import os
@@ -89,6 +92,7 @@ def plot_from_pds_df(pdata,instrument,timeframe,nb_bar_on_chart = 375,show=True,
   return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show,plot_ao_peaks=plot_ao_peaks)
   
 
+
 def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = -1,show=True,plot_ao_peaks=True,cc: JGTChartConfig=None):
     
     """
@@ -128,15 +132,10 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = -1,show=True,pl
     if nb_bar_on_chart==-1:
         nb_bar_on_chart = cc.nb_bar_on_chart
         
-    AO = c.AO
-    AC = c.AC
     
     fig_ratio_x = cc.fig_ratio_x
     fig_ratio_y = cc.fig_ratio_y
-    ao_upbar_color = cc.ao_upbar_color
-    ao_dnbar_color = cc.ao_dnbar_color
-    ac_up_color = cc.ac_up_color
-    ac_dn_color = cc.ac_dn_color
+    
     fdb_signal_buy_color = cc.fdb_signal_buy_color
     fdb_signal_sell_color = cc.fdb_signal_sell_color
     jaw_color = cc.jaw_color
@@ -150,7 +149,6 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = -1,show=True,pl
     ac_signal_sell_color = cc.ac_signal_sell_color
     fdb_marker_size = cc.fdb_marker_size
     fractal_marker_size = cc.fractal_marker_size
-    ac_signals_marker_size = cc.ac_signals_marker_size
     saucer_marker_size = cc.saucer_marker_size
     fractal_degreehigher_marker_size = cc.fractal_degreehigher_marker_size
     fdb_signal_marker = cc.fdb_signal_marker
@@ -158,7 +156,6 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = -1,show=True,pl
     fractal_up_marker_higher = cc.fractal_up_marker_higher
     fractal_dn_marker_higher = cc.fractal_dn_marker_higher
     fractal_dn_marker = cc.fractal_dn_marker
-    ac_signal_marker = cc.ac_signal_marker
     plot_style = cc.plot_style
     saucer_buy_color = cc.saucer_buy_color
     saucer_sell_color = cc.saucer_sell_color
@@ -168,6 +165,10 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = -1,show=True,pl
     price_peak_marker_size = cc.price_peak_marker_size
     price_peak_above_color = cc.price_peak_above_color
     price_peak_bellow_color = cc.price_peak_bellow_color
+    
+    ac_signals_marker_size = cc.ac_signals_marker_size
+    ac_signal_marker = cc.ac_signal_marker
+    
     ao_peaks_marker_size = cc.ao_peaks_marker_size
     ao_peak_offset_value = cc.ao_peak_offset_value
     ao_peak_above_marker_higher = cc.ao_peak_above_marker_higher
@@ -226,27 +227,9 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = -1,show=True,pl
     
     #%% AO/AC
     # AO / AC
-    # Calculate the color for 'ao' and 'ac' bar
-    colors_ao = [
-        ao_upbar_color if (data_last_selection[AO][i] - data_last_selection[AO][i - 1] > 0) else ao_dnbar_color
-        for i in range(1, len(data_last_selection[AO]))
-    ]
-    colors_ao.insert(0, ao_dnbar_color)
-
-    colors_ac = [
-        ac_up_color
-        if (data_last_selection[AC][i] - data_last_selection[AC][i - 1] > 0)
-        else ac_dn_color
-        for i in range(1, len(data_last_selection[AC]))
-    ]
-    colors_ac.insert(0, ac_dn_color)
-    # Make 'ao' and 'ac' oscillator plot
-    ao_plot = mpf.make_addplot(
-        data_last_selection[AO], panel=ao_plot_panel_id, color=colors_ao, secondary_y=False, type="bar"
-    )
-    ac_plot = mpf.make_addplot(
-        data_last_selection[AC], panel=ac_plot_panel_id, color=colors_ac, secondary_y=False, type="bar"
-    )
+    ao_plot,ac_plot = create_ao_ac_plots(data_last_selection,cc)
+    
+    
     # @STCGoal Make AO/AC signals plotted
     
     
@@ -629,6 +612,47 @@ def make_plot_fractals_degreehigher_indicator(fractal_dn_color_higher, fractal_u
   )
     
     return fractal_up_plot_higher,fractal_down_plot_higher
+
+
+
+def create_ao_ac_plots(data:pd.DataFrame,cc: JGTChartConfig=None, ao_plot_panel_id=1, ac_plot_panel_id=2):
+    if cc is None:
+        cc = JGTChartConfig()
+    # ao_upbar_color, ao_dnbar_color, ac_up_color, ac_dn_color
+    ao_upbar_color = cc.ao_upbar_color
+    ao_dnbar_color = cc.ao_dnbar_color
+    ac_up_color = cc.ac_up_color
+    ac_dn_color = cc.ac_dn_color
+    ao_plot_type = cc.ao_plot_type
+    ac_plot_type = cc.ac_plot_type
+    
+    # Calculate the color for 'ao' and 'ac' bar
+    colors_ao = [
+        ao_upbar_color if (data[AO][i] - data[AO][i - 1] > 0) else ao_dnbar_color
+        for i in range(1, len(data[AO]))
+    ]
+    colors_ao.insert(0, ao_dnbar_color)
+
+    colors_ac = [
+        ac_up_color
+        if (data[AC][i] - data[AC][i - 1] > 0)
+        else ac_dn_color
+        for i in range(1, len(data[AC]))
+    ]
+    colors_ac.insert(0, ac_dn_color)
+    
+    # Make 'ao' and 'ac' oscillator plot
+    
+    ao_plot = mpf.make_addplot(
+        data[AO], panel=ao_plot_panel_id, color=colors_ao, secondary_y=False, type=ao_plot_type
+    )
+    ac_plot = mpf.make_addplot(
+        data[AC], panel=ac_plot_panel_id, color=colors_ac, secondary_y=False, type=ac_plot_type
+    )
+    
+    return ao_plot, ac_plot
+
+
 
 def make_plot__fractals_indicator(fractal_up_color, fractal_dn_color, fractal_marker_size, fractal_up_marker, fractal_dn_marker, fh_col_dim, fl_col_dim, main_plot_panel_id, data_last_selection, fractal_offset_value):
     fractal_up_plot = mpf.make_addplot(

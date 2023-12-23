@@ -49,6 +49,9 @@ class JGTChartConfig:
     self.ao_peak_offset_value = 0
     
     self.plot_style = "yahoo"
+    self.ao_plot_type = "bar"
+    self.ac_plot_type = "bar"
+    
 
 # Create an instance with default values
 default_config = JGTChartConfig()
