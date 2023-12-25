@@ -17,7 +17,7 @@ INSTALL_REQUIRES = [
     'dropbox>=11.36.2',
     'mplfinance>=0.12.10b0',    
 	'tlid>=0.0.6',
-    'scipy>=1.11.4'
+    'scipy>=1.7.3'
 ]
 
 EXTRAS_DEV_LINT = [
