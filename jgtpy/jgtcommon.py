@@ -141,7 +141,17 @@ def tlid_range_to_start_end_datetime(tlid_range: str):
         date_format_start = "%y%m%d"
     if len(end_str) == 6:
         date_format_end = "%y%m%d"
-    
+   
+    if len(start_str) == 8:
+        date_format_start = "%Y%m%d"
+    if len(end_str) == 8:
+        date_format_end = "%Y%m%d"
+        
+    if len(start_str) == 12:
+        date_format_start = "%Y%m%d%H%M"
+    if len(end_str) == 12:
+        date_format_end = "%Y%m%d%H%M"
+   
     #print(date_format_end)
     try:
         start_dt =  datetime.datetime.strptime(start_str, date_format_start)
