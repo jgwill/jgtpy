@@ -5,6 +5,8 @@ from jgtpy import JGTChartConfig
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+import os
+print(os.getenv("JGTPY_DATA"))
 
 instrument = "EUR/USD"
 instrument = "XAU/USD"
