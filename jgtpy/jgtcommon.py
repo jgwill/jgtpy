@@ -132,20 +132,24 @@ def str_to_datetime(date_str):
     return None
 
 def tlid_range_to_start_end_datetime(tlid_range: str):
-    start_str, end_str = tlid_range.split("_")
+    try:
+        start_str, end_str = tlid_range.split("_")
+    except:
+        print("TLID ERROR - make use you used a \"_\"")
+        return None,None
     
     date_format_start = "%y%m%d%H%M"
     date_format_end = "%y%m%d%H%M"
     
     if len(start_str) == 6:
-        date_format_start = "%y%m%d"
+        start_str = start_str + "0000"
     if len(end_str) == 6:
-        date_format_end = "%y%m%d"
+        end_str = end_str + "2359"
    
     if len(start_str) == 8:
-        date_format_start = "%Y%m%d"
+        start_str = start_str + "0000"
     if len(end_str) == 8:
-        date_format_end = "%Y%m%d"
+        end_str = end_str + "2359"
         
     if len(start_str) == 12:
         date_format_start = "%Y%m%d%H%M"
