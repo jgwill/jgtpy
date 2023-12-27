@@ -9,11 +9,11 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 
 def create_filestore_path(
-    instrument, timeframe, quiet=True, compressed=False, tlid_range=None,output_path=None
+    instrument, timeframe, quiet=True, compressed=False, tlid_range=None,output_path=None,nsdir="pds"
 ):
     # Define the file path based on the environment variable or local path
     if output_path is None:
-        data_path = get_data_path()
+        data_path = get_data_path(nsdir=nsdir)
     else: # get path from var in os
         data_path = output_path
         

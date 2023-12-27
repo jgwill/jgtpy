@@ -7,6 +7,7 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 #import jgtfxcon.JGTPDS as pds
 import JGTIDS as ids
 import JGTPDSP as pds
+from jgtos import get_data_path
 #from . import jgtconstants
 #.columns_to_remove as columns_to_remove
 
@@ -46,7 +47,7 @@ def createFromPDSFileToCDSFile(instrument, timeframe, columns_to_remove=None, qu
   #   pass
 
   # Define the file path based on the environment variable or local path
-  data_path_cds = get_data_path()
+  data_path_cds = get_data_path("cds")
   fpath = pds.mk_fullpath(instrument, timeframe, 'csv', data_path_cds)
   #print(fpath)
   cdf.to_csv(fpath)
@@ -176,16 +177,6 @@ def create_and_clean_data_from_file_df(instrument, timeframe):
     return cdf
 
 
-def get_data_path():
-    data_path = os.environ.get('JGTPY_DATA', './data')
-    if not os.path.exists(data_path):
-      data_path = os.environ.get('JGTPY_DATA', '../data')
-    
-    if not os.path.exists(data_path):
-      raise Exception("Data directory not found. Please create a directory named 'data' in the current or parent directory, or set the JGTPY_DATA environment variable.")
-    
-    data_path = os.path.join(data_path, 'cds')
-    return data_path
   
 def _save_cds_data_to_file(df, instrument, timeframe):
     # Define the file path based on the environment variable or local path

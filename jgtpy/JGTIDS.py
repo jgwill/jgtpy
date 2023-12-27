@@ -256,7 +256,8 @@ def ids_add_indicators_LEGACY(dfsrc,
                        enableMFI=False,
                        dropnavalue=True,
                        quiet=False,
-                       addAlligatorOffsetInFutur=True):
+                       addAlligatorOffsetInFutur=False,
+                       bAlligator=False):
   """
   Adds various technical indicators to the input DataFrame. Is the same as in the jgtapy.legacy module.
 
@@ -278,7 +279,7 @@ def ids_add_indicators_LEGACY(dfsrc,
   i.accelerator_oscillator( column_name= indicator_AC_accelerationDeceleration_column_name)
   i.alligator(period_jaws=13, period_teeth=8, period_lips=5, shift_jaws=8, shift_teeth=5, shift_lips=3, column_name_jaws=indicator_currentDegree_alligator_jaw_column_name, column_name_teeth=indicator_currentDegree_alligator_teeth_column_name, column_name_lips=indicator_currentDegree_alligator_lips_column_name)
   
-  if len(dfsrc) > 375:
+  if len(dfsrc) > 375 and bAlligator:
     i.alligator(period_jaws=89, period_teeth=55, period_lips=34, shift_jaws=55, shift_teeth=34, shift_lips=21, column_name_jaws=indicator_sixDegreeLarger_alligator_jaw_column_name, column_name_teeth=indicator_sixDegreeLarger_alligator_teeth_column_name, column_name_lips=indicator_sixDegreeLarger_alligator_lips_column_name)
   
   i.awesome_oscillator(column_name=indicator_AO_awesomeOscillator_column_name)

@@ -137,7 +137,7 @@ def read_ohlc_df_from_file(srcpath, quiet=True, compressed=False,with_index=True
 
 
 def create_filestore_path(instrument, timeframe,quiet=True, compressed=False,tlid_range=None,output_path=None):
-  return jgtos.create_filestore_path(instrument,timeframe,quiet,compressed,tlid_range,output_path)
+  return jgtos.create_filestore_path(instrument,timeframe,quiet,compressed,tlid_range,output_path,nsdir="pds")
   
   
 def mk_fn(instrument,timeframe,ext="csv"):
