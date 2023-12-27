@@ -827,13 +827,16 @@ def jgti_add_zlc_plus_other_AO_signal(dfsrc,dropsecondaries=True,quiet=True):
     dfsrc.at[i,signalBuy_zeroLineCrossing_column_name] = isZLCBuy
     dfsrc.at[i,signalSell_zeroLineCrossing_column_name] = isZLCSell
 
+    #dfsrc[signal_zcol_column_name] = dfsrc[signal_zcol_column_name].astype(object)
     #Coloring AO
+    dfsrc['aocolor'] = dfsrc['aocolor'].astype(object)
     if caogreen:
       dfsrc.at[i,'aocolor'] = 'rgb(0,255,0)'
     else:
       dfsrc.at[i,'aocolor'] = 'rgb(255,0,0)'
       
     #Coloring AC
+    dfsrc['accolor'] = dfsrc['accolor'].astype(object)
     if cacgreen:
       dfsrc.at[i,'accolor'] = 'rgb(0,255,0)'
     else:
