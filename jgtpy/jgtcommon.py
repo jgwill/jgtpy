@@ -33,6 +33,9 @@ import traceback
 import argparse
 import sys
 
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
+from jgtos import tlid_range_to_start_end_datetime,tlid_range_to_jgtfxcon_start_end_str,tlid_dt_to_string,tlidmin_to_dt
 
 try :
     import __main__
@@ -129,73 +132,6 @@ def str_to_datetime(date_str):
             return datetime.datetime.strptime(date_str, fmt)
         except ValueError:
             continue
-    return None
-
-def tlid_range_to_start_end_datetime(tlid_range: str):
-    
-    #Support inputting just a Year
-    if len(tlid_range) == 4 or len(tlid_range) == 2 :
-        start_str = tlid_range + "0101" + "0000"
-        end_str = tlid_range +  "1231" + "2359"
-    else:
-        #Normal support start_end
-        try:
-            start_str, end_str = tlid_range.split("_")
-        except:
-            print("TLID ERROR - make use you used a \"_\"")
-            return None,None
-    
-    date_format_start = "%y%m%d%H%M"
-    date_format_end = "%y%m%d%H%M"
-    
-    if len(start_str) == 4 or len(start_str) == 2:
-        start_str = start_str + "0101" + "0000"
-    if len(end_str) == 4 or len(end_str) == 2 :
-        end_str = end_str + "1231" + "2359"
-    
-    if len(start_str) == 6:
-        start_str = start_str + "0000"
-    if len(end_str) == 6:
-        end_str = end_str + "2359"
-   
-    if len(start_str) == 8:
-        start_str = start_str + "0000"
-    if len(end_str) == 8:
-        end_str = end_str + "2359"
-        
-    if len(start_str) == 12:
-        date_format_start = "%Y%m%d%H%M"
-    if len(end_str) == 12:
-        date_format_end = "%Y%m%d%H%M"
-   
-    #print(date_format_end)
-    try:
-        start_dt =  datetime.datetime.strptime(start_str, date_format_start)
-        end_dt = datetime.datetime.strptime(end_str, date_format_end)
-        return start_dt,end_dt
-    except ValueError:
-        return None
-
-def tlid_range_to_jgtfxcon_start_end_str(tlid_range: str):
-    date_format_fxcon = '%m.%d.%Y %H:%M:%S'
-    start_dt,end_dt = tlid_range_to_start_end_datetime(tlid_range)
-    #print(str(start_dt),str(end_dt))
-    if start_dt is None or end_dt is None:
-        return None,None
-    else:
-        return str(start_dt.strftime(date_format_fxcon)),str(end_dt.strftime(date_format_fxcon))
-
-def tlid_dt_to_string(dt):
-    return dt.strftime("%y%m%d%H%M")
-
-def tlidmin_to_dt(tlid_str: str):
-    date_format = "%y%m%d%H%M"
-    try:
-        tlid_dt =  datetime.datetime.strptime(tlid_str, date_format)
-        return tlid_dt
-    except ValueError:
-        pass
-    
     return None
 
 def valid_datetime(check_future: bool):

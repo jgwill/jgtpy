@@ -1,7 +1,7 @@
 import unittest
 import datetime
-from jgtcommon import tlid_range_to_jgtfxcon_start_end_str
-from jgtcommon import tlid_range_to_start_end_datetime
+from jgtos import tlid_range_to_jgtfxcon_start_end_str
+from jgtos import tlid_range_to_start_end_datetime
 
 class TestTlidRangeToJgtfxconStartEndStr(unittest.TestCase):
     def test_tlid_range_to_jgtfxcon_start_end_str(self):

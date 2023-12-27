@@ -5,7 +5,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
-import jgtcommon
+import jgtos
 
 import platform
 
@@ -74,16 +74,29 @@ def jgtfxcli_wsl(instrument, timeframe, quote_count,cli_path="", verbose_level=0
     return run_bash_command_by_platform(bash_command_to_run)
 
 
-def _mkbash_cmd_string_jgtfxcli_range(instrument, timeframe,tlid_range=None,cli_path="", verbose_level=0):
+def _mkbash_cmd_string_jgtfxcli_range(instrument, timeframe,tlid_range=None,cli_path="", verbose_level=0,quote_count=335):
     cli_path=resolve_cli_path(cli_path)
     
-    date_from,date_to=jgtcommon.tlid_range_to_jgtfxcon_start_end_str(tlid_range)
+    
+    if tlid_range is not None:
+        bash_command_to_run = f"pwd;{cli_path} -i \"{instrument}\" -t \"{timeframe}\" -r \"{tlid_range}\" -v {verbose_level}"
+    else:
+        bash_command_to_run = f"pwd;{cli_path} -i \"{instrument}\" -t \"{timeframe}\" -c \"{quote_count}\" -v {verbose_level}"
+        
+    
+    return bash_command_to_run
+
+def _mkbash_cmd_string_jgtfxcli_range1(instrument, timeframe,tlid_range=None,cli_path="", verbose_level=0):
+    cli_path=resolve_cli_path(cli_path)
+    
+    date_from,date_to=jgtos.tlid_range_to_jgtfxcon_start_end_str(tlid_range)
     
     bash_command_to_run = f"pwd;{cli_path} -i \"{instrument}\" -t \"{timeframe}\" -s \"{date_from}\" -e \"{date_to}\" -v {verbose_level}"
     return bash_command_to_run
 
 def jgtfxcli_wsl_range(instrument, timeframe, quote_count,tlid_range=None,cli_path="", verbose_level=0):
-    bash_command_to_run = _mkbash_cmd_string_jgtfxcli_range(instrument, timeframe, quote_count,tlid_range,cli_path, verbose_level)
+    bash_command_to_run = _mkbash_cmd_string_jgtfxcli_range(instrument, timeframe,tlid_range,cli_path, verbose_level,quote_count)
+        
     return run_bash_command_by_platform(bash_command_to_run)
 
 def jgtfxcli(instrument, timeframe, quote_count,cli_path="", verbose_level=0):

@@ -14,6 +14,7 @@ from JGTPDHelper import *
 from datetime import datetime
 import jgtcommon
 import jgtos
+import iprops
 
 renameColumns=True
 addOhlc=True
@@ -152,11 +153,10 @@ def mk_fullpath(instrument,timeframe,ext,path,tlid_range=None):
 
 
 def get_data_path():
-    return jgtos.get_data_path()
+    return jgtos.get_data_path('pds')
   
   
 
-import iprops
 def get_instrument_properties(instrument, quiet=False,from_file=True):
   if not from_file:
     print("NOT SUPORTED in PDSP")
