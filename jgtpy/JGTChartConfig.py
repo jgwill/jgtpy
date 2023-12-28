@@ -23,6 +23,8 @@ class JGTChartConfig:
     self.ao_peak_above_marker_higher= "^"
     self.ao_peak_bellow__marker_higher = "v"
     self.saucer_marker = "|"
+    self.aop_bellow_color = "r"
+    self.aop_above_color = "g"
     
     self.ao_upbar_color = "g"
     self.ao_dnbar_color = "r"
