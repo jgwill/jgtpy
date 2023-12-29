@@ -275,6 +275,8 @@ def ids_add_indicators_LEGACY(dfsrc,
   if not quiet:
     print("Adding indicators...")
   i=Indicators(dfsrc)
+  ldfsrc=len(dfsrc)
+  print("debug len(dfsrc)" + str(ldfsrc))
   
   i.accelerator_oscillator( column_name= indicator_AC_accelerationDeceleration_column_name)
   i.alligator(period_jaws=13, period_teeth=8, period_lips=5, shift_jaws=8, shift_teeth=5, shift_lips=3, column_name_jaws=indicator_currentDegree_alligator_jaw_column_name, column_name_teeth=indicator_currentDegree_alligator_teeth_column_name, column_name_lips=indicator_currentDegree_alligator_lips_column_name)
@@ -292,8 +294,10 @@ def ids_add_indicators_LEGACY(dfsrc,
   i.fractals13(column_name_high=indicator_fractal_high_degree13_column_name, column_name_low=indicator_fractal_low_degree13_column_name)
   i.fractals21(column_name_high=indicator_fractal_high_degree21_column_name, column_name_low=indicator_fractal_low_degree21_column_name)
   i.fractals34(column_name_high=indicator_fractal_high_degree34_column_name, column_name_low=indicator_fractal_low_degree34_column_name)
-  i.fractals55(column_name_high=indicator_fractal_high_degree55_column_name, column_name_low=indicator_fractal_low_degree55_column_name)
-  i.fractals89(column_name_high=indicator_fractal_high_degree89_column_name, column_name_low=indicator_fractal_low_degree89_column_name)
+  if len(dfsrc) > 365:
+    i.fractals55(column_name_high=indicator_fractal_high_degree55_column_name, column_name_low=indicator_fractal_low_degree55_column_name)
+  if len(dfsrc) > 410:
+    i.fractals89(column_name_high=indicator_fractal_high_degree89_column_name, column_name_low=indicator_fractal_low_degree89_column_name)
 
   
   if enableGatorOscillator:
