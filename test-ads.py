@@ -8,22 +8,23 @@ import pandas as pd
 import os
 print(os.getenv("JGTPY_DATA"))
 
-instrument = "EUR/USD"
 instrument = "XAU/USD"
 instrument = "SPX500"
+instrument = "EUR/USD"
 # %% Load data and plot all in one operation
 show=True
-m1p=pds.getPH(instrument, "M1")
+#m1p=pds.getPH(instrument, "M1")
 
 #%% Plot all charts in one operation
 cc = JGTChartConfig.JGTChartConfig()
-cc.saucer_marker_size = 14
+cc.saucer_marker_size = 14;cc.ac_signals_marker_size=14
 cc.fig_ratio_x = 24
-cc.fig_ratio_y = 18
+cc.fig_ratio_y = 16
+cc.nb_bar_on_chart = 340
 cc.plot_style = "yahoo"
 
 #M1c, M1a = ads.plot_from_pds_df(m1p,instrument, "M1", show=show)
-M1c, M1a = ads.plot(instrument, "M1", show=show,cc=cc)
+M1, M1a = ads.plot(instrument, "M1", show=show,cc=cc)
 
 w1, w1a = ads.plot(instrument, "W1", show=show,cc=cc)
 d1, d1a = ads.plot(instrument, "D1", show=show,cc=cc)
@@ -31,7 +32,18 @@ d1, d1a = ads.plot(instrument, "D1", show=show,cc=cc)
 h4, h4a = ads.plot(instrument, "H4", show=show,cc=cc)
 h1, h1a = ads.plot(instrument, "H1", show=show,cc=cc)
 m15, m15a = ads.plot(instrument, "m15", show=show,cc=cc)
+
+#%% m5
 m5, m15a = ads.plot(instrument, "m5", show=show,cc=cc)
+
+#%% Save charts
+M1.savefig("M1.png")
+w1.savefig("w1.png")
+d1.savefig("d1.png")
+h4.savefig("h4.png")
+h1.savefig("h1.png")
+m15.savefig("m15.png")
+m5.savefig("m5.png")
 #mi1,mi1a = ads.plot(instrument, "m1", show=show)
 
 # # %% Plot w1, d1,h4, h1 in four subplots

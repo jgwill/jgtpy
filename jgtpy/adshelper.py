@@ -44,8 +44,9 @@ def read_csv(csv_fn):
         pass
     return df
 
+MIN_CHART_BARS=300
 
-def prepare_cds_for_ads_data(instrument, timeframe, nb_bar_on_chart, recreate_data=True):
+def prepare_cds_for_ads_data(instrument, timeframe, nb_bar_on_chart, recreate_data=True,selected_offsets=45):
     """
     Prepare CDS (Credit Default Swap) data for ADS (Automated Trading System).
 
@@ -79,7 +80,12 @@ def prepare_cds_for_ads_data(instrument, timeframe, nb_bar_on_chart, recreate_da
             df = pds.getPH(instrument,timeframe,nb_bar_on_chart)
         # Select the last 400 bars of the data
         try:
-            selected = df.iloc[-nb_bar_on_chart-120:].copy()
+            #Make sure we have enough bars to select
+            nb_to_select = nb_bar_on_chart+selected_offsets
+            if nb_to_select < MIN_CHART_BARS:
+                nb_to_select = MIN_CHART_BARS+selected_offsets
+                
+            selected = df.iloc[-nb_to_select:].copy()
             selected.to_csv("output_ads_prep_data.csv")
         except:
             l.warning("Could not get DF, trying to run thru WSL the update")

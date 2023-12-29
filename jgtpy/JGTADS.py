@@ -74,8 +74,11 @@ cdtformat="%Y-%m-%d"
 
 
 
-def jgtxplot18c_231209(instrument,timeframe,nb_bar_on_chart = 375,recreate_data = True,show=True,plot_ao_peaks=False,cc: JGTChartConfig=None):
-    data = ah.prepare_cds_for_ads_data(instrument, timeframe, nb_bar_on_chart, recreate_data)
+def jgtxplot18c_231209(instrument,timeframe,nb_bar_on_chart = -1,recreate_data = True,show=True,plot_ao_peaks=False,cc: JGTChartConfig=None):
+    if nb_bar_on_chart==-1:
+        nb_bar_on_chart = cc.nb_bar_on_chart
+    data = ah.prepare_cds_for_ads_data(instrument, timeframe, nb_bar_on_chart, recreate_data) #@STCGoal Supports TLID
+    #data.to_csv("debug_data" + instrument.replace("/","-") + timeframe + ".csv")
     return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show,plot_ao_peaks,cc=cc)
 
 
@@ -113,6 +116,8 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = -1,show=True,pl
     """
     if cc is None:
         cc= JGTChartConfig()
+    if nb_bar_on_chart==-1:
+        nb_bar_on_chart = cc.nb_bar_on_chart
     # Load dataset
     iprop = pds.get_instrument_properties(instrument)
     l.debug(iprop)
@@ -173,7 +178,8 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = -1,show=True,pl
     ao_peak_offset_value = cc.ao_peak_offset_value
     ao_peak_above_marker_higher = cc.ao_peak_above_marker_higher
     ao_peak_bellow__marker_higher = cc.ao_peak_bellow__marker_higher
-    
+    aop_bellow_color = cc.aop_bellow_color
+    aop_above_color = cc.aop_above_color
     
     #COLUMNS
     JAW = c.JAW
@@ -294,13 +300,14 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = -1,show=True,pl
 
         
         # Make AO Peak Bellow plot
+
         aopbellow_plot = mpf.make_addplot(
             data_last_selection[AO_PEAK_BELLOW] +ao_peak_offset_value,
             panel=ao_plot_panel_id,
             type="scatter",
             markersize=ao_peaks_marker_size,
             marker=ao_peak_bellow__marker_higher,
-            color="r",
+            color=aop_bellow_color,
         )
         
         # Make AO Peak Above plot
@@ -310,7 +317,7 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = -1,show=True,pl
             type="scatter",
             markersize=ao_peaks_marker_size,
             marker=ao_peak_above_marker_higher,
-            color="g",
+            color=aop_above_color,
         )
         
         
@@ -732,7 +739,7 @@ def plotcdf(data,instrument, timeframe, nb_bar_on_chart=375,show=True,plot_ao_pe
   return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show,plot_ao_peaks=plot_ao_peaks,cc=cc)
 
 
-def plot(instrument, timeframe, nb_bar_on_chart=375, recreate_data=True, show=True,plot_ao_peaks=True,cc: JGTChartConfig=None):
+def plot(instrument, timeframe, nb_bar_on_chart=-1, recreate_data=True, show=True,plot_ao_peaks=True,cc: JGTChartConfig=None):
     """
     Plot the chart for a given instrument and timeframe.
 
@@ -749,7 +756,9 @@ def plot(instrument, timeframe, nb_bar_on_chart=375, recreate_data=True, show=Tr
     fig: The figure object of the plot.
     axes: The axes object of the plot.
     """
-    fig, axes = jgtxplot18c_231209(instrument, timeframe, nb_bar_on_chart, recreate_data, show,plot_ao_peaks=plot_ao_peaks,cc=cc)
+    if nb_bar_on_chart==-1:
+        nb_bar_on_chart = cc.nb_bar_on_chart
+    fig, axes = jgtxplot18c_231209(instrument, timeframe, nb_bar_on_chart,recreate_data=recreate_data, show=show,plot_ao_peaks=plot_ao_peaks,cc=cc)
     return fig, axes
 
   
