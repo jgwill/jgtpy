@@ -68,7 +68,7 @@ for t in timeframes:
 
 # Wrap the tabs object with an HTML object and set the font size of the tab names
 #tabs_div = pn.panel(tabs, sizing_mode="stretch_width", style={"description_width": "initial", "font_size": "22pt"})
-tabs_div = tabs
+
 
 #%% OUTPUT
   #tabs[int(t[-2:])] = figures[t]
@@ -77,7 +77,7 @@ html_output_path = "pto-pers-" + html_fname
 
 
 
-tabs_div.save(html_output_path,embed=True)
+tabs.save(html_output_path,embed=True)
 print(html_output_path)
 
 
@@ -86,7 +86,7 @@ print(html_output_path)
 
 # %% VIEW TABS
 pn.extension()
-tabs_div.show()
+tabs.show()
 
 
 # %%
