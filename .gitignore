@@ -147,3 +147,17 @@ criss/setup.py
 docs
 
 jgtpy/output
+debug_*
+h*.png
+m5.png
+M1.png
+ads_plot_data.cds.csv
+test.csv
+jgtpy/aohelper.output.csv
+pto-pers-*.html
+m15.png
+d1.png
+out_data_last_selection.csv
+pto-pers*.html
+pto-pers-XAU-USD.html
+w1.png

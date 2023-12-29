@@ -8,9 +8,9 @@ import pandas as pd
 import os
 print(os.getenv("JGTPY_DATA"))
 
-instrument = "XAU/USD"
 instrument = "SPX500"
 instrument = "EUR/USD"
+instrument = "XAU/USD"
 # %% Load data and plot all in one operation
 show=True
 #m1p=pds.getPH(instrument, "M1")
@@ -20,21 +20,32 @@ cc = JGTChartConfig.JGTChartConfig()
 cc.saucer_marker_size = 14;cc.ac_signals_marker_size=14
 cc.fig_ratio_x = 24
 cc.fig_ratio_y = 16
-cc.nb_bar_on_chart = 340
+cc.nb_bar_on_chart = 300
 cc.plot_style = "yahoo"
 
 #M1c, M1a = ads.plot_from_pds_df(m1p,instrument, "M1", show=show)
-M1, M1a = ads.plot(instrument, "M1", show=show,cc=cc)
+t="M1";M1, M1a = ads.plot(instrument, t, show=show,cc=cc)
+print(instrument,t)
 
-w1, w1a = ads.plot(instrument, "W1", show=show,cc=cc)
-d1, d1a = ads.plot(instrument, "D1", show=show,cc=cc)
-
-h4, h4a = ads.plot(instrument, "H4", show=show,cc=cc)
-h1, h1a = ads.plot(instrument, "H1", show=show,cc=cc)
-m15, m15a = ads.plot(instrument, "m15", show=show,cc=cc)
+t="W1";w1, w1a = ads.plot(instrument, t, show=show,cc=cc)
+print(instrument,t)
+t="D1";d1, d1a = ads.plot(instrument, t, show=show,cc=cc)
+print(instrument,t)
+t="H4";h4, h4a = ads.plot(instrument, t, show=show,cc=cc)
+print(instrument,t)
+t="H1";h1, h1a = ads.plot(instrument, t, show=show,cc=cc)
+print(instrument,t)
+t="m15";m15, m15a = ads.plot(instrument, t, show=show,cc=cc)
 
 #%% m5
-m5, m15a = ads.plot(instrument, "m5", show=show,cc=cc)
+t="m5";m5, m15a = ads.plot(instrument, t, show=show,cc=cc)
+cc.nb_bar_on_chart = 350
+t="m5";m5l, m15al = ads.plot(instrument, t, show=show,cc=cc)
+
+#%% m5 Even more TF to see the impact on perception
+cc.nb_bar_on_chart = 380
+t="m5";m5l2, m15al2 = ads.plot(instrument, t, show=show,cc=cc)
+print(instrument,t)
 
 #%% Save charts
 M1.savefig("M1.png")
