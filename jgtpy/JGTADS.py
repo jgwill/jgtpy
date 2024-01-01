@@ -85,7 +85,7 @@ def jgtxplot18c_231209(instrument,timeframe,nb_bar_on_chart = -1,recreate_data =
 def plot_from_pds_df(pdata,instrument,timeframe,nb_bar_on_chart = 375,show=True,plot_ao_peaks=True):
   # Select the last 400 bars of the data
   try:
-      selected = pdata.iloc[-nb_bar_on_chart-120:].copy() #@STCGoal A Unified way to select the data
+      selected = pdata.iloc[-nb_bar_on_chart-120:].copy()
   except:
       selected = pdata.copy()
       l.warning("Could not select the desired amount of bars, trying anyway with what we have")
@@ -134,8 +134,6 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = -1,show=True,pl
     
     main_plot_type="ohlc"
     
-    if nb_bar_on_chart==-1:
-        nb_bar_on_chart = cc.nb_bar_on_chart
         
     
     fig_ratio_x = cc.fig_ratio_x
@@ -573,6 +571,16 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = -1,show=True,pl
     # Set the font size of the x-axis labels
     for ax in axes:
         ax.tick_params(axis="x", labelsize=6)
+
+def _select_charting_nb_bar_on_chart(data, nb_bar_on_chart):
+    try:
+        data_last_selection = data.iloc[-nb_bar_on_chart:].copy()
+        #data_last_selection.to_csv("out_data_last_selection.csv")
+    except:
+        l.warning("Could not select the desired amount of bars, trying anyway with what we have")
+        data_last_selection = data
+        pass
+    return data_last_selection
 
     # Set the font size of the Date column
     axes[main_plot_panel_id].tick_params(axis="x", labelsize=6)

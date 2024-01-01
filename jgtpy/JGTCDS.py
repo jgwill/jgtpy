@@ -2,12 +2,14 @@
 
 import sys
 import os
+
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 #import jgtfxcon.JGTPDS as pds
 import JGTIDS as ids
 import JGTPDSP as pds
 from jgtos import get_data_path
+from JGTChartConfig import JGTChartConfig
 #from . import jgtconstants
 #.columns_to_remove as columns_to_remove
 
@@ -79,7 +81,7 @@ def readCDSFile(instrument, timeframe, columns_to_remove=None, quiet=True):
     cdf = cdf.drop(columns=columns_to_remove, errors='ignore')
   return cdf
 
-def createFromPDSFile(instrument,timeframe,quiet=True,tlid_range=None):
+def createFromPDSFile(instrument,timeframe,quiet=True,tlid_range=None,cc: JGTChartConfig = None):
   """Create CDS (Chaos Data Service) with Fresh Data on the filestore
 
   Args:
@@ -87,6 +89,8 @@ def createFromPDSFile(instrument,timeframe,quiet=True,tlid_range=None):
       timeframe (str): TF
       quiet (bool,optional): Output quiet
       tlid_range (str,optional): TLID range
+      cc (JGTChartConfig, optional): The JGTChartConfig object to use for the processing. Defaults to None.
+      cc (JGTChartConfig, optional): The JGTChartConfig object to use for the processing. Defaults to None.
 
   Returns:
       pandas.DataFrame: CDS DataFrame
@@ -96,30 +100,33 @@ def createFromPDSFile(instrument,timeframe,quiet=True,tlid_range=None):
     if not quiet:
       print(df)
   
-    dfi=createFromDF(df,quiet=quiet)
+    dfi=createFromDF(df,quiet=quiet,cc=cc)
     return dfi
   except:
     return None
 
-def createFromDF(df, quiet=True):
+def createFromDF(df, quiet=True,cc: JGTChartConfig = None):
   """
   Creates a new DataFrame with indicators, signals, and cleansed columns added based on the input DataFrame.
 
   Args:
     df (pandas.DataFrame): The input DataFrame to add indicators, signals, and cleansed columns to.
     quiet (bool, optional): Whether to suppress console output during processing. Defaults to True.
+    cc (JGTChartConfig, optional): The JGTChartConfig object to use for the processing. Defaults to None.
 
   Returns:
     pandas.DataFrame: The new DataFrame with indicators, signals, and cleansed columns added.
   """
-  
+  if cc is None:
+    cc = JGTChartConfig()
+    
   if df.index.name == 'Date':
       df.reset_index(inplace=True)
-  dfi=ids.tocds(df,quiet=quiet) 
+  dfi=ids.tocds(df,quiet=quiet,cc=cc) 
   return dfi
 
 
-def create(instrument,timeframe,nb2retrieve=335,stayConnected=False,quiet=True):
+def create(instrument,timeframe,nb2retrieve=335,stayConnected=False,quiet=True,cc: JGTChartConfig = None):
   """Create CDS (Chaos Data Service) with Fresh Data
 
   Args:
@@ -128,17 +135,17 @@ def create(instrument,timeframe,nb2retrieve=335,stayConnected=False,quiet=True):
       nb2retrieve (int, optional): nb bar to retrieve. Defaults to 335.
       stayConnected (bool, optional): Leave Forexconnect connected. Defaults to False.
       quiet (bool,optional): Output quiet
+      cc (JGTChartConfig, optional): The JGTChartConfig object to use for the processing. Defaults to None.
 
   Returns:
       pandas.DataFrame: CDS DataFrame
-  """
   
   df=pds.getPH(instrument,timeframe,nb2retrieve,with_index=False,quiet=quiet)
-  dfi=createFromDF(df,quiet=quiet)
+
+#createByRange
   return dfi
   
 
-#createByRange
 def createByRange(instrument,timeframe,start,end,stayConnected=False,quiet=True):
   """Create CDS with Fresh Data from a range
 

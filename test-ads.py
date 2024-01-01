@@ -1,3 +1,6 @@
+#%% INSTALLER
+#%pip install jgtapy seaborn panel
+
 # %% Import packages
 from jgtpy import JGTADS as ads
 from jgtpy import JGTPDSP as pds
@@ -8,9 +11,9 @@ import pandas as pd
 import os
 print(os.getenv("JGTPY_DATA"))
 
-instrument = "SPX500"
 instrument = "EUR/USD"
 instrument = "XAU/USD"
+instrument = "SPX500"
 # %% Load data and plot all in one operation
 show=True
 #m1p=pds.getPH(instrument, "M1")
@@ -23,28 +26,30 @@ cc.fig_ratio_y = 16
 cc.nb_bar_on_chart = 300
 cc.plot_style = "yahoo"
 
-#M1c, M1a = ads.plot_from_pds_df(m1p,instrument, "M1", show=show)
-t="M1";M1, M1a = ads.plot(instrument, t, show=show,cc=cc)
+#%% M1
+t="M1";M1, M1a,M1df = ads.plot(instrument, t, show=show,cc=cc)
+print(instrument,t)
+#%% 
+t="W1";w1, w1a,w1df = ads.plot(instrument, t, show=show,cc=cc)
 print(instrument,t)
 
-t="W1";w1, w1a = ads.plot(instrument, t, show=show,cc=cc)
+#%%
+t="D1";d1, d1a,d1df = ads.plot(instrument, t, show=show,cc=cc)
 print(instrument,t)
-t="D1";d1, d1a = ads.plot(instrument, t, show=show,cc=cc)
+t="H4";h4, h4a,h4df = ads.plot(instrument, t, show=show,cc=cc)
 print(instrument,t)
-t="H4";h4, h4a = ads.plot(instrument, t, show=show,cc=cc)
+t="H1";h1, h1a,d1df = ads.plot(instrument, t, show=show,cc=cc)
 print(instrument,t)
-t="H1";h1, h1a = ads.plot(instrument, t, show=show,cc=cc)
-print(instrument,t)
-t="m15";m15, m15a = ads.plot(instrument, t, show=show,cc=cc)
+t="m15";m15, m15a,m15adf = ads.plot(instrument, t, show=show,cc=cc)
 
 #%% m5
-t="m5";m5, m15a = ads.plot(instrument, t, show=show,cc=cc)
+t="m5";m5, m5a,m5adf = ads.plot(instrument, t, show=show,cc=cc)
 cc.nb_bar_on_chart = 350
-t="m5";m5l, m15al = ads.plot(instrument, t, show=show,cc=cc)
+t="m5";m5l, m5la,m5ladf = ads.plot(instrument, t, show=show,cc=cc)
 
 #%% m5 Even more TF to see the impact on perception
 cc.nb_bar_on_chart = 380
-t="m5";m5l2, m15al2 = ads.plot(instrument, t, show=show,cc=cc)
+t="m5";m5l2, m5al2,m5al2df = ads.plot(instrument, t, show=show,cc=cc)
 print(instrument,t)
 
 #%% Save charts

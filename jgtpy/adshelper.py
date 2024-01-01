@@ -11,6 +11,7 @@ import JGTCDS as cds
 import jgtwslhelper as wsl
 import pandas as pd
 
+from JGTChartConfig import JGTChartConfig
 
 import logging
 _loglevel= logging.WARNING
@@ -69,29 +70,31 @@ def prepare_cds_for_ads_data(instrument, timeframe, nb_bar_on_chart, recreate_da
     fnpath = os.path.join(cache_dir,fn)
     l.info("fnpath:"+ fnpath)
 
-    #%% Load data
-    l.info("-----------------  CDS  -----------------")
+    
     if recreate_data:
         try:
-            df = pds.getPH(instrument,timeframe,nb_bar_on_chart)
+            df = pds.getPH(instrument,timeframe,nb_bar_to_retrieve)
+            print("pds df:",str(len(df))+" rows")
         except:
             l.warning("Could not get DF, trying to run thru WSL the update")
-            wsl.jgtfxcli(instrument, timeframe, nb_bar_on_chart+35)
-            df = pds.getPH(instrument,timeframe,nb_bar_on_chart)
+            wsl.jgtfxcli(instrument, timeframe, nb_bar_to_retrieve)
+            df = pds.getPH(instrument,timeframe,nb_bar_to_retrieve) #@STCIssue Limitation of full range to be given yo jgtfxcli
         # Select the last 400 bars of the data
-        try:
+        try:#@q Is the selected correspond to desirrd bars ?
             #Make sure we have enough bars to select
-            nb_to_select = nb_bar_on_chart+selected_offsets
+            nb_to_select = nb_bar_to_retrieve
             if nb_to_select < MIN_CHART_BARS:
-                nb_to_select = MIN_CHART_BARS+selected_offsets
-                
-            selected = df.iloc[-nb_to_select:].copy()
-            selected.to_csv("output_ads_prep_data.csv")
+                nb_to_select = MIN_CHART_BARS
+                selected = df.copy()
+            else:
+                selected = df.iloc[-nb_to_select:].copy()
+            
+            #selected.to_csv("output_ads_prep_data.csv")
         except:
             l.warning("Could not get DF, trying to run thru WSL the update")
-            wsl.jgtfxcli(instrument, timeframe, nb_bar_on_chart+35)
+            wsl.jgtfxcli(instrument, timeframe, nb_bar_to_retrieve)
             try:
-                df = pds.getPH(instrument,timeframe,nb_bar_on_chart)
+                df = pds.getPH(instrument,timeframe,nb_bar_to_retrieve)
                 selected = df.copy()
             except:
                 l.warning("Twice :(Could not select the desired amount of bars, trying anyway with what we have")

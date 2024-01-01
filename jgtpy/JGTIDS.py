@@ -19,6 +19,8 @@ from jgtapy import Indicators
 from scipy.signal import find_peaks
 from aohelper import pto_add_ao_price_peaks
 
+from JGTChartConfig import JGTChartConfig
+
 # %%
 #@title Vars
 _dtformat = '%m.%d.%Y %H:%M:%S'
@@ -208,7 +210,8 @@ def ids_add_indicators(dfsrc,
                        enableMFI=False,
                        dropnavalue=True,
                        quiet=False,                       
-                       cleanupOriginalColumn=True,useLEGACY=True):
+                       cleanupOriginalColumn=True,useLEGACY=True,
+                       cc:JGTChartConfig=None):
   """
   Adds technical indicators to a given DataFrame.
 
@@ -220,6 +223,7 @@ def ids_add_indicators(dfsrc,
   quiet (bool, optional): Whether to suppress console output. Defaults to False.
   cleanupOriginalColumn (bool, optional): Whether to clean up the original column. Defaults to True.
   useLEGACY (bool, optional): Whether to use the legacy version of the function. Defaults to True.
+  cc (JGTChartConfig, optional): The JGTChartConfig object. Defaults to None.
 
   Returns:
   pandas.DataFrame: The DataFrame with the added indicators.
@@ -240,7 +244,8 @@ def ids_add_indicators(dfsrc,
                        enableGatorOscillator,
                        enableMFI,
                        dropnavalue,
-                       quiet)
+                       quiet,
+                       min_nb_bar_on_chart=cc.min_bar_on_chart)
   
   return round_columns(dfresult)
 
@@ -257,7 +262,10 @@ def ids_add_indicators_LEGACY(dfsrc,
                        dropnavalue=True,
                        quiet=False,
                        addAlligatorOffsetInFutur=False,
-                       bAlligator=False):
+                       bAlligator=False,
+                       b_alligator_jaws_period = 89,
+                       largest_fractal_period = 89,
+                       min_nb_bar_on_chart=300):
   """
   Adds various technical indicators to the input DataFrame. Is the same as in the jgtapy.legacy module.
 
@@ -268,6 +276,9 @@ def ids_add_indicators_LEGACY(dfsrc,
   dropnavalue (bool, optional): Whether to drop rows with NaN values. Defaults to True.
   quiet (bool, optional): Whether to suppress print statements. Defaults to False.
   addAlligatorOffsetInFutur (bool, optional): (NOT IMPLEMENTED) Whether to add the Alligator offset in the future. Defaults to True.
+  b_alligator_jaws_period (int, optional): (NOT IMPLEMENTED) The period of the Alligator jaws. Defaults to 89.
+  largest_fractal_period (int, optional): (NOT IMPLEMENTED) The largest fractal period. Defaults to 89.
+  min_nb_bar_on_chart (int, optional): The minimum number of bars on the chart. Defaults to 300.
 
   Returns:
   pandas.DataFrame: The input DataFrame with added technical indicators.
@@ -276,12 +287,14 @@ def ids_add_indicators_LEGACY(dfsrc,
     print("Adding indicators...")
   i=Indicators(dfsrc)
   ldfsrc=len(dfsrc)
-  print("debug len(dfsrc)" + str(ldfsrc))
+  #print("IDS::debug len(dfsrc)" + str(ldfsrc))
   
   i.accelerator_oscillator( column_name= indicator_AC_accelerationDeceleration_column_name)
   i.alligator(period_jaws=13, period_teeth=8, period_lips=5, shift_jaws=8, shift_teeth=5, shift_lips=3, column_name_jaws=indicator_currentDegree_alligator_jaw_column_name, column_name_teeth=indicator_currentDegree_alligator_teeth_column_name, column_name_lips=indicator_currentDegree_alligator_lips_column_name)
   
-  if len(dfsrc) > 375 and bAlligator:
+ 
+  bAlligator_required_bar_offset = min_nb_bar_on_chart + b_alligator_jaws_period
+  if ldfsrc >= bAlligator_required_bar_offset and bAlligator:
     i.alligator(period_jaws=89, period_teeth=55, period_lips=34, shift_jaws=55, shift_teeth=34, shift_lips=21, column_name_jaws=indicator_sixDegreeLarger_alligator_jaw_column_name, column_name_teeth=indicator_sixDegreeLarger_alligator_teeth_column_name, column_name_lips=indicator_sixDegreeLarger_alligator_lips_column_name)
   
   i.awesome_oscillator(column_name=indicator_AO_awesomeOscillator_column_name)
@@ -294,9 +307,12 @@ def ids_add_indicators_LEGACY(dfsrc,
   i.fractals13(column_name_high=indicator_fractal_high_degree13_column_name, column_name_low=indicator_fractal_low_degree13_column_name)
   i.fractals21(column_name_high=indicator_fractal_high_degree21_column_name, column_name_low=indicator_fractal_low_degree21_column_name)
   i.fractals34(column_name_high=indicator_fractal_high_degree34_column_name, column_name_low=indicator_fractal_low_degree34_column_name)
-  if len(dfsrc) > 365:
+  
+  if ldfsrc >= min_nb_bar_on_chart + 55:
     i.fractals55(column_name_high=indicator_fractal_high_degree55_column_name, column_name_low=indicator_fractal_low_degree55_column_name)
-  if len(dfsrc) > 410:
+  
+  largest_fractal_bar_required_offset =  min_nb_bar_on_chart+ largest_fractal_period 
+  if ldfsrc  > largest_fractal_bar_required_offset:
     i.fractals89(column_name_high=indicator_fractal_high_degree89_column_name, column_name_low=indicator_fractal_low_degree89_column_name)
 
   
@@ -513,7 +529,8 @@ def jgtids_mk_ao_fractal_peak(dfsrc,
                               poscolprefix='pao',
                               negcolprefix='nao',
                               endrange=10,
-                              quiet=False):
+                              quiet=False,
+                              cc:JGTChartConfig=None):
   """ Make the AO Fractal Peak
 
     Args:
@@ -522,6 +539,8 @@ def jgtids_mk_ao_fractal_peak(dfsrc,
          poscolprefix (prefix positive (futur) ao sec col )
          negcolprefix (prefix negative (past) ao sec col )          
          endrange (total range from 0 (zero being the current in the output))
+         quiet (quiet mode)
+         cc (JGTChartConfig, optional): The JGTChartConfig object. Defaults to None.
          
     Returns:
       DataFrame with new AO Peak columns 
@@ -695,25 +714,28 @@ def jgtids_mk_ao_fractal_peak(dfsrc,
 
 #@title Add CDS signals
 
-def cds_add_signals_to_indicators(dfires,_aopeak_range=28,quiet=False):
+def cds_add_signals_to_indicators(dfires,_aopeak_range=28,quiet=False,cc:JGTChartConfig=None):
   dfires=_ids_add_fdb_column_logics(dfires,quiet=quiet)
   dfires = jgtids_mk_ao_fractal_peak(dfires,
                                    indicator_AO_awesomeOscillator_column_name,
                                    'p',
                                    'n',
                                    _aopeak_range,
-                                   quiet=quiet)
+
+
   return dfires
 
 
-
 def tocds(dfsrc,quiet=True,peak_distance=13,peak_width=8):
-  dfires = ids_add_indicators(dfsrc,quiet=quiet)
-  dfires = cds_add_signals_to_indicators(dfires,quiet=quiet)
+  if cc is None:
+  if cc is None:
+    cc = JGTChartConfig()
+    cc = JGTChartConfig()
+  dfires = cds_add_signals_to_indicators(dfires,quiet=quiet,cc=cc)
   dfires = jgti_add_zlc_plus_other_AO_signal(dfires,quiet=quiet)
+  dfires = ids_add_indicators(dfsrc,quiet=quiet,cc=cc)
   dfires = pds_cleanse_original_columns(dfires,quiet=True)
   dfires = ids_cleanse_ao_peak_secondary_columns(dfires,quiet=True)
-  dfires = __format_boolean_columns_to_int(dfires,quiet=True)
   dfires = pto_add_ao_price_peaks(dfires,peak_distance=peak_distance,peak_width=peak_width,quiet=True)
   return dfires
 
