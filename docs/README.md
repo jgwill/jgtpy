@@ -14,7 +14,7 @@
 
 ## Charts proto
 
-* [FULl](charts/pto-full.html)   
+* [FULL](charts/pto-full.html)   
 * [AUD/USD](charts/pto-pers-AUD-USD.html)    
 * [EUR/USD](charts/pto-pers-EUR-USD.html)    
 * [XAU/USD](charts/pto-pers-XAU-USD.html)    
