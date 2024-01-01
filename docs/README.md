@@ -16,6 +16,7 @@
 
 * [AUD-USD](charts/pto-pers-AUD-USD.html)    
 * [EUR-USD](charts/pto-pers-EUR-USD.html)    
+* [XAU-USD](charts/pto-pers-XAU-USD.html)    
 * [SPX500](charts/pto-pers-SPX500.html)    
 
 <!-- * [Fractal_Trading_Strategies_231117](Fractal_Trading_Strategies_231117.md) -->
