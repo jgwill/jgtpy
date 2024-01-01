@@ -62,29 +62,5 @@ m15.savefig("m15.png")
 m5.savefig("m5.png")
 #mi1,mi1a = ads.plot(instrument, "m1", show=show)
 
-# # %% Plot w1, d1,h4, h1 in four subplots
-# print("--------------------------")
-# print("Plot w1, d1,h4, h1 in four subplots")
 
-# # Create the grid layout
-# fig, axs = plt.subplots(nrows=2, ncols=2, figsize=(10, 8))
-
-# axs[0, 0].imshow(w1)
-# axs[0, 1].imshow(d1)
-# axs[1, 1].imshow(h4)
-# axs[1, 0].imshow(h1)
-
-# # Customize the layout, labels, and titles if needed
-# axs[0, 0].set_title("Chart 1")
-# axs[0, 1].set_title("Chart 2")
-# axs[1, 0].set_title("Chart 3")
-# axs[1, 1].set_title("Chart 4")
-
-# plt.tight_layout()  # To improve spacing between subplots
-
-# # Show the final grid chart
-# plt.show()
-
-# # %%
-
-# %%
+#%%
