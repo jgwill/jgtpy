@@ -174,6 +174,8 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = -1,show=True,pl
     ac_signals_marker_size = cc.ac_signals_marker_size
     ac_signal_marker = cc.ac_signal_marker
     
+    acb_plot_type =  cc.acb_plot_type
+    
     ao_peaks_marker_size = cc.ao_peaks_marker_size
     ao_peak_offset_value = cc.ao_peak_offset_value
     ao_peak_above_marker_higher = cc.ao_peak_above_marker_higher
@@ -397,7 +399,7 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = -1,show=True,pl
     acb_plot = mpf.make_addplot(
         data_last_selection[ACB] + sig_ac_offset_value,
         panel=ac_plot_panel_id,
-        type="scatter",
+        type=acb_plot_type,
         markersize=ac_signals_marker_size,
         marker=ac_signal_marker,
         color=ac_signal_buy_color,
