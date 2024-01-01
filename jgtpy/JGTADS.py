@@ -79,7 +79,7 @@ def jgtxplot18c_231209(instrument,timeframe,nb_bar_on_chart = -1,recreate_data =
         nb_bar_on_chart = cc.nb_bar_on_chart
     data = ah.prepare_cds_for_ads_data(instrument, timeframe, nb_bar_on_chart, recreate_data) #@STCGoal Supports TLID
     #data.to_csv("debug_data" + instrument.replace("/","-") + timeframe + ".csv")
-    return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show,plot_ao_peaks,cc=cc)
+    return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show,plot_ao_peaks,cc=cc),data
 
 
 def plot_from_pds_df(pdata,instrument,timeframe,nb_bar_on_chart = 375,show=True,plot_ao_peaks=True):
