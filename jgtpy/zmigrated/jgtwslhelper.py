@@ -1,6 +1,5 @@
 import subprocess
 
-
 import os
 import sys
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
@@ -48,17 +47,6 @@ def run(bash_command):
 
 
     
-    
-def jgtfxcli_wsl1(cli_path, instrument, timeframe, quote_count, verbose_level):
-    if cli_path == "" or cli_path is None or cli_path == 0:
-        cli_path = "/home/jgi/.local/bin/jgtfxcli"
-    bash_command_to_run = f"pwd;{cli_path} -i '{instrument}' -t '{timeframe}' -c {quote_count} -o -v {verbose_level}"
-    powershell_command = 'wsl.exe bash -c "' + bash_command_to_run + '"'
-    result = subprocess.run(
-        ["pwsh.exe", "-Command", powershell_command], stdout=subprocess.PIPE, shell=True
-    )
-    return result.stdout.decode("utf-8")
-
 
 def resolve_cli_path(cli_path):
     if cli_path == "" or cli_path is None or cli_path == 0 or cli_path == '0':
@@ -84,6 +72,14 @@ def _mkbash_cmd_string_jgtfxcli_range(instrument, timeframe,tlid_range=None,cli_
         bash_command_to_run = f"pwd;{cli_path} -i \"{instrument}\" -t \"{timeframe}\" -c \"{quote_count}\" -v {verbose_level}"
         
     
+    return bash_command_to_run
+
+def _mkbash_cmd_string_jgtfxcli_range1(instrument, timeframe,tlid_range=None,cli_path="", verbose_level=0):
+    cli_path=resolve_cli_path(cli_path)
+    
+    date_from,date_to=jgtos.tlid_range_to_jgtfxcon_start_end_str(tlid_range)
+    
+    bash_command_to_run = f"pwd;{cli_path} -i \"{instrument}\" -t \"{timeframe}\" -s \"{date_from}\" -e \"{date_to}\" -v {verbose_level}"
     return bash_command_to_run
 
 def jgtfxcli_wsl_range(instrument, timeframe, quote_count,tlid_range=None,cli_path="", verbose_level=0):
