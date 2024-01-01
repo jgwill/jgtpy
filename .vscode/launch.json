@@ -1,0 +1,26 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "ADS-tst-chart",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/test-ads.py",
+      "args": ["SPX500"],
+      "console": "internalConsole",
+      "justMyCode": false
+    },
+    {
+      "name": "Persp-PTO",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/pto-pers-panel-02.py",
+      "args": ["SPX500"],
+      "console": "internalConsole",
+      "justMyCode": false
+    },
+  ]
+}

@@ -25,6 +25,9 @@
 			"dist": true
 		},
 		"explorerExclude.backup": {},
-		"editor.tabSize": 2
+		"editor.tabSize": 2,
+		"python.analysis.include": [
+			"jgtpy/JGT*.py"
+		]
 	}
 }
