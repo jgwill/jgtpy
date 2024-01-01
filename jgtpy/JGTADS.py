@@ -684,7 +684,7 @@ def make_plot__fractals_indicator(fractal_up_color, fractal_dn_color, fractal_ma
     return fractal_up_plot,fractal_down_plot
 
 
-def make_plot__fdb_signals(fdb_signal_buy_color, fdb_signal_sell_color, fdb_marker_size, fdb_signal_marker, fdbb_coln, fdbs_coln, main_plot_panel_id, data_last_selection, fdb_offset_value,fdb_plot_type = "scatter"):
+def make_plot__fdb_signals(fdb_signal_buy_color, fdb_signal_sell_color, fdb_marker_size, fdb_signal_marker, fdbb_coln, fdbs_coln, main_plot_panel_id, data_last_selection, fdb_offset_value):
         """
         Creates scatter plots for FDB buy and sell signals based on the given parameters.
 
@@ -698,14 +698,15 @@ def make_plot__fdb_signals(fdb_signal_buy_color, fdb_signal_sell_color, fdb_mark
                 main_plot_panel_id (int): ID of the main plot panel.
                 data_last_selection (pandas.DataFrame): Data containing the buy and sell signals.
                 fdb_offset_value (float): Offset value to adjust the scatter plot positions.
+                fdbs_plot_type (str, optional): Plot type for sell signals. Defaults to "scatter".
 
         Returns:
                 tuple: A tuple containing the scatter plot for buy signals and the scatter plot for sell signals.
         """
         
-        fdbb_up_plot = make_plot_fdbb_signal(fdb_signal_buy_color, fdb_marker_size, fdb_signal_marker, fdbb_coln, main_plot_panel_id, data_last_selection, fdb_offset_value,fdb_plot_type)
+        fdbb_up_plot = make_plot_fdbb_signal(fdb_signal_buy_color, fdb_marker_size, fdb_signal_marker, fdbb_coln, main_plot_panel_id, data_last_selection, fdb_offset_value)
 
-        fdbs_down_plot = make_plot_fdbs_signal(fdb_signal_sell_color, fdb_marker_size, fdb_signal_marker, fdbs_coln, main_plot_panel_id, data_last_selection, fdb_offset_value,fdb_plot_type)
+        fdbs_down_plot = make_plot_fdbs_signal(fdb_signal_sell_color, fdb_marker_size, fdb_signal_marker, fdbs_coln, main_plot_panel_id, data_last_selection, fdb_offset_value)
         
         return fdbb_up_plot,fdbs_down_plot
 
