@@ -7,7 +7,7 @@
 
 # sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
-# from jgtwslhelper import _mkbash_cmd_string_jgtfxcli_range,resolve_cli_path
+# from jgtutils.jgtwslhelper import _mkbash_cmd_string_jgtfxcli_range,resolve_cli_path
 
 
 # class TestMkBashCmdStringJgtfxcliRange(unittest.TestCase):

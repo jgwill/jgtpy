@@ -12,9 +12,7 @@ import JGTPDHelper as jpd
 from JGTConfig import local_fn_compression,get_pov_local_data_filename
 from JGTPDHelper import *
 from datetime import datetime
-import jgtcommon
-import jgtos
-import iprops
+from jgtutils import jgtcommon,iprops,jgtos
 
 from JGTChartConfig import JGTChartConfig
 

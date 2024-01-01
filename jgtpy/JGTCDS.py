@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 #import jgtfxcon.JGTPDS as pds
 import JGTIDS as ids
 import JGTPDSP as pds
-from jgtos import get_data_path
+from jgtutils.jgtos import get_data_path
 from JGTChartConfig import JGTChartConfig
 #from . import jgtconstants
 #.columns_to_remove as columns_to_remove
@@ -16,7 +16,7 @@ from JGTChartConfig import JGTChartConfig
 import pandas as pd
 
 
-import jgtconstants as c
+from jgtutils import jgtconstants as c
 
 
 # %%

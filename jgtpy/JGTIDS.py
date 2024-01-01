@@ -27,81 +27,9 @@ _dtformat = '%m.%d.%Y %H:%M:%S'
 
 # %%
 #@title INDICATOR's Data Frame Columns naming
-# Import statements for jgtconstants.py variables
-
-from jgtconstants import (
-    indicator_currentDegree_alligator_jaw_column_name,
-    indicator_currentDegree_alligator_teeth_column_name,
-    indicator_currentDegree_alligator_lips_column_name,
-    indicator_sixDegreeLarger_alligator_jaw_column_name,
-    indicator_sixDegreeLarger_alligator_teeth_column_name,
-    indicator_sixDegreeLarger_alligator_lips_column_name,
-    indicator_AO_awesomeOscillator_column_name,
-    indicator_zeroLineCross_column_name,
-    indicator_ao_fractalPeakOfMomentum_column_name,
-    indicator_ao_fractalPeakValue_column_name,
-    indicator_AO_aboveZero_column_name,
-    indicator_AO_bellowZero_column_name,
-    indicator_AC_accelerationDeceleration_column_name,
-    indicator_gatorOscillator_low_column_name,
-    indicator_gatorOscillator_high_column_name,
-    indicator_mfi_marketFacilitationIndex_column_name,
-    indicator_fractal_high_degree2_column_name,
-    indicator_fractal_low_degree2_column_name,
-    indicator_fractal_high_degree3_column_name,
-    indicator_fractal_low_degree3_column_name,
-    indicator_fractal_high_degree5_column_name,
-    indicator_fractal_low_degree5_column_name,
-    indicator_fractal_high_degree8_column_name,
-    indicator_fractal_low_degree8_column_name,
-    indicator_fractal_high_degree13_column_name,
-    indicator_fractal_low_degree13_column_name,
-    indicator_fractal_high_degree21_column_name,
-    indicator_fractal_low_degree21_column_name,
-    indicator_fractal_high_degree34_column_name,
-    indicator_fractal_low_degree34_column_name,
-    indicator_fractal_high_degree55_column_name,
-    indicator_fractal_low_degree55_column_name,
-    indicator_fractal_high_degree89_column_name,
-    indicator_fractal_low_degree89_column_name,
-)
 
 
-# %%
-#@title SIGNAL's Data Frame Columns naming
-# Import statements for jgtconstants.py variables
-
-from jgtconstants import (
-    nonTradingZoneColor,
-    sellingZoneColor,
-    buyingZoneColor,
-)
-
-from jgtconstants import (
-    signalCode_fractalDivergentBar_column_name,
-    signalSell_fractalDivergentBar_column_name,
-    signalBuy_fractalDivergentBar_column_name,
-    signalSell_fractal_column_name,
-    signalBuy_fractal_column_name,
-    signal_zcol_column_name,
-    signalSell_zoneSignal_column_name,
-    signalBuy_zoneSinal_column_name,
-    signalBuy_zeroLineCrossing_column_name,
-    signalSell_zeroLineCrossing_column_name,
-    signalSell_AC_deceleration_column_name,
-    signalBuy_AC_acceleration_column_name,
-    signalSell_saucer_column_name,
-    signalBuy_saucer_column_name,
-)
-
-
-
-
-
-
-
-
-
+from jgtutils.jgtconstants import *
 
 
 

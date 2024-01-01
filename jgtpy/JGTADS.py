@@ -17,11 +17,11 @@ import JGTPDSP as pds
 import JGTIDS as ids
 from JGTIDS import getMinByTF
 import JGTCDS as cds
-import jgtwslhelper as wsl
+from jgtutils import jgtwslhelper as wsl
 from JGTChartConfig import JGTChartConfig
 
 import adshelper as ah
-import jgtconstants as c
+from jgtutils import jgtconstants as c
 
 AO = c.AO
 AC = c.AC

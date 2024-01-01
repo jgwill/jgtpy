@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from scipy.signal import find_peaks
 from JGTPDHelper import jgtpd_drop_col_by_name
-import jgtconstants as c
+from jgtutils import jgtconstants as c
 
 peak_distance = 13  #distance: Set this to the number of periods that define the minimum peak separation. To meet the 5-8 bar criterion, set distance=5.
 peak_width=8 #width: This parameter could be used to define the minimum width of the peak in terms of bars. However, for AO and price peaks, the distance parameter may suffice to ensure the peak duration you are seeking. This parameter is optional and can be set or omitted based on the specific requirements.

@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 import JGTPDSP as pds
 import JGTIDS as ids
 import JGTCDS as cds
-import jgtwslhelper as wsl
+from jgtutils import jgtwslhelper as wsl
 import pandas as pd
 
 from JGTChartConfig import JGTChartConfig

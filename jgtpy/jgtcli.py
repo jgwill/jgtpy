@@ -6,10 +6,8 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 # import .
 
-import jgtconstants as constants
-import jgtcommon as jgtcommon
+from jgtutils import jgtconstants as constants,jgtcommon as jgtcommon,jgtwslhelper as wsl
 import argparse
-import jgtwslhelper as wsl
 import JGTPDSP as pds
 import JGTCDS as cds
 import JGTADS as ads

@@ -5,7 +5,7 @@
 # import sys
 # import os
 # sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
-# import jgtconstants as c
+# from jgtutils import jgtconstants as c
 # from jgtpy.JGTIDS import ids_add_indicators
 
 # import jgtpy.testmock_IDS as mk
