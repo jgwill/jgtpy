@@ -1,8 +1,10 @@
 class JGTChartConfig:
   def __init__(self):
     self.nb_bar_on_chart = 300
+    self.min_bar_on_chart = 220
     self.b_alligator_jaws_period = 89
     self.cds_required_amount_of_bar_for_calc = self.b_alligator_jaws_period
+    self.nb_bar_to_retrieve = self.nb_bar_on_chart + self.cds_required_amount_of_bar_for_calc
     
     self.jaw_line_width = 1
     self.teeth_line_width = 1
