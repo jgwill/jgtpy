@@ -14,9 +14,9 @@
 
 ## Charts proto
 
-* [AUD-USD](docs/charts/pto-pers-AUD-USD.html)    
-* [EUR-USD](docs/charts/pto-pers-EUR-USD.html)    
-* [SPX500](docs/charts/pto-pers-SPX500.html)    
+* [AUD-USD](charts/pto-pers-AUD-USD.html)    
+* [EUR-USD](charts/pto-pers-EUR-USD.html)    
+* [SPX500](charts/pto-pers-SPX500.html)    
 
 <!-- * [Fractal_Trading_Strategies_231117](Fractal_Trading_Strategies_231117.md) -->
 
