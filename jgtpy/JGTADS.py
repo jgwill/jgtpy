@@ -624,7 +624,7 @@ def make_plot_fractals_degreehigher_indicator(fractal_dn_color_higher, fractal_u
 
 
 
-def create_ao_ac_plots(data:pd.DataFrame,cc: JGTChartConfig=None, ao_plot_panel_id=1, ac_plot_panel_id=2):
+def make_plot__ao_ac(data:pd.DataFrame,cc: JGTChartConfig=None, ao_plot_panel_id=1, ac_plot_panel_id=2):
     if cc is None:
         cc = JGTChartConfig()
     # ao_upbar_color, ao_dnbar_color, ac_up_color, ac_dn_color
@@ -663,7 +663,7 @@ def create_ao_ac_plots(data:pd.DataFrame,cc: JGTChartConfig=None, ao_plot_panel_
 
 
 
-def make_plot__fractals_indicator(fractal_up_color, fractal_dn_color, fractal_marker_size, fractal_up_marker, fractal_dn_marker, fh_col_dim, fl_col_dim, main_plot_panel_id, data_last_selection, fractal_offset_value, fractals_plot_type="scatter"):
+def make_plot__fractals_indicator(fractal_up_color, fractal_dn_color, fractal_marker_size, fractal_up_marker, fractal_dn_marker, fh_col_dim, fl_col_dim, main_plot_panel_id, data_last_selection, fractal_offset_value):
     fractal_up_plot = mpf.make_addplot(
         data_last_selection[fh_col_dim] + fractal_offset_value,
         panel=main_plot_panel_id,
@@ -680,9 +680,6 @@ def make_plot__fractals_indicator(fractal_up_color, fractal_dn_color, fractal_ma
         marker=fractal_dn_marker,
         color=fractal_dn_color,
 )
-)
-    
-)    
     
     return fractal_up_plot,fractal_down_plot
 
