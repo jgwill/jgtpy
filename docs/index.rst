@@ -30,10 +30,12 @@ Indicators
 .. autoclass:: jgtpy.JGTPDS
 .. autoclass:: jgtpy.JGTIDS
 .. autoclass:: jgtpy.JGTCDS
+.. autoclass:: jgtpy.JGTADS
 .. automodule:: __init__
 .. automodule:: jgtpy.JGTPDS
 .. automodule:: jgtpy.JGTIDS
 .. automodule:: jgtpy.JGTCDS
+.. automodule:: jgtpy.JGTADS
 
 
 
