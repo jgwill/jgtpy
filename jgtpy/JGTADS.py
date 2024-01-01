@@ -709,11 +709,12 @@ def make_plot__fdb_signals(fdb_signal_buy_color, fdb_signal_sell_color, fdb_mark
         
         return fdbb_up_plot,fdbs_down_plot
 
-def make_plot_fdbs_signal(fdb_signal_sell_color, fdb_marker_size, fdb_signal_marker, fdbs_coln, main_plot_panel_id, data_last_selection, fdb_offset_value):
+def make_plot_fdbs_signal(fdb_signal_sell_color, fdb_marker_size, fdb_signal_marker, fdbs_coln, main_plot_panel_id, data_last_selection, fdb_offset_value,fdbs_plot_type = "scatter"):
+    
     fdbs_down_plot = mpf.make_addplot(
             data_last_selection[fdbs_coln] - fdb_offset_value,
             panel=main_plot_panel_id,
-            type="scatter",
+            type=fdbs_plot_type,
             markersize=fdb_marker_size,
             marker=fdb_signal_marker,
             color=fdb_signal_sell_color,
@@ -721,8 +722,7 @@ def make_plot_fdbs_signal(fdb_signal_sell_color, fdb_marker_size, fdb_signal_mar
 
     return fdbs_down_plot
 
-def make_plot_fdbb_signal(fdb_signal_buy_color, fdb_marker_size, fdb_signal_marker, fdbb_coln, main_plot_panel_id, data_last_selection, fdb_offset_value,fdbb_plot_type = "scatter"):
-    
+def make_plot_fdbb_signal(fdb_signal_buy_color, fdb_marker_size, fdb_signal_marker, fdbb_coln, main_plot_panel_id, data_last_selection, fdb_offset_value):
     fdbb_up_plot = mpf.make_addplot(
             data_last_selection[fdbb_coln] + fdb_offset_value,
             panel=main_plot_panel_id,
