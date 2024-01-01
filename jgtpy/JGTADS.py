@@ -209,9 +209,9 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = -1,show=True,pl
     ACS = c.ACS
     
     #plot config
-    main_plot_panel_id=cc.main_plot_panel_id
-    ao_plot_panel_id=cc.ao_plot_panel_id
-    ac_plot_panel_id=cc.ac_plot_panel_id
+    main_plot_panel_id=0
+    ao_plot_panel_id=1
+    ac_plot_panel_id=2
     
     
     
@@ -399,7 +399,7 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = -1,show=True,pl
     acb_plot = mpf.make_addplot(
         data_last_selection[ACB] + sig_ac_offset_value,
         panel=ac_plot_panel_id,
-        type="scatter",
+        type=acb_plot_type,
         markersize=ac_signals_marker_size,
         marker=ac_signal_marker,
         color=ac_signal_buy_color,
