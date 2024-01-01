@@ -55,6 +55,10 @@ class JGTChartConfig:
     self.ao_plot_type = "bar"
     self.ac_plot_type = "bar"
     
+    self.main_plot_panel_id = 0
+    self.ao_plot_panel_id = 1
+    self.ac_plot_panel_id = 2
+
 
 # Create an instance with default values
 default_config = JGTChartConfig()

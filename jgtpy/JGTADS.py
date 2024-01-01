@@ -209,9 +209,9 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = -1,show=True,pl
     ACS = c.ACS
     
     #plot config
-    main_plot_panel_id=0
-    ao_plot_panel_id=1
-    ac_plot_panel_id=2
+    main_plot_panel_id=cc.main_plot_panel_id
+    ao_plot_panel_id=cc.ao_plot_panel_id
+    ac_plot_panel_id=cc.ac_plot_panel_id
     
     
     
