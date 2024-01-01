@@ -16,6 +16,8 @@ import jgtcommon
 import jgtos
 import iprops
 
+from JGTChartConfig import JGTChartConfig
+
 renameColumns=True
 addOhlc=True
 
@@ -24,10 +26,14 @@ cleanseOriginalColumns=True
 useLocal=True
 
 
-def getPH(instrument, timeframe, quote_count=335, start=None, end=None, with_index=True, quiet=True,convert_date_index_to_dt=True):
+def getPH(instrument, timeframe, quote_count=-1, start=None, end=None, with_index=True, quiet=True,convert_date_index_to_dt=True,cc: JGTChartConfig=None):
   #@STCissue quote_count is ignored or irrelevant in start/end
   #@a Adequate start and end from the stored file
-
+  if cc is None:
+    cc = JGTChartConfig()
+  if quote_count == -1:
+    quote_count = cc.nb_bar_to_retrieve
+  
   df = getPH_from_filestore(instrument, timeframe, quiet, False, with_index,convert_date_index_to_dt)
   if not quiet:
     print(df.columns)
@@ -43,8 +49,9 @@ def getPH(instrument, timeframe, quote_count=335, start=None, end=None, with_ind
       print("start: " + str(start))
       print("end: " + str(end))
     df = select_start_end(df, start, end)
-  
 
+  if len(df) > quote_count:
+    df = df.iloc[-quote_count:]
   return df
 
 def select_start_end(df, start, end=None):

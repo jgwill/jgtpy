@@ -139,13 +139,14 @@ def create(instrument,timeframe,nb2retrieve=335,stayConnected=False,quiet=True,c
 
   Returns:
       pandas.DataFrame: CDS DataFrame
+  """
   
-  df=pds.getPH(instrument,timeframe,nb2retrieve,with_index=False,quiet=quiet)
-
-#createByRange
+  df=pds.getPH(instrument,timeframe,nb2retrieve,with_index=False,quiet=quiet,cc=cc)
+  dfi=createFromDF(df,quiet=quiet,cc=cc)
   return dfi
   
 
+#createByRange
 def createByRange(instrument,timeframe,start,end,stayConnected=False,quiet=True):
   """Create CDS with Fresh Data from a range
 

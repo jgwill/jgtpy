@@ -45,22 +45,32 @@ def read_csv(csv_fn):
         pass
     return df
 
-MIN_CHART_BARS=300
+#IN_CHART_BARS=300
 
-def prepare_cds_for_ads_data(instrument, timeframe, nb_bar_on_chart, recreate_data=True,selected_offsets=45):
+def prepare_cds_for_ads_data(instrument, timeframe,tlid_range=None,cc: JGTChartConfig=None):
     """
     Prepare CDS (Credit Default Swap) data for ADS (Automated Trading System).
 
     Args:
         instrument (str): The instrument symbol.
         timeframe (str): The timeframe of the data.
-        nb_bar_on_chart (int): The number of bars to display on the chart.
-        recreate_data (bool, optional): Whether to recreate the data. Defaults to True.
+        tlid_range (str, optional): The range of TLID to select. Defaults to None.
+        cc (JGTChartConfig, optional): The chart configuration. Defaults to None.
 
     Returns:
-        pandas.DataFrame: The prepared CDS data.
+        pandas.DataFrame: The prepared CDS data with Selected number of bars
 
     """
+    if cc is None:
+        cc = JGTChartConfig()
+        
+    #@STCIssue Deprecating this value for later 
+    
+    
+    if tlid_range is not None:
+        raise NotImplementedError("tlid_range is not implemented yet.")
+    #@STCGoal local retrieve data from cache if available or from WSL if not  (jgtfxcli)
+        
     cache_data=False
     cache_dir = "cache"
     if cache_data:
@@ -70,42 +80,52 @@ def prepare_cds_for_ads_data(instrument, timeframe, nb_bar_on_chart, recreate_da
     fnpath = os.path.join(cache_dir,fn)
     l.info("fnpath:"+ fnpath)
 
-    
-    if recreate_data:
+
+    try:
+        df = pds.getPH(instrument,timeframe,cc=cc)
+        #print("pds df:",str(len(df))+" rows")
+    except:
+        l.warning("Could not get DF, trying to run thru WSL the update")
+        wsl.jgtfxcli(instrument, timeframe, cc.nb_bar_to_retrieve)
+        df = pds.getPH(instrument,timeframe,cc.nb_bar_to_retrieve) #@STCIssue Limitation of full range to be given yo jgtfxcli
+    # Select the last 400 bars of the data
+    try:#@q Is the selected correspond to desirrd bars ?
+        #Make sure we have enough bars to select
+        nb_to_select = cc.nb_bar_to_retrieve
+        if nb_to_select < cc.min_bar_on_chart:
+            nb_to_select = cc.min_bar_on_chart
+            selected = df.copy()
+        else:
+            selected = df.iloc[-nb_to_select:].copy()
+        
+        #selected.to_csv("output_ads_prep_data.csv")
+    except:
+        l.warning("Could not get DF, trying to run thru WSL the update")
+        wsl.jgtfxcli(instrument, timeframe, cc.nb_bar_to_retrieve)
         try:
-            df = pds.getPH(instrument,timeframe,nb_bar_to_retrieve)
-            print("pds df:",str(len(df))+" rows")
+            df = pds.getPH(instrument,timeframe,cc.nb_bar_to_retrieve)
+            selected = df.copy()
         except:
-            l.warning("Could not get DF, trying to run thru WSL the update")
-            wsl.jgtfxcli(instrument, timeframe, nb_bar_to_retrieve)
-            df = pds.getPH(instrument,timeframe,nb_bar_to_retrieve) #@STCIssue Limitation of full range to be given yo jgtfxcli
-        # Select the last 400 bars of the data
-        try:#@q Is the selected correspond to desirrd bars ?
-            #Make sure we have enough bars to select
-            nb_to_select = nb_bar_to_retrieve
-            if nb_to_select < MIN_CHART_BARS:
-                nb_to_select = MIN_CHART_BARS
-                selected = df.copy()
-            else:
-                selected = df.iloc[-nb_to_select:].copy()
-            
-            #selected.to_csv("output_ads_prep_data.csv")
-        except:
-            l.warning("Could not get DF, trying to run thru WSL the update")
-            wsl.jgtfxcli(instrument, timeframe, nb_bar_to_retrieve)
-            try:
-                df = pds.getPH(instrument,timeframe,nb_bar_to_retrieve)
-                selected = df.copy()
-            except:
-                l.warning("Twice :(Could not select the desired amount of bars, trying anyway with what we have")
-                pass
-            l.warning("Could not select the desired amount of bars, trying anyway with what we have")
+            l.warning("Twice :(Could not select the desired amount of bars, trying anyway with what we have")
             pass
-        #print(selected)
-        data = cds.createFromDF(selected)
-        if cache_data:
-            data.to_csv(fnpath)
-    return data
+        l.warning("Could not select the desired amount of bars, trying anyway with what we have")
+        pass
+    #print(selected)
+    #len_selected = len(selected)
+    data = cds.createFromDF(selected)
+    if cache_data:
+        data.to_csv(fnpath)
+        
+    nb_bars = len(data)
+    #print("AH:Debug: nb_bar_on_chart:",nb_bar_on_chart)
+    #print("AH:Debug:nb_bars b4 prep ends well:",nb_bars)
+    if nb_bars> cc.nb_bar_on_chart:
+        r = data.iloc[-cc.nb_bar_on_chart:].copy()
+    else:
+        r= data
+    #len_r = len(r)
+    #print("AH:Debug:nb_bars after prep ends well:",len_r)
+    return r
 
 
 def get(instrument,timeframe,nb_bar_on_chart=500):

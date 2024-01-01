@@ -721,21 +721,21 @@ def cds_add_signals_to_indicators(dfires,_aopeak_range=28,quiet=False,cc:JGTChar
                                    'p',
                                    'n',
                                    _aopeak_range,
-
-
+                                   quiet=quiet,
+                                   cc=cc)
   return dfires
 
 
-def tocds(dfsrc,quiet=True,peak_distance=13,peak_width=8):
-  if cc is None:
+
+def tocds(dfsrc,quiet=True,peak_distance=13,peak_width=8,cc:JGTChartConfig=None):
   if cc is None:
     cc = JGTChartConfig()
-    cc = JGTChartConfig()
+  dfires = ids_add_indicators(dfsrc,quiet=quiet,cc=cc)
   dfires = cds_add_signals_to_indicators(dfires,quiet=quiet,cc=cc)
   dfires = jgti_add_zlc_plus_other_AO_signal(dfires,quiet=quiet)
-  dfires = ids_add_indicators(dfsrc,quiet=quiet,cc=cc)
   dfires = pds_cleanse_original_columns(dfires,quiet=True)
   dfires = ids_cleanse_ao_peak_secondary_columns(dfires,quiet=True)
+  dfires = __format_boolean_columns_to_int(dfires,quiet=True)
   dfires = pto_add_ao_price_peaks(dfires,peak_distance=peak_distance,peak_width=peak_width,quiet=True)
   return dfires
 

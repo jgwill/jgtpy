@@ -1,119 +1,24 @@
-#@title ADS
-
-#%% Imports
-import numpy as np
-import pandas as pd
-import warnings
-import matplotlib.pyplot as plt
-import mplfinance as mpf
-
-
-import sys
-import os
-sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
-
-#import jgtpy
-import JGTPDSP as pds 
-import JGTIDS as ids
-from JGTIDS import getMinByTF
-import JGTCDS as cds
-import jgtwslhelper as wsl
-from JGTChartConfig import JGTChartConfig
-
-import adshelper as ah
-import jgtconstants as c
-
-AO = c.AO
-AC = c.AC
-
-warnings.filterwarnings("ignore", category=FutureWarning)
-
-import os
-
-#import kaleido
-# import plotly
-
-import JGTConfig as jgtc
+with this plotting function, create a class in which each made subplot (   jaw_plot,
+        teeth_plot,
+        lips_plot,
+        fractal_up_plot,
+        fractal_down_plot,
+        fractal_up_plot_higher,
+        fractal_down_plot_higher,
+        fdbb_up_plot,
+        fdbs_down_plot,
+        sb_plot,
+        ss_plot,
+        ao_plot,
+        ac_plot,
+        acs_plot,
+        acb_plot) will be returned in an appropriate object we can reuse when we desire to plot these parts in other charting experiments
 
 
-# import plotly.graph_objects as go
-# import plotly.subplots as sp
+```python
 
 
-
-#%% Logging
-
-import logging
-_loglevel= logging.WARNING
-
-# Create a logger object
-l = logging.getLogger()
-l.setLevel(_loglevel)
-
-# Create a console handler and set its level
-console_handler = logging.StreamHandler()
-console_handler.setLevel(_loglevel)
-
-# Create a formatter and add it to the console handler
-formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-console_handler.setFormatter(formatter)
-
-# Add the console handler to the logger
-l.addHandler(console_handler)
-
-
-
-
-cdtformat="%Y-%m-%d"
-
-
-
-#%% Props and requests
-
-
-
-
-
-def jgtxplot18c_231209(instrument,timeframe,show=True,plot_ao_peaks=False,cc: JGTChartConfig=None,tlid_range=None):
-    if cc is None:
-        cc= JGTChartConfig()
-        
-    data = ah.prepare_cds_for_ads_data(instrument, timeframe,tlid_range=tlid_range,cc=cc) #@STCGoal Supports TLID
-    #@STCIssue Desired Number of Bars ALREADY SELECTED IN THERE
-    #data.to_csv("debug_data" + instrument.replace("/","-") + timeframe + ".csv")
-    return plot_from_cds_df(data,instrument,timeframe,show,plot_ao_peaks,cc=cc)
-
-
-def plot_from_pds_df(pdata,instrument,timeframe,show=True,plot_ao_peaks=True,cc: JGTChartConfig=None,tlid_range=None):
-    if cc is None:
-        cc= JGTChartConfig()
-    
-    cds_required_amount_of_bar_for_calc = cc.cds_required_amount_of_bar_for_calc
-    nb_bar_on_chart = cc.nb_bar_on_chart
-
-    # Select the last cds_required_amount_of_bar_for_calc
-    #@STCIssue Desired Number of Bars MUST SUPPORT TLID RANGE
-    try:
-        selected = pdata.iloc[-nb_bar_on_chart-cds_required_amount_of_bar_for_calc:].copy() #@STCGoal A Unified way to select the data
-    except:
-        selected = pdata.copy()
-        l.warning("Could not select the desired amount of bars, trying anyway with what we have")
-        pass
-
-    data1 = cds.createFromDF(selected)
-
-    #@STCGoal Make sure we have the amount of bars we were requested (and not more)
-    try: 
-        data=data1.iloc[-nb_bar_on_chart:].copy()
-    except:
-        data = data1.copy()
-        l.warning("Could not select the desired amount of bars, trying anyway with what we have")
-        pass
-    return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show,plot_ao_peaks=plot_ao_peaks),data
-
-
-
-def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: JGTChartConfig=None):
+def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = -1,show=True,plot_ao_peaks=True,cc: JGTChartConfig=None):
     
     """
     Plot OHLC bars, indicators, and signals from a pandas DataFrame.
@@ -122,6 +27,7 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
         data (pandas.DataFrame): The input DataFrame containing OHLC data.
         instrument (str): The instrument symbol.
         timeframe (str): The timeframe of the data.
+        nb_bar_on_chart (int, optional): The number of bars to display on the chart. Defaults to 375.
         show (bool, optional): Whether to display the plot. Defaults to True.
         plot_ao_peaks (bool, optional): Whether to plot AO peaks. Defaults to False.
         cc (JGTChartConfig, optional): The chart configuration object. Defaults to None.
@@ -132,9 +38,8 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
     """
     if cc is None:
         cc= JGTChartConfig()
-   
-    
-    nb_bar_on_chart = cc.nb_bar_on_chart
+    if nb_bar_on_chart==-1:
+        nb_bar_on_chart = cc.nb_bar_on_chart
     # Load dataset
     iprop = pds.get_instrument_properties(instrument)
     l.debug(iprop)
@@ -151,6 +56,8 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
     
     main_plot_type="ohlc"
     
+    if nb_bar_on_chart==-1:
+        nb_bar_on_chart = cc.nb_bar_on_chart
         
     
     fig_ratio_x = cc.fig_ratio_x
@@ -189,8 +96,6 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
     ac_signals_marker_size = cc.ac_signals_marker_size
     ac_signal_marker = cc.ac_signal_marker
     
-    acb_plot_type =  cc.acb_plot_type
-    
     ao_peaks_marker_size = cc.ao_peaks_marker_size
     ao_peak_offset_value = cc.ao_peak_offset_value
     ao_peak_above_marker_higher = cc.ao_peak_above_marker_higher
@@ -224,20 +129,22 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
     ACS = c.ACS
     
     #plot config
-    main_plot_panel_id=cc.main_plot_panel_id
-    ao_plot_panel_id=cc.ao_plot_panel_id
-    ac_plot_panel_id=cc.ac_plot_panel_id
+    main_plot_panel_id=0
+    ao_plot_panel_id=1
+    ac_plot_panel_id=2
     
     
     
     #%% Select the last 400 bars of the data
     
-    data_last_selection = data
     # Select the last 400 bars of the data
-    tst_len_data = len(data)
-    if nb_bar_on_chart != tst_len_data:    
-        data_last_selection = _select_charting_nb_bar_on_chart(data, nb_bar_on_chart)
-    l_datasel = len(data_last_selection)
+    try:
+        data_last_selection = data.iloc[-nb_bar_on_chart:].copy()
+        #data_last_selection.to_csv("out_data_last_selection.csv")
+    except:
+        l.warning("Could not select the desired amount of bars, trying anyway with what we have")
+        data_last_selection = data
+        pass
     
     # Make OHLC bars plot
     ohlc = data_last_selection[[OPEN, HIGH, LOW, CLOSE]]
@@ -247,8 +154,8 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
     
     
     #%% AO/AC
-    # AO / AC Plotting
-    ao_plot,ac_plot = make_plot__ao_ac(data_last_selection,cc,ao_plot_panel_id,ac_plot_panel_id)
+    # AO / AC
+    ao_plot,ac_plot = create_ao_ac_plots(data_last_selection,cc)
     
     
     # @STCGoal Make AO/AC signals plotted
@@ -396,10 +303,8 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
     
     #%% AC Signal
     
-    sig_ac_offset_value = 0
     
-    
-    # Align ACB with OHLC bars if value is '1.0'
+    # Align saucer with OHLC bars if value is '1.0'
     data_last_selection.loc[:,ACB] = np.where(
         data_last_selection[ACB] == 1.0, data_last_selection[AC], np.nan
     )
@@ -407,13 +312,14 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
         data_last_selection[ACS] == 1.0, data_last_selection[AC], np.nan
     )
 
+    sig_ac_offset_value = 0
 
 
     # Make Buy Signal plot
     acb_plot = mpf.make_addplot(
         data_last_selection[ACB] + sig_ac_offset_value,
         panel=ac_plot_panel_id,
-        type=acb_plot_type,
+        type="scatter",
         markersize=ac_signals_marker_size,
         marker=ac_signal_marker,
         color=ac_signal_buy_color,
@@ -422,7 +328,7 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
     acs_plot = mpf.make_addplot(
         data_last_selection[ACS] - sig_ac_offset_value,
         panel=ac_plot_panel_id,
-        type=acb_plot_type,
+        type="scatter",
         markersize=ac_signals_marker_size,
         marker=ac_signal_marker,
         color=ac_signal_sell_color,
@@ -472,11 +378,7 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
 
     fractal_up_plot, fractal_down_plot = make_plot__fractals_indicator(fractal_up_color, fractal_dn_color, fractal_marker_size, fractal_up_marker, fractal_dn_marker, FH, FL, main_plot_panel_id, data_last_selection, fractal_offset_value)
 
-
-
-
     #%% Fractal higher dim
-    #@STCIssue The Data IS not Prepared in the PLot Maker.  Is this a problem? Should it be? Should it be done here or into a  function preparing the data for the plot? That way we could use it for more plot Types.
 
 
     data_last_selection.loc[:,FHH] = np.where(
@@ -597,208 +499,8 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
 
     if show:
         plt.show()
-    return fig,axes,data_last_selection
-
-
-def _select_charting_nb_bar_on_chart(data, nb_bar_on_chart):
-    try:
-        data_last_selection = data.iloc[-nb_bar_on_chart:].copy()
-        #data_last_selection.to_csv("out_data_last_selection.csv")
-    except:
-        l.warning("Could not select the desired amount of bars, trying anyway with what we have")
-        data_last_selection = data
-        pass
-    return data_last_selection
+    return fig,axes
 
 
 
-
-def make_plot__price_peaks__indicator(price_peak_above_color, price_peak_bellow_color, price_peak_marker_size, price_peak_above_marker, price_peak_bellow_marker, price_peak_above_coln, price_peak_bellow_coln, main_plot_panel_id, data_last_selection, price_peak_offset_value):
-    price_peak_above_plot = mpf.make_addplot(
-      data_last_selection[price_peak_above_coln] + price_peak_offset_value,
-      panel=main_plot_panel_id,
-      type="scatter",
-      markersize=price_peak_marker_size,
-      marker=price_peak_above_marker,
-      color=price_peak_above_color,
-  )
-    price_peak_bellow_plot= mpf.make_addplot(
-      data_last_selection[price_peak_bellow_coln] - price_peak_offset_value,
-      panel=main_plot_panel_id,
-      type="scatter",
-      markersize=price_peak_marker_size,
-      marker=price_peak_bellow_marker,
-      color=price_peak_bellow_color,
-  )
-    return price_peak_above_plot,price_peak_bellow_plot
-
-def make_plot_fractals_degreehigher_indicator(fractal_dn_color_higher, fractal_up_color_higher, fractal_degreehigher_marker_size, fractal_up_marker_higher, fractal_dn_marker_higher, fh_col_dim_higher, fl_col_dim_higher, main_plot_panel_id, data_last_selection, fractal_offset_value):
-    fractal_up_plot_higher = mpf.make_addplot(
-      data_last_selection[fh_col_dim_higher] + fractal_offset_value,
-      panel=main_plot_panel_id,
-      type="scatter",
-      markersize=fractal_degreehigher_marker_size,
-      marker=fractal_up_marker_higher,
-      color=fractal_up_color_higher,
-  )
-    fractal_down_plot_higher = mpf.make_addplot(
-      data_last_selection[fl_col_dim_higher] - fractal_offset_value,
-      panel=main_plot_panel_id,
-      type="scatter",
-      markersize=fractal_degreehigher_marker_size,
-      marker=fractal_dn_marker_higher,
-      color=fractal_dn_color_higher,
-  )
-    
-    return fractal_up_plot_higher,fractal_down_plot_higher
-
-
-
-def make_plot__ao_ac(data:pd.DataFrame,cc: JGTChartConfig=None, ao_plot_panel_id=1, ac_plot_panel_id=2):
-    if cc is None:
-        cc = JGTChartConfig()
-    # ao_upbar_color, ao_dnbar_color, ac_up_color, ac_dn_color
-    ao_upbar_color = cc.ao_upbar_color
-    ao_dnbar_color = cc.ao_dnbar_color
-    ac_up_color = cc.ac_up_color
-    ac_dn_color = cc.ac_dn_color
-    ao_plot_type = cc.ao_plot_type
-    ac_plot_type = cc.ac_plot_type
-    
-    # Calculate the color for 'ao' and 'ac' bar
-    colors_ao = [
-        ao_upbar_color if (data[AO][i] - data[AO][i - 1] > 0) else ao_dnbar_color
-        for i in range(1, len(data[AO]))
-    ]
-    colors_ao.insert(0, ao_dnbar_color)
-
-    colors_ac = [
-        ac_up_color
-        if (data[AC][i] - data[AC][i - 1] > 0)
-        else ac_dn_color
-        for i in range(1, len(data[AC]))
-    ]
-    colors_ac.insert(0, ac_dn_color)
-    
-    # Make 'ao' and 'ac' oscillator plot
-    
-    ao_plot = mpf.make_addplot(
-        data[AO], panel=ao_plot_panel_id, color=colors_ao, secondary_y=False, type=ao_plot_type
-    )
-    ac_plot = mpf.make_addplot(
-        data[AC], panel=ac_plot_panel_id, color=colors_ac, secondary_y=False, type=ac_plot_type
-    )
-    
-    return ao_plot, ac_plot
-
-
-
-def make_plot__fractals_indicator(fractal_up_color, fractal_dn_color, fractal_marker_size, fractal_up_marker, fractal_dn_marker, fh_col_dim, fl_col_dim, main_plot_panel_id, data_last_selection, fractal_offset_value, fractals_plot_type="scatter"):
-    fractal_up_plot = mpf.make_addplot(
-        data_last_selection[fh_col_dim] + fractal_offset_value,
-        panel=main_plot_panel_id,
-        type=fractals_plot_type,
-        markersize=fractal_marker_size,
-        marker=fractal_up_marker,
-        color=fractal_up_color,
-)
-    fractal_down_plot = mpf.make_addplot(
-        data_last_selection[fl_col_dim] - fractal_offset_value,
-        panel=main_plot_panel_id,
-        type=fractals_plot_type,
-        markersize=fractal_marker_size,
-        marker=fractal_dn_marker,
-        color=fractal_dn_color,
-)    
-    return fractal_up_plot,fractal_down_plot
-
-
-def make_plot__fdb_signals(fdb_signal_buy_color, fdb_signal_sell_color, fdb_marker_size, fdb_signal_marker, fdbb_coln, fdbs_coln, main_plot_panel_id, data_last_selection, fdb_offset_value,fdb_plot_type = "scatter"):
-        """
-        Creates scatter plots for FDB buy and sell signals based on the given parameters.
-
-        Args:
-                fdb_signal_buy_color (str): Color of the scatter plot for buy signals.
-                fdb_signal_sell_color (str): Color of the scatter plot for sell signals.
-                fdb_marker_size (int): Size of the markers in the scatter plot.
-                fdb_signal_marker (str): Marker style for the scatter plot.
-                fdbb_coln (str): Column name for buy signals in the data.
-                fdbs_coln (str): Column name for sell signals in the data.
-                main_plot_panel_id (int): ID of the main plot panel.
-                data_last_selection (pandas.DataFrame): Data containing the buy and sell signals.
-                fdb_offset_value (float): Offset value to adjust the scatter plot positions.
-                fdbs_plot_type (str, optional): Plot type for sell signals. Defaults to "scatter".
-
-        Returns:
-                tuple: A tuple containing the scatter plot for buy signals and the scatter plot for sell signals.
-        """
-        
-        fdbb_up_plot = make_plot_fdbb_signal(fdb_signal_buy_color, fdb_marker_size, fdb_signal_marker, fdbb_coln, main_plot_panel_id, data_last_selection, fdb_offset_value,fdb_plot_type)
-
-        fdbs_down_plot = make_plot_fdbs_signal(fdb_signal_sell_color, fdb_marker_size, fdb_signal_marker, fdbs_coln, main_plot_panel_id, data_last_selection, fdb_offset_value,fdb_plot_type)
-        
-        return fdbb_up_plot,fdbs_down_plot
-
-def make_plot_fdbs_signal(fdb_signal_sell_color, fdb_marker_size, fdb_signal_marker, fdbs_coln, main_plot_panel_id, data_last_selection, fdb_offset_value,fdbs_plot_type = "scatter"):
-    
-    fdbs_down_plot = mpf.make_addplot(
-            data_last_selection[fdbs_coln] - fdb_offset_value,
-            panel=main_plot_panel_id,
-            type=fdbs_plot_type,
-            markersize=fdb_marker_size,
-            marker=fdb_signal_marker,
-            color=fdb_signal_sell_color,
-    )
-
-    return fdbs_down_plot
-
-def make_plot_fdbb_signal(fdb_signal_buy_color, fdb_marker_size, fdb_signal_marker, fdbb_coln, main_plot_panel_id, data_last_selection, fdb_offset_value,fdbb_plot_type = "scatter"):
-    
-    fdbb_up_plot = mpf.make_addplot(
-            data_last_selection[fdbb_coln] + fdb_offset_value,
-            panel=main_plot_panel_id,
-            type=fdbb_plot_type,
-            markersize=fdb_marker_size,
-            marker=fdb_signal_marker,
-            color=fdb_signal_buy_color,
-    )
-
-    return fdbb_up_plot
-  #return plt
-
-
-# %% ALias function (future name)
-
-def plotcdf(data,instrument, timeframe, nb_bar_on_chart=375,show=True,plot_ao_peaks=True,cc: JGTChartConfig=None):
-  return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show,plot_ao_peaks=plot_ao_peaks,cc=cc)
-
-
-def plot(instrument, timeframe, show=True,plot_ao_peaks=True,cc: JGTChartConfig=None):
-    """
-    Plot the chart for a given instrument and timeframe.
-
-    Parameters:
-    instrument (str): The name of the instrument.
-    timeframe (str): The timeframe for the chart.
-    show (bool, optional): Whether to display the plot. Default is True.
-    plot_ao_peaks (bool, optional): Whether to plot AO peaks. Defaults to False.
-    cc (JGTChartConfig, optional): The chart configuration object. Defaults to None.
-
-    Returns:
-    fig: The figure object of the plot.
-    axes: The axes object of the plot.
-    cdfdata: The CDF data used for the plot (and made in the process
-    """
-    if cc is None:
-        cc= JGTChartConfig()
-    
-    nb_bar_on_chart = cc.nb_bar_on_chart
-    #print("ADS::Debug:nb_bar_on_chart:",str(nb_bar_on_chart))
-    fig, axes,cdfdata = jgtxplot18c_231209(instrument, timeframe, show=show,plot_ao_peaks=plot_ao_peaks,cc=cc)
-    return fig, axes,cdfdata
-
-  
-
-
-
-
+```
