@@ -81,7 +81,7 @@ def jgtxplot18c_231209(instrument,timeframe,show=True,plot_ao_peaks=False,cc: JG
     data = ah.prepare_cds_for_ads_data(instrument, timeframe,tlid_range=tlid_range,cc=cc) #@STCGoal Supports TLID
     #@STCIssue Desired Number of Bars ALREADY SELECTED IN THERE
     #data.to_csv("debug_data" + instrument.replace("/","-") + timeframe + ".csv")
-    return plot_from_cds_df(data,instrument,timeframe,show,plot_ao_peaks,cc=cc)
+    return plot_from_cds_df(data,instrument,timeframe,show=show,plot_ao_peaks=plot_ao_peaks,cc=cc)
 
 
 def plot_from_pds_df(pdata,instrument,timeframe,show=True,plot_ao_peaks=True,cc: JGTChartConfig=None,tlid_range=None):
@@ -109,7 +109,7 @@ def plot_from_pds_df(pdata,instrument,timeframe,show=True,plot_ao_peaks=True,cc:
         data = data1.copy()
         l.warning("Could not select the desired amount of bars, trying anyway with what we have")
         pass
-    return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show,plot_ao_peaks=plot_ao_peaks),data
+    return plot_from_cds_df(data,instrument,timeframe,show=show,plot_ao_peaks=plot_ao_peaks)
 
 
 
@@ -536,7 +536,7 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
         addplot.append(price_peak_above_plot)
         addplot.append(price_peak_bellow_plot)
 
-
+    tittle_suffix = " (" + str(len(data_last_selection)) +")"
     fig, axes = mpf.plot(
         ohlc,
         type=main_plot_type,
@@ -544,7 +544,7 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
         addplot=addplot,
         volume=False,
         figratio=(fig_ratio_x, fig_ratio_y),
-        title=instrument + "  " + timeframe,
+        title=instrument + "  " + timeframe  + tittle_suffix,
         returnfig=True,
         tight_layout=True,
     )
@@ -586,7 +586,7 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
 
 
     # Align the title to the left
-    fig.suptitle(instrument + "  " + timeframe, x=0.05, ha="left")
+    fig.suptitle(instrument + "  " + timeframe + tittle_suffix, x=0.05, ha="left")
 
     # Set the font size of the x-axis labels
     for ax in axes:
@@ -769,8 +769,8 @@ def make_plot_fdbb_signal(fdb_signal_buy_color, fdb_marker_size, fdb_signal_mark
 
 # %% ALias function (future name)
 
-def plotcdf(data,instrument, timeframe, nb_bar_on_chart=375,show=True,plot_ao_peaks=True,cc: JGTChartConfig=None):
-  return plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart,show,plot_ao_peaks=plot_ao_peaks,cc=cc)
+def plotcdf(data,instrument, timeframe, show=True,plot_ao_peaks=True,cc: JGTChartConfig=None):
+  return plot_from_cds_df(data,instrument,timeframe,show=show,plot_ao_peaks=plot_ao_peaks,cc=cc)
 
 
 def plot(instrument, timeframe, show=True,plot_ao_peaks=True,cc: JGTChartConfig=None):

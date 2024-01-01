@@ -13,6 +13,8 @@ import jgtwslhelper as wsl
 import JGTPDSP as pds
 import JGTCDS as cds
 import JGTADS as ads
+from JGTChartConfig import JGTChartConfig
+
 
 import pandas as pd
 
@@ -33,10 +35,13 @@ def parse_args():
 
 
 def main():
+    cc=JGTChartConfig()
     args = parse_args()
     instrument = args.instrument
     timeframe = args.timeframe
     quotes_count = args.quotescount
+    cc.nb_bar_on_chart=quotes_count
+    
     date_from = None
     date_to = None
     tlid_range = None
@@ -92,7 +97,7 @@ def main():
 
         for instrument in instruments:
             for timeframe in timeframes:
-                createCDS_for_main(instrument, timeframe, quiet, verbose_level,tlid_range,show_ads,quotes_count)
+                createCDS_for_main(instrument, timeframe, quiet=quiet, verbose_level=verbose_level,tlid_range=tlid_range,show_ads=show_ads,cc=cc)
                 # else:
                 #     p = pds.getPH(instrument, timeframe, quotes_count, date_from, date_to, False, quiet)
                 #     if verbose_level > 0:
@@ -112,7 +117,7 @@ def main():
 # print("")
 # #input("Done! Press enter key to exit\n")
 
-def createCDS_for_main(instrument, timeframe, quiet, verbose_level=0,tlid_range=None,show_ads=False,quotes_count=375):
+def createCDS_for_main(instrument, timeframe, quiet, verbose_level=0,tlid_range=None,show_ads=False,cc: JGTChartConfig = None):
     # implementation goes here
     col2remove=constants.columns_to_remove
     config = jgtcommon.readconfig()
@@ -122,9 +127,9 @@ def createCDS_for_main(instrument, timeframe, quiet, verbose_level=0,tlid_range=
     if verbose_level> 1:
         quietting=False
     try: 
-        cdspath,cdf=cds.createFromPDSFileToCDSFile(instrument,timeframe,col2remove)
+        cdspath,cdf=cds.createFromPDSFileToCDSFile(instrument,timeframe,col2remove) #@STCIssue: This is not supporting -c NB_BARS_TO_PROCESS, should it ? 
         if show_ads:#(data,instrument,timeframe,nb_bar_on_chart = 375,show=True,plot_ao_peaks=False)
-            ads.plot_from_cds_df(cdf,instrument,timeframe,quotes_count,show=True,plot_ao_peaks=True) 
+            ads.plot_from_cds_df(cdf,instrument,timeframe,show=True,plot_ao_peaks=True,cc=cc) 
         print_quiet(quiet,cdspath)
         print_quiet(quiet,cdf)
     except Exception as e:
