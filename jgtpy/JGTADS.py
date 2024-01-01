@@ -399,7 +399,7 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = -1,show=True,pl
     acb_plot = mpf.make_addplot(
         data_last_selection[ACB] + sig_ac_offset_value,
         panel=ac_plot_panel_id,
-        type=acb_plot_type,
+        type="scatter",
         markersize=ac_signals_marker_size,
         marker=ac_signal_marker,
         color=ac_signal_buy_color,
@@ -408,7 +408,7 @@ def plot_from_cds_df(data,instrument,timeframe,nb_bar_on_chart = -1,show=True,pl
     acs_plot = mpf.make_addplot(
         data_last_selection[ACS] - sig_ac_offset_value,
         panel=ac_plot_panel_id,
-        type="scatter",
+        type=acb_plot_type,
         markersize=ac_signals_marker_size,
         marker=ac_signal_marker,
         color=ac_signal_sell_color,
