@@ -663,23 +663,26 @@ def create_ao_ac_plots(data:pd.DataFrame,cc: JGTChartConfig=None, ao_plot_panel_
 
 
 
-def make_plot__fractals_indicator(fractal_up_color, fractal_dn_color, fractal_marker_size, fractal_up_marker, fractal_dn_marker, fh_col_dim, fl_col_dim, main_plot_panel_id, data_last_selection, fractal_offset_value):
+def make_plot__fractals_indicator(fractal_up_color, fractal_dn_color, fractal_marker_size, fractal_up_marker, fractal_dn_marker, fh_col_dim, fl_col_dim, main_plot_panel_id, data_last_selection, fractal_offset_value, fractals_plot_type="scatter"):
     fractal_up_plot = mpf.make_addplot(
-      data_last_selection[fh_col_dim] + fractal_offset_value,
-      panel=main_plot_panel_id,
-      type="scatter",
-      markersize=fractal_marker_size,
-      marker=fractal_up_marker,
-      color=fractal_up_color,
-  )
+        data_last_selection[fh_col_dim] + fractal_offset_value,
+        panel=main_plot_panel_id,
+        type=fractals_plot_type,
+        markersize=fractal_marker_size,
+        marker=fractal_up_marker,
+        color=fractal_up_color,
+)
     fractal_down_plot = mpf.make_addplot(
-      data_last_selection[fl_col_dim] - fractal_offset_value,
-      panel=main_plot_panel_id,
-      type="scatter",
-      markersize=fractal_marker_size,
-      marker=fractal_dn_marker,
-      color=fractal_dn_color,
-  )
+        data_last_selection[fl_col_dim] - fractal_offset_value,
+        panel=main_plot_panel_id,
+        type=fractals_plot_type,
+        markersize=fractal_marker_size,
+        marker=fractal_dn_marker,
+        color=fractal_dn_color,
+)
+)
+    
+)    
     
     return fractal_up_plot,fractal_down_plot
 
@@ -698,7 +701,6 @@ def make_plot__fdb_signals(fdb_signal_buy_color, fdb_signal_sell_color, fdb_mark
                 main_plot_panel_id (int): ID of the main plot panel.
                 data_last_selection (pandas.DataFrame): Data containing the buy and sell signals.
                 fdb_offset_value (float): Offset value to adjust the scatter plot positions.
-                fdbs_plot_type (str, optional): Plot type for sell signals. Defaults to "scatter".
 
         Returns:
                 tuple: A tuple containing the scatter plot for buy signals and the scatter plot for sell signals.
