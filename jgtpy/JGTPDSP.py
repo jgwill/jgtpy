@@ -78,7 +78,10 @@ def str_to_datetime(date_str):
     return None
 
 
-def getPH_from_filestore(instrument,timeframe,quiet=True, compressed=False,with_index=True,convert_date_index_to_dt=True,tlid_range=None):
+def getPH_from_filestore(instrument,timeframe,quiet=True, compressed=False,with_index=True,convert_date_index_to_dt=True,
+                         tlid_range=None,
+                         output_path=None,
+                         nsdir="pds"):
   """
   Retrieves OHLC data for a given instrument and timeframe from the filestore.
 
@@ -90,11 +93,14 @@ def getPH_from_filestore(instrument,timeframe,quiet=True, compressed=False,with_
     with_index (bool, optional): Whether to include the index in the returned DataFrame. Defaults to True.
     convert_date_index_to_dt  (bool, optional): convert index Date to dt
     tlid_range (str, optional): Select a range on disk or return None if unavailable
+    output_path (str, optional): The path to the output directory. Defaults to None.
+    nsdir (str, optional): The name of the directory to use for the filestore. Defaults to "pds".
+    
 
   Returns:
     pandas.DataFrame: The OHLC data for the given instrument and timeframe.
   """  
-  srcpath = create_filestore_path(instrument, timeframe,quiet, compressed,tlid_range=tlid_range)  
+  srcpath = create_filestore_path(instrument, timeframe,quiet, compressed,tlid_range=tlid_range,output_path=output_path,nsdir=nsdir)
   
   print_quiet(quiet,srcpath)
   
@@ -143,8 +149,8 @@ def read_ohlc_df_from_file(srcpath, quiet=True, compressed=False,with_index=True
 
 
 
-def create_filestore_path(instrument, timeframe,quiet=True, compressed=False,tlid_range=None,output_path=None):
-  return jgtos.create_filestore_path(instrument,timeframe,quiet,compressed,tlid_range,output_path,nsdir="pds")
+def create_filestore_path(instrument, timeframe,quiet=True, compressed=False,tlid_range=None,output_path=None,nsdir="pds"):
+  return jgtos.create_filestore_path(instrument,timeframe,quiet=quiet,compressed=compressed,tlid_range=tlid_range,output_path=output_path,nsdir=nsdir)
   
   
 def mk_fn(instrument,timeframe,ext="csv"):
