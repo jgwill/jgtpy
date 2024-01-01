@@ -1,4 +1,10 @@
-#%% Imp.orts
+#%% INSTALLER
+
+#%pip install plotly 
+#%pip install panel
+#%pip install seaborn
+
+#%% Imports
 import os
 #@URIR B:\Dropbox\jgt\drop\rl_comet_jgt_chart03.py
 
@@ -47,8 +53,8 @@ for t in timeframes:
   # data = pd.read_csv(fpath,index_col=0,parse_dates=True)
   # Plot some data expecting to see them in the experiment
   # f,ax = ads.plot_from_cds_df(data,i,t,show=True)
-  data=ah.prepare_cds_for_ads_data(i,t,300)
-  f,ax = ads.plot_from_cds_df(data,i,t,show=True)
+  data=ah.prepare_cds_for_ads_data(i,t)
+  f,ax,cdf = ads.plot_from_cds_df(data,i,t,show=True)
   f.title= t
   figures[t] = f
   
