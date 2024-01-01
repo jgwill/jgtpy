@@ -19,6 +19,7 @@ class JGTChartConfig:
     self.fractal_dn_marker_higher = "v"
     self.fractal_dn_marker = "v"
     self.ac_signal_marker="o"
+    self.acb_plot_type= "scatter"
     
     self.ao_peak_above_marker_higher= "^"
     self.ao_peak_bellow__marker_higher = "v"
