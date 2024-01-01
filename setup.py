@@ -14,6 +14,7 @@ INSTALL_REQUIRES = [
     'matplotlib>=3.3.1',
     'plotly>=5.18.0',
     'jgtapy>=1.9.12',
+    'jgtutils>=0.1.10',
     'dropbox>=11.36.2',
     'mplfinance>=0.12.10b0',    
 	'tlid>=0.0.6',
