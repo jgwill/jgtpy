@@ -726,7 +726,7 @@ def make_plot_fdbb_signal(fdb_signal_buy_color, fdb_marker_size, fdb_signal_mark
             data_last_selection[fdbb_coln] + fdb_offset_value,
             panel=main_plot_panel_id,
             type="scatter",
-            markersize=fdb_marker_size,
+            type=fdbb_plot_type,
             marker=fdb_signal_marker,
             color=fdb_signal_buy_color,
     )
