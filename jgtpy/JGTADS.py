@@ -85,7 +85,7 @@ def jgtxplot18c_231209(instrument,timeframe,nb_bar_on_chart = -1,recreate_data =
 def plot_from_pds_df(pdata,instrument,timeframe,nb_bar_on_chart = 375,show=True,plot_ao_peaks=True):
   # Select the last 400 bars of the data
   try:
-      selected = pdata.iloc[-nb_bar_on_chart-120:].copy()
+      selected = pdata.iloc[-nb_bar_on_chart-120:].copy() #@STCGoal A Unified way to select the data
   except:
       selected = pdata.copy()
       l.warning("Could not select the desired amount of bars, trying anyway with what we have")
