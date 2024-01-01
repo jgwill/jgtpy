@@ -23,6 +23,7 @@
 * [USD/JPY](charts/pto-pers-USD-JPY.html)    
 * [EUR/CAD](charts/pto-pers-EUR-CAD.html)    
 * [AUD/CAD](charts/pto-pers-AUD-CAD.html)
+* [EUR/CAD](charts/pto-pers-EUR-CAD.html)
 
 <!-- * [Fractal_Trading_Strategies_231117](Fractal_Trading_Strategies_231117.md) -->
 
