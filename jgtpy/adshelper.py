@@ -66,7 +66,7 @@ def prepare_cds_for_ads_data(instrument, timeframe,tlid_range=None,cc: JGTChartC
         
     #@STCIssue Deprecating this value for later 
     
-    
+    #print("AH:DEBUG::Tlid_range:",tlid_range)
     if tlid_range is not None:
         raise NotImplementedError("tlid_range is not implemented yet.")
     #@STCGoal local retrieve data from cache if available or from WSL if not  (jgtfxcli)
