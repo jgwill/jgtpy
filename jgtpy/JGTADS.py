@@ -535,8 +535,17 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
         addplot.append(aopbellow_plot)
         addplot.append(price_peak_above_plot)
         addplot.append(price_peak_bellow_plot)
-
-    tittle_suffix = " (" + str(len(data_last_selection)) +")"
+        
+    #get date time of the last bar
+    last_bar_dt = data_last_selection.index[-1]
+    
+    tittle_suffix = " " + str(len(data_last_selection)) +""
+    
+    chart_title = instrument + " \n" + timeframe 
+    #+ tittle_suffix + "  " + str(last_bar_dt)
+    subtitle = "" + get_dt_title_by_timeframe(last_bar_dt,timeframe)  + "      " + tittle_suffix
+    
+    
     fig, axes = mpf.plot(
         ohlc,
         type=main_plot_type,
@@ -544,11 +553,13 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
         addplot=addplot,
         volume=False,
         figratio=(fig_ratio_x, fig_ratio_y),
-        title=instrument + "  " + timeframe  + tittle_suffix,
+        title=chart_title,
         returnfig=True,
         tight_layout=True,
     )
-
+    
+    # Add subtitle to the first subplot
+    axes[0].set_title(subtitle, fontsize=10, x=0.07, ha="left")  # Add subtitle to the first subplot
     
     # Set y-axis limits
     main_ymax, main_ymin = axes[main_plot_panel_id].get_ylim()
@@ -586,7 +597,8 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
 
 
     # Align the title to the left
-    fig.suptitle(instrument + "  " + timeframe + tittle_suffix, x=0.05, ha="left")
+    fig.suptitle(chart_title, x=0.05, ha="left")
+    #fig.subtitle("oeuoeuoeu", x=0.15, ha="left")
 
     # Set the font size of the x-axis labels
     for ax in axes:
@@ -598,6 +610,26 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
     if show:
         plt.show()
     return fig,axes,data_last_selection
+
+
+
+def get_dt_title_by_timeframe(last_bar_dt, timeframe, separator="/"):
+    format_str = {
+        'M1': f'%y{separator}%m',  # Year-Month
+        'W1': f'%y{separator}%m{separator}%d',  # Year-Week number
+        'D1': f'%y{separator}%m{separator}%d',  # Year-Month-Day
+        'H8': f'%y{separator}%m{separator}%d %H',  # Year-Month-Day Hour
+        'H6': f'%y{separator}%m{separator}%d %H',  # Year-Month-Day Hour
+        'H4': f'%y{separator}%m{separator}%d %H',  # Year-Month-Day Hour
+        'H3': f'%y{separator}%m{separator}%d %H',  # Year-Month-Day Hour
+        'H2': f'%y{separator}%m{separator}%d %H',  # Year-Month-Day Hour
+        'H1': f'%y{separator}%m{separator}%d %H',  # Year-Month-Day Hour
+        'm30': f'%y{separator}%m{separator}%d %H:%M',  # Year-Month-Day Hour:Minute
+        'm15': f'%y{separator}%m{separator}%d %H:%M',  # Year-Month-Day Hour:Minute
+        'm5': f'%y{separator}%m{separator}%d %H:%M'  # Year-Month-Day Hour:Minute
+    }.get(timeframe, f'%Y{separator}%m{separator}%d %H:%M')  # Default to full date-time if timeframe is not recognized
+
+    return last_bar_dt.strftime(format_str)
 
 
 def _select_charting_nb_bar_on_chart(data, nb_bar_on_chart):

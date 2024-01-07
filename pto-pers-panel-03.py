@@ -40,8 +40,8 @@ instruments = "GBP/USD,AUD/USD,EUR/USD,SPX500,XAU/USD,USD/CAD,USD/JPY,EUR/CAD,AU
 timeframes = ["M1","W1","D1","H4", "H1","m15","m5"]
 #timeframes = ["W1","D1","H4", "H1","m15","m5"]
 
-html_outdir_root = "../jgtcharts"
 html_outdir_root = "docs/charts"
+html_outdir_root = "../jgtcharts/charts"
 
 show_tabs = False;show_chart=False
 
