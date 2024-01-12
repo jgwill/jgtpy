@@ -5,11 +5,29 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "IDSTest",
+      "type": "python",
+      "request": "launch",
+      "program": "/mnt/c/usr/src/_jgt/ids/test-ids-240107.py",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "Python: Current File",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
       "name": "ADS-tst-chart",
       "type": "python",
       "request": "launch",
       "program": "${workspaceFolder}/test-ads.py",
-      "args": ["SPX500"],
+      "args": [
+        "SPX500"
+      ],
       "console": "internalConsole",
       "justMyCode": false
     },
@@ -18,7 +36,9 @@
       "type": "python",
       "request": "launch",
       "program": "${workspaceFolder}/pto-pers-panel-02.py",
-      "args": ["SPX500"],
+      "args": [
+        "SPX500"
+      ],
       "console": "internalConsole",
       "justMyCode": false
     },
