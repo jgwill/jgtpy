@@ -48,8 +48,8 @@ def getPH(instrument, timeframe, quote_count=-1, start=None, end=None, with_inde
       print("start: " + str(start))
       print("end: " + str(end))
     df = select_start_end(df, start, end)
-
-  if len(df) > quote_count:
+  ldf = len(df)
+  if ldf > quote_count:
     df = df.iloc[-quote_count:]
   return df
 
