@@ -137,9 +137,12 @@ def ids_add_indicators(dfsrc,
                        enableGatorOscillator=False,
                        enableMFI=False,
                        dropnavalue=True,
-                       quiet=False,                       
-                       cleanupOriginalColumn=True,useLEGACY=True,
-                       cc:JGTChartConfig=None):
+                       quiet=True,                       
+                       cleanupOriginalColumn=True,
+                       useLEGACY=True,
+                       cc:JGTChartConfig=None,
+                       bypass_index_reset=False,
+                       big_alligator=False):
   """
   Adds technical indicators to a given DataFrame.
 
@@ -152,14 +155,25 @@ def ids_add_indicators(dfsrc,
   cleanupOriginalColumn (bool, optional): Whether to clean up the original column. Defaults to True.
   useLEGACY (bool, optional): Whether to use the legacy version of the function. Defaults to True.
   cc (JGTChartConfig, optional): The JGTChartConfig object. Defaults to None.
+  bypass_index_reset (bool, optional): Whether to bypass resetting the index. Defaults to False.
+  big_alligator (bool, optional): Whether to enable the Alligator indicator. Defaults to False.
 
   Returns:
   pandas.DataFrame: The DataFrame with the added indicators.
   """
-  # Check if 'Date' is the index column
-  if 'Date' in dfsrc.index.names:
-    # Reset the index to remove 'Date' as the index column
-    dfsrc = dfsrc.reset_index()
+  #print(dfsrc)
+  # if not bypass_index_reset:
+  #   try:
+  #     # Check if 'Date' is the index column
+  #     if dfsrc.index.name == 'Date':
+  #       # Reset the index to remove 'Date' as the index column
+  #       dfsrc = dfsrc.reset_index()
+  #   except Exception:
+  #     pass
+    
+  if cc is None:
+    cc = JGTChartConfig()
+    
   dfresult=None
   if not useLEGACY: # Because jgtapy has to be upgraded with new column name, we wont use it until our next release
     dfresult= Indicators.jgt_create_ids_indicators_as_dataframe(dfsrc,
@@ -168,12 +182,14 @@ def ids_add_indicators(dfsrc,
                        cleanupOriginalColumn,                    
                        quiet)
   else:
-    dfresult= ids_add_indicators_LEGACY(dfsrc,
-                       enableGatorOscillator,
-                       enableMFI,
-                       dropnavalue,
-                       quiet,
-                       min_nb_bar_on_chart=cc.min_bar_on_chart)
+    dfresult= ids_add_indicators_LEGACY(dfsrc=dfsrc,
+                       enableGatorOscillator=enableGatorOscillator,
+                       enableMFI=enableMFI,
+                       dropnavalue=dropnavalue,
+                       quiet=quiet,
+                       min_nb_bar_on_chart=cc.min_bar_on_chart,
+                       bypass_index_reset=bypass_index_reset,
+                       big_alligator=big_alligator)
   
   return round_columns(dfresult)
 
@@ -188,12 +204,13 @@ def ids_add_indicators_LEGACY(dfsrc,
                        enableGatorOscillator=False,
                        enableMFI=False,
                        dropnavalue=True,
-                       quiet=False,
+                       quiet=True,
                        addAlligatorOffsetInFutur=False,
-                       bAlligator=False,
+                       big_alligator=False,
                        b_alligator_jaws_period = 89,
                        largest_fractal_period = 89,
-                       min_nb_bar_on_chart=300):
+                       min_nb_bar_on_chart=300,
+                       bypass_index_reset=False):
   """
   Adds various technical indicators to the input DataFrame. Is the same as in the jgtapy.legacy module.
 
@@ -204,55 +221,144 @@ def ids_add_indicators_LEGACY(dfsrc,
   dropnavalue (bool, optional): Whether to drop rows with NaN values. Defaults to True.
   quiet (bool, optional): Whether to suppress print statements. Defaults to False.
   addAlligatorOffsetInFutur (bool, optional): (NOT IMPLEMENTED) Whether to add the Alligator offset in the future. Defaults to True.
-  b_alligator_jaws_period (int, optional): (NOT IMPLEMENTED) The period of the Alligator jaws. Defaults to 89.
+  big_alligator_jaws_period (int, optional): (NOT IMPLEMENTED) The period of the Alligator jaws. Defaults to 89.
   largest_fractal_period (int, optional): (NOT IMPLEMENTED) The largest fractal period. Defaults to 89.
   min_nb_bar_on_chart (int, optional): The minimum number of bars on the chart. Defaults to 300.
+  bypass_index_reset (bool, optional): Whether to bypass resetting the index. Defaults to False.
 
   Returns:
   pandas.DataFrame: The input DataFrame with added technical indicators.
-  """
+  """    
+
+  #TypeError: string indices must be integers
+  # if not bypass_index_reset:
+  #   try:
+  #     # Check if 'Date' is the index column
+  #     if dfsrc.index.name == 'Date':
+  #       # Reset the index to remove 'Date' as the index column
+  #       dfsrc = dfsrc.reset_index()
+  #   except Exception:
+  #     pass
+  
+  ldfsrc=len(dfsrc)
+  #TODO
+  df_nb_bars = min_nb_bar_on_chart #@STCIssue: We have charts with as few as 80 bars and some indicators wont work. We need to find a way to make it work with less bars.
+  df_nb_bars = ldfsrc #@a workaround for now - adequate limits is the amount of bars we have.
+  minimal_bars_with_indicators = 25
+  FIX_TOO_SHORT_DATAFRAME__PROTO = False
+  
+  if FIX_TOO_SHORT_DATAFRAME__PROTO:dfsrc = fix_too_short_df(dfsrc)
+  
   if not quiet:
     print("Adding indicators...")
   i=Indicators(dfsrc)
-  ldfsrc=len(dfsrc)
   #print("IDS::debug len(dfsrc)" + str(ldfsrc))
   
-  i.accelerator_oscillator( column_name= indicator_AC_accelerationDeceleration_column_name)
-  i.alligator(period_jaws=13, period_teeth=8, period_lips=5, shift_jaws=8, shift_teeth=5, shift_lips=3, column_name_jaws=indicator_currentDegree_alligator_jaw_column_name, column_name_teeth=indicator_currentDegree_alligator_teeth_column_name, column_name_lips=indicator_currentDegree_alligator_lips_column_name)
+  
+  try:i.ao_ac_oscillator(column_name_ao=indicator_AO_awesomeOscillator_column_name, column_name_ac=indicator_AC_accelerationDeceleration_column_name)
+  except:
+    print("ao_ac_oscillator failed")
+  
+  
+  try:i.alligator(period_jaws=13, period_teeth=8, period_lips=5, shift_jaws=8, shift_teeth=5, shift_lips=3, column_name_jaws=indicator_currentDegree_alligator_jaw_column_name, column_name_teeth=indicator_currentDegree_alligator_teeth_column_name, column_name_lips=indicator_currentDegree_alligator_lips_column_name)
+  except:
+    print("alligator failed")
   
  
-  bAlligator_required_bar_offset = min_nb_bar_on_chart + b_alligator_jaws_period
-  if ldfsrc >= bAlligator_required_bar_offset and bAlligator:
-    i.alligator(period_jaws=89, period_teeth=55, period_lips=34, shift_jaws=55, shift_teeth=34, shift_lips=21, column_name_jaws=indicator_sixDegreeLarger_alligator_jaw_column_name, column_name_teeth=indicator_sixDegreeLarger_alligator_teeth_column_name, column_name_lips=indicator_sixDegreeLarger_alligator_lips_column_name)
   
-  i.awesome_oscillator(column_name=indicator_AO_awesomeOscillator_column_name)
+  # Assign numbers to variables with prefix 'balligator_'
+  balligator_period_jaws = 89
+  balligator_period_teeth = 55
+  balligator_period_lips = 34
+  balligator_shift_jaws = 55
+  balligator_shift_teeth = 34
+  balligator_shift_lips = 21
+  bAlligator_required_bar_offset = minimal_bars_with_indicators + b_alligator_jaws_period + balligator_shift_jaws
+
+
+  
+  if ldfsrc >= bAlligator_required_bar_offset and big_alligator:
+
+    
+    try:i.alligator(period_jaws=balligator_period_jaws,
+                period_teeth=balligator_period_teeth, 
+                period_lips=balligator_period_lips, 
+                shift_jaws=balligator_shift_jaws, 
+                shift_teeth=balligator_shift_teeth, 
+                shift_lips=balligator_shift_lips,
+                column_name_jaws=indicator_sixDegreeLarger_alligator_jaw_column_name, 
+                column_name_teeth=indicator_sixDegreeLarger_alligator_teeth_column_name, 
+                column_name_lips=indicator_sixDegreeLarger_alligator_lips_column_name)
+    except:
+      print("big_alligator failed")
+  else:
+    if not quiet:
+      print("Skipping degree larger big Alligator")
+  
   
   # Creating Fractal Indicators for degrees 2,3,5,8,13,21,34,55,89 
-  i.fractals(column_name_high=indicator_fractal_high_degree2_column_name, column_name_low=indicator_fractal_low_degree2_column_name)
-  i.fractals3(column_name_high=indicator_fractal_high_degree3_column_name, column_name_low=indicator_fractal_low_degree3_column_name)
-  i.fractals5(column_name_high=indicator_fractal_high_degree5_column_name, column_name_low=indicator_fractal_low_degree5_column_name)
-  i.fractals8(column_name_high=indicator_fractal_high_degree8_column_name, column_name_low=indicator_fractal_low_degree8_column_name)
-  i.fractals13(column_name_high=indicator_fractal_high_degree13_column_name, column_name_low=indicator_fractal_low_degree13_column_name)
-  i.fractals21(column_name_high=indicator_fractal_high_degree21_column_name, column_name_low=indicator_fractal_low_degree21_column_name)
-  i.fractals34(column_name_high=indicator_fractal_high_degree34_column_name, column_name_low=indicator_fractal_low_degree34_column_name)
   
-  if ldfsrc >= min_nb_bar_on_chart + 55:
-    i.fractals55(column_name_high=indicator_fractal_high_degree55_column_name, column_name_low=indicator_fractal_low_degree55_column_name)
+  try:i.fractals(column_name_high=indicator_fractal_high_degree2_column_name, column_name_low=indicator_fractal_low_degree2_column_name)
+  except:
+    print("fractals failed")
+  try:i.fractals3(column_name_high=indicator_fractal_high_degree3_column_name, column_name_low=indicator_fractal_low_degree3_column_name)
+  except:
+    print("fractals 3 failed")
+  try:i.fractals5(column_name_high=indicator_fractal_high_degree5_column_name, column_name_low=indicator_fractal_low_degree5_column_name)
+  except:
+    print("fractals 5 failed")
+  try:i.fractals8(column_name_high=indicator_fractal_high_degree8_column_name, column_name_low=indicator_fractal_low_degree8_column_name)
+  except:
+    print("fractals 8 failed")
+  try:i.fractals13(column_name_high=indicator_fractal_high_degree13_column_name, column_name_low=indicator_fractal_low_degree13_column_name)
+  except:
+    print("fractals 13 failed")
+  if df_nb_bars >= minimal_bars_with_indicators + 21: #@a The amount of bars the chart has to have to calculate the indicator is the minimal number of bars we want with indicators + the period of the indicator
+    try:i.fractals21(column_name_high=indicator_fractal_high_degree21_column_name, column_name_low=indicator_fractal_low_degree21_column_name)
+    except:
+      print("fractals 21 failed")
   
-  largest_fractal_bar_required_offset =  min_nb_bar_on_chart+ largest_fractal_period 
-  if ldfsrc  > largest_fractal_bar_required_offset:
-    i.fractals89(column_name_high=indicator_fractal_high_degree89_column_name, column_name_low=indicator_fractal_low_degree89_column_name)
+  if df_nb_bars  >= minimal_bars_with_indicators + 34:
+    try:i.fractals34(column_name_high=indicator_fractal_high_degree34_column_name, column_name_low=indicator_fractal_low_degree34_column_name)
+    except:
+      print("fractals 34 failed")
+  else:
+    if not quiet:
+      print("Skipping Fractal 34")
+  
+  if df_nb_bars  >= minimal_bars_with_indicators + 55:
+    try:i.fractals55(column_name_high=indicator_fractal_high_degree55_column_name, column_name_low=indicator_fractal_low_degree55_column_name)
+    except:
+      print("fractals 55 failed")
+  else:
+    if not quiet:
+      print("Skipping Fractal 55")
+  
+  largest_fractal_bar_required_offset =  minimal_bars_with_indicators + largest_fractal_period 
+  if  df_nb_bars  >= largest_fractal_bar_required_offset:
+    try:i.fractals89(column_name_high=indicator_fractal_high_degree89_column_name, column_name_low=indicator_fractal_low_degree89_column_name)
+    except:
+      print("fractals 89 failed")
+  else:
+    if not quiet:
+      print("Skipping Fractal 89")
 
   
   if enableGatorOscillator:
     
-    i.gator(period_jaws=13, period_teeth=8, period_lips=5, shift_jaws=8, shift_teeth=5, shift_lips=3, column_name_val1=indicator_gatorOscillator_low_column_name, column_name_val2=indicator_gatorOscillator_high_column_name)
+    try:i.gator(period_jaws=13, period_teeth=8, period_lips=5, shift_jaws=8, shift_teeth=5, shift_lips=3, column_name_val1=indicator_gatorOscillator_low_column_name, column_name_val2=indicator_gatorOscillator_high_column_name)
+    except:
+      print("gator failed")
 
   if enableMFI:
-    i.bw_mfi(column_name=indicator_mfi_marketFacilitationIndex_column_name)
+    try:i.bw_mfi(column_name=indicator_mfi_marketFacilitationIndex_column_name)
+    except:
+      print("bw_mfi failed")
   
   if addAlligatorOffsetInFutur:
-    _add_alligator_tmpcol_offset_in_futur(i)
+    try:_add_alligator_tmpcol_offset_in_futur(i)
+    except:
+      print("addAlligatorOffsetInFutur failed")
   
   dfresult = i.df
 
@@ -260,7 +366,7 @@ def ids_add_indicators_LEGACY(dfsrc,
   if dropnavalue:
     dfresult = dfresult.dropna()
   try: 
-    dfresult = dfresult.set_index('Date')
+    dfresult.set_index('Date',inplace=True)
   except TypeError:
     pass
   if not quiet:
@@ -269,6 +375,34 @@ def ids_add_indicators_LEGACY(dfsrc,
   # if addAlligatorOffsetInFutur:
   #   _offset_alligator_tmpcol_in_futur(dfresult)
   return dfresult
+
+def fix_too_short_df(dfsrc):
+  """
+  Fixes a DataFrame that is too short for calculating indicators.
+
+  Args:
+  dfsrc (pandas.DataFrame): The input DataFrame.
+
+  Returns:
+  pandas.DataFrame: The fixed DataFrame.
+  """
+  #print("IDS::debug len(dfsrc)" + str(len(dfsrc)))
+  if len(dfsrc) < 110:
+    
+    # Get the 'Date' value from the first row
+    start_date = dfsrc.iloc[0]['Date']
+    
+    # Create a date range starting from the start_date
+    date_range = pd.date_range(start=start_date, periods=110)
+    # Create a DataFrame with the first row replicated 110 times
+    dfsrc_first_row = pd.DataFrame([dfsrc.iloc[0]] * 110)
+    
+    # Add the date range to the DataFrame
+    dfsrc_first_row['Date'] = date_range
+    
+    # Concatenate the two DataFrames
+    dfsrc = pd.concat([dfsrc_first_row, dfsrc], ignore_index=True)
+  return dfsrc
 
 def _offset_alligator_tmpcol_in_futur(dfsrc):
   dfsrc['jaws_tmp2'] = dfsrc['jaws_tmp'].shift(8)
@@ -791,16 +925,16 @@ def jgti_add_zlc_plus_other_AO_signal(dfsrc,dropsecondaries=True,quiet=True):
     #Coloring AO
     #dfsrc['aocolor'] = dfsrc['aocolor'].astype(object)
     if caogreen:
-      dfsrc.at[i,'aocolor'] = 'rgb(0,255,0)'
+      dfsrc.at[i,'aocolor'] = 'green'
     else:
-      dfsrc.at[i,'aocolor'] = 'rgb(255,0,0)'
+      dfsrc.at[i,'aocolor'] = 'red'
       
     #Coloring AC
     #dfsrc['accolor'] = dfsrc['accolor'].astype(object)
     if cacgreen:
-      dfsrc.at[i,'accolor'] = 'rgb(0,255,0)'
+      dfsrc.at[i,'accolor'] = 'green'
     else:
-      dfsrc.at[i,'accolor'] = 'rgb(255,0,0)'
+      dfsrc.at[i,'accolor'] = 'red'
       
     
     # --@STCIssue Zone  (Not sure, it might have to be ABove or Bellow)
