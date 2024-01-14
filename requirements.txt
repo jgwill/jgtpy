@@ -19,3 +19,4 @@ mplfinance
 tlid
 jgtapy
 jgtutils
+scipy
