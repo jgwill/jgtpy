@@ -25,7 +25,7 @@ cleanseOriginalColumns=True
 useLocal=True
 
 
-def getPH(instrument, timeframe, quote_count=-1, start=None, end=None, with_index=True, quiet=True,convert_date_index_to_dt=True,cc: JGTChartConfig=None):
+def getPH(instrument, timeframe, quote_count=-1, start=None, end=None, with_index=True, quiet=True,convert_date_index_to_dt=True,cc: JGTChartConfig=None,get_them_all=False):
   #@STCissue quote_count is ignored or irrelevant in start/end
   #@a Adequate start and end from the stored file
   if cc is None:
@@ -49,7 +49,7 @@ def getPH(instrument, timeframe, quote_count=-1, start=None, end=None, with_inde
       print("end: " + str(end))
     df = select_start_end(df, start, end)
   ldf = len(df)
-  if ldf > quote_count:
+  if ldf > quote_count and not get_them_all:
     df = df.iloc[-quote_count:]
   return df
 
