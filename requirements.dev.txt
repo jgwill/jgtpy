@@ -25,7 +25,7 @@ jedi @ file:///tmp/build/80754af9/jedi_1644315229345/work
 jeepney==0.8.0
 jgtapy==1.9.20
 jgtfxcon==0.3.7
-jgtutils==0.1.19
+jgtutils==0.1.20
 Jinja2==3.1.3
 jupyter_client @ file:///croot/jupyter_client_1699455897726/work
 jupyter_core @ file:///croot/jupyter_core_1698937308754/work

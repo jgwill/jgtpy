@@ -85,7 +85,7 @@ def jgtxplot18c_231209(instrument:str,timeframe:str,show:bool=True,plot_ao_peaks
     try:
         return plot_from_cds_df(data,instrument,timeframe,show=show,plot_ao_peaks=plot_ao_peaks,cc=cc)
     except:
-        print("ERROR - Returning ALT Plotting")
+        print("ERROR - Returning ALT Plotting (" + instrument + " " + timeframe + ")")
         return plot_from_cds_df_ALT(data,instrument,timeframe,show=show,plot_ao_peaks=plot_ao_peaks,cc=cc)
 
 
