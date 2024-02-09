@@ -562,9 +562,13 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
         returnfig=True,
         tight_layout=True,
     )
+    subtitle_x_pos = cc.subtitle_x_pos
+    subtitle_y_pos = cc.subtitle_y_pos
+    subtitle_ha = cc.subtitle_ha
+    subtitle_fontsize = cc.subtitle_fontsize
     
     # Add subtitle to the first subplot
-    axes[0].set_title(subtitle, fontsize=10, x=0.07, ha="left")  # Add subtitle to the first subplot
+    axes[0].set_title(subtitle, fontsize=subtitle_fontsize, x=subtitle_x_pos,y=subtitle_y_pos, ha=subtitle_ha)  # Add subtitle to the first subplot
     
     # Set y-axis limits
     main_ymax, main_ymin = axes[main_plot_panel_id].get_ylim()
@@ -602,7 +606,7 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
 
 
     # Align the title to the left
-    fig.suptitle(chart_title, x=0.05, ha="left")
+    fig.suptitle(chart_title, x=cc.title_x_pos, y=cc.title_y_pos, ha=cc.title_ha, fontsize=cc.title_fontsize)
     #fig.subtitle("oeuoeuoeu", x=0.15, ha="left")
 
     # Set the font size of the x-axis labels
