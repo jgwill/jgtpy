@@ -613,6 +613,219 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
 
 
 
+
+#%% Too short plotting alternative 
+
+
+def plot_from_cds_df_ALT(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: JGTChartConfig=None):
+    
+    """
+    Plot OHLC bars, indicators, and signals from a pandas DataFrame.
+
+    Args:
+        data (pandas.DataFrame): The input DataFrame containing OHLC data.
+        instrument (str): The instrument symbol.
+        timeframe (str): The timeframe of the data.
+        show (bool, optional): Whether to display the plot. Defaults to True.
+        plot_ao_peaks (bool, optional): Whether to plot AO peaks. Defaults to False.
+        cc (JGTChartConfig, optional): The chart configuration object. Defaults to None.
+
+    Returns:
+        fig: The figure object of the plot.
+        axes: The axes object of the plot.
+    """
+    if cc is None:
+        cc= JGTChartConfig()
+   
+    
+    nb_bar_on_chart = cc.nb_bar_on_chart
+    # Load dataset
+    iprop = pds.get_instrument_properties(instrument)
+    l.debug(iprop)
+    pipsize = iprop["pipsize"]  # Access 'pipsize' using dictionary-like syntax
+    l.debug(pipsize)
+    
+    # Convert the index to datetime
+    try:
+        data.index = pd.to_datetime(data.index)
+    except:
+        l.error("Error converting index to datetime")
+        pass
+    
+    
+    main_plot_type="ohlc"
+    
+        
+    
+    fig_ratio_x = cc.fig_ratio_x
+    fig_ratio_y = cc.fig_ratio_y
+    
+    fdb_signal_buy_color = cc.fdb_signal_buy_color
+    fdb_signal_sell_color = cc.fdb_signal_sell_color
+    jaw_color = cc.jaw_color
+    teeth_color = cc.teeth_color
+    lips_color = cc.lips_color
+    fractal_up_color = cc.fractal_up_color
+    fractal_dn_color = cc.fractal_dn_color
+    fractal_dn_color_higher = cc.fractal_dn_color_higher
+    fractal_up_color_higher = cc.fractal_up_color_higher
+    ac_signal_buy_color = cc.ac_signal_buy_color
+    ac_signal_sell_color = cc.ac_signal_sell_color
+    fdb_marker_size = cc.fdb_marker_size
+    fractal_marker_size = cc.fractal_marker_size
+    saucer_marker_size = cc.saucer_marker_size
+    fractal_degreehigher_marker_size = cc.fractal_degreehigher_marker_size
+    fdb_signal_marker = cc.fdb_signal_marker
+    fractal_up_marker = cc.fractal_up_marker
+    fractal_up_marker_higher = cc.fractal_up_marker_higher
+    fractal_dn_marker_higher = cc.fractal_dn_marker_higher
+    fractal_dn_marker = cc.fractal_dn_marker
+    plot_style = cc.plot_style
+    saucer_buy_color = cc.saucer_buy_color
+    saucer_sell_color = cc.saucer_sell_color
+    saucer_marker = cc.saucer_marker
+    price_peak_bellow_marker = cc.price_peak_bellow_marker
+    price_peak_above_marker = cc.price_peak_above_marker
+    price_peak_marker_size = cc.price_peak_marker_size
+    price_peak_above_color = cc.price_peak_above_color
+    price_peak_bellow_color = cc.price_peak_bellow_color
+    
+    ac_signals_marker_size = cc.ac_signals_marker_size
+    ac_signal_marker = cc.ac_signal_marker
+    
+    acb_plot_type =  cc.acb_plot_type
+    
+    ao_peaks_marker_size = cc.ao_peaks_marker_size
+    ao_peak_offset_value = cc.ao_peak_offset_value
+    ao_peak_above_marker_higher = cc.ao_peak_above_marker_higher
+    ao_peak_bellow__marker_higher = cc.ao_peak_bellow__marker_higher
+    aop_bellow_color = cc.aop_bellow_color
+    aop_above_color = cc.aop_above_color
+    
+    #COLUMNS
+    JAW = c.JAW
+    TEETH = c.TEETH
+    LIPS = c.LIPS
+    
+    OPEN = c.OPEN
+    HIGH = c.HIGH
+    LOW = c.LOW
+    CLOSE = c.CLOSE
+    BAR_HEIGHT = c.BAR_HEIGHT #"bar_height"
+    
+    FH = c.FH
+    FL = c.FL
+    FHH = c.FH8
+    FLH = c.FL8
+    
+    
+    FDB = c.FDB
+    FDBB = c.FDBB
+    FDBS = c.FDBS
+    
+    
+    ACB = c.ACB  
+    ACS = c.ACS
+    
+    #plot config
+    main_plot_panel_id=cc.main_plot_panel_id
+    ao_plot_panel_id=cc.ao_plot_panel_id
+    ac_plot_panel_id=cc.ac_plot_panel_id
+    
+    
+    
+    #%% Select the last 400 bars of the data
+    
+    data_last_selection = data
+    # Select the last 400 bars of the data
+    tst_len_data = len(data)
+    if nb_bar_on_chart != tst_len_data:    
+        data_last_selection = _select_charting_nb_bar_on_chart(data, nb_bar_on_chart)
+    l_datasel = len(data_last_selection)
+    
+    # Make OHLC bars plot
+    ohlc = data_last_selection[[OPEN, HIGH, LOW, CLOSE]]
+        
+    #get date time of the last bar
+    last_bar_dt = data_last_selection.index[-1]
+    
+    tittle_suffix = " " + str(len(data_last_selection)) +""
+    
+    chart_title = instrument + " \n" + timeframe 
+    #+ tittle_suffix + "  " + str(last_bar_dt)
+    subtitle = "" + get_dt_title_by_timeframe(last_bar_dt,timeframe)  + "      " + tittle_suffix
+    
+    
+    fig, axes = mpf.plot(
+        ohlc,
+        type=main_plot_type,
+        style=plot_style,
+        #addplot=addplot,
+        volume=False,
+        figratio=(fig_ratio_x, fig_ratio_y),
+        title=chart_title,
+        returnfig=True,
+        tight_layout=True,
+    )
+    
+    # Add subtitle to the first subplot
+    axes[0].set_title(subtitle, fontsize=10, x=0.07, ha="left")  # Add subtitle to the first subplot
+    
+    # # Set y-axis limits
+    # main_ymax, main_ymin = axes[main_plot_panel_id].get_ylim()
+    # height_minmax = main_ymax - main_ymin
+    # tst_v = height_minmax / 8
+    # new_y_max = main_ymin - tst_v - fdb_offset_value
+    # new_y_min = main_ymax + tst_v + fdb_offset_value
+    
+    
+    # axes[main_plot_panel_id].set_ylim(
+    #     new_y_min,
+    #     new_y_max
+    # )
+        
+    #       low_min - fdb_offset_value - pipsize * 30,
+    #       high_max + fdb_offset_value+ pipsize * 33
+    #   )
+        
+    #       low_min - fdb_offset_value - pipsize * 330,
+    #       high_max + fdb_offset_value + pipsize * 330,
+    #   )
+
+    # Get current x-axis limits
+    x_min, x_max = axes[main_plot_panel_id].get_xlim()
+
+    axe2ymin, axe2ymax = axes[ac_plot_panel_id].get_ylim()
+    l.debug("axe2ymin: " + str(axe2ymin))
+    l.debug("axe2ymax: " + str(axe2ymax))
+
+    # Calculate new x-axis limit
+    new_x_max = x_max + 8  # Add 8 for future bars
+
+    # Set new x-axis limit
+    axes[main_plot_panel_id].set_xlim(x_min, new_x_max)
+
+
+    # Align the title to the left
+    fig.suptitle(chart_title, x=0.05, ha="left")
+    #fig.subtitle("oeuoeuoeu", x=0.15, ha="left")
+
+    # Set the font size of the x-axis labels
+    for ax in axes:
+        ax.tick_params(axis="x", labelsize=6)
+
+    # Set the font size of the Date column
+    axes[main_plot_panel_id].tick_params(axis="x", labelsize=6)
+
+    if show:
+        plt.show()
+    return fig,axes,data_last_selection
+    
+
+
+
+
+
 def get_dt_title_by_timeframe(last_bar_dt, timeframe, separator="/"):
     format_str = {
         'M1': f'%y{separator}%m',  # Year-Month
