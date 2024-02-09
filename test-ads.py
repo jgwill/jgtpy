@@ -1,18 +1,23 @@
 #%% INSTALLER
 #%pip install jgtapy seaborn panel
 
+
 # %% Import packages
 from jgtpy import JGTADS as ads
 from jgtpy import JGTPDSP as pds
-from jgtpy import JGTChartConfig 
+from jgtpy import JGTChartConfig
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import os
+
+#%% Set data path
+
 print(os.getenv("JGTPY_DATA"))
 
 instrument = "EUR/USD"
 instrument = "XAU/USD"
+instrument = "WHEATF"
 instrument = "SPX500"
 # %% Load data and plot all in one operation
 show=True
@@ -29,7 +34,7 @@ cc.plot_style = "yahoo"
 #%% M1
 t="M1";M1, M1a,M1df = ads.plot(instrument, t, show=show,cc=cc)
 print(instrument,t)
-#%% 
+#%%
 t="W1";w1, w1a,w1df = ads.plot(instrument, t, show=show,cc=cc)
 print(instrument,t)
 

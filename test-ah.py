@@ -1,7 +1,7 @@
  
  
 #%% IMPORTS
-from jgtpy import JGTChartConfig , adshelper as ah
+from jgtpy import JGTChartConfig , adshelper as ah,JGTPDSP as pds
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -11,9 +11,12 @@ print(os.getenv("JGTPY_DATA"))
 
 
 #%% INstruments + tf
+
+# Instrument def
 instrument = "EUR/USD"
 instrument = "XAU/USD"
 instrument = "SPX500"
+instrument = "WHEATF"
 t="M1"
 
 #%% Plot all charts in one operation
@@ -24,17 +27,24 @@ cc.fig_ratio_y = 16
 cc.nb_bar_on_chart = 300
 cc.plot_style = "yahoo"
 
+#%% Count tests Data
+pdsfileonly  = pds.getPH(instrument,t,cc=cc)
+pdsfileonly
+
+#%% Count tests
+
+count_test = len(pdsfileonly)
+
+print("--------------------------------")
+print("count_test:",str(count_test))
+print("nbbar:",str(cc.nb_bar_on_chart))
+print("--------------------------------")
+
 #%% Load data and plot all in one operation
 #M1c, M1a = ads.plot_from_pds_df(m1p,instrument, "M1", show=show)
 
 data = ah.prepare_cds_for_ads_data(instrument, t,cc=cc)
 
-count_test = len(data)
-
-print("--------------------------------")
-print("count_test:",str(count_test))
-print("nbbar:",str(cc.nb_bar_on_chart))
-print(" ----- We expect the two above values to be equal -----")
 
 
 
