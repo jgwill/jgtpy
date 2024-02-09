@@ -47,7 +47,7 @@ def read_csv(csv_fn):
 
 #IN_CHART_BARS=300
 
-def prepare_cds_for_ads_data(instrument, timeframe,tlid_range=None,cc: JGTChartConfig=None):
+def prepare_cds_for_ads_data(instrument:str, timeframe:str,tlid_range:str=None,cc:JGTChartConfig=None,crop_last_dt:str=None):
     """
     Prepare CDS (Credit Default Swap) data for ADS (Automated Trading System).
 
@@ -56,7 +56,8 @@ def prepare_cds_for_ads_data(instrument, timeframe,tlid_range=None,cc: JGTChartC
         timeframe (str): The timeframe of the data.
         tlid_range (str, optional): The range of TLID to select. Defaults to None.
         cc (JGTChartConfig, optional): The chart configuration. Defaults to None.
-
+        crop_last_dt (str, optional): The last date to crop the data. Defaults to None.
+        
     Returns:
         pandas.DataFrame: The prepared CDS data with Selected number of bars
 
@@ -68,7 +69,7 @@ def prepare_cds_for_ads_data(instrument, timeframe,tlid_range=None,cc: JGTChartC
     
     #print("AH:DEBUG::Tlid_range:",tlid_range)
     if tlid_range is not None:
-        raise NotImplementedError("tlid_range is not implemented yet.")
+        raise NotImplementedError("tlid_range is not implemented yet. We will use crop_last_dt instead.")
     #@STCGoal local retrieve data from cache if available or from WSL if not  (jgtfxcli)
         
     cache_data=False
@@ -80,9 +81,21 @@ def prepare_cds_for_ads_data(instrument, timeframe,tlid_range=None,cc: JGTChartC
     fnpath = os.path.join(cache_dir,fn)
     l.info("fnpath:"+ fnpath)
 
-
+    # @STCIssue: ,get_them_all=False
+    
     try:
-        df = pds.getPH(instrument,timeframe,cc=cc)
+        df = pds.getPH(instrument,timeframe,cc=cc,get_them_all=True)
+        #print(str(len(df))+" rows")
+        #print("------------------")
+        #drop the latest rows until we have the crop_last_dt as last date if not None
+        # crop_last_dt="2022-10-13 13:45:00"
+        if crop_last_dt is not None:
+            df = df[df.index <= crop_last_dt]
+            #print("After dropping the latest rows until we have the crop_last_dt as last date if not None")
+            #print(str(len(df))+" rows")
+            #print("------------------")
+        #print(str(len(df))+" rows")
+        #print("------------------")
         #print("pds df:",str(len(df))+" rows")
     except:
         l.warning("Could not get DF, trying to run thru WSL the update")
@@ -111,7 +124,10 @@ def prepare_cds_for_ads_data(instrument, timeframe,tlid_range=None,cc: JGTChartC
         l.warning("Could not select the desired amount of bars, trying anyway with what we have")
         pass
     #print(selected)
-    #len_selected = len(selected)
+    len_selected = len(selected)
+    #print("Len_selected:",len_selected)
+    #print(selected.tail(1))
+    #print("---------------")
     data = cds.createFromDF(selected)
     if cache_data:
         data.to_csv(fnpath)
@@ -128,7 +144,8 @@ def prepare_cds_for_ads_data(instrument, timeframe,tlid_range=None,cc: JGTChartC
     return r
 
 
-def get(instrument,timeframe,nb_bar_on_chart=500):
-  data = prepare_cds_for_ads_data(instrument, timeframe, nb_bar_on_chart)
+def get(instrument:str, timeframe:str,tlid_range:str=None,cc:JGTChartConfig=None,crop_last_dt:str=None):
+#(instrument,timeframe,nb_bar_on_chart=500,crop_last_dt:str=None):
+  data = prepare_cds_for_ads_data(instrument, timeframe,tlid_range,cc,crop_last_dt)
   return data
 #p=pds.getPH(instrument,timeframe)
