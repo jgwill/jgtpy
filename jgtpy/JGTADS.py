@@ -81,7 +81,11 @@ def jgtxplot18c_231209(instrument,timeframe,show=True,plot_ao_peaks=False,cc: JG
     data = ah.prepare_cds_for_ads_data(instrument, timeframe,tlid_range=tlid_range,cc=cc) #@STCGoal Supports TLID
     #@STCIssue Desired Number of Bars ALREADY SELECTED IN THERE
     #data.to_csv("debug_data" + instrument.replace("/","-") + timeframe + ".csv")
+    try:
     return plot_from_cds_df(data,instrument,timeframe,show=show,plot_ao_peaks=plot_ao_peaks,cc=cc)
+    except:
+        print("ERROR - Returning ALT Plotting")
+        return plot_from_cds_df_ALT(data,instrument,timeframe,show=show,plot_ao_peaks=plot_ao_peaks,cc=cc)
 
 
 def plot_from_pds_df(pdata,instrument,timeframe,show=True,plot_ao_peaks=True,cc: JGTChartConfig=None,tlid_range=None):
