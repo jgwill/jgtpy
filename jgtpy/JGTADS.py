@@ -545,7 +545,7 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
     
     
     colors = data_last_selection['zcol'].values
-    print(colors)
+    #print(colors)
     #marketcolor_overrides=mco
     
     fmt = "%Y-%m-%d"
