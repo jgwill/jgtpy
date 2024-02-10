@@ -131,6 +131,12 @@ def pds_get_dt_from_and_to_for_now_live_price(_timeframe, _nbbar2retrieve=335, q
 #--@STCGoal IDS Indicators and related / CDS
 
 
+def normalize_columns(df: pd.DataFrame, columns: list) -> pd.DataFrame:
+    df_normalized = df.copy()
+    for column in columns:
+        df_normalized[column] = df[column] / df[column].abs().max()
+    return df_normalized
+columns_to_normalize = [ 'ao', 'ac']
 
 
 def ids_add_indicators(dfsrc,
@@ -369,6 +375,11 @@ def ids_add_indicators_LEGACY(dfsrc,
     dfresult.set_index('Date',inplace=True)
   except TypeError:
     pass
+  
+  normalize=True
+  if normalize:
+    dfresult = normalize_columns(dfresult, columns_to_normalize)
+  
   if not quiet:
     print("done adding indicators :)")
   
