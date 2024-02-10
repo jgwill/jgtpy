@@ -544,6 +544,10 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
     subtitle = "" + get_dt_title_by_timeframe(last_bar_dt,timeframe)  + "      " + tittle_suffix
     
     
+    colors = data_last_selection['zcol'].values
+    print(colors)
+    #marketcolor_overrides=mco
+    
     fmt = "%Y-%m-%d"
     if timeframe == "H1" or timeframe == "H4":
         fmt = "%y-%m-%d\n%H"
@@ -562,6 +566,7 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
         returnfig=True,
         tight_layout=True,
         datetime_format=fmt,
+        marketcolor_overrides=colors,
     )
     
     
