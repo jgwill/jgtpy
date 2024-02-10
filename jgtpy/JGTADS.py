@@ -584,20 +584,13 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
     tst_v = height_minmax / 8
     new_y_max = main_ymin - tst_v - fdb_offset_value
     new_y_min = main_ymax + tst_v + fdb_offset_value
-    #print("mainYMin/low/newmin: " + str(main_ymin) + " / " + str(low_min) + " / " + str(new_y_min))
-    #print("mainYMax/high/newmax :"  +str(main_ymax) + " / " + str(high_max) + " / " + str(new_y_max))
+
+    
     axes[main_plot_panel_id].set_ylim(
         new_y_min,
         new_y_max
     )
         
-    #       low_min - fdb_offset_value - pipsize * 30,
-    #       high_max + fdb_offset_value+ pipsize * 33
-    #   )
-        
-    #       low_min - fdb_offset_value - pipsize * 330,
-    #       high_max + fdb_offset_value + pipsize * 330,
-    #   )
 
     # Get current x-axis limits
     x_min, x_max = axes[main_plot_panel_id].get_xlim()
