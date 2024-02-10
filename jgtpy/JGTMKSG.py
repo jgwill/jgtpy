@@ -3,6 +3,8 @@
 import sys
 import os
 
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -37,7 +39,7 @@ def create_default_chart_config():
 
 
 #support crop_last_dt="2022-10-13 13:45:00"
-def generate_market_snapshots(instruments:str, timeframes:str, html_outdir_root:str=None,cc:JGTChartConfig=None,crop_last_dt:str=None, show_chart=False, show_tabs=False,width=2550, height=1150):
+def generate_market_snapshots(instruments:str, timeframes:str, html_outdir_root:str=None,cc:JGTChartConfig=None,crop_last_dt:str=None, show_chart=False, show_tabs=False,width=2550, height=1150,save_fig_image=True,save_cds_data=True):
   if cc is None:
     cc = create_default_chart_config()
   if html_outdir_root is None:
@@ -69,14 +71,15 @@ def generate_market_snapshots(instruments:str, timeframes:str, html_outdir_root:
       success = False
       for t in timeframes:
         print(i, t)
-        f, ax, _ = ads.plot(i, t, show=show_chart, cc=cc, crop_last_dt=crop_last_dt)
+        f, ax, _ = ads.plot(i, t, show=show_chart, cc=cc, crop_last_dt=crop_last_dt,plot_ao_peaks=True)
         f.title = t
         figures[t] = f
-        povfn = i.replace("/", "-") + "_" + t
-        fnout = html_outdir_root + "/" + povfn + ".png"
-        fnoutcsv = html_outdir_root + "/" + povfn + ".cds.csv"
-        f.savefig(fnout)
-        _.to_csv(fnoutcsv)
+        fnout, fnoutcsv = _mk_fnoutputs(html_outdir_root, i, t)
+        
+        if save_fig_image:        
+          f.savefig(fnout)
+        if save_cds_data:
+          _.to_csv(fnoutcsv)
 
       tabs = pn.Tabs(width=width, height=height)
 
@@ -88,11 +91,12 @@ def generate_market_snapshots(instruments:str, timeframes:str, html_outdir_root:
         
       
       if crop_last_dt is not None:
-        cldt_fnstr =crop_last_dt.replace("/","-").replace(" ","_").replace(":","") 
+        #cldt_fnstr=crop_last_dt.replace("/","-").replace(" ","_").replace(":","") 
+        cldt_fnstr=tlid.strdt(crop_last_dt)
         tabs.title = i + " - " + crop_last_dt
-        html_fname = i.replace("/", "-")+ cldt_fnstr + ".html"
+        html_fname = i.replace("/", "-")+"_"+ cldt_fnstr + ".html"
       else:
-        cldt_fnstr =""
+        cldt_fnstr =tlid.get_minutes()
         tabs.title = i
         html_fname = i.replace("/", "-") + ".html"
       print(html_fname)
@@ -108,8 +112,14 @@ def generate_market_snapshots(instruments:str, timeframes:str, html_outdir_root:
       print("An error occurred while processing:", i)
       pass
 
-  full_html_output_filepath = f"{html_outdir_root}/pto-full.html"
+  full_html_output_filepath = f"{html_outdir_root}/pto-all-mksg.html"
   print(full_html_output_filepath)
 
   ptabs.save(full_html_output_filepath, embed=True)
   print("Saved:", full_html_output_filepath)
+
+def _mk_fnoutputs(html_outdir_root, i, t):
+    povfn = i.replace("/", "-") + "_" + t
+    fnout = html_outdir_root + "/" + povfn + ".png"
+    fnoutcsv = html_outdir_root + "/" + povfn + ".cds.csv"
+    return fnout,fnoutcsv

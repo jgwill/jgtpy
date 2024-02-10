@@ -17,7 +17,7 @@ INSTALL_REQUIRES = [
     "jgtutils>=0.1.20",
     "dropbox>=11.36.2",
     "mplfinance>=0.12.10b0",
-    "tlid>=0.1.6",
+    "tlid>=0.1.11",
     "scipy>=1.7.3",
     "panel>=1.3.8",
 ]
