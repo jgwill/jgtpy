@@ -507,12 +507,6 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
 
 
 
-
-
-    #%% Print Mean
-    #l.debug("Mean: " + (price_mean).astype(str))
-
-
     #%% Plotting
     addplot = [
         jaw_plot,
@@ -531,7 +525,6 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
         acs_plot,
         acb_plot,
     ]
-    
     
     
     
@@ -570,6 +563,8 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
         tight_layout=True,
         datetime_format=fmt,
     )
+    
+    
     subtitle_x_pos = cc.subtitle_x_pos
     subtitle_y_pos = cc.subtitle_y_pos
     subtitle_ha = cc.subtitle_ha
@@ -590,7 +585,7 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
         new_y_min,
         new_y_max
     )
-        
+      
 
     # Get current x-axis limits
     x_min, x_max = axes[main_plot_panel_id].get_xlim()
@@ -605,11 +600,10 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
     # Set new x-axis limit
     axes[main_plot_panel_id].set_xlim(x_min, new_x_max)
 
-
+    
     # Align the title to the left
     fig.suptitle(chart_title, x=cc.title_x_pos, y=cc.title_y_pos, ha=cc.title_ha, fontsize=cc.title_fontsize)
-    #fig.subtitle("oeuoeuoeu", x=0.15, ha="left")
-
+ 
 
     
     # Remove the y-axis label from the first subplot
@@ -627,7 +621,6 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
     
     # Set the font size of the Date column
     axes[main_plot_panel_id].tick_params(axis="x", labelsize=6)
-
     if show:
         plt.show()
     return fig,axes,data_last_selection
@@ -955,6 +948,7 @@ def make_plot__ao_ac(data:pd.DataFrame,cc: JGTChartConfig=None, ao_plot_panel_id
         data[AC], panel=ac_plot_panel_id, color=colors_ac, secondary_y=False, type=ac_plot_type
     )
     
+
     return ao_plot, ac_plot
 
 
