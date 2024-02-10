@@ -51,6 +51,7 @@ print(instrument, t)
 t = "H1"
 h1, h1a, d1df = ads.plot(instrument, t, show=show, cc=cc)
 print(instrument, t)
+#%% 
 t = "m15"
 m15, m15a, m15adf = ads.plot(instrument, t, show=show, cc=cc)
 
