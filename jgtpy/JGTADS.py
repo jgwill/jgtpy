@@ -551,6 +551,13 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
     subtitle = "" + get_dt_title_by_timeframe(last_bar_dt,timeframe)  + "      " + tittle_suffix
     
     
+    fmt = "%Y-%m-%d"
+    if timeframe == "H1" or timeframe == "H4":
+        fmt = "%y-%m-%d\n%H"
+    if timeframe == "m5" or timeframe == "m15":
+        fmt = "%y-%m-%d\n%H:%M"
+    if timeframe == "M1":
+        fmt = "%Y-%m"
     fig, axes = mpf.plot(
         ohlc,
         type=main_plot_type,
@@ -561,6 +568,7 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
         title=chart_title,
         returnfig=True,
         tight_layout=True,
+        datetime_format=fmt,
     )
     subtitle_x_pos = cc.subtitle_x_pos
     subtitle_y_pos = cc.subtitle_y_pos
