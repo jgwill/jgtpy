@@ -618,9 +618,23 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
     #fig.subtitle("oeuoeuoeu", x=0.15, ha="left")
 
     # Set the font size of the x-axis labels
-    for ax in axes:
-        ax.tick_params(axis="x", labelsize=6)
+    # for ax in axes:
+    #     ax.tick_params(axis="x", labelsize=6)
 
+    
+    # Remove the y-axis label from the first subplot
+    axes[0].set_ylabel('')
+    axes[1].set_ylabel('')
+    axes[2].set_ylabel('')
+    
+    # Remove the labels from the y-axis of the AO and AC plots
+    axes[1].set_yticklabels([])
+    axes[2].set_yticklabels([])
+    
+    axes[1].set_yticklabels([])
+    axes[2].set_yticklabels([])
+    
+    
     # Set the font size of the Date column
     axes[main_plot_panel_id].tick_params(axis="x", labelsize=6)
 
