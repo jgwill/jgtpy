@@ -610,9 +610,6 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
     fig.suptitle(chart_title, x=cc.title_x_pos, y=cc.title_y_pos, ha=cc.title_ha, fontsize=cc.title_fontsize)
     #fig.subtitle("oeuoeuoeu", x=0.15, ha="left")
 
-    # Set the font size of the x-axis labels
-    # for ax in axes:
-    #     ax.tick_params(axis="x", labelsize=6)
 
     
     # Remove the y-axis label from the first subplot
