@@ -631,6 +631,7 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
     # Set the font size of the x-axis labels
     for ax in axes:
         ax.tick_params(axis="x", labelsize=6)
+        ax.tick_params(axis="y", labelsize=5)
     if show:
         plt.show()
     return fig,axes,data_last_selection
