@@ -628,10 +628,13 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
     axes[main_plot_panel_id].tick_params(axis="x", labelsize=6)
     fig.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.05)
     
+    show_grid=False
     # Set the font size of the x-axis labels
     for ax in axes:
         ax.tick_params(axis="x", labelsize=6)
         ax.tick_params(axis="y", labelsize=5)
+        
+        ax.grid(show_grid)
     if show:
         plt.show()
     return fig,axes,data_last_selection
