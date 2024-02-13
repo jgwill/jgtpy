@@ -74,7 +74,7 @@ cdtformat="%Y-%m-%d"
 
 
 
-def jgtxplot18c_231209(instrument:str,timeframe:str,show:bool=True,plot_ao_peaks:bool=False,cc: JGTChartConfig=None,tlid_range:str=None,crop_last_dt:str=None):
+def jgtxplot18c_231209(instrument:str,timeframe:str,show:bool=True,plot_ao_peaks:bool=True,cc: JGTChartConfig=None,tlid_range:str=None,crop_last_dt:str=None):
     if cc is None:
         cc= JGTChartConfig()
         
