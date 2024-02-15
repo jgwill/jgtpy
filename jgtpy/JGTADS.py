@@ -623,16 +623,19 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
     axes[1].set_yticklabels([])
     axes[2].set_yticklabels([])
     
-    
+    show_grid = cc.show_grid
     # Set the font size of the Date column
     axes[main_plot_panel_id].tick_params(axis="x", labelsize=6)
-    fig.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.05)
     
-    show_grid=False
+    #@STCIssue Enlarging the canvas on top and right
+    #fig.subplots_adjust(left=0.25, right=0.95, top=0.95, bottom=0.35)
+    
+    
     # Set the font size of the x-axis labels
     for ax in axes:
         ax.tick_params(axis="x", labelsize=6)
         ax.tick_params(axis="y", labelsize=5)
+        
         
         ax.grid(show_grid)
     if show:
@@ -956,13 +959,16 @@ def make_plot__ao_ac(data:pd.DataFrame,cc: JGTChartConfig=None, ao_plot_panel_id
     # Make 'ao' and 'ac' oscillator plot
     
     ao_plot = mpf.make_addplot(
-        data[AO], panel=ao_plot_panel_id, color=colors_ao, secondary_y=False, type=ao_plot_type
+        data[AO], panel=ao_plot_panel_id, color=colors_ao, secondary_y=False, type=ao_plot_type,
+        #label="AO"
     )
+    #ao_plot.subplots_adjust(left=0.25, right=0.95, top=0.95, bottom=0.15)
+    
     ac_plot = mpf.make_addplot(
-        data[AC], panel=ac_plot_panel_id, color=colors_ac, secondary_y=False, type=ac_plot_type
+        data[AC], panel=ac_plot_panel_id, color=colors_ac, secondary_y=False, type=ac_plot_type,
+        #label="AC"
     )
     
-
     return ao_plot, ac_plot
 
 

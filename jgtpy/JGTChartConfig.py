@@ -1,6 +1,8 @@
 class JGTChartConfig:
     def __init__(self):
-
+        
+        self.show_grid = False
+        
         # subtitle & title
         self.subtitle_x_pos = 0.07
         self.subtitle_y_pos = 0.9

@@ -34,7 +34,7 @@ cc.plot_style = "yahoo"
 cc.title_y_pos = 0.96
 # %% M1
 t = "M1"
-M1, M1a, M1df = ads.plot(instrument, t, show=show, cc=cc)
+M1, M1a, M1df = ads.plot(instrument, t, show=show, cc=cc,plot_ao_peaks=True)
 print(instrument, t)
 # %%
 t = "W1"
