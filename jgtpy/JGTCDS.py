@@ -12,7 +12,7 @@ from jgtutils.jgtos import get_data_path
 from JGTChartConfig import JGTChartConfig
 #from . import jgtconstants
 #.columns_to_remove as columns_to_remove
-WS__ids_2402.code-workspace
+
 import pandas as pd
 
 
