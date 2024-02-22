@@ -12,7 +12,7 @@ from jgtutils.jgtos import get_data_path
 from JGTChartConfig import JGTChartConfig
 #from . import jgtconstants
 #.columns_to_remove as columns_to_remove
-
+WS__ids_2402.code-workspace
 import pandas as pd
 
 
@@ -70,7 +70,7 @@ def readCDSFile(instrument, timeframe, columns_to_remove=None, quiet=True):
   pandas.DataFrame: The DataFrame containing the CDS data.
   """
   # Define the file path based on the environment variable or local path
-  data_path_cds = get_data_path()
+  data_path_cds = get_data_path("cds")
   fpath = pds.mk_fullpath(instrument, timeframe, 'csv', data_path_cds)
   cdf = pd.read_csv(fpath)
 
