@@ -71,6 +71,7 @@ from JGTCDS import (
     createFromFile_and_clean_and_save_data as fromfile,
     createFromFile_and_clean_and_save_data as ff,
     createFromDF as fp,
+    readCDSFile as rcds,
 )
 from JGTADS import plot as plot
 import jgtpy.JGTMKSG as mksg
