@@ -20,7 +20,7 @@ from jgtutils import jgtconstants as c
 
 
 # %%
-def createFromPDSFileToCDSFile(instrument, timeframe, columns_to_remove=None, quiet=True,tlid_range=None):
+def createFromPDSFileToCDSFile(instrument, timeframe, columns_to_remove=None, quiet=True,tlid_range=None,read_full=False):
   """
   Create a CDS file from a PDS file.
 
@@ -30,13 +30,14 @@ def createFromPDSFileToCDSFile(instrument, timeframe, columns_to_remove=None, qu
   - columns_to_remove (list, optional): List of column names to remove from the CDS file. Default is None.
   - quiet (bool, optional): If True, suppresses the output. Default is True.
   - tlid_range (str, optional): The TLID range to retrieve. Default is None.
+  - read_full (bool, optional): If True, reads the full CDS file. Default is False.
 
   Returns:
   - fpath (str): The file path of the created CDS file.
   - c (DataFrame): The DataFrame containing the data.
 
   """
-  cdf = createFromPDSFile(instrument, timeframe, quiet,tlid_range=tlid_range)
+  cdf = createFromPDSFile(instrument, timeframe, quiet,tlid_range=tlid_range,read_full=read_full)
 
   # Remove the specified columns
   if columns_to_remove is not None:
@@ -49,7 +50,7 @@ def createFromPDSFileToCDSFile(instrument, timeframe, columns_to_remove=None, qu
   #   pass
 
   # Define the file path based on the environment variable or local path
-  data_path_cds = get_data_path("cds")
+  data_path_cds = get_data_path("cds", read_full=read_full)
   fpath = pds.mk_fullpath(instrument, timeframe, 'csv', data_path_cds)
   #print(fpath)
   cdf.to_csv(fpath)
@@ -82,7 +83,7 @@ def readCDSFile(instrument, timeframe, columns_to_remove=None, quiet=True,read_f
     cdf = cdf.drop(columns=columns_to_remove, errors='ignore')
   return cdf
 
-def createFromPDSFile(instrument,timeframe,quiet=True,tlid_range=None,cc: JGTChartConfig = None):
+def createFromPDSFile(instrument,timeframe,quiet=True,tlid_range=None,cc: JGTChartConfig = None,read_full=False):
   """Create CDS (Chaos Data Service) with Fresh Data on the filestore
 
   Args:
@@ -92,12 +93,13 @@ def createFromPDSFile(instrument,timeframe,quiet=True,tlid_range=None,cc: JGTCha
       tlid_range (str,optional): TLID range
       cc (JGTChartConfig, optional): The JGTChartConfig object to use for the processing. Defaults to None.
       cc (JGTChartConfig, optional): The JGTChartConfig object to use for the processing. Defaults to None.
+      read_full (bool, optional): If True, reads the full CDS file. Default is False.
 
   Returns:
       pandas.DataFrame: CDS DataFrame
   """
   try:
-    df=pds.getPH_from_filestore(instrument,timeframe,quiet=quiet,tlid_range=tlid_range)
+    df=pds.getPH_from_filestore(instrument,timeframe,quiet=quiet,tlid_range=tlid_range,read_full=read_full)
     if not quiet:
       print(df)
   
@@ -141,7 +143,7 @@ def create(instrument,timeframe,nb2retrieve=335,stayConnected=False,quiet=True,c
   Returns:
       pandas.DataFrame: CDS DataFrame
   """
-  
+  print("----THIS FUNCTION REQUIRES UPGRADE  cds.create(...) # fresh data")
   df=pds.getPH(instrument,timeframe,nb2retrieve,with_index=False,quiet=quiet,cc=cc)
   dfi=createFromDF(df,quiet=quiet,cc=cc)
   return dfi
