@@ -56,7 +56,7 @@ def createFromPDSFileToCDSFile(instrument, timeframe, columns_to_remove=None, qu
 
   return fpath, cdf
 
-def readCDSFile(instrument, timeframe, columns_to_remove=None, quiet=True):
+def readCDSFile(instrument, timeframe, columns_to_remove=None, quiet=True,read_full=False):
   """
   Read a CDS file and return a pandas DataFrame.
 
@@ -65,12 +65,13 @@ def readCDSFile(instrument, timeframe, columns_to_remove=None, quiet=True):
   timeframe (str): The timeframe of the data.
   columns_to_remove (list, optional): List of column names to remove from the DataFrame. Default is None.
   quiet (bool, optional): If True, suppresses the output messages. Default is True.
+  read_full (bool, optional): If True, reads the full CDS file. Default is False.
 
   Returns:
   pandas.DataFrame: The DataFrame containing the CDS data.
   """
   # Define the file path based on the environment variable or local path
-  data_path_cds = get_data_path("cds")
+  data_path_cds = get_data_path("cds", read_full=read_full)
   fpath = pds.mk_fullpath(instrument, timeframe, 'csv', data_path_cds)
   cdf = pd.read_csv(fpath)
 
