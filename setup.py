@@ -20,6 +20,7 @@ INSTALL_REQUIRES = [
     "tlid>=0.1.11",
     "scipy>=1.7.3",
     "panel>=1.3.8",
+    "tomli>=1.2.3",
 ]
 
 EXTRAS_DEV_LINT = [
