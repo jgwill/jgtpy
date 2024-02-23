@@ -33,7 +33,7 @@ def parse_args():
     # jgtfxcommon.add_quiet_argument(parser)
     jgtcommon.add_verbose_argument(parser)
     jgtcommon.add_ads_argument(parser)
-    jgtcommon.add_read_full_argument(parser)
+    jgtcommon.add_use_full_argument(parser)
 
     # jgtcommon.add_cds_argument(parser)
     args = parser.parse_args()
@@ -47,7 +47,9 @@ def main():
     timeframe = args.timeframe
     quotes_count = args.quotescount
     cc.nb_bar_on_chart = quotes_count
-    read_full = args.readfull
+    full = False
+    if args.full:
+        full = True
 
     date_from = None
     date_to = None
@@ -112,7 +114,7 @@ def main():
                     tlid_range=tlid_range,
                     show_ads=show_ads,
                     cc=cc,
-                    read_full=read_full,
+                    use_full=full,
                 )
                 # else:
                 #     p = pds.getPH(instrument, timeframe, quotes_count, date_from, date_to, False, quiet)
@@ -143,7 +145,7 @@ def createCDS_for_main(
     tlid_range=None,
     show_ads=False,
     cc: JGTChartConfig = None,
-    read_full=False
+    use_full=False,
 ):
     # implementation goes here
     col2remove = constants.columns_to_remove
@@ -155,7 +157,7 @@ def createCDS_for_main(
         quietting = False
     try:
         cdspath, cdf = cds.createFromPDSFileToCDSFile(
-            instrument, timeframe, col2remove
+            instrument, timeframe, col2remove, use_full=use_full
         )  # @STCIssue: This is not supporting -c NB_BARS_TO_PROCESS, should it ?
         if (
             show_ads

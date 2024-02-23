@@ -25,7 +25,7 @@ cleanseOriginalColumns=True
 useLocal=True
 
 
-def getPH(instrument, timeframe, quote_count=-1, start=None, end=None, with_index=True, quiet=True,convert_date_index_to_dt=True,cc: JGTChartConfig=None,get_them_all=False,read_full=False):
+def getPH(instrument, timeframe, quote_count=-1, start=None, end=None, with_index=True, quiet=True,convert_date_index_to_dt=True,cc: JGTChartConfig=None,get_them_all=False,use_full=False):
   #@STCissue quote_count is ignored or irrelevant in start/end
   #@a Adequate start and end from the stored file
   if cc is None:
@@ -33,7 +33,7 @@ def getPH(instrument, timeframe, quote_count=-1, start=None, end=None, with_inde
   if quote_count == -1:
     quote_count = cc.nb_bar_to_retrieve
   
-  df = getPH_from_filestore(instrument, timeframe, quiet, False, with_index,convert_date_index_to_dt,read_full=read_full)
+  df = getPH_from_filestore(instrument, timeframe, quiet, False, with_index,convert_date_index_to_dt,use_full=use_full)
   if not quiet:
     print(df.columns)
     print(df.index)
@@ -50,7 +50,7 @@ def getPH(instrument, timeframe, quote_count=-1, start=None, end=None, with_inde
     df = select_start_end(df, start, end)
   ldf = len(df)
   if ldf > quote_count and not get_them_all:
-    if not read_full:
+    if not use_full:
       df = df.iloc[-quote_count:]
   return df
 
@@ -82,7 +82,7 @@ def getPH_from_filestore(instrument,timeframe,quiet=True, compressed=False,with_
                          tlid_range=None,
                          output_path=None,
                          nsdir="pds",
-                         read_full=False):
+                         use_full=False):
   """
   Retrieves OHLC data for a given instrument and timeframe from the filestore.
 
@@ -96,12 +96,12 @@ def getPH_from_filestore(instrument,timeframe,quiet=True, compressed=False,with_
     tlid_range (str, optional): Select a range on disk or return None if unavailable
     output_path (str, optional): The path to the output directory. Defaults to None.
     nsdir (str, optional): The name of the directory to use for the filestore. Defaults to "pds".
-    read_full (bool, optional): Whether to read the full data. Defaults to False.
+    use_full (bool, optional): Whether to read the full data. Defaults to False.
 
   Returns:
     pandas.DataFrame: The OHLC data for the given instrument and timeframe.
   """  
-  srcpath = create_filestore_path(instrument, timeframe,quiet, compressed,tlid_range=tlid_range,output_path=output_path,nsdir=nsdir,read_full=read_full)
+  srcpath = create_filestore_path(instrument, timeframe,quiet, compressed,tlid_range=tlid_range,output_path=output_path,nsdir=nsdir,use_full=use_full)
   
   print_quiet(quiet,srcpath)
   
