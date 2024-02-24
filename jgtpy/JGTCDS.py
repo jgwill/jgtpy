@@ -28,17 +28,20 @@ def createFromPDSFileToCDSFile(
     quiet=True,
     tlid_range=None,
     use_full=False,
+    peak_distance=13,peak_width=8
 ):
     """
     Create a CDS file from a PDS file.
 
     Parameters:
-    - instrument (str): The instrument name.
-    - timeframe (str): The timeframe of the data.
-    - columns_to_remove (list, optional): List of column names to remove from the CDS file. Default is None.
-    - quiet (bool, optional): If True, suppresses the output. Default is True.
-    - tlid_range (str, optional): The TLID range to retrieve. Default is None.
-    - use_full (bool, optional): If True, reads/writes the full CDS file. Default is False.
+    instrument (str): The instrument name.
+    timeframe (str): The timeframe of the data.
+    columns_to_remove (list, optional): List of column names to remove from the CDS file. Default is None.
+    quiet (bool, optional): If True, suppresses the output. Default is True.
+    tlid_range (str, optional): The TLID range to retrieve. Default is None.
+    use_full (bool, optional): If True, reads/writes the full CDS file. Default is False.
+    peak_distance (int, optional): The peak distance for the AO indicator. Defaults to 13.
+    peak_width (int, optional): The peak width for the AO indicator. Defaults to 8.
 
     Returns:
     - fpath (str): The file path of the created CDS file.
@@ -46,7 +49,7 @@ def createFromPDSFileToCDSFile(
 
     """
     cdf = createFromPDSFile(
-        instrument, timeframe, quiet, tlid_range=tlid_range, use_full=use_full
+        instrument, timeframe, quiet, tlid_range=tlid_range, use_full=use_full,peak_distance=peak_distance,peak_width=peak_width
     )
 
     # Remove the specified columns
@@ -114,6 +117,7 @@ def createFromPDSFile(
     tlid_range=None,
     cc: JGTChartConfig = None,
     use_full=False,
+    peak_distance=13,peak_width=8
 ):
     """Create CDS (Chaos Data Service) with Fresh Data on the filestore
 
@@ -125,6 +129,8 @@ def createFromPDSFile(
         cc (JGTChartConfig, optional): The JGTChartConfig object to use for the processing. Defaults to None.
         cc (JGTChartConfig, optional): The JGTChartConfig object to use for the processing. Defaults to None.
         use_full (bool, optional): If True, reads the full CDS file. Default is False.
+        peak_distance (int, optional): The peak distance for the AO indicator. Defaults to 13.
+        peak_width (int, optional): The peak width for the AO indicator. Defaults to 8.
 
     Returns:
         pandas.DataFrame: CDS DataFrame
@@ -140,7 +146,7 @@ def createFromPDSFile(
         if not quiet:
             print(df)
 
-        dfi = createFromDF(df, quiet=quiet, cc=cc)
+        dfi = createFromDF(df, quiet=quiet, cc=cc,peak_distance=peak_distance,peak_width=peak_width)
         return dfi
     except:
         return None
