@@ -72,7 +72,7 @@ def prepare_cds_for_ads_data(instrument:str, timeframe:str,tlid_range:str=None,c
         raise NotImplementedError("tlid_range is not implemented yet. We will use crop_last_dt instead.")
     #@STCGoal local retrieve data from cache if available or from WSL if not  (jgtfxcli)
         
-    cache_data=False
+    cache_data:bool=False
     cache_dir = "cache"
     if cache_data:
         os.makedirs(cache_dir, exist_ok=True)
@@ -138,7 +138,7 @@ def prepare_cds_for_ads_data(instrument:str, timeframe:str,tlid_range:str=None,c
     if nb_bars> cc.nb_bar_on_chart:
         r = data.iloc[-cc.nb_bar_on_chart:].copy()
     else:
-        r= data
+        r= data.copy()
     #len_r = len(r)
     #print("AH:Debug:nb_bars after prep ends well:",len_r)
     return r

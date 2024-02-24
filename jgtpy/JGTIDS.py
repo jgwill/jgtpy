@@ -451,7 +451,9 @@ def _jgtpd_dropnas_on_any_rows(dfsrc):
 	return dfsrc.dropna(axis='rows')
 	
 def _jgtpd_drop_cols_from_to_by_name(dfsrc,firstcolname,lastcolname,_axis = 1):
-  return dfsrc.drop(dfsrc.loc[:, firstcolname:lastcolname].columns,axis = _axis)
+  try:  return dfsrc.drop(dfsrc.loc[:, firstcolname:lastcolname].columns,axis = _axis)
+  except:
+    return dfsrc
 
 
 def _jgtpd_col_drop_range(dfsrc,colprefix='pao',endrange=10):

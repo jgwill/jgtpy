@@ -274,8 +274,8 @@ def plot_from_cds_df(data:pd.DataFrame,instrument:str,timeframe:str,show=True,pl
     #%% Offsets and various values
     # offset
     
-    min_timeframe = getMinByTF(timeframe)
-    price_mean = data_last_selection[CLOSE].mean()
+    #min_timeframe = getMinByTF(timeframe)
+    #price_mean = data_last_selection[CLOSE].mean()
     
     # Calculate the bar height for each row
     data_last_selection[BAR_HEIGHT] = data_last_selection[HIGH] - data_last_selection[LOW]
@@ -283,8 +283,8 @@ def plot_from_cds_df(data:pd.DataFrame,instrument:str,timeframe:str,show=True,pl
     
     # Calculate the average bar height
     average_bar_height = data_last_selection[BAR_HEIGHT].mean()
-    low_min = data_last_selection[LOW].min()
-    high_max = data_last_selection[HIGH].max()
+    #low_min = data_last_selection[LOW].min()
+    #high_max = data_last_selection[HIGH].max()
     ao_max = data_last_selection[AO].max()
     ao_min = data_last_selection[AO].min()
     ac_max = data_last_selection[AC].max()
@@ -309,8 +309,8 @@ def plot_from_cds_df(data:pd.DataFrame,instrument:str,timeframe:str,show=True,pl
     #%% ao_peak_above Plot
     if plot_ao_peaks:
             #%% AO Peaks
-        AO_PEAK_BELLOW = c.AO_PEAK_BELLOW#'ao_peak_bellow'
-        AO_PEAK_ABOVE = c.AO_PEAK_ABOVE#'ao_peak_above'
+        AO_PEAK_BELLOW = c.AO_PEAK_BELLOW #'ao_peak_bellow'
+        AO_PEAK_ABOVE = c.AO_PEAK_ABOVE #'ao_peak_above'
         
         # AO Peaks
         # Align AO Peaks with AO bars if value is '1.0'
@@ -547,7 +547,7 @@ def plot_from_cds_df(data:pd.DataFrame,instrument:str,timeframe:str,show=True,pl
     colors = data_last_selection['zcol'].values
     #print(colors)
     #marketcolor_overrides=mco
-    
+    print(data_last_selection)
     fmt = "%Y-%m-%d"
     if timeframe == "H1" or timeframe == "H4":
         fmt = "%y-%m-%d\n%H"
@@ -1053,7 +1053,7 @@ def plotcdf(data,instrument, timeframe, show=True,plot_ao_peaks=True,cc: JGTChar
   return plot_from_cds_df(data,instrument,timeframe,show=show,plot_ao_peaks=plot_ao_peaks,cc=cc)
 
 
-def plot(instrument:str,timeframe:str,show:bool=True,plot_ao_peaks:bool=False,cc: JGTChartConfig=None,tlid_range:str=None,crop_last_dt:str=None):
+def plot(instrument:str,timeframe:str,show:bool=True,plot_ao_peaks:bool=True,cc: JGTChartConfig=None,tlid_range:str=None,crop_last_dt:str=None):
     """
     Plot the chart for a given instrument and timeframe.
 
@@ -1061,7 +1061,7 @@ def plot(instrument:str,timeframe:str,show:bool=True,plot_ao_peaks:bool=False,cc
     instrument (str): The name of the instrument.
     timeframe (str): The timeframe for the chart.
     show (bool, optional): Whether to display the plot. Default is True.
-    plot_ao_peaks (bool, optional): Whether to plot AO peaks. Defaults to False.
+    plot_ao_peaks (bool, optional): Whether to plot AO peaks. Defaults to True.
     cc (JGTChartConfig, optional): The chart configuration object. Defaults to None.
     tlid_range (str, optional): The range of TLIDs to use for the plot. Defaults to None. (WE WILL USE crop_last_dt INSTEAD or we might split and transform it for using it as crop_last_dt...)
     crop_last_dt (str, optional): The last date-time to crop the data. Defaults to None.
