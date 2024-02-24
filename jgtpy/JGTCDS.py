@@ -188,7 +188,7 @@ def create(
 
 
 # createByRange
-def createByRange(instrument, timeframe, start, end, stayConnected=False, quiet=True):
+def createByRange(instrument:str, timeframe:str, start, end, stayConnected:bool=False, quiet:bool=True):
     """Create CDS with Fresh Data from a range
 
     Args:
@@ -225,7 +225,7 @@ columns_to_remove = [
 ]
 
 
-def create_and_clean_data_from_file_df(instrument, timeframe):
+def create_and_clean_data_from_file_df(instrument:str, timeframe:str):
     # Create DataFrame from PDS file
     cdf = createFromPDSFile(instrument, timeframe)
 
@@ -239,7 +239,7 @@ def create_and_clean_data_from_file_df(instrument, timeframe):
     return cdf
 
 
-def _save_cds_data_to_file(df, instrument, timeframe):
+def _save_cds_data_to_file(df, instrument:str, timeframe:str):
     # Define the file path based on the environment variable or local path
     data_path = get_data_path()
     fpath = pds.mk_fullpath(instrument, timeframe, "csv", data_path)
@@ -249,7 +249,7 @@ def _save_cds_data_to_file(df, instrument, timeframe):
     return fpath
 
 
-def createFromFile_and_clean_and_save_data(instrument, timeframe):
+def createFromFile_and_clean_and_save_data(instrument:str, timeframe:str):
     # Create DataFrame from PDS file
     cdf = create_and_clean_data_from_file_df(instrument, timeframe)
     _save_cds_data_to_file(cdf, instrument, timeframe)
@@ -296,7 +296,7 @@ def getLastCompletedBarAsList(_df):
     return _pa
 
 
-def checkFDB(_instrument, _timeframe):
+def checkFDB(_instrument:str, _timeframe:str):
     _df = create(_instrument)
     pa = getPresentBarAsList(_df)
     isfdb = pa[c.FDB][0] != 0.0

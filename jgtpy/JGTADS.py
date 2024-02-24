@@ -89,7 +89,7 @@ def jgtxplot18c_231209(instrument:str,timeframe:str,show:bool=True,plot_ao_peaks
         return plot_from_cds_df_ALT(data,instrument,timeframe,show=show,plot_ao_peaks=plot_ao_peaks,cc=cc)
 
 
-def plot_from_pds_df(pdata,instrument,timeframe,show=True,plot_ao_peaks=True,cc: JGTChartConfig=None,tlid_range=None):
+def plot_from_pds_df(pdata,instrument:str,timeframe:str,show:int=True,plot_ao_peaks=True,cc: JGTChartConfig=None,tlid_range:str=None):
     if cc is None:
         cc= JGTChartConfig()
     
@@ -118,7 +118,7 @@ def plot_from_pds_df(pdata,instrument,timeframe,show=True,plot_ao_peaks=True,cc:
 
 
 
-def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: JGTChartConfig=None):
+def plot_from_cds_df(data:pd.DataFrame,instrument:str,timeframe:str,show=True,plot_ao_peaks:bool=True,cc: JGTChartConfig=None):
     
     """
     Plot OHLC bars, indicators, and signals from a pandas DataFrame.
@@ -648,7 +648,7 @@ def plot_from_cds_df(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: 
 #%% Too short plotting alternative 
 
 
-def plot_from_cds_df_ALT(data,instrument,timeframe,show=True,plot_ao_peaks=True,cc: JGTChartConfig=None):
+def plot_from_cds_df_ALT(data,instrument:str,timeframe:str,show:bool=True,plot_ao_peaks:bool=True,cc: JGTChartConfig=None):
     
     """
     Plot OHLC bars, indicators, and signals from a pandas DataFrame.

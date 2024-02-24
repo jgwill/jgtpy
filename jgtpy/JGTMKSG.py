@@ -39,7 +39,7 @@ def create_default_chart_config():
 
 
 #support crop_last_dt="2022-10-13 13:45:00"
-def generate_market_snapshots(instruments:str, timeframes:str, html_outdir_root:str=None,cc:JGTChartConfig=None,crop_last_dt:str=None, show_chart=False, show_tabs=False,width=2550, height=1150,save_fig_image=True,save_cds_data=True):
+def generate_market_snapshots(instruments:str, timeframes:str, html_outdir_root:str=None,cc:JGTChartConfig=None,crop_last_dt:str=None, show_chart:bool=False, show_tabs:bool=False,width:int=2550, height:int=1150,save_fig_image:bool=True,save_cds_data:bool=True):
   if cc is None:
     cc = create_default_chart_config()
   if html_outdir_root is None:

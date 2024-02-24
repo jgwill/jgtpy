@@ -31,7 +31,7 @@ _DROPBOX_ACCESS_TOKEN= _FXCM_DROPBOX_ACCESS_TOKEN
 local_fn_compression='gzip'
 
 
-def get_pov_local_data_filename(instrument,timeframe,local_data_dir='./data',local_fn_suffix='.full.csv.gz'):
+def get_pov_local_data_filename(instrument:str,timeframe:str,local_data_dir='./data',local_fn_suffix='.full.csv.gz'):
   print("-------#@STCIssue FIXING REQUIRED-----------------")
   tf=timeframe
   if tf=="m1":

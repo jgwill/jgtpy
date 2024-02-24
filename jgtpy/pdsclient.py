@@ -12,7 +12,7 @@ class JGTPDSProxyClient:
     def __init__(self, base_url):
         self.base_url = base_url
 
-    def getPH(self, instrument, timeframe):
+    def getPH(self, instrument:str, timeframe:str):
         data = {"instrument": instrument, "timeframe": timeframe}
         response = requests.post(f"{self.base_url}/getPH", json=data)
         return response.text
@@ -62,8 +62,8 @@ class JGTPDSProxyClient:
 
     def cli2(
         self,
-        instrument,
-        timeframe
+        instrument:str,
+        timeframe:str,
     ):
         data = {
             "instrument": instrument,
@@ -77,12 +77,12 @@ class JGTPDSProxyClient:
         response = requests.get(f"{self.base_url}/init")
         return response.json()
 
-    def fetch_mk_fn(self, instrument, timeframe, ext):
+    def fetch_mk_fn(self, instrument:str, timeframe:str, ext:str):
         params = {"instrument": instrument, "timeframe": timeframe, "ext": ext}
         response = requests.get(f"{self.base_url}/mk_fn", params=params)
         return response.json()
 
-    def fetch_get_instrument_properties(self, instrument):
+    def fetch_get_instrument_properties(self, instrument:str):
         data = {"instrument": instrument.replace("-", "/")}
         response = requests.post(f"{self.base_url}/iprop", json=data)
         return response.json()

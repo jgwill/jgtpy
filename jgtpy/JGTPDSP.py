@@ -25,7 +25,7 @@ cleanseOriginalColumns=True
 useLocal=True
 
 
-def getPH(instrument, timeframe, quote_count=-1, start=None, end=None, with_index=True, quiet=True,convert_date_index_to_dt=True,cc: JGTChartConfig=None,get_them_all=False,use_full=False):
+def getPH(instrument:str, timeframe:str, quote_count:int=-1, start=None, end=None, with_index=True, quiet:bool=True,convert_date_index_to_dt:bool=True,cc: JGTChartConfig=None,get_them_all:bool=False,use_full:bool=False):
   #@STCissue quote_count is ignored or irrelevant in start/end
   #@a Adequate start and end from the stored file
   if cc is None:
@@ -78,11 +78,11 @@ def str_to_datetime(date_str):
     return None
 
 
-def getPH_from_filestore(instrument,timeframe,quiet=True, compressed=False,with_index=True,convert_date_index_to_dt=True,
-                         tlid_range=None,
+def getPH_from_filestore(instrument:str,timeframe:str,quiet=True, compressed:bool=False,with_index:bool=True,convert_date_index_to_dt:bool=True,
+        tlid_range:str=None,
                          output_path=None,
-                         nsdir="pds",
-                         use_full=False):
+                         nsdir:str="pds",
+                         use_full:bool=False):
   """
   Retrieves OHLC data for a given instrument and timeframe from the filestore.
 
@@ -149,28 +149,13 @@ def read_ohlc_df_from_file(srcpath, quiet=True, compressed=False,with_index=True
   return df
  
 
-# def create_filestore_path(instrument, timeframe,quiet=True, compressed=False,tlid_range=None,output_path=None,nsdir="pds"):
-#   return jgtos.create_filestore_path(instrument,timeframe,quiet=quiet,compressed=compressed,tlid_range=tlid_range,output_path=output_path,nsdir=nsdir)
-  
-  
-# def mk_fn(instrument,timeframe,ext="csv"):
-#   return jgtos.mk_fn(instrument,timeframe,ext)
-
-
-# def mk_fn_range(instrument, timeframe, start: datetime, end: datetime,ext="csv"):
-#   return jgtos.mk_fn_range(instrument,timeframe,start,end,ext)
-
-
-# def mk_fullpath(instrument,timeframe,ext,path,tlid_range=None):
-#   return jgtos.mk_fullpath(instrument,timeframe,ext,path,tlid_range)
-
 
 def get_data_path():
     return jgtos.get_data_path('pds')
   
   
 
-def get_instrument_properties(instrument, quiet=False,from_file=True):
+def get_instrument_properties(instrument:str, quiet=False,from_file=True):
   if not from_file:
     print("NOT SUPORTED in PDSP")
   else:
