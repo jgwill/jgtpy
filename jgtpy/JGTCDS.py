@@ -146,7 +146,7 @@ def createFromPDSFile(
         return None
 
 
-def createFromDF(df, quiet=True, cc: JGTChartConfig = None):
+def createFromDF(df, quiet=True, cc: JGTChartConfig = None,peak_distance=13,peak_width=8):
     """
     Creates a new DataFrame with indicators, signals, and cleansed columns added based on the input DataFrame.
 
@@ -154,6 +154,8 @@ def createFromDF(df, quiet=True, cc: JGTChartConfig = None):
       df (pandas.DataFrame): The input DataFrame to add indicators, signals, and cleansed columns to.
       quiet (bool, optional): Whether to suppress console output during processing. Defaults to True.
       cc (JGTChartConfig, optional): The JGTChartConfig object to use for the processing. Defaults to None.
+      peak_distance (int, optional): The peak distance for the AO indicator. Defaults to 13.
+      peak_width (int, optional): The peak width for the AO indicator. Defaults to 8.
 
     Returns:
       pandas.DataFrame: The new DataFrame with indicators, signals, and cleansed columns added.
@@ -163,7 +165,7 @@ def createFromDF(df, quiet=True, cc: JGTChartConfig = None):
 
     if df.index.name == "Date":
         df.reset_index(inplace=True)
-    dfi = ids.tocds(df, quiet=quiet, cc=cc)
+    dfi = ids.tocds(df, quiet=quiet, cc=cc,peak_distance=peak_distance,peak_width=peak_width)
     return dfi
 
 
