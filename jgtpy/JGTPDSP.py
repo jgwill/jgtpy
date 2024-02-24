@@ -25,7 +25,9 @@ cleanseOriginalColumns=True
 useLocal=True
 
 
-def getPH(instrument:str, timeframe:str, quote_count:int=-1, start=None, end=None, with_index=True, quiet:bool=True,convert_date_index_to_dt:bool=True,cc: JGTChartConfig=None,get_them_all:bool=False,use_full:bool=False):
+def getPH(instrument:str, timeframe:str, quote_count:int=-1, start=None, end=None, with_index=True, quiet:bool=True,convert_date_index_to_dt:bool=True,cc: JGTChartConfig=None,get_them_all:bool=False,use_full:bool=False,
+          dt_crop_last=None          
+          ):
   #@STCissue quote_count is ignored or irrelevant in start/end
   #@a Adequate start and end from the stored file
   if cc is None:
@@ -48,10 +50,15 @@ def getPH(instrument:str, timeframe:str, quote_count:int=-1, start=None, end=Non
       print("start: " + str(start))
       print("end: " + str(end))
     df = select_start_end(df, start, end)
+    
+  if dt_crop_last is not None:
+      df = df[df.index < dt_crop_last]
+      
   ldf = len(df)
   if ldf > quote_count and not get_them_all:
     if not use_full:
       df = df.iloc[-quote_count:]
+  
   return df
 
 def select_start_end(df, start, end=None):
@@ -168,7 +175,7 @@ def get_instrument_properties(instrument:str, quiet=False,from_file=True):
     except:
       home_dir = os.path.expanduser("~")
       dir_path = os.path.join(home_dir, '.jgt', 'iprops')
-      instrument_filename = instrument.replace('/', '-')
+      instrument_filename = instrument.replace("/", "-")
       #     # Read the instrument properties from the file
       iprop_dir_path = os.path.join(dir_path, f'{instrument_filename}.json')
       with open(iprop_dir_path, 'r') as f:

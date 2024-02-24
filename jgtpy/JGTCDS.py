@@ -69,7 +69,9 @@ def createFromPDSFileToCDSFile(
 
 
 def readCDSFile(
-    instrument, timeframe, columns_to_remove=None, quiet=True, use_full=False
+    instrument, timeframe, columns_to_remove=None, quiet=True, use_full=False,
+    dt_crop_last=None,
+    quote_count=None
 ):
     """
     Read a CDS file and return a pandas DataFrame.
@@ -80,6 +82,8 @@ def readCDSFile(
     columns_to_remove (list, optional): List of column names to remove from the DataFrame. Default is None.
     quiet (bool, optional): If True, suppresses the output messages. Default is True.
     use_full (bool, optional): If True, reads the full CDS file. Default is False.
+    dt_crop_last (str, optional): The date to crop the data to. Default is None.
+    quote_count (int, optional): The number of quotes to keep. Default is None.
 
     Returns:
     pandas.DataFrame: The DataFrame containing the CDS data.
@@ -95,6 +99,11 @@ def readCDSFile(
     # Remove the specified columns
     if columns_to_remove is not None:
         cdf = cdf.drop(columns=columns_to_remove, errors="ignore")
+    
+    if dt_crop_last is not None:
+        cdf = cdf[cdf.index < dt_crop_last]
+    if quote_count is not None:
+        cdf = cdf[-quote_count:]
     return cdf
 
 
