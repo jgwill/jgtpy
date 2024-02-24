@@ -70,6 +70,9 @@ cdtformat="%Y-%m-%d"
 
 #%% Props and requests
 
+def plot_from_cds_df__DEBUG(df,instrument:str,timeframe:str,show:bool=True,plot_ao_peaks:bool=True,cc: JGTChartConfig=None,crop_last_dt:str=None):
+    data = ah.prepare_cds_for_ads_data(instrument, timeframe,cc=cc,crop_last_dt=crop_last_dt) #@STCGoal  Same Prep as if reading and setting it
+    return None
 
 
 

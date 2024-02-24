@@ -114,13 +114,16 @@ def prepare_cds_for_ads_data(instrument:str, timeframe:str,tlid_range:str=None,c
         #selected.to_csv("output_ads_prep_data.csv")
     except:
         l.warning("Could not get DF, trying to run thru WSL the update")
-        wsl.jgtfxcli(instrument, timeframe, cc.nb_bar_to_retrieve)
-        try:
-            df = pds.getPH(instrument,timeframe,cc.nb_bar_to_retrieve)
-            selected = df.copy()
+        try:        
+            wsl.jgtfxcli(instrument, timeframe, cc.nb_bar_to_retrieve)
         except:
-            l.warning("Twice :(Could not select the desired amount of bars, trying anyway with what we have")
-            pass
+                
+            try:
+                df = pds.getPH(instrument,timeframe,cc.nb_bar_to_retrieve)
+                selected = df.copy()
+            except:
+                l.warning("Twice :(Could not select the desired amount of bars, trying anyway with what we have")
+                pass
         l.warning("Could not select the desired amount of bars, trying anyway with what we have")
         pass
     #print(selected)
@@ -131,7 +134,18 @@ def prepare_cds_for_ads_data(instrument:str, timeframe:str,tlid_range:str=None,c
     data = cds.createFromDF(selected)
     if cache_data:
         data.to_csv(fnpath)
-        
+    
+    return prepare_cds_for_ads_data_from_cdsdf(
+        data,
+        instrument,
+        timeframe,
+        tlid_range,
+        cc,
+        crop_last_dt
+    
+    )
+
+def prepare_cds_for_ads_data_from_cdsdf(data,instrument:str, timeframe:str,tlid_range:str=None,cc:JGTChartConfig=None,crop_last_dt:str=None):   
     nb_bars = len(data)
     #print("AH:Debug: nb_bar_on_chart:",nb_bar_on_chart)
     #print("AH:Debug:nb_bars b4 prep ends well:",nb_bars)
