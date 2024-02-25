@@ -21,3 +21,5 @@ jgtapy
 jgtutils
 scipy
 tomli
+markdown-it-py
+panel
