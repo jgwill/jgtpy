@@ -49,7 +49,7 @@ def read_csv(csv_fn):
 
 def prepare_cds_for_ads_data(instrument:str, timeframe:str,tlid_range:str=None,cc:JGTChartConfig=None,crop_last_dt:str=None):
     """
-    Prepare CDS (Credit Default Swap) data for ADS (Automated Trading System).
+    Prepare CDS data for ADS (Analysis Data Service).
 
     Args:
         instrument (str): The instrument symbol.
@@ -144,6 +144,30 @@ def prepare_cds_for_ads_data(instrument:str, timeframe:str,tlid_range:str=None,c
         crop_last_dt
     
     )
+
+
+def prepare_cds_for_ads_data_from_cdsdf(data, instrument: str, timeframe: str, tlid_range: str = None, cc: JGTChartConfig = None, crop_last_dt: str = None):
+    """
+    Prepare CDS data for ADS data from CDS DataFrame.
+
+    Args:
+        data (DataFrame): The CDS DataFrame containing the data.
+        instrument (str): The instrument name.
+        timeframe (str): The timeframe of the data.
+        tlid_range (str, optional): The TLID range. Defaults to None.
+        cc (JGTChartConfig, optional): The JGTChartConfig object. Defaults to None.
+        crop_last_dt (str, optional): The last date to crop the data. Defaults to None.
+
+    Returns:
+        DataFrame: The prepared CDS data for ADS.
+    """
+    nb_bars = len(data)
+    if nb_bars > cc.nb_bar_on_chart:
+        r = data.iloc[-cc.nb_bar_on_chart:].copy()
+    else:
+        r = data.copy()
+    return r
+
 
 def prepare_cds_for_ads_data_from_cdsdf(data,instrument:str, timeframe:str,tlid_range:str=None,cc:JGTChartConfig=None,crop_last_dt:str=None):   
     nb_bars = len(data)

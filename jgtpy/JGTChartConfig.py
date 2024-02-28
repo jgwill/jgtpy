@@ -17,7 +17,7 @@ class JGTChartConfig:
         
         self.nb_bar_on_chart = 300
         self.min_bar_on_chart = 299  # Somehow it not that helpful because some instruments has less than 100 bars on their montly chart and close to 300 an their weekly chart
-        self.b_alligator_jaws_period = 89
+        self.b_alligator_jaws_period = 89 #Migrating to JGTIDSRequest
         self.cds_required_amount_of_bar_for_calc = self.b_alligator_jaws_period
         self.nb_bar_to_retrieve = (
             self.nb_bar_on_chart + self.cds_required_amount_of_bar_for_calc

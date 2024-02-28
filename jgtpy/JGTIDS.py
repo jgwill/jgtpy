@@ -20,6 +20,7 @@ from scipy.signal import find_peaks
 from aohelper import pto_add_ao_price_peaks
 
 from JGTChartConfig import JGTChartConfig
+from JGTIDSRequest import JGTIDSRequest
 
 # %%
 #@title Vars
@@ -139,6 +140,23 @@ def normalize_columns(df: pd.DataFrame, columns: list) -> pd.DataFrame:
 columns_to_normalize = [ 'ao', 'ac']
 
 
+
+def ids_add_indicatorsV2(dfsrc,
+                       dropnavalue=True,
+                       quiet=True,                       
+                       cleanupOriginalColumn=True,
+                       cc:JGTChartConfig=None,
+                       ids_request:JGTIDSRequest=None
+                       ):
+  """
+  #@STCIssue Backward Compatibility ??
+  #@STCGoal What is the ultimate goal ?
+    #@STCGoal Well Migrated to the new version of the function
+      #@STCIssue   JGTChartConfig/JGTIDSRequest Unclear about Creation of IDS and What Goes in the Chart (ADS)
+        #@a ADSRequest vs IDSRequest/CDSRequest
+  """
+  return None
+
 def ids_add_indicators(dfsrc,
                        enableGatorOscillator=False,
                        enableMFI=False,
@@ -148,7 +166,9 @@ def ids_add_indicators(dfsrc,
                        useLEGACY=True,
                        cc:JGTChartConfig=None,
                        bypass_index_reset=False,
-                       big_alligator=False):
+                       big_alligator=False,
+                       ids_request:JGTIDSRequest=None
+                       ):
   """
   Adds technical indicators to a given DataFrame.
 
@@ -163,22 +183,16 @@ def ids_add_indicators(dfsrc,
   cc (JGTChartConfig, optional): The JGTChartConfig object. Defaults to None.
   bypass_index_reset (bool, optional): Whether to bypass resetting the index. Defaults to False.
   big_alligator (bool, optional): Whether to enable the Alligator indicator. Defaults to False.
+  ids_request (JGTIDSRequest, optional): The JGTIDSRequest object. Defaults to None.
 
   Returns:
   pandas.DataFrame: The DataFrame with the added indicators.
   """
-  #print(dfsrc)
-  # if not bypass_index_reset:
-  #   try:
-  #     # Check if 'Date' is the index column
-  #     if dfsrc.index.name == 'Date':
-  #       # Reset the index to remove 'Date' as the index column
-  #       dfsrc = dfsrc.reset_index()
-  #   except Exception:
-  #     pass
-    
+
   if cc is None:
     cc = JGTChartConfig()
+  if ids_request is None:
+    ids_request = JGTIDSRequest()
     
   dfresult=None
   if not useLEGACY: # Because jgtapy has to be upgraded with new column name, we wont use it until our next release
@@ -195,7 +209,8 @@ def ids_add_indicators(dfsrc,
                        quiet=quiet,
                        min_nb_bar_on_chart=cc.min_bar_on_chart,
                        bypass_index_reset=bypass_index_reset,
-                       big_alligator=big_alligator)
+                       big_alligator=big_alligator,
+                       ids_request=ids_request)
   
   return round_columns(dfresult)
 
@@ -216,7 +231,8 @@ def ids_add_indicators_LEGACY(dfsrc,
                        b_alligator_jaws_period = 89,
                        largest_fractal_period = 89,
                        min_nb_bar_on_chart=300,
-                       bypass_index_reset=False):
+                       bypass_index_reset=False,
+                       ids_request:JGTIDSRequest=None):
   """
   Adds various technical indicators to the input DataFrame. Is the same as in the jgtapy.legacy module.
 
@@ -231,21 +247,17 @@ def ids_add_indicators_LEGACY(dfsrc,
   largest_fractal_period (int, optional): (NOT IMPLEMENTED) The largest fractal period. Defaults to 89.
   min_nb_bar_on_chart (int, optional): The minimum number of bars on the chart. Defaults to 300.
   bypass_index_reset (bool, optional): Whether to bypass resetting the index. Defaults to False.
+  ids_request (JGTIDSRequest, optional): The JGTIDSRequest object. Defaults to None.
 
   Returns:
   pandas.DataFrame: The input DataFrame with added technical indicators.
   """    
 
-  #TypeError: string indices must be integers
-  # if not bypass_index_reset:
-  #   try:
-  #     # Check if 'Date' is the index column
-  #     if dfsrc.index.name == 'Date':
-  #       # Reset the index to remove 'Date' as the index column
-  #       dfsrc = dfsrc.reset_index()
-  #   except Exception:
-  #     pass
+
   
+  if ids_request is None:
+    ids_request = JGTIDSRequest()
+    
   ldfsrc=len(dfsrc)
   #TODO
   df_nb_bars = min_nb_bar_on_chart #@STCIssue: We have charts with as few as 80 bars and some indicators wont work. We need to find a way to make it work with less bars.
@@ -273,12 +285,13 @@ def ids_add_indicators_LEGACY(dfsrc,
  
   
   # Assign numbers to variables with prefix 'balligator_'
-  balligator_period_jaws = 89
-  balligator_period_teeth = 55
-  balligator_period_lips = 34
-  balligator_shift_jaws = 55
-  balligator_shift_teeth = 34
-  balligator_shift_lips = 21
+  balligator_period_jaws = ids_request.balligator_period_jaws
+  balligator_period_teeth = ids_request.balligator_period_teeth
+  balligator_period_lips = ids_request.balligator_period_lips
+  balligator_shift_jaws = ids_request.balligator_shift_jaws
+  balligator_shift_teeth = ids_request.balligator_shift_teeth
+  balligator_shift_lips = ids_request.balligator_shift_lips
+  
   bAlligator_required_bar_offset = minimal_bars_with_indicators + b_alligator_jaws_period + balligator_shift_jaws
 
 
