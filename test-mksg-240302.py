@@ -53,18 +53,19 @@ h = 1150
 
 #-----------------------------------------------
 
-scntlid = tlid.strdt(crop_last_dt)
-scntlid
-ifn = instrument.replace("/", "-")
-subdir_scene_name = f"{ifn}_{tf_of_signal}_{sig_type_name}_{scntlid}"  # GBP-USD_2307132100
+def pto_generate_snapshot_240302(default_char_dir_name, cc, show_chart, show_tabs, save_fig_image, save_cds_data, instrument, timeframes, tf_of_signal, sig_type_name, crop_last_dt, scn_root_dir, out_htm_viewer_full_fn, out_htm_viewer_prefix, w, h):
+    scntlid = tlid.strdt(crop_last_dt)
+    scntlid
+    ifn = instrument.replace("/", "-")
+    subdir_scene_name = f"{ifn}_{tf_of_signal}_{sig_type_name}_{scntlid}"  # GBP-USD_2307132100
 
-scn_chart_dir = os.path.join(os.path.join(scn_root_dir,  default_char_dir_name), subdir_scene_name)
-os.makedirs(scn_chart_dir, exist_ok=True)
+    scn_chart_dir = os.path.join(os.path.join(scn_root_dir,  default_char_dir_name), subdir_scene_name)
+    os.makedirs(scn_chart_dir, exist_ok=True)
 
 
 # %% crop_last_dt
 
-mksg.generate_market_snapshots(
+    mksg.generate_market_snapshots(
     instrument,
     timeframes,
     scn_chart_dir,
@@ -81,6 +82,8 @@ mksg.generate_market_snapshots(
     out_htm_viewer_prefix=out_htm_viewer_prefix,
     out_htm_viewer_full_fn=out_htm_viewer_full_fn #@STCGoal Expecting to be able to add many cropped DTs to the same file
 )
+
+pto_generate_snapshot_240302(default_char_dir_name, cc, show_chart, show_tabs, save_fig_image, save_cds_data, instrument, timeframes, tf_of_signal, sig_type_name, crop_last_dt, scn_root_dir, out_htm_viewer_full_fn, out_htm_viewer_prefix, w, h)
 
 
 # %%
