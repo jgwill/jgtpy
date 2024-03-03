@@ -140,7 +140,7 @@ def _mk_fnoutputs(html_outdir_root, i, t,crop_last_dt=None):
 #%% For Many Crop DT Last
 
 
-def generate_market_snapshots_for_many_crop_dt(i:str, timeframes,crop_last_dt_arr, html_outdir_root:str=None,cc:JGTChartConfig.JGTChartConfig=None, show_chart:bool=False, show_tabs:bool=False,width:int=2550, height:int=1150,save_fig_image:bool=True,save_cds_data:bool=True,out_htm_viewer_prefix = "pto-mksg-bycrop-",default_char_dir_name = "charts",default_chart_output_dir = "./",out_htm_viewer_ext = ".html",out_htm_viewer_full_fn= "pto-all-mksg-bycrop.html",jgtpy_data_var = "JGTPY_DATA_FULL",tf_of_signal:str=None,dt_of_signal:str=None):
+def generate_market_snapshots_for_many_crop_dt(i:str, timeframes,crop_last_dt_arr, html_outdir_root:str=None,cc:JGTChartConfig.JGTChartConfig=None, show_chart:bool=False, show_tabs:bool=False,width:int=2550, height:int=1150,save_fig_image:bool=True,save_cds_data:bool=True,out_htm_viewer_prefix = "pto-mksg-bycrop-",default_char_dir_name = "charts",default_chart_output_dir = "./",out_htm_viewer_ext = ".html",out_htm_viewer_full_fn= "pto-all-mksg-bycrop.html",jgtpy_data_var = "JGTPY_DATA_FULL",tf_of_signal:str=None,dt_of_signal:str=None,sig_type:str=""):
   if cc is None:
     cc = create_default_chart_config()
   
@@ -202,14 +202,14 @@ def generate_market_snapshots_for_many_crop_dt(i:str, timeframes,crop_last_dt_ar
       tabs.title =  cldt_fnstr
       
       html_fname = ifn+"_"+ cldt_fnstr + out_htm_viewer_ext
-      
+      html_title_name = i + " " + tf_of_signal +" "+ sig_type+ " " + crop_last_dt
         
       html_fname=html_fname.replace("..",".")
       print(html_fname)
       
       html_output_filepath = f"{html_outdir_root}/{out_htm_viewer_prefix}" + html_fname
 
-      tabs.save(html_output_filepath, embed=True)
+      tabs.save(html_output_filepath,title=html_title_name, embed=True)
 
       perspectives[i] = tabs
 
@@ -219,12 +219,15 @@ def generate_market_snapshots_for_many_crop_dt(i:str, timeframes,crop_last_dt_ar
     except:
       print("An error occurred while processing:", i)
       pass
+    
+  full_html_title_name = i + " " + tf_of_signal +" "+ sig_type+ " " + dt_of_signal
   
   full_html_output_filepath = f"{html_outdir_root}/{out_htm_viewer_full_fn}"
   print(full_html_output_filepath)
 
-  ptabs.save(full_html_output_filepath, embed=True)
+  ptabs.save(full_html_output_filepath,title=full_html_title_name, embed=True)
   print("Crop by DT Saved:", full_html_output_filepath)
+  
   
   # Fix the output HTML <title>Panel</title>
   #with open(full_html_output_filepath, "r") as file:
