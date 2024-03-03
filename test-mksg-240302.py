@@ -53,7 +53,7 @@ h = 1150
 
 #-----------------------------------------------
 
-def pto_generate_snapshot_240302(default_char_dir_name, cc, show_chart, show_tabs, save_fig_image, save_cds_data, instrument, timeframes, tf_of_signal, sig_type_name, crop_last_dt, scn_root_dir, out_htm_viewer_full_fn, out_htm_viewer_prefix, w, h):
+def pto_generate_snapshot_240302(instrument, timeframes, tf_of_signal, sig_type_name, crop_last_dt, scn_root_dir,default_char_dir_name, show_chart, show_tabs, save_fig_image, save_cds_data,  out_htm_viewer_full_fn, out_htm_viewer_prefix, w, h, cc):
     scntlid = tlid.strdt(crop_last_dt)
     scntlid
     ifn = instrument.replace("/", "-")
@@ -83,8 +83,46 @@ def pto_generate_snapshot_240302(default_char_dir_name, cc, show_chart, show_tab
     out_htm_viewer_full_fn=out_htm_viewer_full_fn #@STCGoal Expecting to be able to add many cropped DTs to the same file
 )
 
-pto_generate_snapshot_240302(default_char_dir_name, cc, show_chart, show_tabs, save_fig_image, save_cds_data, instrument, timeframes, tf_of_signal, sig_type_name, crop_last_dt, scn_root_dir, out_htm_viewer_full_fn, out_htm_viewer_prefix, w, h)
+pto_generate_snapshot_240302(
+    instrument=instrument,
+    timeframes=timeframes,
+    tf_of_signal=tf_of_signal,
+    sig_type_name=sig_type_name,
+    crop_last_dt=crop_last_dt,
+    scn_root_dir=scn_root_dir,
+    default_char_dir_name=default_char_dir_name,
+    cc=cc,
+    show_chart=show_chart,
+    show_tabs=show_tabs,
+    save_fig_image=save_fig_image,
+    save_cds_data=save_cds_data,
+    out_htm_viewer_full_fn=out_htm_viewer_full_fn,
+    out_htm_viewer_prefix=out_htm_viewer_prefix,
+    w=w,
+    h=h
+)
 
 
-# %%
+# %% #@STCGoal Much later when there Were Profits 
 
+crop_last_dt = "2023-07-13 21:00"  # FDBS Signal (ORIGINAL)
+crop_last_dt = "2023-12-13 21:00"  # FDBS Signal (PROFIT)
+
+pto_generate_snapshot_240302(
+    instrument=instrument,
+    timeframes=timeframes,
+    tf_of_signal=tf_of_signal,
+    sig_type_name=sig_type_name,
+    crop_last_dt=crop_last_dt,
+    scn_root_dir=scn_root_dir,
+    default_char_dir_name=default_char_dir_name,
+    cc=cc,
+    show_chart=show_chart,
+    show_tabs=show_tabs,
+    save_fig_image=save_fig_image,
+    save_cds_data=save_cds_data,
+    out_htm_viewer_full_fn=out_htm_viewer_full_fn,
+    out_htm_viewer_prefix=out_htm_viewer_prefix,
+    w=w,
+    h=h
+)
