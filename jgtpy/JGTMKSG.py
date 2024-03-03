@@ -127,10 +127,13 @@ def generate_market_snapshots(instruments:str, timeframes:str, html_outdir_root:
   ptabs.save(full_html_output_filepath, embed=True)
   print("Saved:", full_html_output_filepath)
 
-def _mk_fnoutputs(html_outdir_root, i, t):
+def _mk_fnoutputs(html_outdir_root, i, t,crop_last_dt=None):
+    _suffix = ""
+    if crop_last_dt is not None:
+      _suffix = "_"+tlid.strdt(crop_last_dt)
     povfn = i.replace("/", "-") + "_" + t
-    fnout = html_outdir_root + "/" + povfn + ".png"
-    fnoutcsv = html_outdir_root + "/" + povfn + ".cds.csv"
+    fnout = html_outdir_root + "/" + povfn +_suffix + ".png"
+    fnoutcsv = html_outdir_root + "/" + povfn + _suffix+ ".cds.csv"
     return fnout,fnoutcsv
 
 
@@ -174,7 +177,7 @@ def generate_market_snapshots_for_many_crop_dt(i:str, timeframes,crop_last_dt_ar
         f, ax, _ = ads.plot(i, t, show=show_chart, cc=cc, crop_last_dt=crop_last_dt,plot_ao_peaks=True)
         f.title = t
         figures[t] = f
-        fnout, fnoutcsv = _mk_fnoutputs(html_outdir_root, i, t)
+        fnout, fnoutcsv = _mk_fnoutputs(html_outdir_root, i, t,crop_last_dt)
         
         if save_fig_image:        
           f.savefig(fnout)
@@ -210,7 +213,7 @@ def generate_market_snapshots_for_many_crop_dt(i:str, timeframes,crop_last_dt_ar
 
       perspectives[i] = tabs
 
-      tabstitle =  tf_of_signal + " " + dt_of_signal
+      tabstitle =  tf_of_signal + " " + crop_last_dt
       ptabs.append((tabstitle, tabs))
       
     except:
