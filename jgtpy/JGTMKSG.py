@@ -344,3 +344,48 @@ def _mk_html_outdir_root_default(html_outdir_root, default_char_dir_name, defaul
       
         html_outdir_root = os.path.join(default_chart_output_dir,default_char_dir_name)
     return html_outdir_root
+
+
+import argparse
+
+def main():
+    parser = argparse.ArgumentParser(description='CLI for pto_generate_snapshot_240302_v2_by_crop_dates function')
+    
+    parser.add_argument('-i','--instrument', type=str, required=True)
+    parser.add_argument('-t','--timeframes', type=str, required=True)
+    parser.add_argument('-tos','--tf_of_signal', type=str, required=True)
+    parser.add_argument('-st','--sig_type_name', type=str, required=True)
+    parser.add_argument('-cl','--crop_last_dt_arr', type=str, required=True)
+    parser.add_argument('--scn_root_dir', type=str, default=None)
+    parser.add_argument('--default_char_dir_name', type=str, default="charts")
+    parser.add_argument('--show_chart', type=bool, default=False)
+    parser.add_argument('--show_tabs', type=bool, default=False)
+    parser.add_argument('--save_fig_image', type=bool, default=True)
+    parser.add_argument('--save_cds_data', type=bool, default=True)
+    parser.add_argument('--out_htm_viewer_full_fn', type=str, default="index.html")
+    parser.add_argument('--out_htm_viewer_prefix', type=str, default="_index-")
+    parser.add_argument('--width', type=int, default=2550)
+    parser.add_argument('--height', type=int, default=1150)
+
+    args = parser.parse_args()
+
+    pto_generate_snapshot_240302_v2_by_crop_dates(
+        i=args.instrument,
+        timeframes=args.timeframes,
+        tf_of_signal=args.tf_of_signal,
+        sig_type_name=args.sig_type_name,
+        crop_last_dt_arr=args.crop_last_dt_arr,
+        scn_root_dir=args.scn_root_dir,
+        default_char_dir_name=args.default_char_dir_name,
+        show_chart=args.show_chart,
+        show_tabs=args.show_tabs,
+        save_fig_image=args.save_fig_image,
+        save_cds_data=args.save_cds_data,
+        out_htm_viewer_full_fn=args.out_htm_viewer_full_fn,
+        out_htm_viewer_prefix=args.out_htm_viewer_prefix,
+        w=args.width,
+        h=args.height
+    )
+
+if __name__ == "__main__":
+    main()
