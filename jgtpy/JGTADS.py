@@ -946,16 +946,16 @@ def make_plot__ao_ac(data:pd.DataFrame,cc: JGTChartConfig=None, ao_plot_panel_id
     
     # Calculate the color for 'ao' and 'ac' bar
     colors_ao = [
-        ao_upbar_color if (data[AO][i] - data[AO][i - 1] > 0) else ao_dnbar_color
+        ao_upbar_color if (data.iloc[i][AO] - data.iloc[i - 1][AO] > 0) else ao_dnbar_color
         for i in range(1, len(data[AO]))
     ]
     colors_ao.insert(0, ao_dnbar_color)
 
     colors_ac = [
         ac_up_color
-        if (data[AC][i] - data[AC][i - 1] > 0)
+        if (data.iloc[i][AC] - data.iloc[i - 1][AC] > 0)
         else ac_dn_color
-        for i in range(1, len(data[AC]))
+        for i in range(1, len(data))
     ]
     colors_ac.insert(0, ac_dn_color)
     
