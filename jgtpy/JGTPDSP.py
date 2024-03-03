@@ -36,6 +36,7 @@ def getPH(instrument:str, timeframe:str, quote_count:int=-1, start=None, end=Non
     quote_count = cc.nb_bar_to_retrieve
   
   df = getPH_from_filestore(instrument, timeframe, quiet, False, with_index,convert_date_index_to_dt,use_full=use_full)
+  
   if not quiet:
     print(df.columns)
     print(df.index)
@@ -108,6 +109,7 @@ def getPH_from_filestore(instrument:str,timeframe:str,quiet=True, compressed:boo
   Returns:
     pandas.DataFrame: The OHLC data for the given instrument and timeframe.
   """  
+  
   srcpath = create_filestore_path(instrument, timeframe,quiet, compressed,tlid_range=tlid_range,output_path=output_path,nsdir=nsdir,use_full=use_full)
   
   print_quiet(quiet,srcpath)

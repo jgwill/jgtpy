@@ -85,18 +85,10 @@ def prepare_cds_for_ads_data(instrument:str, timeframe:str,tlid_range:str=None,c
     
     try:
         df = pds.getPH(instrument,timeframe,cc=cc,get_them_all=True)
-        #print(str(len(df))+" rows")
-        #print("------------------")
-        #drop the latest rows until we have the crop_last_dt as last date if not None
-        # crop_last_dt="2022-10-13 13:45:00"
+   
         if crop_last_dt is not None:
             df = df[df.index <= crop_last_dt]
-            #print("After dropping the latest rows until we have the crop_last_dt as last date if not None")
-            #print(str(len(df))+" rows")
-            #print("------------------")
-        #print(str(len(df))+" rows")
-        #print("------------------")
-        #print("pds df:",str(len(df))+" rows")
+    
     except:
         l.warning("Could not get DF, trying to run thru WSL the update")
         wsl.jgtfxcli(instrument, timeframe, cc.nb_bar_to_retrieve)
