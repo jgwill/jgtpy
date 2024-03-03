@@ -104,7 +104,7 @@ def readCDSFile(
         cdf = cdf.drop(columns=columns_to_remove, errors="ignore")
     
     if dt_crop_last is not None:
-        cdf = cdf[cdf.index < dt_crop_last]
+        cdf = cdf[cdf.index <= dt_crop_last]
     if quote_count is not None:
         cdf = cdf[-quote_count:]
     return cdf

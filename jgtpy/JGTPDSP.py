@@ -52,7 +52,7 @@ def getPH(instrument:str, timeframe:str, quote_count:int=-1, start=None, end=Non
     df = select_start_end(df, start, end)
     
   if dt_crop_last is not None:
-    df = df[df.index < dt_crop_last]
+    df = df[df.index <= dt_crop_last]
       
   ldf = len(df)
   if ldf > quote_count and not get_them_all:
