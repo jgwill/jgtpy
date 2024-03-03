@@ -81,14 +81,24 @@ def prepare_cds_for_ads_data(instrument:str, timeframe:str,tlid_range:str=None,c
     fnpath = os.path.join(cache_dir,fn)
     l.info("fnpath:"+ fnpath)
 
-    # @STCIssue: ,get_them_all=False
+    # @STCIssue: Crop Last Dt out of range should use FULL
     
     try:
         df = pds.getPH(instrument,timeframe,cc=cc,get_them_all=True)
    
         if crop_last_dt is not None:
             df = df[df.index <= crop_last_dt]
-    
+        tst_len_df = len(df)
+        
+        if tst_len_df < cc.nb_bar_to_retrieve:
+            l.warning(f"Data length is less than {cc.nb_bar_to_retrieve}, trying to use full storage")
+            df = pds.getPH(instrument,timeframe,cc=cc,use_full=True)
+        tst_len_df = len(df)
+        
+        if crop_last_dt is not None:
+            df = df[df.index <= crop_last_dt]
+        tst_len_df = len(df)
+        
     except:
         l.warning("Could not get DF, trying to run thru WSL the update")
         wsl.jgtfxcli(instrument, timeframe, cc.nb_bar_to_retrieve)
@@ -103,6 +113,7 @@ def prepare_cds_for_ads_data(instrument:str, timeframe:str,tlid_range:str=None,c
         else:
             selected = df.iloc[-nb_to_select:].copy()
         
+        tst_len_df = len(df)
         #selected.to_csv("output_ads_prep_data.csv")
     except:
         l.warning("Could not get DF, trying to run thru WSL the update")
