@@ -140,7 +140,7 @@ def _mk_fnoutputs(html_outdir_root, i, t,crop_last_dt=None):
 #%% For Many Crop DT Last
 
 
-def generate_market_snapshots_for_many_crop_dt(i:str, timeframes,crop_last_dt_arr, html_outdir_root:str=None,cc:JGTChartConfig.JGTChartConfig=None, show_chart:bool=False, show_tabs:bool=False,width:int=2550, height:int=1150,save_fig_image:bool=True,save_cds_data:bool=True,out_htm_viewer_prefix = "pto-mksg-bycrop-",default_char_dir_name = "charts",default_chart_output_dir = "./",out_htm_viewer_ext = ".html",out_htm_viewer_full_fn= "pto-all-mksg-bycrop.html",jgtpy_data_var = "JGTPY_DATA_FULL",tf_of_signal:str=None,dt_of_signal:str=None,sig_type:str=""):
+def generate_market_snapshots_for_many_crop_dt(i:str, timeframes,crop_last_dt_arr, html_outdir_root:str=None,cc:JGTChartConfig.JGTChartConfig=None, show_chart:bool=False, show_tabs:bool=False,width:int=2550, height:int=1150,save_fig_image:bool=True,save_cds_data:bool=True,out_htm_viewer_prefix = "pto-mksg-bycrop-",default_char_dir_name = "charts",default_chart_output_dir = "./",out_htm_viewer_ext = ".html",out_htm_viewer_full_fn= "pto-all-mksg-bycrop.html",jgtpy_data_var = "JGTPY_DATA_FULL",tf_of_signal:str=None,dt_of_signal:str=None,sig_type_name:str=""):
   if cc is None:
     cc = create_default_chart_config()
   
@@ -202,7 +202,10 @@ def generate_market_snapshots_for_many_crop_dt(i:str, timeframes,crop_last_dt_ar
       tabs.title =  cldt_fnstr
       
       html_fname = ifn+"_"+ cldt_fnstr + out_htm_viewer_ext
-      html_title_name = i + " " + tf_of_signal +" "+ sig_type+ " " + crop_last_dt
+      _sig_type_str = ""
+      if sig_type_name != "":
+        _sig_type_str =" "+ sig_type_name+ " "
+      html_title_name = i + " " + tf_of_signal +_sig_type_str + crop_last_dt
         
       html_fname=html_fname.replace("..",".")
       print(html_fname)
@@ -220,7 +223,7 @@ def generate_market_snapshots_for_many_crop_dt(i:str, timeframes,crop_last_dt_ar
       print("An error occurred while processing:", i)
       pass
     
-  full_html_title_name = i + " " + tf_of_signal +" "+ sig_type+ " " + dt_of_signal
+  full_html_title_name = i + " " + tf_of_signal +" "+ sig_type_name+ " " + dt_of_signal
   
   full_html_output_filepath = f"{html_outdir_root}/{out_htm_viewer_full_fn}"
   print(full_html_output_filepath)
@@ -313,7 +316,8 @@ def pto_generate_snapshot_240302_v2_by_crop_dates(
   save_fig_image=save_fig_image,
   save_cds_data=save_cds_data,
   out_htm_viewer_prefix=out_htm_viewer_prefix,
-  out_htm_viewer_full_fn=out_htm_viewer_full_fn #@STCGoal Expecting to be able to add many cropped DTs to the same file
+  out_htm_viewer_full_fn=out_htm_viewer_full_fn, #@STCGoal Expecting to be able to add many cropped DTs to the same file
+  sig_type_name=sig_type_name
 )
 
 
