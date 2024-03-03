@@ -39,9 +39,10 @@ def create_default_chart_config():
 
 
 #support crop_last_dt="2022-10-13 13:45:00"
-def generate_market_snapshots(instruments:str, timeframes:str, html_outdir_root:str=None,cc:JGTChartConfig=None,crop_last_dt:str=None, show_chart:bool=False, show_tabs:bool=False,width:int=2550, height:int=1150,save_fig_image:bool=True,save_cds_data:bool=True):
+def generate_market_snapshots(instruments:str, timeframes:str, html_outdir_root:str=None,cc:JGTChartConfig=None,crop_last_dt:str=None, show_chart:bool=False, show_tabs:bool=False,width:int=2550, height:int=1150,save_fig_image:bool=True,save_cds_data:bool=True,out_htm_viewer_prefix = "pto-mksg-",default_char_dir_name = "charts",default_chart_output_dir = "./",out_htm_viewer_ext = ".html",out_htm_viewer_full_fn= "pto-all-mksg.html"):
   if cc is None:
     cc = create_default_chart_config()
+  
   if html_outdir_root is None:
     # Read the environment variable
     jgtpy_data_dir = os.environ.get("JGTPY_DATA")
@@ -49,7 +50,8 @@ def generate_market_snapshots(instruments:str, timeframes:str, html_outdir_root:
     # Check if the environment variable is set
     if jgtpy_data_dir is not None:
       # Join the environment variable with "charts" to create a new directory path
-      scn_chart_dir = os.path.join(jgtpy_data_dir, "charts")
+      
+      scn_chart_dir = os.path.join(jgtpy_data_dir, default_char_dir_name)
       
       # Create the directory if it doesn't exist
       os.makedirs(scn_chart_dir, exist_ok=True)
@@ -58,12 +60,14 @@ def generate_market_snapshots(instruments:str, timeframes:str, html_outdir_root:
       html_outdir_root = scn_chart_dir
     else:
       print("Environment variable JGTPY_DATA is not set. Default to ./charts.")
-      html_outdir_root = "./charts"
+      
+      html_outdir_root = os.path.join(default_chart_output_dir,default_char_dir_name)
   timeframes = timeframes.split(",")
   perspectives = {}
   ptabs = pn.Tabs(width=width, height=height)
 
   for i in instruments.split(","):
+    ifn=i.replace("/", "-")
     try:
       print(f"-------------{i}-------------------")
 
@@ -94,14 +98,18 @@ def generate_market_snapshots(instruments:str, timeframes:str, html_outdir_root:
         #cldt_fnstr=crop_last_dt.replace("/","-").replace(" ","_").replace(":","") 
         cldt_fnstr=tlid.strdt(crop_last_dt)
         tabs.title = i + " - " + crop_last_dt
-        html_fname = i.replace("/", "-")+"_"+ cldt_fnstr + ".html"
+        
+        html_fname = ifn+"_"+ cldt_fnstr + out_htm_viewer_ext
+        
       else:
         cldt_fnstr =tlid.get_minutes()
         tabs.title = i
-        html_fname = i.replace("/", "-") + ".html"
+        html_fname = ifn + out_htm_viewer_ext
+        
+      html_fname=html_fname.replace("..",".")
       print(html_fname)
       
-      html_output_filepath = f"{html_outdir_root}/pto-mksg-" + html_fname
+      html_output_filepath = f"{html_outdir_root}/{out_htm_viewer_prefix}" + html_fname
 
       tabs.save(html_output_filepath, embed=True)
 
@@ -111,8 +119,8 @@ def generate_market_snapshots(instruments:str, timeframes:str, html_outdir_root:
     except:
       print("An error occurred while processing:", i)
       pass
-
-  full_html_output_filepath = f"{html_outdir_root}/pto-all-mksg.html"
+  
+  full_html_output_filepath = f"{html_outdir_root}/{out_htm_viewer_full_fn}"
   print(full_html_output_filepath)
 
   ptabs.save(full_html_output_filepath, embed=True)
