@@ -318,16 +318,13 @@ def plot_from_cds_df(data:pd.DataFrame,instrument:str,timeframe:str,show=True,pl
         # AO Peaks
         # Align AO Peaks with AO bars if value is '1.0'
         data_last_selection.loc[:,AO_PEAK_BELLOW] = np.where(data_last_selection[AO_PEAK_BELLOW] == 1.0, ao_max/1.5, np.nan)
-        data_last_selection[AO_PEAK_ABOVE] = data_last_selection[AO_PEAK_ABOVE].astype(float)
         data_last_selection.loc[:,AO_PEAK_ABOVE] = np.where(data_last_selection[AO_PEAK_ABOVE] == 1.0, ao_min/1.5, np.nan)
         
-
         
         # Make AO Peak Bellow plot
 
-        data_last_selection[AO_PEAK_BELLOW] = data_last_selection[AO_PEAK_BELLOW].astype(float)
         aopbellow_plot = mpf.make_addplot(
-            data_last_selection[AO_PEAK_BELLOW].astype(float) + ao_peak_offset_value,
+            data_last_selection[AO_PEAK_BELLOW] +ao_peak_offset_value,
             panel=ao_plot_panel_id,
             type="scatter",
             markersize=ao_peaks_marker_size,
@@ -337,7 +334,7 @@ def plot_from_cds_df(data:pd.DataFrame,instrument:str,timeframe:str,show=True,pl
         
         # Make AO Peak Above plot
         aopabove_plot = mpf.make_addplot(
-            data_last_selection[AO_PEAK_ABOVE].astype(float) - ao_peak_offset_value,
+            data_last_selection[AO_PEAK_ABOVE] -ao_peak_offset_value,
             panel=ao_plot_panel_id,
             type="scatter",
             markersize=ao_peaks_marker_size,
