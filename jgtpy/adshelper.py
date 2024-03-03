@@ -169,17 +169,17 @@ def prepare_cds_for_ads_data_from_cdsdf(data, instrument: str, timeframe: str, t
     return r
 
 
-def prepare_cds_for_ads_data_from_cdsdf(data,instrument:str, timeframe:str,tlid_range:str=None,cc:JGTChartConfig=None,crop_last_dt:str=None):   
-    nb_bars = len(data)
-    #print("AH:Debug: nb_bar_on_chart:",nb_bar_on_chart)
-    #print("AH:Debug:nb_bars b4 prep ends well:",nb_bars)
-    if nb_bars> cc.nb_bar_on_chart:
-        r = data.iloc[-cc.nb_bar_on_chart:].copy()
-    else:
-        r= data.copy()
-    #len_r = len(r)
-    #print("AH:Debug:nb_bars after prep ends well:",len_r)
-    return r
+# def prepare_cds_for_ads_data_from_cdsdf(data,instrument:str, timeframe:str,tlid_range:str=None,cc:JGTChartConfig=None,crop_last_dt:str=None):   
+#     nb_bars = len(data)
+#     #print("AH:Debug: nb_bar_on_chart:",nb_bar_on_chart)
+#     #print("AH:Debug:nb_bars b4 prep ends well:",nb_bars)
+#     if nb_bars> cc.nb_bar_on_chart:
+#         r = data.iloc[-cc.nb_bar_on_chart:].copy()
+#     else:
+#         r= data.copy()
+#     #len_r = len(r)
+#     #print("AH:Debug:nb_bars after prep ends well:",len_r)
+#     return r
 
 
 def get(instrument:str, timeframe:str,tlid_range:str=None,cc:JGTChartConfig=None,crop_last_dt:str=None):

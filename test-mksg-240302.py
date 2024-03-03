@@ -8,7 +8,7 @@ from jgtpy import JGTChartConfig
 
 default_char_dir_name = "charts"
 
-cc = JGTChartConfig()  # Assuming JGTChartConfig is a class, initialize it
+cc = JGTChartConfig.JGTChartConfig()  # Assuming JGTChartConfig is a class, initialize it
 show_chart = False
 show_tabs = False
 save_fig_image = True
@@ -53,24 +53,42 @@ h = 1150
 
 #-----------------------------------------------
 
-def pto_generate_snapshot_240302(instrument, timeframes, tf_of_signal, sig_type_name, crop_last_dt, scn_root_dir,default_char_dir_name, show_chart, show_tabs, save_fig_image, save_cds_data,  out_htm_viewer_full_fn, out_htm_viewer_prefix, w, h, cc):
+def pto_generate_snapshot_240302(
+    i: str,
+    timeframes: str,
+    tf_of_signal: str,
+    sig_type_name: str,
+    crop_last_dt: str = None,
+    scn_root_dir: str = None,
+    default_char_dir_name: str = "charts",
+    show_chart: bool = False,
+    show_tabs: bool = False,
+    save_fig_image: bool = True,
+    save_cds_data: bool = True,
+    out_htm_viewer_full_fn: str = "index.html",
+    out_htm_viewer_prefix: str = "_index-",
+    w: int = 2550,
+    h: int = 1150,
+    cc: JGTChartConfig.JGTChartConfig = None
+):
+    if cc is None:
+        cc = JGTChartConfig.JGTChartConfig()
     scntlid = tlid.strdt(crop_last_dt)
     scntlid
-    ifn = instrument.replace("/", "-")
+    ifn = i.replace("/", "-")
     subdir_scene_name = f"{ifn}_{tf_of_signal}_{sig_type_name}_{scntlid}"  # GBP-USD_2307132100
 
+    if scn_root_dir is None:
+        scn_root_dir = os.environ["JGTPY_DATA_FULL"]
+    
     scn_chart_dir = os.path.join(os.path.join(scn_root_dir,  default_char_dir_name), subdir_scene_name)
     os.makedirs(scn_chart_dir, exist_ok=True)
-
-
-# %% crop_last_dt
-
+    
+    
     mksg.generate_market_snapshots(
-    instrument,
-    timeframes,
-    scn_chart_dir,
-    show_chart=False,
-    show_tabs=False,
+    instruments=instrument,
+    timeframes=timeframes,
+    html_outdir_root=scn_chart_dir,
     width=w,
     height=h,
     cc=cc,
@@ -83,8 +101,12 @@ def pto_generate_snapshot_240302(instrument, timeframes, tf_of_signal, sig_type_
     out_htm_viewer_full_fn=out_htm_viewer_full_fn #@STCGoal Expecting to be able to add many cropped DTs to the same file
 )
 
+
+#%% Exec
+
+
 pto_generate_snapshot_240302(
-    instrument=instrument,
+    i=instrument,
     timeframes=timeframes,
     tf_of_signal=tf_of_signal,
     sig_type_name=sig_type_name,
@@ -109,7 +131,7 @@ crop_last_dt = "2023-07-13 21:00"  # FDBS Signal (ORIGINAL)
 crop_last_dt = "2023-12-13 21:00"  # FDBS Signal (PROFIT)
 
 pto_generate_snapshot_240302(
-    instrument=instrument,
+    i=instrument,
     timeframes=timeframes,
     tf_of_signal=tf_of_signal,
     sig_type_name=sig_type_name,
@@ -126,3 +148,6 @@ pto_generate_snapshot_240302(
     w=w,
     h=h
 )
+
+#%%
+

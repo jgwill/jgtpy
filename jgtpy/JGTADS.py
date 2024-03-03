@@ -550,7 +550,7 @@ def plot_from_cds_df(data:pd.DataFrame,instrument:str,timeframe:str,show=True,pl
     colors = data_last_selection['zcol'].values
     #print(colors)
     #marketcolor_overrides=mco
-    print(data_last_selection)
+    #print(data_last_selection)
     fmt = "%Y-%m-%d"
     if timeframe == "H1" or timeframe == "H4":
         fmt = "%y-%m-%d\n%H"
