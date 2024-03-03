@@ -3,9 +3,19 @@
 import os
 from jgtpy import mksg
 import tlid
+from jgtpy import JGTChartConfig
 
 
 default_char_dir_name = "charts"
+
+cc = JGTChartConfig()  # Assuming JGTChartConfig is a class, initialize it
+show_chart = False
+show_tabs = False
+save_fig_image = True
+save_cds_data = False
+
+
+
 
 instrument = "SPX500"
 instrument = "GBP/USD"
@@ -18,6 +28,7 @@ sig_type_name = "fdbs"
 
 scntlid = "240209"
 scntlid = "221013"
+
 
 crop_last_dt = "2023-07-13 21:00"  # FDBS Signal
 
@@ -41,6 +52,7 @@ w = 2550
 h = 1150
 
 #-----------------------------------------------
+
 scntlid = tlid.strdt(crop_last_dt)
 scntlid
 ifn = instrument.replace("/", "-")
@@ -60,6 +72,11 @@ mksg.generate_market_snapshots(
     show_tabs=False,
     width=w,
     height=h,
+    cc=cc,
+    show_chart=show_chart,
+    show_tabs=show_tabs,
+    save_fig_image=save_fig_image,
+    save_cds_data=save_cds_data,
     crop_last_dt=crop_last_dt,
     out_htm_viewer_prefix=out_htm_viewer_prefix,
     out_htm_viewer_full_fn=out_htm_viewer_full_fn #@STCGoal Expecting to be able to add many cropped DTs to the same file
