@@ -159,18 +159,22 @@ def createCDS_for_main(
         cdspath, cdf = cds.createFromPDSFileToCDSFile(
             instrument, timeframe, col2remove, use_full=use_full
         )  # @STCIssue: This is not supporting -c NB_BARS_TO_PROCESS, should it ?
+        
+        print_quiet(quiet, cdspath)
+        print_quiet(quiet, cdf)
+    except Exception as e:
+        print("Failed to create CDS for : " + instrument + "_" + timeframe)
+        print("Exception: " + str(e))
+    try:
         if (
             show_ads
         ):  # (data,instrument,timeframe,nb_bar_on_chart = 375,show=True,plot_ao_peaks=False)
             ads.plot_from_cds_df(
                 cdf, instrument, timeframe, show=True, plot_ao_peaks=True, cc=cc
             )
-        print_quiet(quiet, cdspath)
-        print_quiet(quiet, cdf)
     except Exception as e:
-        print("Failed to create CDS for : " + instrument + "_" + timeframe)
+        print("ADS Failed to plot CDS for : " + instrument + "_" + timeframe)
         print("Exception: " + str(e))
-
 
 def print_quiet(quiet, content):
     if not quiet:
