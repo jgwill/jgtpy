@@ -34,7 +34,8 @@ def parse_args():
     jgtcommon.add_verbose_argument(parser)
     jgtcommon.add_ads_argument(parser)
     jgtcommon.add_use_full_argument(parser)
-
+    jgtcommon.add_use_fresh_argument(parser)
+    
     # jgtcommon.add_cds_argument(parser)
     args = parser.parse_args()
     return args
@@ -47,7 +48,17 @@ def main():
     timeframe = args.timeframe
     quotes_count = args.quotescount
     cc.nb_bar_on_chart = quotes_count
+    
+    verbose_level = args.verbose
+    quiet = False
+    if verbose_level == 0:
+        quiet = True
+    
     full = False
+    fresh = False
+    if args.fresh:
+        fresh=True
+    
     if args.full:
         full = True
 
@@ -57,12 +68,13 @@ def main():
     if args.tlidrange:
         # @STCGoal Get range prices from cache or request new
         tlid_range = args.tlidrange
-        print("FUTURE Support for tlid range")
+        print("#FUTURE Support for tlid range")
         tmpcmd = wsl._mkbash_cmd_string_jgtfxcli_range(
-            instrument, timeframe, tlid_range
+            instrument, timeframe, tlid_range,verbose_level=verbose_level,
+            use_full=full
         )
-        print("> " + tmpcmd)
-        print("-----------Stay tune -------- Quitting for now")
+        print(tmpcmd)
+        print("#-----------Stay tune -------- Quitting for now")
         return
 
     if args.datefrom:
@@ -78,10 +90,7 @@ def main():
     process_cds = True
     # output=False
     # compress=False
-    verbose_level = args.verbose
-    quiet = False
-    if verbose_level == 0:
-        quiet = True
+
     # print("Verbose level : " + str(verbose_level))
     if process_cds:
         print("Processing CDS")
@@ -115,6 +124,7 @@ def main():
                     show_ads=show_ads,
                     cc=cc,
                     use_full=full,
+                    use_fresh=fresh
                 )
                 # else:
                 #     p = pds.getPH(instrument, timeframe, quotes_count, date_from, date_to, False, quiet)
@@ -146,6 +156,7 @@ def createCDS_for_main(
     show_ads=False,
     cc: JGTChartConfig = None,
     use_full=False,
+    use_fresh=False,
 ):
     # implementation goes here
     col2remove = constants.columns_to_remove
@@ -155,16 +166,25 @@ def createCDS_for_main(
     quietting = True
     if verbose_level > 1:
         quietting = False
+        
     try:
-        cdspath, cdf = cds.createFromPDSFileToCDSFile(
-            instrument, timeframe, col2remove, use_full=use_full
+        #cdspath, cdf = cds.createFromPDSFileToCDSFile(
+        cdspath, cdf = cds.create(
+            instrument, 
+            timeframe, 
+            quiet=quietting,
+            cc=cc,
+            use_full=use_full,
+            use_fresh=use_fresh,
+            columns_to_remove=col2remove,
         )  # @STCIssue: This is not supporting -c NB_BARS_TO_PROCESS, should it ?
         
-        print_quiet(quiet, cdspath)
+        #print_quiet(quiet, cdspath)
         print_quiet(quiet, cdf)
     except Exception as e:
         print("Failed to create CDS for : " + instrument + "_" + timeframe)
         print("Exception: " + str(e))
+        
     try:
         if (
             show_ads

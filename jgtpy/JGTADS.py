@@ -77,11 +77,11 @@ def plot_from_cds_df__DEBUG(df,instrument:str,timeframe:str,show:bool=True,plot_
 
 
 
-def jgtxplot18c_231209(instrument:str,timeframe:str,show:bool=True,plot_ao_peaks:bool=True,cc: JGTChartConfig=None,tlid_range:str=None,crop_last_dt:str=None):
+def jgtxplot18c_231209(instrument:str,timeframe:str,show:bool=True,plot_ao_peaks:bool=True,cc: JGTChartConfig=None,tlid_range:str=None,crop_last_dt:str=None,use_fresh=False):
     if cc is None:
         cc= JGTChartConfig()
         
-    data = ah.prepare_cds_for_ads_data(instrument, timeframe,tlid_range=tlid_range,cc=cc,crop_last_dt=crop_last_dt) #@STCGoal Supports TLID
+    data = ah.prepare_cds_for_ads_data(instrument, timeframe,tlid_range=tlid_range,cc=cc,crop_last_dt=crop_last_dt,use_fresh=use_fresh) #@STCGoal Supports TLID
     #@STCIssue Desired Number of Bars ALREADY SELECTED IN THERE
     #print(len(data))
     #data.to_csv("debug_data" + instrument.replace("/","-") + timeframe + ".csv")
@@ -1055,7 +1055,7 @@ def plotcdf(data,instrument, timeframe, show=True,plot_ao_peaks=True,cc: JGTChar
   return plot_from_cds_df(data,instrument,timeframe,show=show,plot_ao_peaks=plot_ao_peaks,cc=cc)
 
 
-def plot(instrument:str,timeframe:str,show:bool=True,plot_ao_peaks:bool=True,cc: JGTChartConfig=None,tlid_range:str=None,crop_last_dt:str=None):
+def plot(instrument:str,timeframe:str,show:bool=True,plot_ao_peaks:bool=True,cc: JGTChartConfig=None,tlid_range:str=None,crop_last_dt:str=None,use_fresh=False):
     """
     Plot the chart for a given instrument and timeframe.
 
@@ -1067,6 +1067,7 @@ def plot(instrument:str,timeframe:str,show:bool=True,plot_ao_peaks:bool=True,cc:
     cc (JGTChartConfig, optional): The chart configuration object. Defaults to None.
     tlid_range (str, optional): The range of TLIDs to use for the plot. Defaults to None. (WE WILL USE crop_last_dt INSTEAD or we might split and transform it for using it as crop_last_dt...)
     crop_last_dt (str, optional): The last date-time to crop the data. Defaults to None.
+    use_fresh (bool, optional): Whether to use fresh data. Defaults to False.
     
     Returns:
     fig: The figure object of the plot.
@@ -1078,7 +1079,7 @@ def plot(instrument:str,timeframe:str,show:bool=True,plot_ao_peaks:bool=True,cc:
     
     nb_bar_on_chart = cc.nb_bar_on_chart
     #print("ADS::Debug:nb_bar_on_chart:",str(nb_bar_on_chart))
-    fig, axes,cdfdata = jgtxplot18c_231209(instrument, timeframe, show=show,plot_ao_peaks=plot_ao_peaks,cc=cc,tlid_range=tlid_range,crop_last_dt=crop_last_dt)
+    fig, axes,cdfdata = jgtxplot18c_231209(instrument, timeframe, show=show,plot_ao_peaks=plot_ao_peaks,cc=cc,tlid_range=tlid_range,crop_last_dt=crop_last_dt,use_fresh=use_fresh)
     
     return fig, axes,cdfdata
 

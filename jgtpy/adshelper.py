@@ -4,6 +4,8 @@
 
 import sys
 import os
+
+from jgtpy.JGTADSRequest import JGTADSRequest
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 import JGTPDSP as pds
 import JGTIDS as ids
@@ -47,7 +49,7 @@ def read_csv(csv_fn):
 
 #IN_CHART_BARS=300
 
-def prepare_cds_for_ads_data(instrument:str, timeframe:str,tlid_range:str=None,cc:JGTChartConfig=None,crop_last_dt:str=None):
+def prepare_cds_for_ads_data(instrument:str, timeframe:str,tlid_range:str=None,cc:JGTChartConfig=None,crop_last_dt:str=None,use_fresh=False,use_cache_if_available=False,rq:JGTADSRequest=None):
     """
     Prepare CDS data for ADS (Analysis Data Service).
 
@@ -57,9 +59,11 @@ def prepare_cds_for_ads_data(instrument:str, timeframe:str,tlid_range:str=None,c
         tlid_range (str, optional): The range of TLID to select. Defaults to None.
         cc (JGTChartConfig, optional): The chart configuration. Defaults to None.
         crop_last_dt (str, optional): The last date to crop the data. Defaults to None.
-        
+        use_fresh (bool, optional): Whether to use fresh data. Defaults to False.
+        use_cache_if_available (bool, optional): Whether to use cache if available. Defaults to False.
+        rq (JGTADSRequest, optional): The JGTADSRequest object. Defaults to None.
     Returns:
-        pandas.DataFrame: The prepared CDS data with Selected number of bars
+        pandas.DataFrame: The prepared ADS(CDS) data with Selected number of bars
 
     """
     if cc is None:
@@ -72,71 +76,48 @@ def prepare_cds_for_ads_data(instrument:str, timeframe:str,tlid_range:str=None,c
         raise NotImplementedError("tlid_range is not implemented yet. We will use crop_last_dt instead.")
     #@STCGoal local retrieve data from cache if available or from WSL if not  (jgtfxcli)
         
-    cache_data:bool=False
+    cache_data:bool=use_cache_if_available
     cache_dir = "cache"
+    
     if cache_data:
         os.makedirs(cache_dir, exist_ok=True)
 
     fn =  instrument.replace("/", "-") + "_" + timeframe + ".csv"
-    fnpath = os.path.join(cache_dir,fn)
-    l.info("fnpath:"+ fnpath)
-
-    # @STCIssue: Crop Last Dt out of range should use FULL
+    fnpath_cache = os.path.join(cache_dir,fn)
+    #l.info("fnpath:"+ fnpath)
     
-    try:
-        df = pds.getPH(instrument,timeframe,cc=cc,get_them_all=True)
-   
-        if crop_last_dt is not None:
-            df = df[df.index <= crop_last_dt]
-        tst_len_df = len(df)
+    
+    
+    # @STCIssue Even the Cache above could be moved to JGTCDS or Business Layer
+    # @STCIssue: LOGICS Bellow should be moved to JGTCDS  cds.create_crop_dt(...) cds.create_crop_dt_selection(...) 
+
+
+    nb_to_select = cc.nb_bar_to_retrieve
+
+    if crop_last_dt is None:
+        # Get Lastest DF
+        selected = pds.getPH(instrument,timeframe,cc=cc,get_them_all=True,use_fresh=use_fresh,quote_count=nb_to_select)
+    else:
+        # Get Crop DF, assuming we require using FULL data
+        # df = pds.getPH(instrument,timeframe,cc=cc,use_full=True,use_fresh=use_fresh)
+        selected = pds.getPH_crop(instrument,timeframe,quote_count=nb_to_select,dt_crop_last=crop_last_dt)
+        #df = df[df.index <= crop_last_dt]
+
         
-        if tst_len_df < cc.nb_bar_to_retrieve:
-            l.warning(f"Data length is less than {cc.nb_bar_to_retrieve}, trying to use full storage")
-            df = pds.getPH(instrument,timeframe,cc=cc,use_full=True)
-        tst_len_df = len(df)
+    print("DEBUG:: nb_to_select:",nb_to_select)
+    print("DEBUG:: len selected:", len(selected))
+    
+    # #Make sure we have enough bars to select
+    # if nb_to_select < cc.min_bar_on_chart:
+    #     # Some instrument/tf dont have enough bars to select
+    #     nb_to_select = cc.min_bar_on_chart
+    #     selected = df.copy()
+    # else: 
+    #     selected = df.iloc[-nb_to_select:].copy()
         
-        if crop_last_dt is not None:
-            df = df[df.index <= crop_last_dt]
-        tst_len_df = len(df)
-        
-    except:
-        l.warning("Could not get DF, trying to run thru WSL the update")
-        wsl.jgtfxcli(instrument, timeframe, cc.nb_bar_to_retrieve)
-        df = pds.getPH(instrument,timeframe,cc.nb_bar_to_retrieve) #@STCIssue Limitation of full range to be given yo jgtfxcli
-    # Select the last 400 bars of the data
-    try:#@q Is the selected correspond to desirrd bars ?
-        #Make sure we have enough bars to select
-        nb_to_select = cc.nb_bar_to_retrieve
-        if nb_to_select < cc.min_bar_on_chart:
-            nb_to_select = cc.min_bar_on_chart
-            selected = df.copy()
-        else:
-            selected = df.iloc[-nb_to_select:].copy()
-        
-        tst_len_df = len(df)
-        #selected.to_csv("output_ads_prep_data.csv")
-    except:
-        l.warning("Could not get DF, trying to run thru WSL the update")
-        try:        
-            wsl.jgtfxcli(instrument, timeframe, cc.nb_bar_to_retrieve)
-        except:
-                
-            try:
-                df = pds.getPH(instrument,timeframe,cc.nb_bar_to_retrieve)
-                selected = df.copy()
-            except:
-                l.warning("Twice :(Could not select the desired amount of bars, trying anyway with what we have")
-                pass
-        l.warning("Could not select the desired amount of bars, trying anyway with what we have")
-        pass
-    #print(selected)
-    len_selected = len(selected)
-    #print("Len_selected:",len_selected)
-    #print(selected.tail(1))
-    #print("---------------")
     data = cds.createFromDF(selected)
     if cache_data:
-        data.to_csv(fnpath)
+        data.to_csv(fnpath_cache)
     
     return prepare_cds_for_ads_data_from_cdsdf(
         data,

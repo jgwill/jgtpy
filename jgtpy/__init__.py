@@ -21,13 +21,9 @@ import os
 import platform
 import sys
 
-import sys
-import os
 
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
-
-import jgtflags
 
 
 import warnings
@@ -36,53 +32,53 @@ with warnings.catch_warnings():
     warnings.filterwarnings(
         "ignore", category=RuntimeWarning, module="importlib._bootstrap"
     )
-    # your code here
 
 
-class NotCompatibleException(Exception):
-    pass
 
-
-# from jgtpy.common_samples import common_samples
-from jgtetl import svc_offset_dt_by_tf as etl_offset_dt_by_tf, offsetdt as etl_offsetdt
 from JGTCore import (
     __version__,
-)  # ,json2dict,jsonfile2prop,json2prop,jsonfile2dict,d2p,fixdtindf,offsetdt
-
-# from .JGTConfig import getenv,setreal,setdemo,env
+) 
 
 
-from jgtutils import jgtwslhelper as wsl
-
-import JGTIDS as ids, JGTADS as ads, JGTPDSP as pds, JGTCDS as cds
-
-from JGTIDS import tocds as tocds
-
-# mk_fn,mk_fullpath,getSubscribed,getPH,getPHByRange,tryConnect
 from JGTCDS import (
-    create as createCDS,
-    createByRange,
-    createFromDF,
-    getLast,
-    getPresentBar,
-    getPresentBarAsList,
-    getLastCompletedBarAsList,
-    createFromDF,
-    createFromFile_and_clean_and_save_data as fromfile,
-    createFromFile_and_clean_and_save_data as ff,
-    createFromDF as fp,
-    readCDSFile as rcds,
+    create as cds,
+    createFromDF as fromdf,
+    readCDSFile as read,
 )
-from JGTADS import plot as plot
-import jgtpy.JGTMKSG as mksg
+from JGTADS import plot as plot,plot as ads
+
+from JGTMKSG import (
+    pto_generate_snapshot_240302_v2_by_crop_dates as mksg_by_crop_dates,
+    generate_market_snapshots as mksg_by_pov,
+)
 
 
 def help():
     print(
-        ".h(i,t,400)\t\tGet Prices (PDS): \n\t\t\tjgtpy.h(instrument,timeframe,quote_count=335,start=None,end=None,quiet=True)"
+        "JGTPY\n",
+        "Version: ",
+        __version__,
+        "\n",
+        "JGTPY is a set of tools to help with the analysis of financial markets.\n",
+        "It is a Python library that can be used to process data from various sources.\n",
+        "It is also a command line tool that can be used to generate charts and reports.\n",
+        "> import jgtpy as jgt\n",
+        "> i=\"SPX500\"\n",
+        "> t=\"H4\"\n",
+        "> #CDS \n",
+        "> df=jgt.cds(i,t)\n",
+        "> df_fresh=jgt.cds(i,t,use_fresh=True)\n",
+        "> df_fresh_full=jgt.cds(i,t,use_fresh=True,use_full=True)\n",
+        "> \n",
+        "> \n",
+        "> #ADS \n",
+        "> ads_chart,_ads_plt_arr,_ads_df = jgt.ads(i,t)\n",
+        "> ads_chart.show()\n",
+        "> \n",
+        "> df=jgt.read(i,t)\n",
+        "> \n",
+        "> #MKS \n",
+        "> jgt.mksg_by_crop_dates(i,t,\"H4\",\"Fractal\",\"2023-01-01\",scn_root_dir=\"./data\",show_chart=True,show_tabs=True,save_fig_image=True,save_cds_data=True)\n",
+        "> \n",
+        "For more information, please visit: https://jgtpy.jgwill.com\n"        
     )
-    print("\t\t\t\t\treturn DataFrame of PDS Type")
-    print("\t\t\t\t\t(Will connect and stay connected)")
-    print(".fp(df)\t\t Create CDS from PDS DF \n\t\t\tjgtpy.fp(df [pd.DataFrame])")
-    print("\t\t\t\t\treturn DataFrame of CDS Type")
-    print(".off()\t\t Disconnect (Bugged)\n\t\t\tjgtpy.off()")

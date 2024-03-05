@@ -24,19 +24,68 @@ addOhlc=True
 cleanseOriginalColumns=True
 useLocal=True
 
+def refreshPH(instrument:str, timeframe:str,quote_count:int=-1, quiet:bool=True,use_full:bool=False,verbose_level=0,tlid_range=None):
+  from jgtutils import jgtwslhelper as wsl
+  if not quiet:
+    print(f"Refreshing {instrument} {timeframe}")
+  try:
+    wsl.getPH(instrument, timeframe,quote_count=quote_count, tlid_range=tlid_range, use_full=use_full,verbose_level=verbose_level)
+  except Exception as e:
+    print("Error in refreshPH")
+    raise e
 
+#df = df[df.index <= crop_last_dt]
+
+def getPH_crop(instrument:str,
+               timeframe:str,
+               dt_crop_last,
+               quote_count:int=-1,
+               quiet:bool=True               
+          ):
+  df=getPH(instrument, timeframe, quiet=quiet,dt_crop_last=dt_crop_last,use_full=True)
+  ldf = len(df)
+  #@q How can we Get Fresh data if the FULL has not our range ??
+  
+  if  ldf > quote_count  and quote_count != -1:
+    selected = df.iloc[-quote_count:].copy()
+  else:
+    selected = df.copy()
+  return selected
+  
 def getPH(instrument:str, timeframe:str, quote_count:int=-1, start=None, end=None, with_index=True, quiet:bool=True,convert_date_index_to_dt:bool=True,cc: JGTChartConfig=None,get_them_all:bool=False,use_full:bool=False,
-          dt_crop_last=None          
+          dt_crop_last=None,
+          tlid_range=None,
+    run_jgtfxcli_on_error=True,
+    use_fresh=False 
           ):
   #@STCissue quote_count is ignored or irrelevant in start/end
   #@a Adequate start and end from the stored file
   if cc is None:
     cc = JGTChartConfig()
-  if quote_count == -1:
+  if quote_count == -1 and use_full == False:
     quote_count = cc.nb_bar_to_retrieve
   
-  df = getPH_from_filestore(instrument, timeframe, quiet, False, with_index,convert_date_index_to_dt,use_full=use_full)
-  
+  if use_fresh:
+    refreshPH(instrument, timeframe,quote_count=quote_count, tlid_range=tlid_range, use_full=use_full,verbose_level=1)
+    
+  df = getPH_from_filestore(instrument, timeframe, quiet, False, with_index,convert_date_index_to_dt,use_full=use_full,tlid_range=tlid_range)
+  if df  is None and run_jgtfxcli_on_error:
+    print("NO DATA IN DF, running jgtfxcli")
+    #df = getPH_from_filestore(instrument, timeframe, quiet, False, with_index,convert_date_index_to_dt,use_full=use_full)
+    #@STCIssue its more PDSP that should run this logics
+    try: 
+      if run_jgtfxcli_on_error:
+        print("Error in createFromPDSFile, running jgtfxcli")
+        refreshPH(instrument, timeframe,quote_count=quote_count, tlid_range=tlid_range, use_full=use_full,verbose_level=1)
+        # CALL IT BACK AGAIN
+        df = getPH_from_filestore(instrument, timeframe, quiet, False, with_index,convert_date_index_to_dt,use_full=use_full,tlid_range=tlid_range)
+      else:
+          print("run_jgtfxcli_on_error is OFF, not running jgtfxcli")
+    except Exception as e:
+        print("Error in createFromPDSFile, jgtfxcli failed")
+        print(e)
+    
+    
   if not quiet:
     print(df.columns)
     print(df.index)
@@ -56,7 +105,7 @@ def getPH(instrument:str, timeframe:str, quote_count:int=-1, start=None, end=Non
     df = df[df.index <= dt_crop_last]
       
   ldf = len(df)
-  if ldf > quote_count and not get_them_all:
+  if ldf > quote_count and not get_them_all and quote_count > 50:
     if not use_full:
       df = df.iloc[-quote_count:]
   

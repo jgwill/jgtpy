@@ -27,11 +27,19 @@ class JGTIDSRequest:
         balligator_shift_teeth (int): Shift for the teeth line of the Alligator indicator.
         balligator_shift_lips (int): Shift for the lips line of the Alligator indicator.
         largest_fractal_period (int): Period for identifying the largest fractal.
+        peak_distance (int): Distance between peaks.
+        peak_width (int): Width of peaks.
+        peak_divider_min_height (int): Minimum height of peaks.
+        rounding_decimal_min (int): Minimum number of decimal places to round to.
     """
     def __init__(self, AOF=False, BigAlligator=False, MFI=False, GatorOscillator=False,
                  balligator_period_jaws=89, balligator_period_teeth=55, balligator_period_lips=34,
                  balligator_shift_jaws=55, balligator_shift_teeth=34, balligator_shift_lips=21,
-                 largest_fractal_period=89):
+                 largest_fractal_period=89,
+                 peak_distance=13,
+                 peak_width=8,
+                 peak_divider_min_height = 3,
+                 rounding_decimal_min=10):
         self.AOF = AOF
         self.BigAlligator = BigAlligator
         self.MFI = MFI
@@ -43,4 +51,8 @@ class JGTIDSRequest:
         self.balligator_shift_teeth = balligator_shift_teeth
         self.balligator_shift_lips = balligator_shift_lips
         self.largest_fractal_period = largest_fractal_period
+        self.rounding_decimal_min = rounding_decimal_min
+        self.peak_distance = peak_distance
+        self.peak_width = peak_width
+        self.peak_divider_min_height = peak_divider_min_height
 

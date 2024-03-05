@@ -3,6 +3,8 @@
 import sys
 import os
 
+from jgtpy.JGTCDSRequest import JGTCDSRequest
+
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 # import jgtfxcon.JGTPDS as pds
@@ -28,7 +30,7 @@ def createFromPDSFileToCDSFile(
     quiet=True,
     tlid_range=None,
     use_full=False,
-    peak_distance=13,peak_width=8
+    rq:JGTCDSRequest=None
 ):
     """
     Create a CDS file from a PDS file.
@@ -40,35 +42,27 @@ def createFromPDSFileToCDSFile(
     quiet (bool, optional): If True, suppresses the output. Default is True.
     tlid_range (str, optional): The TLID range to retrieve. Default is None.
     use_full (bool, optional): If True, reads/writes the full CDS file. Default is False.
-    peak_distance (int, optional): The peak distance for the AO indicator. Defaults to 13.
-    peak_width (int, optional): The peak width for the AO indicator. Defaults to 8.
+    rq (JGTCDSRequest, optional): The JGTCDSRequest object to use for the processing. Defaults to None.
 
     Returns:
     - fpath (str): The file path of the created CDS file.
     - c (DataFrame): The DataFrame containing the data.
 
     """
+    if rq is None:
+        rq = JGTCDSRequest()
     cdf = createFromPDSFile(
-        instrument, timeframe, quiet, tlid_range=tlid_range, use_full=use_full,peak_distance=peak_distance,peak_width=peak_width
+        instrument, timeframe, quiet, tlid_range=tlid_range, use_full=use_full, 
+        rq=rq,
+        columns_to_remove=columns_to_remove
     )
 
-    # Remove the specified columns
-    if columns_to_remove is not None:
-        cdf = cdf.drop(columns=columns_to_remove, errors="ignore")
-
-    # # Reset the index
-    # try:
-    #   c.reset_index(inplace=True)
-    # except:
-    #   pass
 
     # Define the file path based on the environment variable or local path
-    data_path_cds = get_data_path("cds", use_full=use_full)
-    fpath = pds.mk_fullpath(instrument, timeframe, "csv", data_path_cds)
-    # print(fpath)
-    cdf.to_csv(fpath)
+    fpath = writeCDS(instrument, timeframe, use_full, cdf)
 
     return fpath, cdf
+
 
 
 def readCDSFile(
@@ -114,10 +108,12 @@ def createFromPDSFile(
     instrument,
     timeframe,
     quiet=True,
-    tlid_range=None,
     cc: JGTChartConfig = None,
     use_full=False,
-    peak_distance=13,peak_width=8
+    rq:JGTCDSRequest=None,
+    run_jgtfxcli_on_error=True,
+    columns_to_remove=None,
+
 ):
     """Create CDS (Chaos Data Service) with Fresh Data on the filestore
 
@@ -125,34 +121,47 @@ def createFromPDSFile(
         instrument (str): symbol
         timeframe (str): TF
         quiet (bool,optional): Output quiet
-        tlid_range (str,optional): TLID range
-        cc (JGTChartConfig, optional): The JGTChartConfig object to use for the processing. Defaults to None.
         cc (JGTChartConfig, optional): The JGTChartConfig object to use for the processing. Defaults to None.
         use_full (bool, optional): If True, reads the full CDS file. Default is False.
-        peak_distance (int, optional): The peak distance for the AO indicator. Defaults to 13.
-        peak_width (int, optional): The peak width for the AO indicator. Defaults to 8.
+        rq (JGTCDSRequest, optional): The JGTCDSRequest object to use for the processing. Defaults to None. 
+        run_jgtfxcli_on_error (bool, optional): If True, runs jgtfxcli on error. Default is True.
+        columns_to_remove (list, optional): List of column names to remove from the DataFrame. Default is None.
 
     Returns:
         pandas.DataFrame: CDS DataFrame
     """
     try:
-        df = pds.getPH_from_filestore(
-            instrument,
-            timeframe,
-            quiet=quiet,
-            tlid_range=tlid_range,
-            use_full=use_full,
-        )
-        if not quiet:
-            print(df)
-
-        dfi = createFromDF(df, quiet=quiet, cc=cc,peak_distance=peak_distance,peak_width=peak_width)
-        return dfi
-    except:
+        df = _getPH_to_DF_wrapper_240304(instrument, timeframe, quiet, cc, use_full, rq=rq, run_jgtfxcli_on_error=run_jgtfxcli_on_error,
+                                         columns_to_remove=columns_to_remove)
+        return df
+    except Exception as e:
+        print("Error in createFromPDSFile")
+        print(e)
+            
         return None
 
+def _getPH_to_DF_wrapper_240304(instrument, timeframe, quiet, cc, use_full, rq,use_fresh=False ,run_jgtfxcli_on_error=True,columns_to_remove=None):
 
-def createFromDF(df, quiet=True, cc: JGTChartConfig = None,peak_distance=13,peak_width=8):
+    df=pds.getPH(instrument,
+            timeframe,
+            quiet=quiet,
+            use_full=use_full,
+            use_fresh=use_fresh,
+            run_jgtfxcli_on_error=run_jgtfxcli_on_error,
+            )
+
+    if not quiet:
+        print(df)
+
+    dfi = createFromDF(df, quiet=quiet, cc=cc,rq=rq,
+                       columns_to_remove=columns_to_remove)
+    return dfi
+
+def createFromDF(df, quiet=True, 
+                 cc: JGTChartConfig = None,
+                 rq: JGTCDSRequest=None,
+                 columns_to_remove=None
+                 ):
     """
     Creates a new DataFrame with indicators, signals, and cleansed columns added based on the input DataFrame.
 
@@ -160,47 +169,64 @@ def createFromDF(df, quiet=True, cc: JGTChartConfig = None,peak_distance=13,peak
       df (pandas.DataFrame): The input DataFrame to add indicators, signals, and cleansed columns to.
       quiet (bool, optional): Whether to suppress console output during processing. Defaults to True.
       cc (JGTChartConfig, optional): The JGTChartConfig object to use for the processing. Defaults to None.
-      peak_distance (int, optional): The peak distance for the AO indicator. Defaults to 13.
-      peak_width (int, optional): The peak width for the AO indicator. Defaults to 8.
+      rq (JGTCDSRequest, optional): The JGTCDSRequest object to use for the processing. Defaults to None.
+      columns_to_remove (list, optional): List of column names to remove from the DataFrame. Default is None.
+
 
     Returns:
       pandas.DataFrame: The new DataFrame with indicators, signals, and cleansed columns added.
     """
     if cc is None:
         cc = JGTChartConfig()
+    if rq is None:
+        rq = JGTCDSRequest()
 
     if df.index.name == "Date":
         df.reset_index(inplace=True)
-    dfi = ids.tocds(df, quiet=quiet, cc=cc,peak_distance=peak_distance,peak_width=peak_width)
+    dfi = ids.tocds(df, quiet=quiet, cc=cc,rq=rq,columns_to_remove=columns_to_remove)
+    
     return dfi
 
 
 def create(
     instrument,
     timeframe,
-    nb2retrieve=335,
-    stayConnected=False,
     quiet=True,
     cc: JGTChartConfig = None,
+    rq:JGTCDSRequest=None,
+    use_full=False,
+    use_fresh=False,
+    columns_to_remove=None,    
 ):
     """Create CDS (Chaos Data Service) with Fresh Data
 
     Args:
         instrument (str): symbol
         timeframe (str): TF
-        nb2retrieve (int, optional): nb bar to retrieve. Defaults to 335.
-        stayConnected (bool, optional): Leave Forexconnect connected. Defaults to False.
         quiet (bool,optional): Output quiet
         cc (JGTChartConfig, optional): The JGTChartConfig object to use for the processing. Defaults to None.
+        rq (JGTCDSRequest, optional): The JGTCDSRequest object to use for the processing. Defaults to None.
+        use_full (bool, optional): If True, reads the full CDS file. Default is False.
+        use_fresh (bool, optional): If True, tries to retrieves and reads fresh data. Default is False.
+        
 
     Returns:
         pandas.DataFrame: CDS DataFrame
     """
-    print("----THIS FUNCTION REQUIRES UPGRADE  cds.create(...) # fresh data")
-    df = pds.getPH(
-        instrument, timeframe, nb2retrieve, with_index=False, quiet=quiet, cc=cc
-    )
-    dfi = createFromDF(df, quiet=quiet, cc=cc)
+    #print("----THIS FUNCTION IS BEING UPGRADED  cds.create(...) # fresh data or not, not sure.  At least now IT GETS NON EXISTING DATA...")
+    if cc is None:
+        cc = JGTChartConfig()
+    if rq is None:
+        rq = JGTCDSRequest()
+    
+    dfi = _getPH_to_DF_wrapper_240304(instrument, timeframe, quiet, cc, use_full, rq,use_fresh=use_fresh)
+    # df = pds.getPH(
+    #     instrument, timeframe,quiet=quiet, cc=cc,
+    #     use_full=use_full,
+    #     run_jgtfxcli_on_error=True,
+    #     use_fresh=use_fresh
+    # )
+    # dfi = createFromDF(df, quiet=quiet, cc=cc,rq=rq)
     return dfi
 
 
@@ -263,6 +289,14 @@ def _save_cds_data_to_file(df, instrument:str, timeframe:str):
 
     # Save DataFrame to CSV
     df.to_csv(fpath)
+    return fpath
+
+
+def writeCDS(instrument, timeframe, use_full, cdf):
+    data_path_cds = get_data_path("cds", use_full=use_full)
+    fpath = pds.mk_fullpath(instrument, timeframe, "csv", data_path_cds)
+    # print(fpath)
+    cdf.to_csv(fpath, index=True)
     return fpath
 
 

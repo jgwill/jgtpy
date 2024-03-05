@@ -6,14 +6,24 @@ from scipy.signal import find_peaks
 from JGTPDHelper import jgtpd_drop_col_by_name
 from jgtutils import jgtconstants as c
 
+from jgtpy.JGTIDSRequest import JGTIDSRequest
+
 peak_distance = 13  #distance: Set this to the number of periods that define the minimum peak separation. To meet the 5-8 bar criterion, set distance=5.
 peak_width=8 #width: This parameter could be used to define the minimum width of the peak in terms of bars. However, for AO and price peaks, the distance parameter may suffice to ensure the peak duration you are seeking. This parameter is optional and can be set or omitted based on the specific requirements.
 
-def pto_add_ao_price_peaks(data: pd.DataFrame,peak_distance=13,peak_width=8,peak_divider_min_height = 3,quiet=True):
+def pto_add_ao_price_peaks(data: pd.DataFrame,quiet=True,rq: JGTIDSRequest = None,
+):
+    if rq is None:
+        rq = JGTIDSRequest()
     try:
         data.reset_index(inplace=True)
     except:
         pass
+    
+    peak_distance=rq.peak_distance
+    peak_width=rq.peak_width
+    peak_divider_min_height = rq.peak_divider_min_height
+    
     data['ao_above'] = data['ao'].apply(lambda x: x if x > 0 else 0)
     data['ao_bellow'] = data['ao'].apply(lambda x: x if x < 0 else 0)
     data['ao_bellow'] = data['ao_bellow'] * -1
