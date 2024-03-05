@@ -251,10 +251,10 @@ def ids_add_indicators(
 
     return round_columns(dfresult, rq.rounding_decimal_min)
 
-def round_columns(df):
+def round_columns(df,rounding_decimal_min=10):
   for col in df.columns:
     if df[col].dtype == 'float64' and df[col].apply(lambda x: x % 1 != 0).any():
-      df[col] = df[col].round(decimals=10)
+      df[col] = df[col].round(decimals=rounding_decimal_min)
       df[col] = df[col].apply(lambda x: 0 if 'e' in str(x) else x)
   return df
 

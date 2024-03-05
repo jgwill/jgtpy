@@ -3,9 +3,10 @@
 import sys
 import os
 
-from jgtpy.JGTCDSRequest import JGTCDSRequest
 
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
+from JGTCDSRequest import JGTCDSRequest
 
 # import jgtfxcon.JGTPDS as pds
 import JGTIDS as ids
@@ -30,7 +31,8 @@ def createFromPDSFileToCDSFile(
     quiet=True,
     tlid_range=None,
     use_full=False,
-    rq:JGTCDSRequest=None
+    rq:JGTCDSRequest=None,
+    use_fresh=False,
 ):
     """
     Create a CDS file from a PDS file.
@@ -51,10 +53,13 @@ def createFromPDSFileToCDSFile(
     """
     if rq is None:
         rq = JGTCDSRequest()
+    
     cdf = createFromPDSFile(
-        instrument, timeframe, quiet, tlid_range=tlid_range, use_full=use_full, 
+        instrument, timeframe, quiet,         
+        use_full=use_full, 
         rq=rq,
-        columns_to_remove=columns_to_remove
+        columns_to_remove=columns_to_remove,
+        use_fresh=use_fresh
     )
 
 
@@ -109,10 +114,11 @@ def createFromPDSFile(
     timeframe,
     quiet=True,
     cc: JGTChartConfig = None,
-    use_full=False,
+    use_full=False, #@STCIssue USELESS Somehow here
     rq:JGTCDSRequest=None,
     run_jgtfxcli_on_error=True,
     columns_to_remove=None,
+    use_fresh=False
 
 ):
     """Create CDS (Chaos Data Service) with Fresh Data on the filestore
@@ -132,7 +138,9 @@ def createFromPDSFile(
     """
     try:
         df = _getPH_to_DF_wrapper_240304(instrument, timeframe, quiet, cc, use_full, rq=rq, run_jgtfxcli_on_error=run_jgtfxcli_on_error,
-                                         columns_to_remove=columns_to_remove)
+        columns_to_remove=columns_to_remove,
+        use_fresh=use_fresh)
+        
         return df
     except Exception as e:
         print("Error in createFromPDSFile")
@@ -183,6 +191,7 @@ def createFromDF(df, quiet=True,
 
     if df.index.name == "Date":
         df.reset_index(inplace=True)
+    
     dfi = ids.tocds(df, quiet=quiet, cc=cc,rq=rq,columns_to_remove=columns_to_remove)
     
     return dfi
@@ -213,13 +222,13 @@ def create(
     Returns:
         pandas.DataFrame: CDS DataFrame
     """
-    #print("----THIS FUNCTION IS BEING UPGRADED  cds.create(...) # fresh data or not, not sure.  At least now IT GETS NON EXISTING DATA...")
+    print("----THIS FUNCTION IS BEING UPGRADED  cds.create(...) # fresh data or not, not sure.  At least now IT GETS NON EXISTING DATA...")
     if cc is None:
         cc = JGTChartConfig()
     if rq is None:
         rq = JGTCDSRequest()
     
-    dfi = _getPH_to_DF_wrapper_240304(instrument, timeframe, quiet, cc, use_full, rq,use_fresh=use_fresh)
+    dfi = _getPH_to_DF_wrapper_240304(instrument, timeframe, quiet, cc, use_full, rq,use_fresh=use_fresh,columns_to_remove=columns_to_remove)
     # df = pds.getPH(
     #     instrument, timeframe,quiet=quiet, cc=cc,
     #     use_full=use_full,

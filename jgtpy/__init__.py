@@ -41,7 +41,7 @@ from JGTCore import (
 
 
 from JGTCDS import (
-    create as cds,
+    create as cds_create,
     createFromDF as fromdf,
     readCDSFile as read,
 )
@@ -66,9 +66,9 @@ def help():
         "> i=\"SPX500\"\n",
         "> t=\"H4\"\n",
         "> #CDS \n",
-        "> df=jgt.cds(i,t)\n",
-        "> df_fresh=jgt.cds(i,t,use_fresh=True)\n",
-        "> df_fresh_full=jgt.cds(i,t,use_fresh=True,use_full=True)\n",
+        "> df=jgt.cds_create(i,t)\n",
+        "> df_fresh=jgt.cds_create(i,t,use_fresh=True)\n",
+        "> df_fresh_full=jgt.cds_create(i,t,use_fresh=True,use_full=True)\n",
         "> \n",
         "> \n",
         "> #ADS \n",

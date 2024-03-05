@@ -1,3 +1,10 @@
+
+import sys
+import os
+
+
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
 class JGTIDSRequest:
     """
     Represents a JGT IDS (Indicator Data Structure) request.

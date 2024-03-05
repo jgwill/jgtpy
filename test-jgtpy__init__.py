@@ -41,15 +41,15 @@ df.tail(1)
 
 
 # %% CDS
-df = jgt.cds(i, t)
+df = jgt.cds_create(i, t)
 
 df.tail(1)
 # %%
-df_fresh = jgt.cds(i, t, use_fresh=True)
+df_fresh = jgt.cds_create(i, t, use_fresh=True)
 df_fresh.tail(1)
 
 # %%
-df_fresh_full = jgt.cds(i, t, use_fresh=True, use_full=True)
+df_fresh_full = jgt.cds_create(i, t, use_fresh=True, use_full=True)
 df_fresh_full.head(1)
 # %%
 len(df_fresh_full)

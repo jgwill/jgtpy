@@ -5,8 +5,9 @@
 import sys
 import os
 
-from jgtpy.JGTADSRequest import JGTADSRequest
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
+from JGTADSRequest import JGTADSRequest
 import JGTPDSP as pds
 import JGTIDS as ids
 import JGTCDS as cds

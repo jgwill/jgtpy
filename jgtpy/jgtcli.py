@@ -169,21 +169,21 @@ def createCDS_for_main(
         
     try:
         #cdspath, cdf = cds.createFromPDSFileToCDSFile(
-        cdspath, cdf = cds.create(
+        cdspath, cdf = cds.createFromPDSFileToCDSFile(
             instrument, 
             timeframe, 
             quiet=quietting,
-            cc=cc,
+            #cc=cc,
             use_full=use_full,
             use_fresh=use_fresh,
             columns_to_remove=col2remove,
         )  # @STCIssue: This is not supporting -c NB_BARS_TO_PROCESS, should it ?
         
-        #print_quiet(quiet, cdspath)
+        print_quiet(quiet, cdspath)
         print_quiet(quiet, cdf)
     except Exception as e:
         print("Failed to create CDS for : " + instrument + "_" + timeframe)
-        print("Exception: " + str(e))
+        print("jgtcli::Exception: " + str(e))
         
     try:
         if (
@@ -194,7 +194,7 @@ def createCDS_for_main(
             )
     except Exception as e:
         print("ADS Failed to plot CDS for : " + instrument + "_" + timeframe)
-        print("Exception: " + str(e))
+        print("jgtcli::ADS::Exception: " + str(e))
 
 def print_quiet(quiet, content):
     if not quiet:
