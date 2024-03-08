@@ -34,9 +34,8 @@ class JGTPDSRequest(JGTBaseRequest):
             self.use_full = True
             self.use_fresh = False
 
-        if timeframes is not None:
-            # if already a list
-            self.__timeframes__(timeframes)
+        self.__timeframes__(timeframes)
+            
 
     def __timeframes__(self, timeframes=None):
         if isinstance(timeframes, list):
