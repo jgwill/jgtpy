@@ -143,3 +143,6 @@ ptabs=mksg.pto_generate_snapshot_240302_v2_by_crop_dates(
 )
 
 # %%
+pn.extension()
+ptabs.servable()
+# %%

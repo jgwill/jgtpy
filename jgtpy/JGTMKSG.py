@@ -40,7 +40,8 @@ def create_default_chart_config():
 
 #support crop_last_dt="2022-10-13 13:45:00"
 
-def generate_market_snapshots(instruments:str, timeframes:str, html_outdir_root:str=None,cc:JGTChartConfig.JGTChartConfig=None,crop_last_dt:str=None, show_chart:bool=False, show_tabs:bool=False,width:int=2550, height:int=1150,save_fig_image:bool=True,save_cds_data:bool=True,out_htm_viewer_prefix = "pto-mksg-",default_char_dir_name = "charts",default_chart_output_dir = "./",out_htm_viewer_ext = ".html",out_htm_viewer_full_fn= "pto-all-mksg.html"):
+def generate_market_snapshots(instruments:str, timeframes:str, html_outdir_root:str=None,cc:JGTChartConfig.JGTChartConfig=None,crop_last_dt:str=None, show_chart:bool=False, show_tabs:bool=False,width:int=2550, height:int=1150,save_fig_image:bool=True,save_cds_data:bool=True,out_htm_viewer_prefix = "pto-mksg-",default_char_dir_name = "charts",default_chart_output_dir = "./",out_htm_viewer_ext = ".html",out_htm_viewer_full_fn= "pto-all-mksg.html",
+  serve_it=False):
   """
   Generates market snapshots for the given instruments and timeframes.
 
@@ -61,6 +62,7 @@ def generate_market_snapshots(instruments:str, timeframes:str, html_outdir_root:
   - default_chart_output_dir (str, optional): Default output directory for charts. Default is "./".
   - out_htm_viewer_ext (str, optional): Extension for the HTML viewer output. Default is ".html".
   - out_htm_viewer_full_fn (str, optional): Full filename for the HTML viewer output. Default is "pto-all-mksg.html".
+  - serve_it (bool, optional): Whether to serve the output. Default is False.
 
   Returns:
   - ptabs (pn.Tabs): A `pn.Tabs` object containing the generated market snapshots.
@@ -151,6 +153,9 @@ def generate_market_snapshots(instruments:str, timeframes:str, html_outdir_root:
   ptabs.save(full_html_output_filepath, embed=True)
   print("Saved:", full_html_output_filepath)
 
+  if serve_it:
+    pn.extension()
+    ptabs.servable()
   return ptabs
 
 def _mk_fnoutputs(html_outdir_root, i, t,crop_last_dt=None):
@@ -166,7 +171,7 @@ def _mk_fnoutputs(html_outdir_root, i, t,crop_last_dt=None):
 #%% For Many Crop DT Last
 
 
-def generate_market_snapshots_for_many_crop_dt(i:str, timeframes, crop_last_dt_arr, html_outdir_root:str=None, cc:JGTChartConfig.JGTChartConfig=None, show_chart:bool=False, show_tabs:bool=False, width:int=2550, height:int=1150, save_fig_image:bool=True, save_cds_data:bool=True, out_htm_viewer_prefix="pto-mksg-bycrop-", default_char_dir_name="charts", default_chart_output_dir="./", out_htm_viewer_ext=".html", out_htm_viewer_full_fn="pto-all-mksg-bycrop.html", jgtpy_data_var="JGTPY_DATA_FULL", tf_of_signal:str=None, dt_of_signal:str=None, sig_type_name:str=""):
+def generate_market_snapshots_for_many_crop_dt(i:str, timeframes, crop_last_dt_arr, html_outdir_root:str=None, cc:JGTChartConfig.JGTChartConfig=None, show_chart:bool=False, show_tabs:bool=False, width:int=2550, height:int=1150, save_fig_image:bool=True, save_cds_data:bool=True, out_htm_viewer_prefix="pto-mksg-bycrop-", default_char_dir_name="charts", default_chart_output_dir="./", out_htm_viewer_ext=".html", out_htm_viewer_full_fn="pto-all-mksg-bycrop.html", jgtpy_data_var="JGTPY_DATA_FULL", tf_of_signal:str=None, dt_of_signal:str=None, sig_type_name:str="",serve_it=False):
   """
   Generates market snapshots for multiple crop dates and timeframes.
 
@@ -191,7 +196,7 @@ def generate_market_snapshots_for_many_crop_dt(i:str, timeframes, crop_last_dt_a
     tf_of_signal (str, optional): The timeframe of the signal. Defaults to None.
     dt_of_signal (str, optional): The date of the signal. Defaults to None.
     sig_type_name (str, optional): The name of the signal type. Defaults to "".
-
+    serve_it (bool, optional): Whether to serve the output. Defaults to False.
   Returns:
     pn.Tabs: The generated market snapshots as a panel of tabs.
   """
@@ -282,6 +287,9 @@ def generate_market_snapshots_for_many_crop_dt(i:str, timeframes, crop_last_dt_a
   ptabs.save(full_html_output_filepath, title=full_html_title_name, embed=True)
   print("Crop by DT Saved:", full_html_output_filepath)
 
+  if serve_it:
+    pn.extension()
+    ptabs.servable()
   return ptabs
   
 
@@ -306,7 +314,8 @@ def pto_generate_snapshot_240302_v2_by_crop_dates(
   out_htm_viewer_prefix: str = "_index-",
   w: int = 2550,
   h: int = 1150,
-  cc: JGTChartConfig.JGTChartConfig = None
+  cc: JGTChartConfig.JGTChartConfig = None,
+  serve_it=False
 ):
   """
   Generate market snapshots for multiple crop dates.
@@ -328,7 +337,7 @@ def pto_generate_snapshot_240302_v2_by_crop_dates(
     w (int, optional): The width parameter. Defaults to 2550.
     h (int, optional): The height parameter. Defaults to 1150.
     cc (JGTChartConfig.JGTChartConfig, optional): The cc parameter. Defaults to None.
-
+    serve_it (bool, optional): The serve_it parameter. Defaults to False.
   Returns:
     The result of calling the `generate_market_snapshots_for_many_crop_dt` function.
   """
@@ -366,7 +375,8 @@ def pto_generate_snapshot_240302_v2_by_crop_dates(
   save_cds_data=save_cds_data,
   out_htm_viewer_prefix=out_htm_viewer_prefix,
   out_htm_viewer_full_fn=out_htm_viewer_full_fn, #@STCGoal Expecting to be able to add many cropped DTs to the same file
-  sig_type_name=sig_type_name
+  sig_type_name=sig_type_name,
+  serve_it=serve_it
 )
 
 
