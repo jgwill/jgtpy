@@ -122,7 +122,7 @@ crop_last_dates = ["2023-07-15 09:00","2023-07-16 09:00","2023-10-17 21:00","202
 
 
 
-mksg.pto_generate_snapshot_240302_v2_by_crop_dates(
+ptabs=mksg.pto_generate_snapshot_240302_v2_by_crop_dates(
     i=instrument,
     timeframes=timeframes,
     tf_of_signal=tf_of_signal,
