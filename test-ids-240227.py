@@ -19,9 +19,9 @@ len(p)
 
 # %% JGTIDSRequest
 rq = ids.JGTIDSRequest()
-rq.flag_AOF = False
-rq.BigAlligator = False
-rq.MFI = False
+rq.aof_flag = False
+rq.balligator_flag = False
+rq.mfi_flag = False
 rq.rounding_decimal_min = 2
 
 # %%
