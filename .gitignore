@@ -161,3 +161,6 @@ out_data_last_selection.csv
 jgtpy/pto-pers*.html
 pto-pers-XAU-USD.html
 w1.png
+*.pickle
+_tmp*
+
