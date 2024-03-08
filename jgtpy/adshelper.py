@@ -69,7 +69,8 @@ def prepare_cds_for_ads_data(instrument:str, timeframe:str,tlid_range:str=None,c
     """
     if cc is None:
         cc = JGTChartConfig()
-        
+    if rq is None:
+        rq = JGTADSRequest()
     #@STCIssue Deprecating this value for later 
     
     #print("AH:DEBUG::Tlid_range:",tlid_range)
@@ -92,8 +93,10 @@ def prepare_cds_for_ads_data(instrument:str, timeframe:str,tlid_range:str=None,c
     # @STCIssue Even the Cache above could be moved to JGTCDS or Business Layer
     # @STCIssue: LOGICS Bellow should be moved to JGTCDS  cds.create_crop_dt(...) cds.create_crop_dt_selection(...) 
 
-
-    nb_to_select = cc.nb_bar_to_retrieve
+    if rq.balligator_flag:
+        nb_to_select = cc.nb_bar_to_retrieve
+    else:
+        nb_to_select = cc.nb_bar_on_chart
 
     if crop_last_dt is None:
         # Get Lastest DF
@@ -104,9 +107,9 @@ def prepare_cds_for_ads_data(instrument:str, timeframe:str,tlid_range:str=None,c
         selected = pds.getPH_crop(instrument,timeframe,quote_count=nb_to_select,dt_crop_last=crop_last_dt)
         #df = df[df.index <= crop_last_dt]
 
-        
-    print("DEBUG:: nb_to_select:",nb_to_select)
-    print("DEBUG:: len selected:", len(selected))
+    if not rq.quiet:
+        print("DEBUG:: nb_to_select:",nb_to_select)
+        print("DEBUG:: len selected:", len(selected))
     
     # #Make sure we have enough bars to select
     # if nb_to_select < cc.min_bar_on_chart:

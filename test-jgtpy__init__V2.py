@@ -8,11 +8,39 @@ jgt.help()
 
 i = "SPX500"
 t = "H4"
+rq=jgt.ads_request(instrument=i, 
+                   timeframe=t,
+                   show=True,
+                   peak_distance=21,
+                   peak_width=13,
+                   plot_ao_peaks=True)
 
 
 # %% ADS
-ads_chart, _ads_plt_arr, _ads_df = jgt.ads_create(i, t)
-ads_chart.show()
+fig, arr, _ads_df = jgt.ads_create_v2(rq,True)
+fig.show()
+
+#%% 
+fig.__dict__
+
+#%%
+arr
+
+#%%
+_ads_df.__dict__
+
+#%% Proto plotly having the arr and fig
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import plotly.express as px
+import pandas as pd
+import numpy as np
+
+# make plot using returned arr and fig above
+
+
+
+
 
 
 # %% ADS  with fresh data
@@ -76,13 +104,13 @@ jgt.mksg_by_crop_dates(
 
 
 #%% 
-ads_chart.__dict__
+fig.__dict__
 
 # %% Serialize import pickle
 import pickle
 # Save the Matplotlib figure using pickle
 with open('figure_data.pickle', 'wb') as file:
-    pickle.dump(ads_chart, file)
+    pickle.dump(fig, file)
 
 #%% Load it back
 # Load the Matplotlib figure from the pickle file

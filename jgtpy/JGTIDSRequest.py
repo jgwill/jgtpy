@@ -41,14 +41,20 @@ class JGTIDSRequest(JGTPDSRequest):
         peak_divider_min_height (int): Minimum height of peaks.
         rounding_decimal_min (int): Minimum number of decimal places to round to.
     """
-    def __init__(self, aof_flag=False, balligator_flag=False, mfi_flag=False, gator_oscillator_flag=False,
+    def __init__(self, 
+                 aof_flag=False, 
+                 balligator_flag=False, 
+                 mfi_flag=False, 
+                 gator_oscillator_flag=False,
                  balligator_period_jaws=89, balligator_period_teeth=55, balligator_period_lips=34,
                  balligator_shift_jaws=55, balligator_shift_teeth=34, balligator_shift_lips=21,
                  largest_fractal_period=89,
                  peak_distance=13,
                  peak_width=8,
                  peak_divider_min_height = 3,
-                 rounding_decimal_min=10, *args, **kwargs):
+                 rounding_decimal_min=10, 
+                 *args, 
+                 **kwargs):
         #super().__init__(None, None, None)
         super().__init__(*args, **kwargs)
         self.aof_flag = aof_flag

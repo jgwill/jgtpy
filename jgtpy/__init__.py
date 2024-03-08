@@ -48,6 +48,9 @@ from JGTCDS import (
 
 import JGTADS as ads
 from JGTADS import plot as plot,plot as ads_create
+#@STCGoal Planning to replace the plot with plot_v2
+from JGTADS import plot_v2,plot_v2 as ads_create_v2
+from JGTADSRequest import JGTADSRequest as ads_request
 
 import JGTMKSG as mksg
 from JGTMKSG import (
@@ -77,7 +80,7 @@ def help():
         "> \n",
         "> \n",
         "> #ADS \n",
-        "> ads_chart,_ads_plt_arr,_ads_df = jgt.ads(i,t)\n",
+        "> ads_chart,_ads_plt_arr,_ads_df = jgt.ads_create(i,t)\n",
         "> ads_chart.show()\n",
         "> \n",
         "> df=jgt.read(i,t)\n",

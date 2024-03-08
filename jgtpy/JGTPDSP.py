@@ -56,17 +56,24 @@ def getPH(instrument:str, timeframe:str, quote_count:int=-1, start=None, end=Non
           dt_crop_last=None,
           tlid_range=None,
     run_jgtfxcli_on_error=True,
-    use_fresh=False 
+    use_fresh=False,
+    use_fresh_error_ignore=False
           ):
   #@STCissue quote_count is ignored or irrelevant in start/end
   #@a Adequate start and end from the stored file
   if cc is None:
     cc = JGTChartConfig()
-  if quote_count == -1 and use_full == False:
+  if quote_count == -1 and use_full == False: #@STCIssue JGTChartConfig being Replaced by JGTPDSPRequest
     quote_count = cc.nb_bar_to_retrieve
   
   if use_fresh:
-    refreshPH(instrument, timeframe,quote_count=quote_count, tlid_range=tlid_range, use_full=use_full,verbose_level=1)
+    try:
+      refreshPH(instrument, timeframe,quote_count=quote_count, tlid_range=tlid_range, use_full=use_full,verbose_level=1)
+    except: #Raise ExceptionUseFreshData
+      print("Error in getPH, use_fresh failed")
+      if use_fresh_error_ignore:
+        pass      
+      raise Exception("Error in getPH, use_fresh failed")
     
   df = getPH_from_filestore(instrument, timeframe, quiet, False, with_index,convert_date_index_to_dt,use_full=use_full,tlid_range=tlid_range)
   if df  is None and run_jgtfxcli_on_error:

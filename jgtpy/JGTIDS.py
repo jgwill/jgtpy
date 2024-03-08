@@ -193,8 +193,8 @@ def ids_add_indicatorsV2(
 
 def ids_add_indicators(
     dfsrc,
-    enableGatorOscillator=False,
-    enableMFI=False,
+    enablegator_oscillator_flag=False,
+    enablemfi_flag=False,
     dropnavalue=True,
     quiet=True,
     cleanupOriginalColumn=True,
@@ -209,8 +209,8 @@ def ids_add_indicators(
 
     Args:
     dfsrc (pandas.DataFrame): The DataFrame to which the indicators will be added.
-    enableGatorOscillator (bool, optional): Whether to enable the Gator Oscillator indicator. Defaults to False.
-    enableMFI (bool, optional): Whether to enable the Money Flow Index indicator. Defaults to False.
+    enablegator_oscillator_flag (bool, optional): Whether to enable the Gator Oscillator indicator. Defaults to False.
+    enablemfi_flag (bool, optional): Whether to enable the Money Flow Index indicator. Defaults to False.
     dropnavalue (bool, optional): Whether to drop rows with NaN values. Defaults to True.
     quiet (bool, optional): Whether to suppress console output. Defaults to False.
     cleanupOriginalColumn (bool, optional): Whether to clean up the original column. Defaults to True.
@@ -234,13 +234,13 @@ def ids_add_indicators(
         not useLEGACY
     ):  # Because jgtapy has to be upgraded with new column name, we wont use it until our next release
         dfresult = Indicators.jgt_create_ids_indicators_as_dataframe(
-            dfsrc, enableGatorOscillator, enableMFI, cleanupOriginalColumn, quiet
+            dfsrc, enablegator_oscillator_flag, enablemfi_flag, cleanupOriginalColumn, quiet
         )
     else:
         dfresult = ids_add_indicators_LEGACY(
             dfsrc=dfsrc,
-            enableGatorOscillator=enableGatorOscillator,
-            enableMFI=enableMFI,
+            enablegator_oscillator_flag=enablegator_oscillator_flag,
+            enablemfi_flag=enablemfi_flag,
             dropnavalue=dropnavalue,
             quiet=quiet,
             min_nb_bar_on_chart=cc.min_bar_on_chart,
@@ -270,13 +270,13 @@ def round_columns_v2(df, rounding_decimal_min=10):
 
 def ids_add_indicators_LEGACY(
     dfsrc,
-    enableGatorOscillator=False,
-    enableMFI=False,
+    enablegator_oscillator_flag=False,
+    enablemfi_flag=False,
     dropnavalue=True,
     quiet=True,
     addAlligatorOffsetInFutur=False,
     big_alligator=False,
-    b_alligator_jaws_period=89,
+    balligator_period_jaws=89,
     largest_fractal_period=89,
     min_nb_bar_on_chart=300,
     bypass_index_reset=False,
@@ -287,8 +287,8 @@ def ids_add_indicators_LEGACY(
 
     Args:
     dfsrc (pandas.DataFrame): The input DataFrame.
-    enableGatorOscillator (bool, optional): Whether to enable the Gator Oscillator indicator. Defaults to False.
-    enableMFI (bool, optional): Whether to enable the Money Flow Index indicator. Defaults to False.
+    enablegator_oscillator_flag (bool, optional): Whether to enable the Gator Oscillator indicator. Defaults to False.
+    enablemfi_flag (bool, optional): Whether to enable the Money Flow Index indicator. Defaults to False.
     dropnavalue (bool, optional): Whether to drop rows with NaN values. Defaults to True.
     quiet (bool, optional): Whether to suppress print statements. Defaults to False.
     addAlligatorOffsetInFutur (bool, optional): (NOT IMPLEMENTED) Whether to add the Alligator offset in the future. Defaults to True.
@@ -354,7 +354,7 @@ def ids_add_indicators_LEGACY(
     balligator_shift_lips = ids_request.balligator_shift_lips
 
     bAlligator_required_bar_offset = (
-        minimal_bars_with_indicators + b_alligator_jaws_period + balligator_shift_jaws
+        minimal_bars_with_indicators + balligator_period_jaws + balligator_shift_jaws
     )
 
     if ldfsrc >= bAlligator_required_bar_offset and big_alligator:
@@ -464,7 +464,7 @@ def ids_add_indicators_LEGACY(
         if not quiet:
             print("Skipping Fractal 89")
 
-    if enableGatorOscillator:
+    if enablegator_oscillator_flag:
 
         try:
             i.gator(
@@ -480,7 +480,7 @@ def ids_add_indicators_LEGACY(
         except:
             print("gator failed")
 
-    if enableMFI:
+    if enablemfi_flag:
         try:
             i.bw_mfi(column_name=indicator_mfi_marketFacilitationIndex_column_name)
         except:
@@ -718,7 +718,7 @@ def _ids_add_fdb_column_logics(dfsrc, _dropIntermediariesColumns=True, quiet=Fal
     return dfsrc
 
 
-# @title AOF function pto (AO Fractals)
+# @title aof_flag function pto (AO Fractals)
 
 
 # @title Range shift col
@@ -767,21 +767,21 @@ def jgtids_mk_ao_fractal_peak(
     df_standardDeviation = dfsrc[ctxcolname].std()
     df_max = dfsrc[ctxcolname].max()
     df_min = dfsrc[ctxcolname].min()
-    df_filterOutAOFThreshold_ABOVE = (df_standardDeviation + df_max) / 2
-    df_filterOutAOFThreshold_BELLOW = ((df_standardDeviation * -1) + df_min) / 2
+    df_filterOutaof_flagThreshold_ABOVE = (df_standardDeviation + df_max) / 2
+    df_filterOutaof_flagThreshold_BELLOW = ((df_standardDeviation * -1) + df_min) / 2
 
     if not quiet:
         print(
             "filterout (std) Above(max)/(min)Bellow:  ("
             + str(df_standardDeviation)
             + ")  "
-            + str(df_filterOutAOFThreshold_ABOVE)
+            + str(df_filterOutaof_flagThreshold_ABOVE)
             + "("
             + str(df_max)
             + ") / ("
             + str(df_min)
             + ") "
-            + str(df_filterOutAOFThreshold_BELLOW)
+            + str(df_filterOutaof_flagThreshold_BELLOW)
         )
 
     # Counting the peaks
@@ -789,7 +789,7 @@ def jgtids_mk_ao_fractal_peak(
     countDownPeak = 0
     countDiscarted = 0
     for i, row in dfsrc.iterrows():
-        barAOF = 0
+        baraof_flag = 0
         dt = i
         curHigh = dfsrc.at[i, "High"]
         curLow = dfsrc.at[i, "Low"]
@@ -858,14 +858,14 @@ def jgtids_mk_ao_fractal_peak(
             and cur > n12
             and cur > n13
         ):
-            if cur > 0 and cur > df_filterOutAOFThreshold_ABOVE:
-                barAOF = 21
+            if cur > 0 and cur > df_filterOutaof_flagThreshold_ABOVE:
+                baraof_flag = 21
                 if not quiet:
                     print("We have an up peak at:" + str(dt))
                 countUpPeak = countUpPeak + 1
             else:
-                if cur > 0 and cur > df_standardDeviation and barAOF != 21:
-                    barAOF = 13
+                if cur > 0 and cur > df_standardDeviation and baraof_flag != 21:
+                    baraof_flag = 13
                     if not quiet:
                         print("We have an up peak at:" + str(dt))
                     countUpPeak = countUpPeak + 1
@@ -900,18 +900,18 @@ def jgtids_mk_ao_fractal_peak(
                 and cur < n12
                 and cur < n13
             ):
-                if cur < 0 and cur < df_filterOutAOFThreshold_BELLOW:
-                    barAOF = -21
+                if cur < 0 and cur < df_filterOutaof_flagThreshold_BELLOW:
+                    baraof_flag = -21
                     if not quiet:
                         print("We have an down peak at: " + str(dt))
                     countDownPeak = countDownPeak + 1
                 else:
-                    if cur < 0 and cur < df_standardDeviation * -1 and barAOF != -21:
-                        barAOF = -13
+                    if cur < 0 and cur < df_standardDeviation * -1 and baraof_flag != -21:
+                        baraof_flag = -13
                         if not quiet:
                             print("We have an down peak at: " + str(dt))
                         countDownPeak = countDownPeak + 1
-        if barAOF != 0:
+        if baraof_flag != 0:
             if cur > 0:
                 outHigh = curHigh
                 outHighAO = cur
@@ -923,11 +923,11 @@ def jgtids_mk_ao_fractal_peak(
                 outLowAO = cur
                 outHighAO = 0
 
-        # AOF is the Fractal Peak Value, it would be used to find twin peak signals and learn
+        # aof_flag is the Fractal Peak Value, it would be used to find twin peak signals and learn
 
         # @STCIssue I question the use of some of these columns, they might be temporary
 
-        dfsrc.at[i, indicator_ao_fractalPeakOfMomentum_column_name] = barAOF
+        dfsrc.at[i, indicator_ao_fractalPeakOfMomentum_column_name] = baraof_flag
         dfsrc.at[i, indicator_ao_fractalPeakValue_column_name] = cur  # current AO Value
         dfsrc.at[i, "aofhighao"] = outHighAO
         dfsrc.at[i, "aoflowao"] = outLowAO

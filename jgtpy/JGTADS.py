@@ -10,6 +10,7 @@ import mplfinance as mpf
 
 import sys
 import os
+
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 #import jgtpy
@@ -18,7 +19,10 @@ import JGTIDS as ids
 from JGTIDS import getMinByTF
 import JGTCDS as cds
 from jgtutils import jgtwslhelper as wsl
+
+#@STCGoal Unified JGTChartConfig & JGTADSRequest
 from JGTChartConfig import JGTChartConfig
+from JGTADSRequest import JGTADSRequest
 
 import adshelper as ah
 from jgtutils import jgtconstants as c
@@ -77,11 +81,9 @@ def plot_from_cds_df__DEBUG(df,instrument:str,timeframe:str,show:bool=True,plot_
 
 
 
-def jgtxplot18c_231209(instrument:str,timeframe:str,show:bool=True,plot_ao_peaks:bool=True,cc: JGTChartConfig=None,tlid_range:str=None,crop_last_dt:str=None,use_fresh=False):
-    if cc is None:
-        cc= JGTChartConfig()
-        
-    data = ah.prepare_cds_for_ads_data(instrument, timeframe,tlid_range=tlid_range,cc=cc,crop_last_dt=crop_last_dt,use_fresh=use_fresh) #@STCGoal Supports TLID
+def jgtxplot18c_231209(instrument:str,timeframe:str,show:bool=True,plot_ao_peaks:bool=True,cc: JGTChartConfig=None,tlid_range:str=None,crop_last_dt:str=None,use_fresh=False,rq:JGTADSRequest=None):
+      
+    data = ah.prepare_cds_for_ads_data(instrument, timeframe,tlid_range=tlid_range,cc=cc,crop_last_dt=crop_last_dt,use_fresh=use_fresh,rq=rq) #@STCGoal Supports TLID
     #@STCIssue Desired Number of Bars ALREADY SELECTED IN THERE
     #print(len(data))
     #data.to_csv("debug_data" + instrument.replace("/","-") + timeframe + ".csv")
@@ -1055,7 +1057,27 @@ def plotcdf(data,instrument, timeframe, show=True,plot_ao_peaks=True,cc: JGTChar
   return plot_from_cds_df(data,instrument,timeframe,show=show,plot_ao_peaks=plot_ao_peaks,cc=cc)
 
 
-def plot(instrument:str,timeframe:str,show:bool=True,plot_ao_peaks:bool=True,cc: JGTChartConfig=None,tlid_range:str=None,crop_last_dt:str=None,use_fresh=False):
+def plot_v2(rq:JGTADSRequest,BETA_TRY=False):
+    if BETA_TRY:
+        return plot(rq.instrument,
+                    rq.timeframe,
+                    show=rq.show,
+                    plot_ao_peaks=rq.plot_ao_peaks,
+                    crop_last_dt=rq.crop_last_dt,
+                    use_fresh=rq.use_fresh)
+    else:
+        raise Exception("Not implemented yet")
+    
+
+def plot(instrument:str,
+         timeframe:str,
+         show:bool=True,
+         plot_ao_peaks:bool=True,
+         cc: JGTChartConfig=None,
+         tlid_range:str=None,
+         crop_last_dt:str=None,
+         use_fresh=False,
+         rq:JGTADSRequest=None):
     """
     Plot the chart for a given instrument and timeframe.
 
@@ -1068,6 +1090,7 @@ def plot(instrument:str,timeframe:str,show:bool=True,plot_ao_peaks:bool=True,cc:
     tlid_range (str, optional): The range of TLIDs to use for the plot. Defaults to None. (WE WILL USE crop_last_dt INSTEAD or we might split and transform it for using it as crop_last_dt...)
     crop_last_dt (str, optional): The last date-time to crop the data. Defaults to None.
     use_fresh (bool, optional): Whether to use fresh data. Defaults to False.
+    rq (JGTADSRequest, optional): The request object. Defaults to None.
     
     Returns:
     fig: The figure object of the plot.
@@ -1076,9 +1099,7 @@ def plot(instrument:str,timeframe:str,show:bool=True,plot_ao_peaks:bool=True,cc:
     """
 
     
-    nb_bar_on_chart = cc.nb_bar_on_chart
-    #print("ADS::Debug:nb_bar_on_chart:",str(nb_bar_on_chart))
-    fig, axes,cdfdata = jgtxplot18c_231209(instrument, timeframe, show=show,plot_ao_peaks=plot_ao_peaks,cc=cc,tlid_range=tlid_range,crop_last_dt=crop_last_dt,use_fresh=use_fresh)
+    fig, axes,cdfdata = jgtxplot18c_231209(instrument, timeframe, show=show,plot_ao_peaks=plot_ao_peaks,cc=cc,tlid_range=tlid_range,crop_last_dt=crop_last_dt,use_fresh=use_fresh,rq=rq)
     
     return fig, axes,cdfdata
 
