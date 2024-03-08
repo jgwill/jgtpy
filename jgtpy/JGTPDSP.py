@@ -42,9 +42,10 @@ def getPH_crop(instrument:str,
                quote_count:int=-1,
                quiet:bool=True               
           ):
-  print("getting cropped data....")
-  print(" dt_crop_last: " + str(dt_crop_last))
-  print(" quote_count: " + str(quote_count))
+  if not quiet:  
+    print("getting cropped data....")
+    print(" dt_crop_last: " + str(dt_crop_last))
+    print(" quote_count: " + str(quote_count))
   
   df=getPH(instrument, timeframe, quiet=quiet,dt_crop_last=dt_crop_last,use_full=True)
   
