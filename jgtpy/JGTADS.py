@@ -1074,8 +1074,7 @@ def plot(instrument:str,timeframe:str,show:bool=True,plot_ao_peaks:bool=True,cc:
     axes: The axes object of the plot.
     cdfdata: The CDF data used for the plot (and made in the process
     """
-    if cc is None:
-        cc= JGTChartConfig()
+
     
     nb_bar_on_chart = cc.nb_bar_on_chart
     #print("ADS::Debug:nb_bar_on_chart:",str(nb_bar_on_chart))
