@@ -1060,16 +1060,18 @@ def plotcdf(data,instrument, timeframe, show=True,plot_ao_peaks=True,cc: JGTChar
 def plot_perspective(rq:JGTADSRequest):
     #timeframes = rq.timeframes.split(",")
     perspective={}
-    perspective["request"] = rq
+    perspective["rq"] = rq
     for tf in rq.timeframes:
         #instanciate a copy of the request
         _rq = rq.copy_with_timeframe(tf)
         _c,_a,_d=plot_v2(_rq,BETA_TRY=True)
         _p={}
-        _p["fig"] = _c
-        _p["axes"] = _a
-        _p["data"] = _d
-        _p["request"] = _rq
+        _p = {
+            "fig": _c,
+            "axes": _a,
+            "data": _d,
+            "rq": _rq
+        }
         perspective[tf] = _p
         #{"fig":_c,"axes":_a,"data":_d,"request":_rq}
     return perspective
