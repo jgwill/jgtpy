@@ -47,7 +47,8 @@ from JGTCDS import (
 )
 
 import JGTADS as ads
-from JGTADS import plot as plot,plot as ads_create
+from JGTADS import plot as plot,plot as ads_create,plot_perspective as plot_perspective
+
 #@STCGoal Planning to replace the plot with plot_v2
 from JGTADS import plot_v2,plot_v2 as ads_create_v2
 from JGTADSRequest import JGTADSRequest as ads_request

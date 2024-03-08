@@ -3,4 +3,5 @@ class JGTBaseRequest:
         self.quiet = quiet
         self.verbose_level = verbose_level
 
-    # Rest of the class implementation goes here
+    # def __str__(self) -> str:
+    #     pass

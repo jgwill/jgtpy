@@ -46,8 +46,12 @@ class JGTIDSRequest(JGTPDSRequest):
                  balligator_flag=False, 
                  mfi_flag=False, 
                  gator_oscillator_flag=False,
-                 balligator_period_jaws=89, balligator_period_teeth=55, balligator_period_lips=34,
-                 balligator_shift_jaws=55, balligator_shift_teeth=34, balligator_shift_lips=21,
+                 balligator_period_jaws=89, 
+                 balligator_period_teeth=55, 
+                 balligator_period_lips=34,
+                 balligator_shift_jaws=55, 
+                 balligator_shift_teeth=34, 
+                 balligator_shift_lips=21,
                  largest_fractal_period=89,
                  peak_distance=13,
                  peak_width=8,
@@ -72,3 +76,11 @@ class JGTIDSRequest(JGTPDSRequest):
         self.peak_distance = peak_distance
         self.peak_width = peak_width
         self.peak_divider_min_height = peak_divider_min_height
+
+        #Migrated logics
+        self.balligator_period_jaws = self.balligator_period_jaws if self.balligator_flag else 0 #balligator_period_jaws will be 0 if it is not used
+        
+        
+        
+    # def __str__(self) -> str:
+    #     return super().__str__() + f"aof_flag: {self.aof_flag}\n" + f"balligator_flag: {self.balligator_flag}\n" + f"mfi_flag: {self.mfi_flag}\n" + f"gator_oscillator_flag: {self.gator_oscillator_flag}\n" + f"balligator_period_jaws: {self.balligator_period_jaws}\n" + f"balligator_period_teeth: {self.balligator_period_teeth}\n" + f"balligator_period_lips: {self.balligator_period_lips}\n" + f"balligator_shift_jaws: {self.balligator_shift_jaws}\n" + f"balligator_shift_teeth: {self.balligator_shift_teeth}\n" + f"balligator_shift_lips: {self.balligator_shift_lips}\n" + f"largest_fractal_period: {self.largest_fractal_period}\n" + f"peak_distance: {self.peak_distance}\n" + f"peak_width: {self.peak_width}\n" + f"peak_divider_min_height: {self.peak_divider_min_height}\n" + f"rounding_decimal_min: {self.rounding_decimal_min}\n"

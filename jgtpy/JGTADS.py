@@ -1057,20 +1057,39 @@ def plotcdf(data,instrument, timeframe, show=True,plot_ao_peaks=True,cc: JGTChar
   return plot_from_cds_df(data,instrument,timeframe,show=show,plot_ao_peaks=plot_ao_peaks,cc=cc)
 
 
+def plot_perspective(rq:JGTADSRequest):
+    #timeframes = rq.timeframes.split(",")
+    perspective={}
+    perspective["request"] = rq
+    for tf in rq.timeframes:
+        #instanciate a copy of the request
+        _rq = rq.copy_with_timeframe(tf)
+        _c,_a,_d=plot_v2(_rq,BETA_TRY=True)
+        _p={}
+        _p["fig"] = _c
+        _p["axes"] = _a
+        _p["data"] = _d
+        _p["request"] = _rq
+        perspective[tf] = _p
+        #{"fig":_c,"axes":_a,"data":_d,"request":_rq}
+    return perspective
+
 def plot_v2(rq:JGTADSRequest,BETA_TRY=False):
     if BETA_TRY:
-        return plot(rq.instrument,
-                    rq.timeframe,
-                    show=rq.show,
-                    plot_ao_peaks=rq.plot_ao_peaks,
-                    crop_last_dt=rq.crop_last_dt,
-                    use_fresh=rq.use_fresh)
+        return plot(rq=rq)
+    # (rq.instrument,
+    #                 rq.timeframe,
+    #                 show=rq.show,
+    #                 plot_ao_peaks=rq.plot_ao_peaks,
+    #                 crop_last_dt=rq.crop_last_dt,
+    #                 use_fresh=rq.use_fresh,
+    #                 cc=rq.cc)
     else:
         raise Exception("Not implemented yet")
     
 
-def plot(instrument:str,
-         timeframe:str,
+def plot(instrument:str=None,
+         timeframe:str=None,
          show:bool=True,
          plot_ao_peaks:bool=True,
          cc: JGTChartConfig=None,
@@ -1097,7 +1116,17 @@ def plot(instrument:str,
     axes: The axes object of the plot.
     cdfdata: The CDF data used for the plot (and made in the process
     """
-
+    if rq is not None:
+        use_fresh = rq.use_fresh
+        cc = rq.cc
+        crop_last_dt = rq.crop_last_dt
+        tlid_range = rq.tlid_range
+        plot_ao_peaks = rq.plot_ao_peaks
+        show = rq.show
+        if instrument is None:
+            instrument = rq.instrument
+        if timeframe is None:
+            timeframe = rq.timeframe
     
     fig, axes,cdfdata = jgtxplot18c_231209(instrument, timeframe, show=show,plot_ao_peaks=plot_ao_peaks,cc=cc,tlid_range=tlid_range,crop_last_dt=crop_last_dt,use_fresh=use_fresh,rq=rq)
     

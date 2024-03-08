@@ -93,23 +93,24 @@ def prepare_cds_for_ads_data(instrument:str, timeframe:str,tlid_range:str=None,c
     # @STCIssue Even the Cache above could be moved to JGTCDS or Business Layer
     # @STCIssue: LOGICS Bellow should be moved to JGTCDS  cds.create_crop_dt(...) cds.create_crop_dt_selection(...) 
 
-    if rq.balligator_flag:
-        nb_to_select = cc.nb_bar_to_retrieve
-    else:
-        nb_to_select = cc.nb_bar_on_chart
+    # if rq.balligator_flag:
+    #     nb_to_select = cc.nb_bar_to_retrieve
+    # else:
+    #     nb_to_select = cc.nb_bar_on_chart
 
     if crop_last_dt is None:
         # Get Lastest DF
-        selected = pds.getPH(instrument,timeframe,cc=cc,get_them_all=True,use_fresh=use_fresh,quote_count=nb_to_select)
+        selected = pds.getPH(instrument,timeframe,cc=rq.cc,get_them_all=True,use_fresh=use_fresh,quote_count=rq.nb_bar_to_retrieve,quiet=rq.quiet)
     else:
         # Get Crop DF, assuming we require using FULL data
         # df = pds.getPH(instrument,timeframe,cc=cc,use_full=True,use_fresh=use_fresh)
-        selected = pds.getPH_crop(instrument,timeframe,quote_count=nb_to_select,dt_crop_last=crop_last_dt)
+        selected = pds.getPH_crop(instrument,timeframe,quote_count=rq.nb_bar_to_retrieve,dt_crop_last=crop_last_dt,quiet=rq.quiet)
         #df = df[df.index <= crop_last_dt]
 
     if not rq.quiet:
-        print("DEBUG:: nb_to_select:",nb_to_select)
+        print("DEBUG:: nb_to_select (rq.nb_bar_to_retrieve):",rq.nb_bar_to_retrieve)
         print("DEBUG:: len selected:", len(selected))
+
     
     # #Make sure we have enough bars to select
     # if nb_to_select < cc.min_bar_on_chart:

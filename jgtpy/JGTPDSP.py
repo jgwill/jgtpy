@@ -42,16 +42,48 @@ def getPH_crop(instrument:str,
                quote_count:int=-1,
                quiet:bool=True               
           ):
+  print("getting cropped data....")
+  print(" dt_crop_last: " + str(dt_crop_last))
+  print(" quote_count: " + str(quote_count))
+  
   df=getPH(instrument, timeframe, quiet=quiet,dt_crop_last=dt_crop_last,use_full=True)
+  
   ldf = len(df)
   #@q How can we Get Fresh data if the FULL has not our range ??
   
   if  ldf > quote_count  and quote_count != -1:
+    if not quiet:
+      print("  we selected: " + str(quote_count) + " bars")
     selected = df.iloc[-quote_count:].copy()
   else:
     selected = df.copy()
   return selected
   
+
+def test_if_having_crop_last_dt(df,crop_last_dt, quiet:bool=True):
+    tst=df.tail(1).copy()
+    if not quiet:
+      print(" test_if_having_crop_last_dt")
+      print("   crop_last_dt: " + str(crop_last_dt))
+      print("   Last row: " + str(tst))
+    tst = tst[tst.index >= crop_last_dt]
+    return len(tst)>0 # Expecting 1 if we have the date
+
+
+def _check_if_last_row_of_full_match_out_dt_crop_last_with_enough_bars(instrument:str, timeframe:str, dt_crop_last, quote_count:int, quiet:bool=True):
+      if not quiet:
+        print("Checking if last row of full match out dt_crop_last with enough bars")
+        print(" quote_count: " + str(quote_count) + " (REQUIRES enough bars after crops)")
+      df_full = getPH_from_filestore(instrument, timeframe, quiet=quiet, use_full=True)
+      res= test_if_having_crop_last_dt(df_full,dt_crop_last) and len(df_full) >= quote_count
+      if not quiet:
+        if res:
+          print("  Last row of full match out dt_crop_last with enough bars")
+        else:
+          print("  Last row of full does not match out dt_crop_last with enough bars")
+      return res
+
+
 def getPH(instrument:str, timeframe:str, quote_count:int=-1, start=None, end=None, with_index=True, quiet:bool=True,convert_date_index_to_dt:bool=True,cc: JGTChartConfig=None,get_them_all:bool=False,use_full:bool=False,
           dt_crop_last=None,
           tlid_range=None,
@@ -65,6 +97,19 @@ def getPH(instrument:str, timeframe:str, quote_count:int=-1, start=None, end=Non
     cc = JGTChartConfig()
   if quote_count == -1 and use_full == False: #@STCIssue JGTChartConfig being Replaced by JGTPDSPRequest
     quote_count = cc.nb_bar_to_retrieve
+  
+  # If we dont have enough data in full when using crop_last_dt, we should use fresh
+  if dt_crop_last is not None and use_full:
+    our_data_is_ok=_check_if_last_row_of_full_match_out_dt_crop_last_with_enough_bars(instrument, timeframe, dt_crop_last, quote_count, quiet)
+    if not our_data_is_ok:
+      if not quiet:
+        print("Our data is not ok, using fresh")
+      use_fresh=True
+    else:
+      if not quiet:
+        print("Our data is ok, not using fresh")
+    
+    
   
   if use_fresh:
     try:
