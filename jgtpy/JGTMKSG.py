@@ -41,6 +41,30 @@ def create_default_chart_config():
 #support crop_last_dt="2022-10-13 13:45:00"
 
 def generate_market_snapshots(instruments:str, timeframes:str, html_outdir_root:str=None,cc:JGTChartConfig.JGTChartConfig=None,crop_last_dt:str=None, show_chart:bool=False, show_tabs:bool=False,width:int=2550, height:int=1150,save_fig_image:bool=True,save_cds_data:bool=True,out_htm_viewer_prefix = "pto-mksg-",default_char_dir_name = "charts",default_chart_output_dir = "./",out_htm_viewer_ext = ".html",out_htm_viewer_full_fn= "pto-all-mksg.html"):
+  """
+  Generates market snapshots for the given instruments and timeframes.
+
+  Parameters:
+  - instruments (str): Comma-separated string of instrument names.
+  - timeframes (str): Comma-separated string of timeframes.
+  - html_outdir_root (str, optional): Root directory for HTML output. If not provided, a default directory will be used.
+  - cc (JGTChartConfig.JGTChartConfig, optional): Chart configuration object. If not provided, a default configuration will be used.
+  - crop_last_dt (str, optional): Date and time to crop the snapshots. If not provided, all data will be included.
+  - show_chart (bool, optional): Whether to show the chart. Default is False.
+  - show_tabs (bool, optional): Whether to show the tabs. Default is False.
+  - width (int, optional): Width of the snapshots. Default is 2550.
+  - height (int, optional): Height of the snapshots. Default is 1150.
+  - save_fig_image (bool, optional): Whether to save the figure images. Default is True.
+  - save_cds_data (bool, optional): Whether to save the CDS data. Default is True.
+  - out_htm_viewer_prefix (str, optional): Prefix for the HTML viewer output. Default is "pto-mksg-".
+  - default_char_dir_name (str, optional): Default directory name for charts. Default is "charts".
+  - default_chart_output_dir (str, optional): Default output directory for charts. Default is "./".
+  - out_htm_viewer_ext (str, optional): Extension for the HTML viewer output. Default is ".html".
+  - out_htm_viewer_full_fn (str, optional): Full filename for the HTML viewer output. Default is "pto-all-mksg.html".
+
+  Returns:
+  - ptabs (pn.Tabs): A `pn.Tabs` object containing the generated market snapshots.
+  """
   if cc is None:
     cc = create_default_chart_config()
   
@@ -142,46 +166,72 @@ def _mk_fnoutputs(html_outdir_root, i, t,crop_last_dt=None):
 #%% For Many Crop DT Last
 
 
-def generate_market_snapshots_for_many_crop_dt(i:str, timeframes,crop_last_dt_arr, html_outdir_root:str=None,cc:JGTChartConfig.JGTChartConfig=None, show_chart:bool=False, show_tabs:bool=False,width:int=2550, height:int=1150,save_fig_image:bool=True,save_cds_data:bool=True,out_htm_viewer_prefix = "pto-mksg-bycrop-",default_char_dir_name = "charts",default_chart_output_dir = "./",out_htm_viewer_ext = ".html",out_htm_viewer_full_fn= "pto-all-mksg-bycrop.html",jgtpy_data_var = "JGTPY_DATA_FULL",tf_of_signal:str=None,dt_of_signal:str=None,sig_type_name:str=""):
+def generate_market_snapshots_for_many_crop_dt(i:str, timeframes, crop_last_dt_arr, html_outdir_root:str=None, cc:JGTChartConfig.JGTChartConfig=None, show_chart:bool=False, show_tabs:bool=False, width:int=2550, height:int=1150, save_fig_image:bool=True, save_cds_data:bool=True, out_htm_viewer_prefix="pto-mksg-bycrop-", default_char_dir_name="charts", default_chart_output_dir="./", out_htm_viewer_ext=".html", out_htm_viewer_full_fn="pto-all-mksg-bycrop.html", jgtpy_data_var="JGTPY_DATA_FULL", tf_of_signal:str=None, dt_of_signal:str=None, sig_type_name:str=""):
+  """
+  Generates market snapshots for multiple crop dates and timeframes.
+
+  Args:
+    i (str): The input string.
+    timeframes: The list of timeframes.
+    crop_last_dt_arr: The list of crop last dates.
+    html_outdir_root (str, optional): The root directory for HTML output. Defaults to None.
+    cc (JGTChartConfig.JGTChartConfig, optional): The chart configuration. Defaults to None.
+    show_chart (bool, optional): Whether to show the chart. Defaults to False.
+    show_tabs (bool, optional): Whether to show the tabs. Defaults to False.
+    width (int, optional): The width of the tabs. Defaults to 2550.
+    height (int, optional): The height of the tabs. Defaults to 1150.
+    save_fig_image (bool, optional): Whether to save the figure image. Defaults to True.
+    save_cds_data (bool, optional): Whether to save the CDS data. Defaults to True.
+    out_htm_viewer_prefix (str, optional): The prefix for the HTML viewer output. Defaults to "pto-mksg-bycrop-".
+    default_char_dir_name (str, optional): The default chart directory name. Defaults to "charts".
+    default_chart_output_dir (str, optional): The default chart output directory. Defaults to "./".
+    out_htm_viewer_ext (str, optional): The extension for the HTML viewer output. Defaults to ".html".
+    out_htm_viewer_full_fn (str, optional): The full filename for the HTML viewer output. Defaults to "pto-all-mksg-bycrop.html".
+    jgtpy_data_var (str, optional): The JGTPY data variable. Defaults to "JGTPY_DATA_FULL".
+    tf_of_signal (str, optional): The timeframe of the signal. Defaults to None.
+    dt_of_signal (str, optional): The date of the signal. Defaults to None.
+    sig_type_name (str, optional): The name of the signal type. Defaults to "".
+
+  Returns:
+    pn.Tabs: The generated market snapshots as a panel of tabs.
+  """
   if cc is None:
     cc = create_default_chart_config()
-  
+
   html_outdir_root = _mk_html_outdir_root_default(html_outdir_root, default_char_dir_name, default_chart_output_dir, jgtpy_data_var)
-  
-  
+
   if isinstance(timeframes, str):
     timeframes = timeframes.split(",")
-    
+
   perspectives = {}
   ptabs = pn.Tabs(width=width, height=height)
 
   # If crop_last_dt_arr is type string, split
   if isinstance(crop_last_dt_arr, str):
     crop_last_dt_arr = crop_last_dt_arr.split(",")
-  
-  #ASsume dt_of_signal is the first of the array
+
+  # Assume dt_of_signal is the first of the array
   if dt_of_signal is None:
     dt_of_signal = crop_last_dt_arr[0]
-  
+
   for crop_last_dt in crop_last_dt_arr:
-    ifn=i.replace("/", "-")
+    ifn = i.replace("/", "-")
     try:
       print(f"-------------{i}-------------------")
 
       figures = {}
       success = False
-      
+
       # We add one tag with the signal TF
-      
-      
+
       for t in timeframes:
         print(i, t, crop_last_dt)
-        f, ax, _ = ads.plot(i, t, show=show_chart, cc=cc, crop_last_dt=crop_last_dt,plot_ao_peaks=True)
+        f, ax, _ = ads.plot(i, t, show=show_chart, cc=cc, crop_last_dt=crop_last_dt, plot_ao_peaks=True)
         f.title = t
         figures[t] = f
-        fnout, fnoutcsv = _mk_fnoutputs(html_outdir_root, i, t,crop_last_dt)
-        
-        if save_fig_image:        
+        fnout, fnoutcsv = _mk_fnoutputs(html_outdir_root, i, t, crop_last_dt)
+
+        if save_fig_image:
           f.savefig(fnout)
         if save_cds_data:
           _.to_csv(fnoutcsv)
@@ -191,59 +241,53 @@ def generate_market_snapshots_for_many_crop_dt(i:str, timeframes,crop_last_dt_ar
       if tf_of_signal is not None:
         first_tab_name = tf_of_signal + "s"
         tabs.append((first_tab_name, figures[tf_of_signal]))
-        
+
       for t in timeframes:
         tabs.append((t, figures[t]))
 
       if show_tabs:
         tabs.show()
-        
 
-      cldt_fnstr=tlid.strdt(crop_last_dt)
+      cldt_fnstr = tlid.strdt(crop_last_dt)
       # tabs.title = i + " - " + crop_last_dt
-      tabs.title =  cldt_fnstr
-      
-      html_fname = ifn+"_"+ cldt_fnstr + out_htm_viewer_ext
+      tabs.title = cldt_fnstr
+
+      html_fname = ifn + "_" + cldt_fnstr + out_htm_viewer_ext
       _sig_type_str = ""
       if sig_type_name != "":
-        _sig_type_str =" "+ sig_type_name+ " "
-      html_title_name = i + " " + tf_of_signal +_sig_type_str + crop_last_dt
-        
-      html_fname=html_fname.replace("..",".")
+        _sig_type_str = " " + sig_type_name + " "
+      html_title_name = i + " " + tf_of_signal + _sig_type_str + crop_last_dt
+
+      html_fname = html_fname.replace("..", ".")
       print(html_fname)
-      
+
       html_output_filepath = f"{html_outdir_root}/{out_htm_viewer_prefix}" + html_fname
 
-      tabs.save(html_output_filepath,title=html_title_name, embed=True)
+      tabs.save(html_output_filepath, title=html_title_name, embed=True)
 
       perspectives[i] = tabs
 
-      tabstitle =  tf_of_signal + " " + crop_last_dt
+      tabstitle = tf_of_signal + " " + crop_last_dt
       ptabs.append((tabstitle, tabs))
-      
+
     except:
       print("An error occurred while processing:", i)
       pass
-    
-  full_html_title_name = i + " " + tf_of_signal +" "+ sig_type_name+ " " + dt_of_signal
-  
+
+  full_html_title_name = i + " " + tf_of_signal + " " + sig_type_name + " " + dt_of_signal
+
   full_html_output_filepath = f"{html_outdir_root}/{out_htm_viewer_full_fn}"
   print(full_html_output_filepath)
 
-  ptabs.save(full_html_output_filepath,title=full_html_title_name, embed=True)
+  ptabs.save(full_html_output_filepath, title=full_html_title_name, embed=True)
   print("Crop by DT Saved:", full_html_output_filepath)
-  
+
   return ptabs
-  # Fix the output HTML <title>Panel</title>
-  #with open(full_html_output_filepath, "r") as file:
   
 
 
 
 
-
-
-#%% v2
 
 
 def pto_generate_snapshot_240302_v2_by_crop_dates(
@@ -284,6 +328,9 @@ def pto_generate_snapshot_240302_v2_by_crop_dates(
     w (int, optional): The width parameter. Defaults to 2550.
     h (int, optional): The height parameter. Defaults to 1150.
     cc (JGTChartConfig.JGTChartConfig, optional): The cc parameter. Defaults to None.
+
+  Returns:
+    The result of calling the `generate_market_snapshots_for_many_crop_dt` function.
   """
   if cc is None:
     cc = JGTChartConfig.JGTChartConfig()
