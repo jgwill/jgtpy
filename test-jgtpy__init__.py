@@ -22,7 +22,8 @@ ads_fresh_chart.show()
 
 # %%
 crop_dt = "2023-01-13 21:00"
-ads_crop_chart, _ads_crop_plt_arr, _ads_crop_df = jgt.ads(i, t, crop_last_dt=crop_dt)
+ads_crop_chart, _ads_crop_plt_arr, _ads_crop_df = \
+    jgt.ads(i, t, crop_last_dt=crop_dt)
 ads_crop_chart.show()
 
 
