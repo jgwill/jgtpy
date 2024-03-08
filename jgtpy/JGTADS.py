@@ -271,9 +271,7 @@ def plot_from_cds_df(data:pd.DataFrame,instrument:str,timeframe:str,show=True,pl
     
     # Make Alligator's lines plot
     
-    jaw_plot = mpf.make_addplot(data_last_selection[JAW], panel=main_plot_panel_id, color=jaw_color)
-    teeth_plot = mpf.make_addplot(data_last_selection[TEETH], panel=main_plot_panel_id, color=teeth_color)
-    lips_plot = mpf.make_addplot(data_last_selection[LIPS], panel=main_plot_panel_id, color=lips_color)
+    jaw_plot, teeth_plot, lips_plot = _make_alligator_line_plots(jaw_color, teeth_color, lips_color, JAW, TEETH, LIPS, main_plot_panel_id, data_last_selection)
     
     
     #%% Offsets and various values
@@ -385,6 +383,7 @@ def plot_from_cds_df(data:pd.DataFrame,instrument:str,timeframe:str,show=True,pl
         marker=saucer_marker,
         color=saucer_buy_color,
     )
+    
     
     # Make Sell Signal plot
     ss_plot = mpf.make_addplot(
@@ -645,6 +644,12 @@ def plot_from_cds_df(data:pd.DataFrame,instrument:str,timeframe:str,show=True,pl
     if show:
         plt.show()
     return fig,axes,data_last_selection
+
+def _make_alligator_line_plots(jaw_color, teeth_color, lips_color, JAW, TEETH, LIPS, main_plot_panel_id, data_last_selection):
+    jaw_plot = mpf.make_addplot(data_last_selection[JAW], panel=main_plot_panel_id, color=jaw_color)
+    teeth_plot = mpf.make_addplot(data_last_selection[TEETH], panel=main_plot_panel_id, color=teeth_color)
+    lips_plot = mpf.make_addplot(data_last_selection[LIPS], panel=main_plot_panel_id, color=lips_color)
+    return jaw_plot,teeth_plot,lips_plot
 
 
 

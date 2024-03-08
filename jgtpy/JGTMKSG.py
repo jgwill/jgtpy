@@ -127,6 +127,8 @@ def generate_market_snapshots(instruments:str, timeframes:str, html_outdir_root:
   ptabs.save(full_html_output_filepath, embed=True)
   print("Saved:", full_html_output_filepath)
 
+  return ptabs
+
 def _mk_fnoutputs(html_outdir_root, i, t,crop_last_dt=None):
     _suffix = ""
     if crop_last_dt is not None:
@@ -231,7 +233,7 @@ def generate_market_snapshots_for_many_crop_dt(i:str, timeframes,crop_last_dt_ar
   ptabs.save(full_html_output_filepath,title=full_html_title_name, embed=True)
   print("Crop by DT Saved:", full_html_output_filepath)
   
-  
+  return ptabs
   # Fix the output HTML <title>Panel</title>
   #with open(full_html_output_filepath, "r") as file:
   
@@ -302,7 +304,7 @@ def pto_generate_snapshot_240302_v2_by_crop_dates(
   os.makedirs(scn_chart_dir, exist_ok=True)
   
   
-  generate_market_snapshots_for_many_crop_dt(
+  return generate_market_snapshots_for_many_crop_dt(
   i=i,
   timeframes=timeframes,
   crop_last_dt_arr=crop_last_dt_arr,
