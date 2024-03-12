@@ -116,27 +116,28 @@ def getPH(instrument:str, timeframe:str, quote_count:int=-1, start=None, end=Non
     try:
       refreshPH(instrument, timeframe,quote_count=quote_count, tlid_range=tlid_range, use_full=use_full,verbose_level=1)
     except: #Raise ExceptionUseFreshData
-      print("Error in getPH, use_fresh failed")
+      print("Error in getPH when using fresh")
       if use_fresh_error_ignore:
         pass      
       raise Exception("Error in getPH, use_fresh failed")
     
   df = getPH_from_filestore(instrument, timeframe, quiet, False, with_index,convert_date_index_to_dt,use_full=use_full,tlid_range=tlid_range)
   if df  is None and run_jgtfxcli_on_error:
-    print("NO DATA IN DF, running jgtfxcli")
+    print_quiet(quiet,"NO DATA IN DF, running jgtfxcli")
     #df = getPH_from_filestore(instrument, timeframe, quiet, False, with_index,convert_date_index_to_dt,use_full=use_full)
     #@STCIssue its more PDSP that should run this logics
     try: 
       if run_jgtfxcli_on_error:
-        print("Error in createFromPDSFile, running jgtfxcli")
+        print("Running jgtfxcli")
         refreshPH(instrument, timeframe,quote_count=quote_count, tlid_range=tlid_range, use_full=use_full,verbose_level=1)
         # CALL IT BACK AGAIN
         df = getPH_from_filestore(instrument, timeframe, quiet, False, with_index,convert_date_index_to_dt,use_full=use_full,tlid_range=tlid_range)
       else:
           print("run_jgtfxcli_on_error is OFF, not running jgtfxcli")
     except Exception as e:
-        print("Error in createFromPDSFile, jgtfxcli failed")
+        print("Error when running jgtfxcli")
         print(e)
+        print("------------------------------------")
     
     
   if not quiet:
