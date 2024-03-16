@@ -1,0 +1,32 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"**/.git": true,
+			"**/.svn": true,
+			"**/.hg": true,
+			"**/CVS": true,
+			"**/.DS_Store": true,
+			"**/Thumbs.db": true,
+			"**/node_modules/*/**": true,
+			"**/History": true,
+			"History": true,
+			"jgtpy/__pycache__": true,
+			"**/__pycache__": true,
+			"__pycache__": true,
+			"**/.spyproject": true,
+			".spyproject": true,
+			"**/jgtpy.egg-info": true,
+			"*.egg-info": true,
+			"jgtpy.egg-info": true,
+			"dist": true,
+			"*.log": true
+		},
+		"explorerExclude.backup": {},
+		"editor.tabSize": 2
+	}
+}
