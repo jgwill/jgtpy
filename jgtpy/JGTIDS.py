@@ -82,9 +82,15 @@ def _jgtpd_col_add_range_shifting(
 # --@STCGoal IDS Indicators and related / CDS
 
 
-def normalize_columns(df: pd.DataFrame, columns: list) -> pd.DataFrame:
-    df_normalized = df.copy()
-    for column in columns:
+def normalize_columns(df: pd.DataFrame, columns: list, in_place=True) -> pd.DataFrame:
+    if in_place:
+        df_normalized = df
+        for column in columns:
+            df.loc[:, column] = df[column] / df[column].abs().max()
+        return df
+    else:
+        df_normalized = df.copy()
+        for column in columns:
         df_normalized[column] = df[column] / df[column].abs().max()
     return df_normalized
 
