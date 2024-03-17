@@ -133,30 +133,6 @@ def pds_get_dt_from_and_to_for_now_live_price(
       _nbbar2retrieve (int, optional): The number of bars to retrieve. Defaults to 335.
       quiet (bool, optional): Whether to print weekday information. Defaults to True.
 
-    Returns:
-      tuple: A tuple containing the start and end datetime strings in the format '%m.%d.%Y %H:%M:%S'.
-    """
-    nbmintf = getMinByTF(_timeframe)
-    now = datetime.datetime.now(datetime.timezone.utc)
-    if not quiet:
-        print("Now is: " + str(now))
-    weekdayoffset = 0
-    chkweekday = now.weekday()
-    if not quiet:
-        print("Weekday is: " + str(chkweekday))
-    if chkweekday == 7:
-        weekdayoffset = 1440
-    if chkweekday == 0:
-        weekdayoffset = 2840
-    idsIndiPrepNbBars = 90
-    dtminute = datetime.timedelta(
-        minutes=nbmintf * (_nbbar2retrieve + weekdayoffset + idsIndiPrepNbBars)
-    )
-    datefromobj = now - dtminute
-    datefrom = datefromobj.strftime(_dtformat)
-    nowstring = now.strftime(_dtformat)
-    dateto = nowstring
-    return datefrom, dateto
 
 
 # %%
