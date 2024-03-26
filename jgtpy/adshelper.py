@@ -91,9 +91,8 @@ def prepare_cds_for_ads_data(
     if tlid_range is not None:
         msg_prep_cds_for_ads_data_error = "tlid_range is not implemented yet. We will use crop_last_dt instead."
         print(msg_prep_cds_for_ads_data_error)
-        raise NotImplementedError(
-            msg_prep_cds_for_ads_data_error
-        )
+        #raise NotImplementedError(msg_prep_cds_for_ads_data_error)
+   
     # @STCGoal local retrieve data from cache if available or from WSL if not  (jgtfxcli)
 
     cache_data: bool = use_cache_if_available

@@ -164,3 +164,5 @@ w1.png
 *.pickle
 _tmp*
 test*.csv
+charts/
+mycharts/

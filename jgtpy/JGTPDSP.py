@@ -17,6 +17,8 @@ from jgtutils.jgtos import create_filestore_path, mk_fn, mk_fn_range, mk_fullpat
 
 from JGTChartConfig import JGTChartConfig
 
+from jgtutils import jgtwslhelper as wsl
+
 renameColumns=True
 addOhlc=True
 
@@ -25,7 +27,7 @@ cleanseOriginalColumns=True
 useLocal=True
 
 def refreshPH(instrument:str, timeframe:str,quote_count:int=-1, quiet:bool=True,use_full:bool=False,verbose_level=0,tlid_range=None):
-  from jgtutils import jgtwslhelper as wsl
+  
   if not quiet:
     print(f"Refreshing {instrument} {timeframe}")
   try:
@@ -132,7 +134,7 @@ def getPH(instrument:str,
     quote_count = cc.nb_bar_to_retrieve + fix_240325
   
   # If we dont have enough data in full when using crop_last_dt, we should use fresh
-  df = _get_ph_surely_fresh(instrument, timeframe, quote_count, with_index, quiet, convert_date_index_to_dt, use_full, dt_crop_last, tlid_range, run_jgtfxcli_on_error, use_fresh_error_ignore, use_cache_full)
+  df = _get_ph_surely_fresh(instrument, timeframe, quote_count, with_index, quiet, convert_date_index_to_dt, use_full, dt_crop_last, tlid_range, run_jgtfxcli_on_error, use_fresh_error_ignore, use_cache_full,use_fresh=use_fresh)
   
   
   df = if_select_start_end(df, start, end,quiet)
@@ -147,15 +149,20 @@ def getPH(instrument:str,
   
   return df
 
-def _get_ph_surely_fresh(instrument, timeframe, quote_count, with_index, quiet, convert_date_index_to_dt, use_full, dt_crop_last, tlid_range, run_jgtfxcli_on_error, use_fresh_error_ignore, use_cache_full):
+def _get_ph_surely_fresh(instrument, timeframe, quote_count, with_index, quiet, convert_date_index_to_dt, use_full, dt_crop_last, tlid_range, run_jgtfxcli_on_error, use_fresh_error_ignore, use_cache_full,use_fresh=False):
 
   _dt_requirements = str(datetime.now()) if dt_crop_last is None else dt_crop_last
 
   # We are not using crop_last_dt neither full, we should use fresh anyways if our short stored data is not enough fresh
   # we will tel it our date is now
   
-  use_fresh=False
-  our_data_is_ok=_check_if_dt_range_has_enough_bars(instrument, timeframe, _dt_requirements, quote_count, quiet,use_full=use_full)
+  our_data_is_ok=use_fresh
+  if not use_fresh:
+    print_quiet(quiet,"Checking if dt range has enough bars")
+    our_data_is_ok=_check_if_dt_range_has_enough_bars(instrument, timeframe, _dt_requirements, quote_count, quiet,use_full=use_full)
+  else:
+    print_quiet(quiet,"We are using fresh, skipping checking if dt range has enough bars")
+    
   if not our_data_is_ok:
     if not quiet:
       print("Our data is not ok, using fresh")

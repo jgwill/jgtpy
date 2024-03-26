@@ -4,17 +4,29 @@
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
+
     {
       "name": "Python: Current File",
-      "type": "python",
+      "type": "debugpy",
       "request": "launch",
       "program": "${file}",
       "console": "integratedTerminal",
       "justMyCode": false
     },
     {
+      "name": "jgtcli-ads",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/jgtpy/jgtcli.py",
+      "args": [
+        "-i","USD/CAD","-t","m5","--ads","-v","2"
+      ],
+      "console": "internalConsole",
+      "justMyCode": false
+    },
+    {
       "name": "ADS-tst-chart",
-      "type": "python",
+      "type": "debugpy",
       "request": "launch",
       "program": "${workspaceFolder}/test-ads.py",
       "args": [

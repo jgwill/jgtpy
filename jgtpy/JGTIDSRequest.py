@@ -46,7 +46,7 @@ class JGTIDSRequest(JGTPDSRequest):
                  peak_distance=13,
                  peak_width=8,
                  peak_divider_min_height = 3,
-                 rounding_decimal_min=10, 
+                 rounding_decimal_min=11, 
                  disable_ao_peaks_v1=True,
                  include_ao_color=False,
                  include_ac_color=False,

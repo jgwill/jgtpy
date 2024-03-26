@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 plt.rcParams["figure.max_open_warning"] = 100
 
 import pandas as pd
-from jgtpy import JGTADS as ads, adshelper as ah, JGTPDSP as pds, JGTCDS as cds
+from jgtpy import JGTADS as ads, adshelper as ah, JGTPDSP as pds, JGTADSRequest as RQ
 from jgtpy import JGTChartConfig
 
 import tlid
@@ -41,7 +41,7 @@ def create_default_chart_config():
 #support crop_last_dt="2022-10-13 13:45:00"
 
 def generate_market_snapshots(instruments:str, timeframes:str, html_outdir_root:str=None,cc:JGTChartConfig.JGTChartConfig=None,crop_last_dt:str=None, show_chart:bool=False, show_tabs:bool=False,width:int=2550, height:int=1150,save_fig_image:bool=True,save_cds_data:bool=True,out_htm_viewer_prefix = "pto-mksg-",default_char_dir_name = "charts",default_chart_output_dir = "./",out_htm_viewer_ext = ".html",out_htm_viewer_full_fn= "pto-all-mksg.html",
-  serve_it=False):
+  serve_it=False,use_fresh=False):
   """
   Generates market snapshots for the given instruments and timeframes.
 
@@ -104,7 +104,16 @@ def generate_market_snapshots(instruments:str, timeframes:str, html_outdir_root:
       success = False
       for t in timeframes:
         print(i, t)
-        f, ax, _ = ads.plot(i, t, show=show_chart, cc=cc, crop_last_dt=crop_last_dt,plot_ao_peaks=True)
+        #RQ
+        rq=RQ.JGTADSRequest()
+        rq.instrument=i
+        rq.timeframe=t
+        rq.crop_last_dt=crop_last_dt
+        rq.show=show_chart
+        rq.cc=cc
+        rq.use_fresh=use_fresh
+        f, ax, _ = ads.plot_v2(rq)
+        #ads.plot(i, t, show=show_chart, cc=cc, crop_last_dt=crop_last_dt,plot_ao_peaks=True)
         f.title = t
         figures[t] = f
         fnout, fnoutcsv = _mk_fnoutputs(html_outdir_root, i, t)
@@ -425,7 +434,7 @@ def main():
     parser.add_argument('-st','--sig_type_name', type=str, required=True)
     parser.add_argument('-cl','--crop_last_dt_arr', type=str, required=True)
     parser.add_argument('--scn_root_dir', type=str, default=None)
-    parser.add_argument('--default_char_dir_name', type=str, default="charts")
+    parser.add_argument('-o','--default_char_dir_name', type=str, default="charts")
     parser.add_argument('--show_chart', type=bool, default=False)
     parser.add_argument('--show_tabs', type=bool, default=False)
     parser.add_argument('--save_fig_image', type=bool, default=True)
