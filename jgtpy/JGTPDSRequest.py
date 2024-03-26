@@ -1,5 +1,6 @@
 import sys
 import os
+import json
 
 
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
@@ -46,5 +47,8 @@ class JGTPDSRequest(JGTBaseRequest):
             else:
                 self.timeframes = timeframes.split(",")
 
+    def to_json(self):
+        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=2)
+    
     # def __str__(self) -> str:
     #     return super().__str__() + f"instrument: {self.instrument}\n" + f"timeframe: {self.timeframe}\n" + f"timeframes: {self.timeframes if self.timeframes is not None else 'None'}\n" + f"crop_last_dt: {self.crop_last_dt if self.crop_last_dt is not None else 'None'}\n" + f"use_fresh: {self.use_fresh}\n" + f"use_full: {self.use_full}\n"

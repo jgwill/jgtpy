@@ -35,33 +35,185 @@ def refreshPH(instrument:str, timeframe:str,quote_count:int=-1, quiet:bool=True,
     raise e
 
 #df = df[df.index <= crop_last_dt]
+df_full_cache = {}
+def add_df_to_full_cache(instrument:str, timeframe:str, df,quiet:bool=True):
+  global df_full_cache
+  key = instrument + "_" + timeframe
+  df_full_cache[key] = df
+
+def _get_full_ph_from_cache_and_add(instrument:str, 
+                          timeframe:str,
+                          quiet:bool=True,
+                          quote_count:int=-1,
+                          dt_crop_last=None ):
+  global df_full_cache
+  key = instrument + "_" + timeframe
+  
+  if key not in df_full_cache:
+    #df = getPH(instrument, timeframe, quiet=quiet, use_full=True)
+    getPH_crop(instrument, timeframe,
+                  dt_crop_last=dt_crop_last,
+                  quote_count=quote_count,
+                  quiet=quiet,
+                  #use_full=True,
+                  use_cache_full=True)
+  return df_full_cache[key]
+
+def getPH_crop_use_cache(instrument:str, 
+                               timeframe:str, 
+                               dt_crop_last, 
+                               quote_count:int=-1, 
+                               quiet:bool=True):
+  
+  df=_get_full_ph_from_cache_and_add(instrument, timeframe, quiet=quiet)
+  selected = _if_crop_ph(dt_crop_last, df)
+  return select_quote_count(quote_count, selected, quiet=quiet)
+
 
 def getPH_crop(instrument:str,
                timeframe:str,
                dt_crop_last,
                quote_count:int=-1,
-               quiet:bool=True               
+               quiet:bool=True,   
+               use_cache_full=False
           ):
+  global df_full_cache
   if not quiet:  
     print("getting cropped data....")
     print(" dt_crop_last: " + str(dt_crop_last))
     print(" quote_count: " + str(quote_count))
   
-  df=getPH(instrument, timeframe, quiet=quiet,dt_crop_last=dt_crop_last,use_full=True)
   
-  ldf = len(df)
-  #@q How can we Get Fresh data if the FULL has not our range ??
+  df=getPH(instrument, timeframe, quiet=quiet,dt_crop_last=dt_crop_last,use_full=True,use_cache_full=use_cache_full)
   
-  if  ldf > quote_count  and quote_count != -1:
-    if not quiet:
-      print("  we selected: " + str(quote_count) + " bars")
-    selected = df.iloc[-quote_count:].copy()
-  else:
-    selected = df.copy()
-  return selected
+  return select_quote_count(quote_count, df, quiet=quiet)
+
+
+def select_quote_count(quote_count, df, quiet=True):
+    ldf = len(df)
+    if  ldf > quote_count  and quote_count != -1:
+      if not quiet:
+        print("  we selected: " + str(quote_count) + " bars")
+      selected = df.iloc[-quote_count:].copy()
+    else:
+      selected = df.copy()
+    return selected
   
 
-def test_if_having_crop_last_dt(df,crop_last_dt, quiet:bool=True):
+
+def getPH(instrument:str, 
+          timeframe:str, 
+          quote_count:int=-1, 
+          start=None, 
+          end=None, 
+          with_index=True, 
+          quiet:bool=True,
+          convert_date_index_to_dt:bool=True,
+          cc: JGTChartConfig=None,
+          get_them_all:bool=False,
+          use_full:bool=False,
+          dt_crop_last=None,
+          tlid_range=None,
+          run_jgtfxcli_on_error=True,
+          use_fresh=False,
+          use_fresh_error_ignore=False,   
+          use_cache_full=False
+          ):
+  global df_full_cache
+  if use_cache_full:
+    use_full=True
+  
+  #@STCissue quote_count is ignored or irrelevant in start/end
+  #@a Adequate start and end from the stored file
+  if cc is None:
+    cc = JGTChartConfig()
+  if quote_count == -1 and use_full == False: #@STCIssue JGTChartConfig being Replaced by JGTPDSPRequest
+    fix_240325 = 50
+    quote_count = cc.nb_bar_to_retrieve + fix_240325
+  
+  # If we dont have enough data in full when using crop_last_dt, we should use fresh
+  df = _get_ph_surely_fresh(instrument, timeframe, quote_count, with_index, quiet, convert_date_index_to_dt, use_full, dt_crop_last, tlid_range, run_jgtfxcli_on_error, use_fresh_error_ignore, use_cache_full)
+  
+  
+  df = if_select_start_end(df, start, end,quiet)
+    
+  
+  df = _if_crop_ph(dt_crop_last, df)
+      
+  ldf = len(df)
+  if ldf > quote_count and not get_them_all and quote_count > 50:
+    if not use_full:
+      df = df.iloc[-quote_count:]
+  
+  return df
+
+def _get_ph_surely_fresh(instrument, timeframe, quote_count, with_index, quiet, convert_date_index_to_dt, use_full, dt_crop_last, tlid_range, run_jgtfxcli_on_error, use_fresh_error_ignore, use_cache_full):
+
+  _dt_requirements = str(datetime.now()) if dt_crop_last is None else dt_crop_last
+
+  # We are not using crop_last_dt neither full, we should use fresh anyways if our short stored data is not enough fresh
+  # we will tel it our date is now
+  
+  use_fresh=False
+  our_data_is_ok=_check_if_dt_range_has_enough_bars(instrument, timeframe, _dt_requirements, quote_count, quiet,use_full=use_full)
+  if not our_data_is_ok:
+    if not quiet:
+      print("Our data is not ok, using fresh")
+    use_fresh=True
+  else:
+    if not quiet:
+      print("Our data is ok, not using fresh")
+  
+
+  
+
+  if use_fresh:
+    try:
+      refreshPH(instrument, timeframe,quote_count=quote_count, tlid_range=tlid_range, use_full=use_full,verbose_level=1)
+    except: #Raise ExceptionUseFreshData
+      print("Error in getPH when using fresh")
+      if use_fresh_error_ignore:
+        pass      
+      raise Exception("Error in getPH, use_fresh failed")
+  
+  df = getPH_from_filestore(instrument, timeframe, quiet, False, with_index,convert_date_index_to_dt,use_full=use_full,tlid_range=tlid_range)
+  if df  is None and run_jgtfxcli_on_error:
+    print_quiet(quiet,"NO DATA IN DF, running jgtfxcli")
+  #df = getPH_from_filestore(instrument, timeframe, quiet, False, with_index,convert_date_index_to_dt,use_full=use_full)
+  #@STCIssue its more PDSP that should run this logics
+    try: 
+      if run_jgtfxcli_on_error:
+        print("Running jgtfxcli")
+        refreshPH(instrument, timeframe,quote_count=quote_count, tlid_range=tlid_range, use_full=use_full,verbose_level=1)
+      # CALL IT BACK AGAIN
+        df = getPH_from_filestore(instrument, timeframe, quiet, False, with_index,convert_date_index_to_dt,use_full=use_full,tlid_range=tlid_range)
+      else:
+          print("run_jgtfxcli_on_error is OFF, not running jgtfxcli")
+    except Exception as e:
+        print("Error when running jgtfxcli")
+        print(e)
+        print("------------------------------------")
+  
+  
+  if not quiet:
+    print(df.columns)
+    print(df.index)
+    print("------------------------------------")
+
+  if use_cache_full:
+    add_df_to_full_cache(instrument, timeframe, df)
+  return df
+
+def _if_crop_ph(dt_crop_last, df):
+  if dt_crop_last is not None:
+    return df[df.index <= dt_crop_last].copy() 
+  return df
+
+
+
+
+
+def _test_if_having_crop_last_dt(df,crop_last_dt, quiet:bool=True):
     tst=df.tail(1).copy()
     if not quiet:
       print(" test_if_having_crop_last_dt")
@@ -71,111 +223,43 @@ def test_if_having_crop_last_dt(df,crop_last_dt, quiet:bool=True):
     return len(tst)>0 # Expecting 1 if we have the date
 
 
-def _check_if_last_row_of_full_match_out_dt_crop_last_with_enough_bars(instrument:str, timeframe:str, dt_crop_last, quote_count:int, quiet:bool=True):
-      if not quiet:
-        print("Checking if last row of full match out dt_crop_last with enough bars")
-        print(" quote_count: " + str(quote_count) + " (REQUIRES enough bars after crops)")
-      df_full = getPH_from_filestore(instrument, timeframe, quiet=quiet, use_full=True)
-      res= test_if_having_crop_last_dt(df_full,dt_crop_last) and len(df_full) >= quote_count
+def _check_if_dt_range_has_enough_bars(instrument:str, timeframe:str, dt_last_we_want, quote_count_we_require:int, quiet:bool=True, use_full:bool=True):
+    if not quiet:
+      print("Checking if last row of full match out dt_crop_last with enough bars")
+      print(" quote_count: " + str(quote_count_we_require) + " (REQUIRES enough bars after crops)")
+    try:
+      df_full = getPH_from_filestore(instrument, timeframe, quiet=quiet, use_full=use_full)
+      res= _test_if_having_crop_last_dt(df_full,dt_last_we_want) and len(df_full) >= quote_count_we_require
       if not quiet:
         if res:
           print("  Last row of full match out dt_crop_last with enough bars")
         else:
           print("  Last row of full does not match out dt_crop_last with enough bars")
       return res
+    except:
+      print("Error in _check_if_dt_range_has_enough_bars")
+      return False
 
 
-def getPH(instrument:str, timeframe:str, quote_count:int=-1, start=None, end=None, with_index=True, quiet:bool=True,convert_date_index_to_dt:bool=True,cc: JGTChartConfig=None,get_them_all:bool=False,use_full:bool=False,
-          dt_crop_last=None,
-          tlid_range=None,
-    run_jgtfxcli_on_error=True,
-    use_fresh=False,
-    use_fresh_error_ignore=False
-          ):
-  #@STCissue quote_count is ignored or irrelevant in start/end
-  #@a Adequate start and end from the stored file
-  if cc is None:
-    cc = JGTChartConfig()
-  if quote_count == -1 and use_full == False: #@STCIssue JGTChartConfig being Replaced by JGTPDSPRequest
-    quote_count = cc.nb_bar_to_retrieve
-  
-  # If we dont have enough data in full when using crop_last_dt, we should use fresh
-  if dt_crop_last is not None and use_full:
-    our_data_is_ok=_check_if_last_row_of_full_match_out_dt_crop_last_with_enough_bars(instrument, timeframe, dt_crop_last, quote_count, quiet)
-    if not our_data_is_ok:
-      if not quiet:
-        print("Our data is not ok, using fresh")
-      use_fresh=True
-    else:
-      if not quiet:
-        print("Our data is ok, not using fresh")
-    
-    
-  
-  if use_fresh:
-    try:
-      refreshPH(instrument, timeframe,quote_count=quote_count, tlid_range=tlid_range, use_full=use_full,verbose_level=1)
-    except: #Raise ExceptionUseFreshData
-      print("Error in getPH when using fresh")
-      if use_fresh_error_ignore:
-        pass      
-      raise Exception("Error in getPH, use_fresh failed")
-    
-  df = getPH_from_filestore(instrument, timeframe, quiet, False, with_index,convert_date_index_to_dt,use_full=use_full,tlid_range=tlid_range)
-  if df  is None and run_jgtfxcli_on_error:
-    print_quiet(quiet,"NO DATA IN DF, running jgtfxcli")
-    #df = getPH_from_filestore(instrument, timeframe, quiet, False, with_index,convert_date_index_to_dt,use_full=use_full)
-    #@STCIssue its more PDSP that should run this logics
-    try: 
-      if run_jgtfxcli_on_error:
-        print("Running jgtfxcli")
-        refreshPH(instrument, timeframe,quote_count=quote_count, tlid_range=tlid_range, use_full=use_full,verbose_level=1)
-        # CALL IT BACK AGAIN
-        df = getPH_from_filestore(instrument, timeframe, quiet, False, with_index,convert_date_index_to_dt,use_full=use_full,tlid_range=tlid_range)
-      else:
-          print("run_jgtfxcli_on_error is OFF, not running jgtfxcli")
-    except Exception as e:
-        print("Error when running jgtfxcli")
-        print(e)
-        print("------------------------------------")
-    
-    
-  if not quiet:
-    print(df.columns)
-    print(df.index)
-    print("------------------------------------")
-  
+def if_select_start_end(df, start=None, end=None,quiet=True):
   if start is not None:
-    #@STCIssue Not supported supplying the 'end' with a count
+        
     if end is None:  # end is not provided
       end = datetime.now()
-    
-    if not quiet:
-      print("start: " + str(start))
-      print("end: " + str(end))
-    df = select_start_end(df, start, end)
-    
-  if dt_crop_last is not None:
-    df = df[df.index <= dt_crop_last]
       
-  ldf = len(df)
-  if ldf > quote_count and not get_them_all and quote_count > 50:
-    if not use_full:
-      df = df.iloc[-quote_count:]
+    if not quiet:
+        print("start: " + str(start))
+        print("end: " + str(end))
+        
+    if 'Date' in df.columns:
+      mask = (df['Date'] >= start) & (df['Date'] <= end)
+    else:
+      mask = (df.index >= start) & (df.index <= end)
+    
+    selected_df = df.loc[mask].copy()
+    return selected_df
   
   return df
-
-def select_start_end(df, start, end=None):
-  if end is None:  # end is not provided
-    end = datetime.now()
-  
-  if 'Date' in df.columns:
-    mask = (df['Date'] >= start) & (df['Date'] <= end)
-  else:
-    mask = (df.index >= start) & (df.index <= end)
-  
-  selected_df = df.loc[mask]
-  return selected_df
 
 
 def str_to_datetime(date_str):

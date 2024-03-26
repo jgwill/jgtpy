@@ -25,6 +25,8 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 
+from jgtutils import jgtlogging as l
+
 
 import warnings
 
@@ -34,10 +36,9 @@ with warnings.catch_warnings():
     )
 
 
-
 from JGTCore import (
     __version__,
-) 
+)
 
 
 from JGTCDS import (
@@ -47,11 +48,19 @@ from JGTCDS import (
 )
 
 import JGTADS as ads
-from JGTADS import plot as plot,plot as ads_create,plot_perspective as plot_perspective
+from JGTADS import (
+    plot as plot,
+    plot as ads_create,
+    plot_perspective as plot_perspective,
+)
 
-#@STCGoal Planning to replace the plot with plot_v2
-from JGTADS import plot_v2,plot_v2 as ads_create_v2
+# @STCGoal Planning to replace the plot with plot_v2
+from JGTADS import plot_v2, plot_v2 as ads_create_v2
 from JGTADSRequest import JGTADSRequest as ads_request
+import adshelper as adh
+from adshelper import prep as prep_ads
+
+import JGTChartConfig as CC
 
 import JGTMKSG as mksg
 from JGTMKSG import (
@@ -72,8 +81,8 @@ def help():
         "It is a Python library that can be used to process data from various sources.\n",
         "It is also a command line tool that can be used to generate charts and reports.\n",
         "> import jgtpy as jgt\n",
-        "> i=\"SPX500\"\n",
-        "> t=\"H4\"\n",
+        '> i="SPX500"\n',
+        '> t="H4"\n',
         "> #CDS \n",
         "> df=jgt.cds_create(i,t)\n",
         "> df_fresh=jgt.cds_create(i,t,use_fresh=True)\n",
@@ -87,7 +96,7 @@ def help():
         "> df=jgt.read(i,t)\n",
         "> \n",
         "> #MKS \n",
-        "> jgt.mksg_by_crop_dates(i,t,\"H4\",\"Fractal\",\"2023-01-01\",scn_root_dir=\"./data\",show_chart=True,show_tabs=True,save_fig_image=True,save_cds_data=True)\n",
+        '> jgt.mksg_by_crop_dates(i,t,"H4","Fractal","2023-01-01",scn_root_dir="./data",show_chart=True,show_tabs=True,save_fig_image=True,save_cds_data=True)\n',
         "> \n",
-        "For more information, please visit: https://jgtpy.jgwill.com\n"        
+        "For more information, please visit: https://jgtpy.jgwill.com\n",
     )

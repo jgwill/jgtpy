@@ -32,6 +32,7 @@ cc.fig_ratio_y = 16
 cc.nb_bar_on_chart = 300
 cc.plot_style = "yahoo"
 cc.title_y_pos = 0.96
+cc.show_ac=True
 # %% M1
 t = "M1"
 M1, M1a, M1df = ads.plot(instrument, t, show=show, cc=cc,plot_ao_peaks=True)
@@ -42,9 +43,21 @@ w1, w1a, w1df = ads.plot(instrument, t, show=show, cc=cc)
 print(instrument, t)
 
 # %%
+cc.reset()
 t = "D1"
 d1, d1a, d1df = ads.plot(instrument, t, show=show, cc=cc)
 print(instrument, t)
+
+
+
+#%% 
+rq=ads.RQ.JGTADSRequest(instrument=instrument, timeframe=t, nb_bar_on_chart=300, cc=cc)
+
+rq.cc.show_ac=False
+rq.reset()
+d1plot2,d1aplot2,d1dfplot2 = ads.plot_v2(rq)
+
+#%%
 t = "H4"
 h4, h4a, h4df = ads.plot(instrument, t, show=show, cc=cc)
 print(instrument, t)

@@ -1,6 +1,4 @@
-
-
-#@STCGoal Aim to become the container for lighting JGTADS
+# @STCGoal Aim to become the container for lighting JGTADS
 
 import sys
 import os
@@ -16,41 +14,57 @@ import pandas as pd
 
 from JGTChartConfig import JGTChartConfig
 
-import logging
-_loglevel= logging.WARNING
-
-# Create a logger object
-l = logging.getLogger()
-l.setLevel(_loglevel)
-
-# Create a console handler and set its level
-console_handler = logging.StreamHandler()
-console_handler.setLevel(_loglevel)
-
-# Create a formatter and add it to the console handler
-formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-console_handler.setFormatter(formatter)
-
-# Add the console handler to the logger
-l.addHandler(console_handler)
 
 
 
 def read_csv(csv_fn):
-    df=pd.read_csv(csv_fn)
+    df = pd.read_csv(csv_fn)
     # try:
     #     df.set_index('Date', inplace=True)
     # except:
     #     pass
     try:
-        df.drop(columns=['Unnamed: 0'],inplace=True)
+        df.drop(columns=["Unnamed: 0"], inplace=True)
     except:
         pass
     return df
 
-#IN_CHART_BARS=300
 
-def prepare_cds_for_ads_data(instrument:str, timeframe:str,tlid_range:str=None,cc:JGTChartConfig=None,crop_last_dt:str=None,use_fresh=False,use_cache_if_available=False,rq:JGTADSRequest=None):
+# IN_CHART_BARS=300
+
+
+def prep(
+    instrument: str,
+    timeframe: str,
+    tlid_range: str = None,
+    cc: JGTChartConfig = None,
+    crop_last_dt: str = None,
+    use_fresh=False,
+    use_cache_if_available=False,
+    rq: JGTADSRequest = None,
+):
+    return prepare_cds_for_ads_data(
+        instrument=instrument,
+        timeframe=timeframe,
+        tlid_range=tlid_range,
+        cc=cc,
+        crop_last_dt=crop_last_dt,
+        use_fresh=use_fresh,
+        use_cache_if_available=use_cache_if_available,
+        rq=rq,
+    )
+
+
+def prepare_cds_for_ads_data(
+    instrument: str,
+    timeframe: str,
+    tlid_range: str = None,
+    cc: JGTChartConfig = None,
+    crop_last_dt: str = None,
+    use_fresh=False,
+    use_cache_if_available=False,
+    rq: JGTADSRequest = None,
+):
     """
     Prepare CDS data for ADS (Analysis Data Service).
 
@@ -71,27 +85,29 @@ def prepare_cds_for_ads_data(instrument:str, timeframe:str,tlid_range:str=None,c
         cc = JGTChartConfig()
     if rq is None:
         rq = JGTADSRequest()
-    #@STCIssue Deprecating this value for later 
-    
-    #print("AH:DEBUG::Tlid_range:",tlid_range)
+    # @STCIssue Deprecating this value for later
+
+    # print("AH:DEBUG::Tlid_range:",tlid_range)
     if tlid_range is not None:
-        raise NotImplementedError("tlid_range is not implemented yet. We will use crop_last_dt instead.")
-    #@STCGoal local retrieve data from cache if available or from WSL if not  (jgtfxcli)
-        
-    cache_data:bool=use_cache_if_available
+        msg_prep_cds_for_ads_data_error = "tlid_range is not implemented yet. We will use crop_last_dt instead."
+        print(msg_prep_cds_for_ads_data_error)
+        raise NotImplementedError(
+            msg_prep_cds_for_ads_data_error
+        )
+    # @STCGoal local retrieve data from cache if available or from WSL if not  (jgtfxcli)
+
+    cache_data: bool = use_cache_if_available
     cache_dir = "cache"
-    
+
     if cache_data:
         os.makedirs(cache_dir, exist_ok=True)
 
-    fn =  instrument.replace("/", "-") + "_" + timeframe + ".csv"
-    fnpath_cache = os.path.join(cache_dir,fn)
-    #l.info("fnpath:"+ fnpath)
-    
-    
-    
+    fn = instrument.replace("/", "-") + "_" + timeframe + ".csv"
+    fnpath_cache = os.path.join(cache_dir, fn)
+
+
     # @STCIssue Even the Cache above could be moved to JGTCDS or Business Layer
-    # @STCIssue: LOGICS Bellow should be moved to JGTCDS  cds.create_crop_dt(...) cds.create_crop_dt_selection(...) 
+    # @STCIssue: LOGICS Bellow should be moved to JGTCDS  cds.create_crop_dt(...) cds.create_crop_dt_selection(...)
 
     # if rq.balligator_flag:
     #     nb_to_select = cc.nb_bar_to_retrieve
@@ -100,42 +116,57 @@ def prepare_cds_for_ads_data(instrument:str, timeframe:str,tlid_range:str=None,c
 
     if crop_last_dt is None:
         # Get Lastest DF
-        selected = pds.getPH(instrument,timeframe,cc=rq.cc,get_them_all=True,use_fresh=use_fresh,quote_count=rq.nb_bar_to_retrieve,quiet=rq.quiet)
+        selected = pds.getPH(
+            instrument,
+            timeframe,
+            cc=rq.cc,
+            get_them_all=True,
+            use_fresh=use_fresh,
+            quote_count=rq.nb_bar_to_retrieve,
+            quiet=rq.quiet,
+        )
     else:
         # Get Crop DF, assuming we require using FULL data
         # df = pds.getPH(instrument,timeframe,cc=cc,use_full=True,use_fresh=use_fresh)
-        selected = pds.getPH_crop(instrument,timeframe,quote_count=rq.nb_bar_to_retrieve,dt_crop_last=crop_last_dt,quiet=rq.quiet)
-        #df = df[df.index <= crop_last_dt]
+        selected = pds.getPH_crop(
+            instrument,
+            timeframe,
+            quote_count=rq.nb_bar_to_retrieve,
+            dt_crop_last=crop_last_dt,
+            quiet=rq.quiet,
+            use_cache_full=use_cache_if_available,
+        )
+        # df = df[df.index <= crop_last_dt]
 
     if not rq.quiet:
-        print("DEBUG:: nb_to_select (rq.nb_bar_to_retrieve):",rq.nb_bar_to_retrieve)
+        print("DEBUG:: nb_to_select (rq.nb_bar_to_retrieve):", rq.nb_bar_to_retrieve)
         print("DEBUG:: len selected:", len(selected))
 
-    
     # #Make sure we have enough bars to select
     # if nb_to_select < cc.min_bar_on_chart:
     #     # Some instrument/tf dont have enough bars to select
     #     nb_to_select = cc.min_bar_on_chart
     #     selected = df.copy()
-    # else: 
+    # else:
     #     selected = df.iloc[-nb_to_select:].copy()
-        
-    data = cds.createFromDF(selected)
+
+    data = cds.createFromDF(selected, cc=cc, quiet=rq.quiet, rq=rq)
     if cache_data:
         data.to_csv(fnpath_cache)
-    
+
     return prepare_cds_for_ads_data_from_cdsdf(
-        data,
-        instrument,
-        timeframe,
-        tlid_range,
-        cc,
-        crop_last_dt
-    
+        data, instrument, timeframe, tlid_range, cc, crop_last_dt
     )
 
 
-def prepare_cds_for_ads_data_from_cdsdf(data, instrument: str, timeframe: str, tlid_range: str = None, cc: JGTChartConfig = None, crop_last_dt: str = None):
+def prepare_cds_for_ads_data_from_cdsdf(
+    data,
+    instrument: str,
+    timeframe: str,
+    tlid_range: str = None,
+    cc: JGTChartConfig = None,
+    crop_last_dt: str = None,
+):
     """
     Prepare CDS data for ADS data from CDS DataFrame.
 
@@ -152,27 +183,24 @@ def prepare_cds_for_ads_data_from_cdsdf(data, instrument: str, timeframe: str, t
     """
     nb_bars = len(data)
     if nb_bars > cc.nb_bar_on_chart:
-        r = data.iloc[-cc.nb_bar_on_chart:].copy()
+        r = data.iloc[-cc.nb_bar_on_chart :].copy()
     else:
         r = data.copy()
     return r
 
 
-# def prepare_cds_for_ads_data_from_cdsdf(data,instrument:str, timeframe:str,tlid_range:str=None,cc:JGTChartConfig=None,crop_last_dt:str=None):   
-#     nb_bars = len(data)
-#     #print("AH:Debug: nb_bar_on_chart:",nb_bar_on_chart)
-#     #print("AH:Debug:nb_bars b4 prep ends well:",nb_bars)
-#     if nb_bars> cc.nb_bar_on_chart:
-#         r = data.iloc[-cc.nb_bar_on_chart:].copy()
-#     else:
-#         r= data.copy()
-#     #len_r = len(r)
-#     #print("AH:Debug:nb_bars after prep ends well:",len_r)
-#     return r
 
 
-def get(instrument:str, timeframe:str,tlid_range:str=None,cc:JGTChartConfig=None,crop_last_dt:str=None):
-#(instrument,timeframe,nb_bar_on_chart=500,crop_last_dt:str=None):
-  data = prepare_cds_for_ads_data(instrument, timeframe,tlid_range,cc,crop_last_dt)
-  return data
-#p=pds.getPH(instrument,timeframe)
+def get(
+    instrument: str,
+    timeframe: str,
+    tlid_range: str = None,
+    cc: JGTChartConfig = None,
+    crop_last_dt: str = None,
+):
+    # (instrument,timeframe,nb_bar_on_chart=500,crop_last_dt:str=None):
+    data = prepare_cds_for_ads_data(instrument, timeframe, tlid_range, cc, crop_last_dt)
+    return data
+
+
+# p=pds.getPH(instrument,timeframe)

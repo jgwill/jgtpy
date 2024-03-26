@@ -114,7 +114,7 @@ def createFromPDSFile(
     timeframe,
     quiet=True,
     cc: JGTChartConfig = None,
-    use_full=False, #@STCIssue USELESS Somehow here
+    use_full=False, #@STCIssue USELESS Somehow here :NOPE it reads a different file
     rq:JGTCDSRequest=None,
     run_jgtfxcli_on_error=True,
     columns_to_remove=None,
@@ -140,6 +140,7 @@ def createFromPDSFile(
         df = _getPH_to_DF_wrapper_240304(instrument, timeframe, quiet, cc, use_full, rq=rq, run_jgtfxcli_on_error=run_jgtfxcli_on_error,
         columns_to_remove=columns_to_remove,
         use_fresh=use_fresh)
+        print("DEBUG H8 240325:: len getPH DF:",len(df))
         
         return df
     except Exception as e:

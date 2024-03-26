@@ -16,18 +16,19 @@ m1p=pds.getPH(instrument, "M1")
 output_dir = './output'
 os.makedirs(output_dir, exist_ok=True)
 
+main_plot_type= "candlestick"
 # Plot and save the chart
-M1c, M1a = ads.plot(instrument, "M1", show=show)
+M1c, M1a,_ = ads.plot(instrument, "M1", show=show, main_plot_type=main_plot_type)
 #plt.savefig(f'{output_dir}/{instrument}_M1.png')
 
 #%% Other plots
-w1, w1a = ads.plot(instrument, "W1", show=show)
-d1, d1a = ads.plot(instrument, "D1", show=show)
+w1, w1a,_ = ads.plot(instrument, "W1", show=show)
+d1, d1a,_ = ads.plot(instrument, "D1", show=show)
 
-h4, h4a = ads.plot(instrument, "H4", show=show)
-h1, h1a = ads.plot(instrument, "H1", show=show)
-m15, m15a = ads.plot(instrument, "m15", show=show)
-m5, m15a = ads.plot(instrument, "m5", show=show)
+h4, h4a,_ = ads.plot(instrument, "H4", show=show)
+h1, h1a,_ = ads.plot(instrument, "H1", show=show)
+m15, m15a,_ = ads.plot(instrument, "m15", show=show)
+m5, m15a,_ = ads.plot(instrument, "m5", show=show)
 #mi1,mi1a = ads.plot(instrument, "m1", show=show)
 
 # # %% Plot w1, d1,h4, h1 in four subplots

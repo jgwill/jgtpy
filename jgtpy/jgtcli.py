@@ -18,6 +18,7 @@ import JGTCDS as cds
 import JGTADS as ads
 from JGTChartConfig import JGTChartConfig
 
+import  JGTADSRequest as RQ
 
 import pandas as pd
 
@@ -183,18 +184,25 @@ def createCDS_for_main(
         print_quiet(quiet, cdf)
     except Exception as e:
         print("Failed to create CDS for : " + instrument + "_" + timeframe)
-        print("jgtcli::Exception: " + str(e))
+        print("jgtcli::Exception in cds.createFromPDSFileToCDSFile(: " + str(e))
         
     try:
         if (
             show_ads
         ):  # (data,instrument,timeframe,nb_bar_on_chart = 375,show=True,plot_ao_peaks=False)
-            ads.plot_from_cds_df(
-                cdf, instrument, timeframe, show=True, plot_ao_peaks=True, cc=cc
-            )
+            
+            rq=RQ.JGTADSRequest()
+            rq.instrument=instrument
+            rq.timeframe=timeframe
+            rq.show=True
+            rq.cc=cc
+            _chart,_arr,_data = ads.plot_v2(rq)
+            #ads.plot_from_cds_df(
+            #    cdf, instrument, timeframe, show=True, plot_ao_peaks=True, cc=cc
+            #)
     except Exception as e:
         print("ADS Failed to plot CDS for : " + instrument + "_" + timeframe)
-        print("jgtcli::ADS::Exception: " + str(e))
+        print("jgtcli::ADS::Exception in  _chart,_arr,_data = ads.plot_v2(rq): " + str(e))
 
 def print_quiet(quiet, content):
     if not quiet:
