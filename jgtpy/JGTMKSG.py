@@ -92,6 +92,8 @@ def generate_market_snapshots(instruments:str, timeframes:str, html_outdir_root:
   timeframes = timeframes.split(",")
   perspectives = {}
   ptabs = pn.Tabs(width=width, height=height)
+  
+  os.makedirs(html_outdir_root, exist_ok=True)
 
   for i in instruments.split(","):
     ifn=i.replace("/", "-")
