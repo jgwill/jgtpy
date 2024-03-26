@@ -1,4 +1,6 @@
-# @title ADS
+#!/usr/bin/env python
+# 
+# # @title ADS
 
 # Imports
 import numpy as np
@@ -854,28 +856,39 @@ def ao_max_min(data):
 
 def save_add_figure(instrument, timeframe, rq, fig):
     print("Saving figure to: " + rq.save_additional_figures_path)
-    last_char_is_slash = rq.save_additional_figures_path[-1] == "/"
-
-    is_an_image_path = rq.save_additional_figures_path[-4] == "."
+    try:
+            
+        last_char_is_slash = rq.save_additional_figures_path[-1] == "/"
+        is_an_image_path =False
+        if len(rq.save_additional_figures_path) > 4:
+            is_an_image_path = rq.save_additional_figures_path[-4] == "."
 
         # if rq.save_additional_figures_path is a filepath ,Save the figure
-    if (
-            os.path.isdir(rq.save_additional_figures_path) and not is_an_image_path
-        ) or last_char_is_slash:
-        os.path.mkdir(rq.save_additional_figures_path, exist_ok=True)
-        exn = ".png"
-        fig.savefig(
-                rq.save_additional_figures_path
-                + instrument.replace("/", "-")
-                + "_"
-                + timeframe
-                + exn,
+        if (
+                os.path.isdir(rq.save_additional_figures_path) and not is_an_image_path
+            ) or last_char_is_slash or rq.save_additional_figures_path == "pov":
+            try:
+                os.path.mkdir(rq.save_additional_figures_path, exist_ok=True)
+            except:
+                pass
+            exn = ".png"
+            path_part1 = rq.save_additional_figures_path
+            if path_part1 == "pov":
+                path_part1 = os.getcwd() #saving in current directory
+            fn=instrument.replace("/", "-") + "_"  + timeframe  + exn
+            fig.savefig(
+                os.path.join(path_part1, fn),
                 dpi=rq.save_additional_figures_dpi,
-            )
-    else:
-        fig.savefig(
-                rq.save_additional_figures_path, dpi=rq.save_additional_figures_dpi
-            )
+                )
+        else:
+            fig.savefig(
+                    rq.save_additional_figures_path, dpi=rq.save_additional_figures_dpi
+                )
+    except Exception as e:
+        print("Error saving figure to: " + rq.save_additional_figures_path)
+        print(e)
+        #traceback.print_exc()
+        
 
 def _get_dt_fmt_for_timeframe(timeframe):
     if timeframe == "H1" or timeframe == "H4" or timeframe == "H8" or timeframe == "H6" or timeframe == "H3" or timeframe == "H2" :
@@ -1437,3 +1450,70 @@ def plot(
     )
 
     return fig, axes, cdfdata
+
+
+
+import argparse
+
+
+def main():
+    print("JGTADS v0.1")
+    # Parse arguments
+    parser = argparse.ArgumentParser(description="Plot the chart for a given instrument and timeframe.")
+    parser.add_argument("-i","--instrument", type=str, help="The name of the instrument.",required=True,metavar="instrument")
+    parser.add_argument("-t","--timeframe", type=str, help="The timeframe for the chart.",required=True,metavar="timeframe")
+    #use fresh
+    parser.add_argument("-uf","--fresh", action="store_true", help="Whether to use fresh data.",default=False)
+    #crop dt
+    parser.add_argument("-dt","--crop_last_dt", type=str, help="The last date-time to crop the data.")
+    parser.add_argument("-s","--show", action="store_true", help="Whether to display the plot.",default=False)
+    #save figure 
+    parser.add_argument("-sf", "--save_figure", type=str, help="Save the figure to the given path.",default=None)
+    #save_figure_as_pov_name flag
+    parser.add_argument("-pov", "--save_figure_as_pov_name", action="store_true", help="Save the figure as pov file.",default=False)
+    #save dpi
+    parser.add_argument("-dpi", "--save_additional_figures_dpi", type=int, help="The DPI of the saved figures.",default=300)
+    #verbose level
+    parser.add_argument("-v","--verbose_level", type=int, help="The verbose level.",default=0)
+    
+    args = parser.parse_args()
+    if not args.show and args.save_figure is None and args.save_figure_as_pov_name is False:
+        print("No output will be generated. Use -s or -sf to display or save the figure.")
+        return
+
+    # Create a JGTADSRequest object
+    rq = JGTADSRequest()
+    rq.verbose_level = args.verbose_level
+
+    # Set the instrument and timeframe
+    rq.instrument = args.instrument
+    rq.timeframe = args.timeframe
+    
+    #crop dt
+    rq.crop_last_dt = args.crop_last_dt
+    
+    rq.use_fresh = args.fresh
+    
+    rq.show = args.show
+        
+    rq.save_additional_figures_dpi = args.save_additional_figures_dpi
+    
+    if  args.save_figure_as_pov_name and args.save_figure is None:#if save_figure_as_pov_name is set and save_figure is not set
+        rq.save_additional_figures_path = os.getcwd() #saving in current directory
+    if args.save_figure is not None:
+        rq.save_additional_figures_path = args.save_figure
+    
+    #many timeframs if , in the string timeframe
+    if "," in rq.timeframe:
+        timeframes = rq.timeframe.split(",")
+    else:
+        timeframes = [rq.timeframe]
+    
+    #foreach timeframes
+    for tf in timeframes:
+        rq.timeframe = tf
+        # Plot the chart
+        plot_v2(rq, BETA_TRY=True)
+
+if __name__ == "__main__":
+    main()

@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 # %% Imports
 import sys
@@ -426,27 +427,43 @@ def _mk_html_outdir_root_default(html_outdir_root, default_char_dir_name, defaul
 import argparse
 
 def main():
-    parser = argparse.ArgumentParser(description='CLI for pto_generate_snapshot_240302_v2_by_crop_dates function')
+  
+    parser = argparse.ArgumentParser(description='CLI for mksg functions')
     
     parser.add_argument('-i','--instrument', type=str, required=True)
     parser.add_argument('-t','--timeframes', type=str, required=True)
-    parser.add_argument('-tos','--tf_of_signal', type=str, required=True)
-    parser.add_argument('-st','--sig_type_name', type=str, required=True)
-    parser.add_argument('-cl','--crop_last_dt_arr', type=str, required=True)
-    parser.add_argument('--scn_root_dir', type=str, default=None)
-    parser.add_argument('-o','--default_char_dir_name', type=str, default="charts")
+    parser.add_argument('-tos','--tf_of_signal', type=str, required=False)
+    parser.add_argument('-st','--sig_type_name', type=str, required=False, default="")
+    parser.add_argument('-cl','--crop_last_dt', type=str, required=False, default=None,description="crop date(s) in the format '2022-10-13 13:45:00' or '2022-10-13 13:45:00,2022-10-13 13:45:00' ")
+    parser.add_argument('-o','--scn_root_dir', type=str, default=None)
+    parser.add_argument('-d','--default_char_dir_name', type=str, default="charts")
     parser.add_argument('--show_chart', type=bool, default=False)
     parser.add_argument('--show_tabs', type=bool, default=False)
     parser.add_argument('--save_fig_image', type=bool, default=True)
     parser.add_argument('--save_cds_data', type=bool, default=True)
     parser.add_argument('--out_htm_viewer_full_fn', type=str, default="index.html")
     parser.add_argument('--out_htm_viewer_prefix', type=str, default="_index-")
-    parser.add_argument('--width', type=int, default=2550)
-    parser.add_argument('--height', type=int, default=1150)
+    parser.add_argument('-w','--width', type=int, default=2550)
+    parser.add_argument('-h','--height', type=int, default=1150)
+    #add seerve it
+    parser.add_argument('-svr','--serve_it', type=bool, default=False)
 
     args = parser.parse_args()
+  
 
-    pto_generate_snapshot_240302_v2_by_crop_dates(
+    if args.tf_of_signal is None or args.sig_type_name is None:
+      print("Generating market snapshots for the given instruments and timeframes")
+      generate_market_snapshots(
+        instruments=args.instrument,
+        timeframes=args.timeframes,
+        html_outdir_root=args.scn_root_dir,
+        cc=None,
+        crop_last_dt=args.crop_last_dt_arr
+        
+      )
+    else:
+      print("Generating market snapshots for multiple crop dates / signal dates")
+      pto_generate_snapshot_240302_v2_by_crop_dates(
         i=args.instrument,
         timeframes=args.timeframes,
         tf_of_signal=args.tf_of_signal,
@@ -461,8 +478,10 @@ def main():
         out_htm_viewer_full_fn=args.out_htm_viewer_full_fn,
         out_htm_viewer_prefix=args.out_htm_viewer_prefix,
         w=args.width,
-        h=args.height
-    )
+        h=args.height,
+        serve_it=args.serve_it
+      )
+
 
 if __name__ == "__main__":
     main()

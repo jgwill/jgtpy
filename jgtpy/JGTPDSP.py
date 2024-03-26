@@ -243,8 +243,10 @@ def _check_if_dt_range_has_enough_bars(instrument:str, timeframe:str, dt_last_we
         else:
           print("  Last row of full does not match out dt_crop_last with enough bars")
       return res
-    except:
-      print("Error in _check_if_dt_range_has_enough_bars")
+    except Exception as e:
+      #print(str(e))
+      #print("Error in _check_if_dt_range_has_enough_bars")
+      print("  Fixing issue with data....")
       return False
 
 
@@ -339,9 +341,9 @@ def read_ohlc_df_from_file(srcpath, quiet=True, compressed=False,with_index=True
       print_quiet(quiet, "Reading uncompressed csv file: " + srcpath)
       df = pd.read_csv(srcpath)
   except Exception as e:
-    print(f"An error occurred while reading the file: {e}")
+    print_quiet(quiet,f"An error occurred while reading the file: {e}")
     df = None
-  if with_index:
+  if with_index and df is not None:
     if 'Date' in df.columns:
       df.set_index('Date', inplace=True)
       
