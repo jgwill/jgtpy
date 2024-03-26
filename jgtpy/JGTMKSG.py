@@ -443,8 +443,8 @@ def main():
     parser.add_argument('--save_cds_data', type=bool, default=True)
     parser.add_argument('--out_htm_viewer_full_fn', type=str, default="index.html")
     parser.add_argument('--out_htm_viewer_prefix', type=str, default="_index-")
-    parser.add_argument('-w','--width', type=int, default=2550)
-    parser.add_argument('-h','--height', type=int, default=1150)
+    parser.add_argument('--width', type=int, default=2550)
+    parser.add_argument('--height', type=int, default=1150)
     #add seerve it
     parser.add_argument('-svr','--serve_it', type=bool, default=False)
 
