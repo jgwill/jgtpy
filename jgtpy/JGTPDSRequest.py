@@ -20,16 +20,17 @@ class JGTPDSRequest(JGTBaseRequest):
         crop_last_dt: str = None,
         use_fresh: bool = False,
         use_full=False,
+        quotescount=300, #@a Migrate to Use TODO
         *args,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
         self.instrument = instrument
         self.timeframe = timeframe
-
         self.crop_last_dt = crop_last_dt
         self.use_full = use_full
         self.use_fresh = use_fresh
+        self.quotescount = quotescount
         if self.crop_last_dt is not None:
             print("-self.crop_last_dt is not None-")
             self.use_full = True

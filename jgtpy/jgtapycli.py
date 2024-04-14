@@ -452,7 +452,8 @@ def _getPH_to_DF_wrapper_240304_then_createIDS_df(rq ,run_jgtfxcli_on_error=True
                  timeframe=rq.timeframe, 
                  use_full=rq.use_full, 
                  use_fresh=rq.use_fresh, run_jgtfxcli_on_error=run_jgtfxcli_on_error,
-                 quiet=quiet)
+                 quiet=quiet,
+                 quote_count=rq.quotescount)
 
     if not quiet:
         print(df)
@@ -637,42 +638,26 @@ def parse_args():
 
 
 def main():
-    cc = JGTChartConfig()
+    
     rq = JGTIDSRequest()
     
     args = parse_args()
     
-    #gator_oscillator_flag, mfi_flag, balligator_flag, balligator_period_jaws, largest_fractal_period
-    #@STCIssue Bellow Validation required.
-    rq.gator_oscillator_flag=args.gator_oscillator_flag
-    rq.mfi_flag=args.mfi_flag
-    rq.balligator_flag=args.balligator_flag
-    rq.balligator_period_jaws=args.balligator_period_jaws
-    rq.largest_fractal_period=args.largest_fractal_period
     
+    #There might be multiple for now
     instrument = args.instrument
     timeframe = args.timeframe
-    rq.instrument=instrument
-    rq.timeframe=timeframe
-    quotes_count = args.quotescount
-    cc.nb_bar_on_chart = quotes_count
+    
     
     verbose_level = args.verbose
     quiet = False
     if verbose_level == 0:
         quiet = True
     
-    full = False
-    fresh = False
-    if args.fresh:
-        fresh=True
-    rq.use_fresh=fresh
     
-    if args.full:
-        full = True
-    rq.use_full=full
-    date_from = None
-    date_to = None
+    
+    # date_from = None
+    # date_to = None
     
     # tlid_range = None
     # if args.tlidrange:
@@ -695,11 +680,11 @@ def main():
         output = True
 
 
-    if verbose_level > 1:
-        if date_from:
-            print("Date from : " + str(date_from))
-        if date_to:
-            print("Date to : " + str(date_to))
+    # if verbose_level > 1:
+    #     if date_from:
+    #         print("Date from : " + str(date_from))
+    #     if date_to:
+    #         print("Date to : " + str(date_to))
 
     try:
 
@@ -724,13 +709,15 @@ def createIDSRequestFromArgs(args,instrument,timeframe):
     rq = JGTIDSRequest()
     rq.instrument=instrument
     rq.timeframe=timeframe
+    rq.quotescount=args.quotescount
     rq.use_fresh=args.fresh if args.fresh else False
     rq.use_full=args.full if args.full else False
-    rq.gator_oscillator_flag=args.gator_oscillator_flag
-    rq.mfi_flag=args.mfi_flag
-    rq.balligator_flag=args.balligator_flag
+    rq.gator_oscillator_flag=args.gator_oscillator_flag if args.gator_oscillator_flag else False
+    rq.mfi_flag=args.mfi_flag if args.mfi_flag else False
+    rq.balligator_flag=args.balligator_flag if args.balligator_flag else False
     rq.balligator_period_jaws=args.balligator_period_jaws
     rq.largest_fractal_period=args.largest_fractal_period
+    rq.verbose_level=args.verbose
     return rq
 
 
@@ -763,7 +750,7 @@ def createIDS_for_main(
         print_quiet(quiet, cdspath)
         print_quiet(quiet, cdf)
     except Exception as e:
-        print("Failed to create IDS for : " + instrument + "_" + timeframe)
+        print("Failed to create IDS for : " + rq.instrument + "_" + rq.timeframe)
         print("jgtapycli::Exception in ...(: " + str(e))
         
 
