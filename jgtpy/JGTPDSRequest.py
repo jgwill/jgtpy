@@ -9,8 +9,6 @@ from JGTBaseRequest import JGTBaseRequest
 from jgtutils import jgtconstants as c
 
 
-
-
 class JGTPDSRequest(JGTBaseRequest):
     def __init__(
         self,
@@ -20,7 +18,8 @@ class JGTPDSRequest(JGTBaseRequest):
         crop_last_dt: str = None,
         use_fresh: bool = False,
         use_full=False,
-        quotescount=300, #@a Migrate to Use TODO
+        keep_bid_ask=False,
+        quotescount=300,  # @a Migrate to Use TODO
         *args,
         **kwargs,
     ):
@@ -31,13 +30,13 @@ class JGTPDSRequest(JGTBaseRequest):
         self.use_full = use_full
         self.use_fresh = use_fresh
         self.quotescount = quotescount
+        self.keep_bid_ask = keep_bid_ask
         if self.crop_last_dt is not None:
             print("-self.crop_last_dt is not None-")
             self.use_full = True
             self.use_fresh = False
 
         self.__timeframes__(timeframes)
-            
 
     def __timeframes__(self, timeframes=None):
         if isinstance(timeframes, list):
@@ -50,6 +49,6 @@ class JGTPDSRequest(JGTBaseRequest):
 
     def to_json(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=2)
-    
+
     # def __str__(self) -> str:
     #     return super().__str__() + f"instrument: {self.instrument}\n" + f"timeframe: {self.timeframe}\n" + f"timeframes: {self.timeframes if self.timeframes is not None else 'None'}\n" + f"crop_last_dt: {self.crop_last_dt if self.crop_last_dt is not None else 'None'}\n" + f"use_fresh: {self.use_fresh}\n" + f"use_full: {self.use_full}\n"

@@ -119,7 +119,8 @@ def getPH(instrument:str,
           run_jgtfxcli_on_error=True,
           use_fresh=False,
           use_fresh_error_ignore=False,   
-          use_cache_full=False
+          use_cache_full=False,
+          keep_bid_ast=False
           ):
   global df_full_cache
   if use_cache_full:
@@ -134,7 +135,7 @@ def getPH(instrument:str,
     quote_count = cc.nb_bar_to_retrieve + fix_240325
   
   # If we dont have enough data in full when using crop_last_dt, we should use fresh
-  df = _get_ph_surely_fresh(instrument, timeframe, quote_count, with_index, quiet, convert_date_index_to_dt, use_full, dt_crop_last, tlid_range, run_jgtfxcli_on_error, use_fresh_error_ignore, use_cache_full,use_fresh=use_fresh)
+  df = _get_ph_surely_fresh(instrument, timeframe, quote_count, with_index, quiet, convert_date_index_to_dt, use_full, dt_crop_last, tlid_range, run_jgtfxcli_on_error, use_fresh_error_ignore, use_cache_full,use_fresh=use_fresh,keep_bid_ast=keep_bid_ast)
   
   
   df = if_select_start_end(df, start, end,quiet)
@@ -149,7 +150,7 @@ def getPH(instrument:str,
   
   return df
 
-def _get_ph_surely_fresh(instrument, timeframe, quote_count, with_index, quiet, convert_date_index_to_dt, use_full, dt_crop_last, tlid_range, run_jgtfxcli_on_error, use_fresh_error_ignore, use_cache_full,use_fresh=False):
+def _get_ph_surely_fresh(instrument, timeframe, quote_count, with_index, quiet, convert_date_index_to_dt, use_full, dt_crop_last, tlid_range, run_jgtfxcli_on_error, use_fresh_error_ignore, use_cache_full,use_fresh=False,keep_bid_ast=False):
 
   _dt_requirements = str(datetime.now()) if dt_crop_last is None else dt_crop_last
 

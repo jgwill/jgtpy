@@ -1,4 +1,3 @@
-
 import warnings
 
 # Ignore FutureWarning
@@ -8,7 +7,6 @@ import sys
 import os
 
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
-
 
 
 from jgtapy import Indicators
@@ -44,17 +42,28 @@ from jgtutils.jgtconstants import (
     FL8,
     AO,
     AC,
-    FH13,    FH21,    FH34,    FH55,    FH89,    FL13,    FL21,    FL34,    FL55,    FL89,
-    GL,GH,
+    FH13,
+    FH21,
+    FH34,
+    FH55,
+    FH89,
+    FL13,
+    FL21,
+    FL34,
+    FL55,
+    FL89,
+    GL,
+    GH,
 )
 
-columns_to_normalize = IDS_COLUMNS_TO_NORMALIZE #@a Migrate to jgtutils.jgtconstants
+columns_to_normalize = IDS_COLUMNS_TO_NORMALIZE  # @a Migrate to jgtutils.jgtconstants
 
 from jgtutils import (
     jgtconstants as constants,
     jgtcommon as jgtcommon,
     jgtwslhelper as wsl,
 )
+
 
 def ids_add_indicators(
     dfsrc,
@@ -121,8 +130,6 @@ def round_columns(df, rounding_decimal_min=10):
     return df
 
 
-
-
 def ids_add_indicators_LEGACY(
     dfsrc,
     dropnavalue=True,
@@ -149,16 +156,14 @@ def ids_add_indicators_LEGACY(
     if ids_request is None:
         ids_request = JGTIDSRequest()
 
-    #@a Migrating to the new JGTIDSRequest
-    gator_oscillator_flag=ids_request.gator_oscillator_flag
-    mfi_flag=ids_request.mfi_flag
-    addAlligatorOffsetInFutur=ids_request.addAlligatorOffsetInFutur
-    balligator_flag=ids_request.balligator_flag
-    balligator_period_jaws=ids_request.balligator_period_jaws
-    largest_fractal_period=ids_request.largest_fractal_period
-    
-    
-    
+    # @a Migrating to the new JGTIDSRequest
+    gator_oscillator_flag = ids_request.gator_oscillator_flag
+    mfi_flag = ids_request.mfi_flag
+    addAlligatorOffsetInFutur = ids_request.addAlligatorOffsetInFutur
+    balligator_flag = ids_request.balligator_flag
+    balligator_period_jaws = ids_request.balligator_period_jaws
+    largest_fractal_period = ids_request.largest_fractal_period
+
     ldfsrc = len(dfsrc)
     # TODO
     df_nb_bars = min_nb_bar_on_chart  # @STCIssue: We have charts with as few as 80 bars and some indicators wont work. We need to find a way to make it work with less bars.
@@ -396,8 +401,6 @@ def fix_too_short_df(dfsrc):
     return dfsrc
 
 
-
-
 def normalize_columns(df: pd.DataFrame, columns: list, in_place=True) -> pd.DataFrame:
     if in_place:
         df_normalized = df
@@ -409,10 +412,6 @@ def normalize_columns(df: pd.DataFrame, columns: list, in_place=True) -> pd.Data
         for column in columns:
             df_normalized.loc[:, column] = df[column] / df[column].abs().max()
     return df_normalized
-
-
-
-
 
 
 def _add_alligator_tmpcol_offset_in_futur(i):
@@ -437,44 +436,47 @@ def _add_alligator_tmpcol_offset_in_futur(i):
     return i
 
 
-
-
-#@STCGoal Support for the CLI making IDS
+# @STCGoal Support for the CLI making IDS
 
 import JGTIDS as ids
 import JGTPDSP as pds
 from jgtutils.jgtos import get_data_path
 
-def _getPH_to_DF_wrapper_240304_then_createIDS_df(rq ,run_jgtfxcli_on_error=True,columns_to_remove=None,quiet=True):
+
+def _getPH_to_DF_wrapper_240304_then_createIDS_df(
+    rq, run_jgtfxcli_on_error=True, columns_to_remove=None, quiet=True
+):
     if rq is None:
         rq = JGTIDSRequest()
-    df=pds.getPH(instrument=rq.instrument, 
-                 timeframe=rq.timeframe, 
-                 use_full=rq.use_full, 
-                 use_fresh=rq.use_fresh, run_jgtfxcli_on_error=run_jgtfxcli_on_error,
-                 quiet=quiet,
-                 quote_count=rq.quotescount)
+    df = pds.getPH(
+        instrument=rq.instrument,
+        timeframe=rq.timeframe,
+        use_full=rq.use_full,
+        use_fresh=rq.use_fresh,
+        run_jgtfxcli_on_error=run_jgtfxcli_on_error,
+        quiet=quiet,
+        quote_count=rq.quotescount,
+        keep_bid_ast=rq.keep_bid_ask,
+    )
 
     if not quiet:
         print(df)
 
-    dfi = createFromDF(df, quiet=quiet,rq=rq,
-                       columns_to_remove=columns_to_remove)
+    dfi = createFromDF(df, quiet=quiet, rq=rq, columns_to_remove=columns_to_remove)
     return dfi
 
 
 def createFromPDSFile(
-    rq:JGTIDSRequest=None,
+    rq: JGTIDSRequest = None,
     quiet=True,
     run_jgtfxcli_on_error=True,
-    columns_to_remove=None
-
+    columns_to_remove=None,
 ):
     """Create IDS (Indicator Data Service) with Fresh Data on the filestore
 
     Args:
         quiet (bool,optional): Output quiet
-        rq (JGTIDSRequest, optional): The JGTIDSRequest object to use for the processing. Defaults to None. 
+        rq (JGTIDSRequest, optional): The JGTIDSRequest object to use for the processing. Defaults to None.
         run_jgtfxcli_on_error (bool, optional): If True, runs jgtfxcli on error. Default is True.
         columns_to_remove (list, optional): List of column names to remove from the DataFrame. Default is None.
 
@@ -484,20 +486,24 @@ def createFromPDSFile(
     if rq is None:
         rq = JGTIDSRequest()
     try:
-        df = _getPH_to_DF_wrapper_240304_then_createIDS_df( quiet=quiet, rq=rq, run_jgtfxcli_on_error=run_jgtfxcli_on_error,
-        columns_to_remove=columns_to_remove)
-        #print("DEBUG H8 240325:: len getPH DF:",len(df))
-        
+        df = _getPH_to_DF_wrapper_240304_then_createIDS_df(
+            quiet=quiet,
+            rq=rq,
+            run_jgtfxcli_on_error=run_jgtfxcli_on_error,
+            columns_to_remove=columns_to_remove,
+        )
+        # print("DEBUG H8 240325:: len getPH DF:",len(df))
+
         return df
     except Exception as e:
         print("Error in createFromPDSFile")
         print(e)
-            
+
         return None
 
 
 def createFromPDSFileToIDSFile(
-    rq:JGTIDSRequest=None,
+    rq: JGTIDSRequest = None,
     columns_to_remove=None,
     quiet=True,
 ):
@@ -516,24 +522,22 @@ def createFromPDSFileToIDSFile(
     """
     if rq is None:
         rq = JGTIDSRequest()
-    
-    cdf = createFromPDSFile(
-        rq=rq,
-        quiet=quiet,       
-        columns_to_remove=columns_to_remove
-    )
 
+    cdf = createFromPDSFile(rq=rq, quiet=quiet, columns_to_remove=columns_to_remove)
 
     # Define the file path based on the environment variable or local path
     fpath = writeIDS(rq.instrument, rq.timeframe, rq.use_full, cdf)
 
     return fpath, cdf
 
-def createFromDF(df, quiet=True, 
-                 cc: JGTChartConfig = None,
-                 rq: JGTIDSRequest=None,
-                 columns_to_remove=None
-                 ):
+
+def createFromDF(
+    df,
+    quiet=True,
+    cc: JGTChartConfig = None,
+    rq: JGTIDSRequest = None,
+    columns_to_remove=None,
+):
     """
     Creates a new DataFrame with indicators, signals, and cleansed columns added based on the input DataFrame.
 
@@ -555,19 +559,26 @@ def createFromDF(df, quiet=True,
 
     if df.index.name == "Date":
         df.reset_index(inplace=True)
-    
-    #dfi = ids.tocds(df, quiet=quiet, cc=cc,rq=rq,columns_to_remove=columns_to_remove) 
-    #@a REPLACE BY LOGICS TO CREATE OUR IDS
+
+    # dfi = ids.tocds(df, quiet=quiet, cc=cc,rq=rq,columns_to_remove=columns_to_remove)
+    # @a REPLACE BY LOGICS TO CREATE OUR IDS
     dfi = toids(df, quiet=quiet, cc=cc, rq=rq, columns_to_remove=columns_to_remove)
-    
+
     return dfi
 
-def toids(dfsrc, quiet=True, cc: JGTChartConfig = None, rq: JGTIDSRequest=None, columns_to_remove=None,format_boolean_columns_to_int=True):
+
+def toids(
+    dfsrc,
+    quiet=True,
+    cc: JGTChartConfig = None,
+    rq: JGTIDSRequest = None,
+    columns_to_remove=None,
+    format_boolean_columns_to_int=True,
+):
     dfi = ids_add_indicators(dfsrc, cc=cc, rq=rq)
     if format_boolean_columns_to_int:
         dfi = __format_boolean_columns_to_int(dfi, quiet=True)
     return dfi
-
 
 
 def __format_boolean_columns_to_int(dfsrc, quiet=True):
@@ -576,6 +587,7 @@ def __format_boolean_columns_to_int(dfsrc, quiet=True):
             dfsrc[col] = dfsrc[col].astype(int)
     return dfsrc
 
+
 def writeIDS(instrument, timeframe, use_full, cdf):
     data_path_ids = get_data_path("ids", use_full=use_full)
     fpath = pds.mk_fullpath(instrument, timeframe, "csv", data_path_ids)
@@ -583,104 +595,104 @@ def writeIDS(instrument, timeframe, use_full, cdf):
     cdf.to_csv(fpath, index=True)
     return fpath
 
-#@STCGoal CLI
+
+# @STCGoal CLI
 
 import argparse
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Process command parameters.")
     # jgtfxcommon.add_main_arguments(parser)
     jgtcommon.add_instrument_timeframe_arguments(parser)
-    #jgtcommon.add_date_arguments(parser)
-    #jgtcommon.add_tlid_range_argument(parser)
+    # jgtcommon.add_date_arguments(parser)
+    # jgtcommon.add_tlid_range_argument(parser)
     jgtcommon.add_max_bars_arguments(parser)
     # jgtcommon.add_output_argument(parser)
     # jgtfxcommon.add_quiet_argument(parser)
     jgtcommon.add_verbose_argument(parser)
-    
+
     jgtcommon.add_use_full_argument(parser)
     jgtcommon.add_use_fresh_argument(parser)
+    jgtcommon.add_keepbidask_argument(parser)
+
     parser.add_argument(
-        "-go","--gator_oscillator_flag",
+        "-go",
+        "--gator_oscillator_flag",
         action="store_true",
         help="Enable the Gator Oscillator indicator.",
     )
     parser.add_argument(
-        "-mfi","--mfi_flag",
+        "-mfi",
+        "--mfi_flag",
         action="store_true",
         help="Enable the Money Flow Index indicator.",
     )
-    
+
     parser.add_argument(
         "--bypass_index_reset",
         action="store_true",
         help="Bypass resetting the index.",
     )
     parser.add_argument(
-        "-ba","--balligator_flag",
+        "-ba",
+        "--balligator_flag",
         action="store_true",
         help="Enable the Alligator indicator.",
     )
     parser.add_argument(
-        "-bjaw","--balligator_period_jaws",
+        "-bjaw",
+        "--balligator_period_jaws",
         type=int,
         default=89,
         help="The period of the Alligator jaws.",
     )
     parser.add_argument(
-        "-lfp","--largest_fractal_period",
+        "-lfp",
+        "--largest_fractal_period",
         type=int,
         default=89,
         help="The largest fractal period.",
     )
-    
+
     # jgtcommon.add_cds_argument(parser)
     args = parser.parse_args()
     return args
 
 
 def main():
-    
+
     rq = JGTIDSRequest()
-    
+
     args = parse_args()
-    
-    
-    #There might be multiple for now
+
+    # There might be multiple for now
     instrument = args.instrument
     timeframe = args.timeframe
-    
-    
+
     verbose_level = args.verbose
     quiet = False
     if verbose_level == 0:
         quiet = True
-    
-    
-    
+
     # date_from = None
     # date_to = None
-    
+
     # tlid_range = None
     # if args.tlidrange:
     #     #not supported yet and wont
     #     print("TLID Range not supported yet")
-        
-
-        
 
     # if args.datefrom:
     #     date_from = args.datefrom.replace("/", ".")
     # if args.dateto:
     #     date_to = args.dateto.replace("/", ".")
 
-
     process_ids = True
 
     if process_ids:
         print("Processing IDS")
         output = True
-
 
     # if verbose_level > 1:
     #     if date_from:
@@ -696,30 +708,33 @@ def main():
 
         for instrument in instruments:
             for timeframe in timeframes:
-                rq= createIDSRequestFromArgs(args,instrument,timeframe)
+                rq = createIDSRequestFromArgs(args, instrument, timeframe)
                 createIDSService(
                     rq=rq,
                     quiet=quiet,
                     verbose_level=verbose_level,
                 )
 
-
     except Exception as e:
         jgtcommon.print_exception(e)
 
-def createIDSRequestFromArgs(args,instrument,timeframe):
+
+def createIDSRequestFromArgs(args, instrument, timeframe):
     rq = JGTIDSRequest()
-    rq.instrument=instrument
-    rq.timeframe=timeframe
-    rq.quotescount=args.quotescount
-    rq.use_fresh=args.fresh if args.fresh else False
-    rq.use_full=args.full if args.full else False
-    rq.gator_oscillator_flag=args.gator_oscillator_flag if args.gator_oscillator_flag else False
-    rq.mfi_flag=args.mfi_flag if args.mfi_flag else False
-    rq.balligator_flag=args.balligator_flag if args.balligator_flag else False
-    rq.balligator_period_jaws=args.balligator_period_jaws
-    rq.largest_fractal_period=args.largest_fractal_period
-    rq.verbose_level=args.verbose
+    rq.instrument = instrument
+    rq.keep_bid_ask = args.keepbidask
+    rq.timeframe = timeframe
+    rq.quotescount = args.quotescount
+    rq.use_fresh = args.fresh if args.fresh else False
+    rq.use_full = args.full if args.full else False
+    rq.gator_oscillator_flag = (
+        args.gator_oscillator_flag if args.gator_oscillator_flag else False
+    )
+    rq.mfi_flag = args.mfi_flag if args.mfi_flag else False
+    rq.balligator_flag = args.balligator_flag if args.balligator_flag else False
+    rq.balligator_period_jaws = args.balligator_period_jaws
+    rq.largest_fractal_period = args.largest_fractal_period
+    rq.verbose_level = args.verbose
     return rq
 
 
@@ -738,23 +753,24 @@ def createIDSService(
     quietting = True
     if verbose_level > 1:
         quietting = False
-        
+
     try:
-        #cdspath, cdf = cds.createFromPDSFileToCDSFile(
-        #@a Migrate to IDS Logics
-        # cdspath, cdf = cds.createFromPDSFileToCDSFile( 
-        cdspath, cdf = createFromPDSFileToIDSFile( 
+        # cdspath, cdf = cds.createFromPDSFileToCDSFile(
+        # @a Migrate to IDS Logics
+        # cdspath, cdf = cds.createFromPDSFileToCDSFile(
+        cdspath, cdf = createFromPDSFileToIDSFile(
             rq=rq,
             quiet=quietting,
             columns_to_remove=col2remove,
         )  # @STCIssue: This is not supporting -c NB_BARS_TO_PROCESS, should it ?
-        
+
         print_quiet(quiet, cdspath)
         print_quiet(quiet, cdf)
+        return cdspath, cdf
     except Exception as e:
         print("Failed to create IDS for : " + rq.instrument + "_" + rq.timeframe)
         print("jgtapycli::Exception in ...(: " + str(e))
-        
+
 
 def print_quiet(quiet, content):
     if not quiet:
@@ -763,6 +779,3 @@ def print_quiet(quiet, content):
 
 if __name__ == "__main__":
     main()
-
-
-    
