@@ -20,7 +20,6 @@ import datetime
 from JGTChartConfig import JGTChartConfig
 from JGTIDSRequest import JGTIDSRequest
 
-columns_to_normalize = ["ao", "ac"] #@a Migrate to jgtutils.jgtconstants
 
 from jgtutils.jgtconstants import (
     IDS_COLUMNS_TO_NORMALIZE,
@@ -48,6 +47,8 @@ from jgtutils.jgtconstants import (
     FH13,    FH21,    FH34,    FH55,    FH89,    FL13,    FL21,    FL34,    FL55,    FL89,
     GL,GH,
 )
+
+columns_to_normalize = IDS_COLUMNS_TO_NORMALIZE #@a Migrate to jgtutils.jgtconstants
 
 from jgtutils import (
     jgtconstants as constants,
@@ -589,10 +590,17 @@ def createFromDF(df, quiet=True,
     
     return dfi
 
-def toids(dfsrc, quiet=True, cc: JGTChartConfig = None, rq: JGTIDSRequest=None, columns_to_remove=None):
+def toids(dfsrc, quiet=True, cc: JGTChartConfig = None, rq: JGTIDSRequest=None, columns_to_remove=None,format_boolean_columns_to_int=True):
     dfi = ids_add_indicators(dfsrc, cc=cc, rq=rq)
-    
+    if format_boolean_columns_to_int:
+        dfi = __format_boolean_columns_to_int(dfi, quiet=True)
     return dfi
+
+def __format_boolean_columns_to_int(dfsrc, quiet=True):
+    for col in dfsrc.columns:
+        if dfsrc[col].dtype == bool:
+            dfsrc[col] = dfsrc[col].astype(int)
+    return dfsrc
 
 def writeIDS(instrument, timeframe, use_full, cdf):
     data_path_ids = get_data_path("ids", use_full=use_full)
