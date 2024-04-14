@@ -54,6 +54,7 @@ from jgtutils.jgtconstants import (
     FL89,
     GL,
     GH,
+    MFI,
 )
 
 columns_to_normalize = IDS_COLUMNS_TO_NORMALIZE  # @a Migrate to jgtutils.jgtconstants
