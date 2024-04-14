@@ -626,7 +626,7 @@ def parse_args():
         help="The period of the Alligator jaws.",
     )
     parser.add_argument(
-        "--largest_fractal_period",
+        "-lfp","--largest_fractal_period",
         type=int,
         default=89,
         help="The largest fractal period.",
