@@ -150,10 +150,10 @@ def ids_add_indicators_LEGACY(
         ids_request = JGTIDSRequest()
 
     #@a Migrating to the new JGTIDSRequest
-    enablegator_oscillator_flag=ids_request.gator_oscillator_flag
-    enablemfi_flag=ids_request.mfi_flag
+    gator_oscillator_flag=ids_request.gator_oscillator_flag
+    mfi_flag=ids_request.mfi_flag
     addAlligatorOffsetInFutur=ids_request.addAlligatorOffsetInFutur
-    big_alligator=ids_request.balligator_flag
+    balligator_flag=ids_request.balligator_flag
     balligator_period_jaws=ids_request.balligator_period_jaws
     largest_fractal_period=ids_request.largest_fractal_period
     
@@ -211,7 +211,7 @@ def ids_add_indicators_LEGACY(
         minimal_bars_with_indicators + balligator_period_jaws + balligator_shift_jaws
     )
 
-    if ldfsrc >= bAlligator_required_bar_offset and big_alligator:
+    if ldfsrc >= bAlligator_required_bar_offset and balligator_flag:
 
         try:
             i.alligator(
@@ -226,7 +226,7 @@ def ids_add_indicators_LEGACY(
                 column_name_lips=BLIPS,
             )
         except:
-            print("big_alligator failed")
+            print("balligator_flag failed")
     else:
         if not quiet:
             print("Skipping degree larger big Alligator")
@@ -318,7 +318,7 @@ def ids_add_indicators_LEGACY(
         if not quiet:
             print("Skipping Fractal 89")
 
-    if enablegator_oscillator_flag:
+    if gator_oscillator_flag:
 
         try:
             i.gator(
@@ -334,7 +334,7 @@ def ids_add_indicators_LEGACY(
         except:
             print("gator failed")
 
-    if enablemfi_flag:
+    if mfi_flag:
         try:
             i.bw_mfi(column_name=MFI)
         except:
@@ -598,12 +598,12 @@ def parse_args():
     jgtcommon.add_use_full_argument(parser)
     jgtcommon.add_use_fresh_argument(parser)
     parser.add_argument(
-        "--enablegator_oscillator_flag",
+        "-go","--gator_oscillator_flag",
         action="store_true",
         help="Enable the Gator Oscillator indicator.",
     )
     parser.add_argument(
-        "--enablemfi_flag",
+        "-mfi","--mfi_flag",
         action="store_true",
         help="Enable the Money Flow Index indicator.",
     )
@@ -614,12 +614,12 @@ def parse_args():
         help="Bypass resetting the index.",
     )
     parser.add_argument(
-        "--big_alligator",
+        "-ba","--balligator_flag",
         action="store_true",
         help="Enable the Alligator indicator.",
     )
     parser.add_argument(
-        "--balligator_period_jaws",
+        "-bjaw","--balligator_period_jaws",
         type=int,
         default=89,
         help="The period of the Alligator jaws.",
@@ -642,11 +642,11 @@ def main():
     
     args = parse_args()
     
-    #enablegator_oscillator_flag, enablemfi_flag, big_alligator, balligator_period_jaws, largest_fractal_period
+    #gator_oscillator_flag, mfi_flag, balligator_flag, balligator_period_jaws, largest_fractal_period
     #@STCIssue Bellow Validation required.
-    rq.gator_oscillator_flag=args.enablegator_oscillator_flag
-    rq.mfi_flag=args.enablemfi_flag
-    rq.balligator_flag=args.big_alligator
+    rq.gator_oscillator_flag=args.gator_oscillator_flag
+    rq.mfi_flag=args.mfi_flag
+    rq.balligator_flag=args.balligator_flag
     rq.balligator_period_jaws=args.balligator_period_jaws
     rq.largest_fractal_period=args.largest_fractal_period
     
@@ -725,9 +725,9 @@ def createIDSRequestFromArgs(args,instrument,timeframe):
     rq.timeframe=timeframe
     rq.use_fresh=args.fresh if args.fresh else False
     rq.use_full=args.full if args.full else False
-    rq.gator_oscillator_flag=args.enablegator_oscillator_flag
-    rq.mfi_flag=args.enablemfi_flag
-    rq.balligator_flag=args.big_alligator
+    rq.gator_oscillator_flag=args.gator_oscillator_flag
+    rq.mfi_flag=args.mfi_flag
+    rq.balligator_flag=args.balligator_flag
     rq.balligator_period_jaws=args.balligator_period_jaws
     rq.largest_fractal_period=args.largest_fractal_period
     return rq
