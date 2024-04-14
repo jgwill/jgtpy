@@ -588,8 +588,8 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Process command parameters.")
     # jgtfxcommon.add_main_arguments(parser)
     jgtcommon.add_instrument_timeframe_arguments(parser)
-    jgtcommon.add_date_arguments(parser)
-    jgtcommon.add_tlid_range_argument(parser)
+    #jgtcommon.add_date_arguments(parser)
+    #jgtcommon.add_tlid_range_argument(parser)
     jgtcommon.add_max_bars_arguments(parser)
     # jgtcommon.add_output_argument(parser)
     # jgtfxcommon.add_quiet_argument(parser)
@@ -673,18 +673,19 @@ def main():
     rq.use_full=full
     date_from = None
     date_to = None
-    tlid_range = None
-    if args.tlidrange:
-        #not supported yet and wont
-        print("TLID Range not supported yet")
+    
+    # tlid_range = None
+    # if args.tlidrange:
+    #     #not supported yet and wont
+    #     print("TLID Range not supported yet")
         
 
         
 
-    if args.datefrom:
-        date_from = args.datefrom.replace("/", ".")
-    if args.dateto:
-        date_to = args.dateto.replace("/", ".")
+    # if args.datefrom:
+    #     date_from = args.datefrom.replace("/", ".")
+    # if args.dateto:
+    #     date_to = args.dateto.replace("/", ".")
 
 
     process_ids = True
