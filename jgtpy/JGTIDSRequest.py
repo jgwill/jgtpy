@@ -50,6 +50,7 @@ class JGTIDSRequest(JGTPDSRequest):
                  disable_ao_peaks_v1=True,
                  include_ao_color=False,
                  include_ac_color=False,
+                 addAlligatorOffsetInFutur=False,
                  *args, 
                  **kwargs):
         #super().__init__(None, None, None)
@@ -72,6 +73,7 @@ class JGTIDSRequest(JGTPDSRequest):
         self.peak_distance = peak_distance
         self.peak_width = peak_width
         self.peak_divider_min_height = peak_divider_min_height
+        self.addAlligatorOffsetInFutur = addAlligatorOffsetInFutur
 
         #Migrated logics
         self.balligator_period_jaws = self.balligator_period_jaws if self.balligator_flag else 0 #balligator_period_jaws will be 0 if it is not used

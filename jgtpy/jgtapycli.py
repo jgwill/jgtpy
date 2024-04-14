@@ -58,15 +58,12 @@ from jgtutils import (
 
 def ids_add_indicators(
     dfsrc,
-    enablegator_oscillator_flag=False,
-    enablemfi_flag=False,
     dropnavalue=True,
     quiet=True,
     cleanupOriginalColumn=True,
     useLEGACY=True,
     cc: JGTChartConfig = None,
     bypass_index_reset=False,
-    big_alligator=False,
     rq: JGTIDSRequest = None,
 ):
     """
@@ -74,15 +71,12 @@ def ids_add_indicators(
 
     Args:
     dfsrc (pandas.DataFrame): The DataFrame to which the indicators will be added.
-    enablegator_oscillator_flag (bool, optional): Whether to enable the Gator Oscillator indicator. Defaults to False.
-    enablemfi_flag (bool, optional): Whether to enable the Money Flow Index indicator. Defaults to False.
     dropnavalue (bool, optional): Whether to drop rows with NaN values. Defaults to True.
     quiet (bool, optional): Whether to suppress console output. Defaults to False.
     cleanupOriginalColumn (bool, optional): Whether to clean up the original column. Defaults to True.
     useLEGACY (bool, optional): Whether to use the legacy version of the function. Defaults to True.
     cc (JGTChartConfig, optional): The JGTChartConfig object. Defaults to None.
     bypass_index_reset (bool, optional): Whether to bypass resetting the index. Defaults to False.
-    big_alligator (bool, optional): Whether to enable the Alligator indicator. Defaults to False.
     rq (JGTIDSRequest, optional): The JGTIDSRequest object. Defaults to None.
 
     Returns:
@@ -98,23 +92,21 @@ def ids_add_indicators(
     if (
         not useLEGACY
     ):  # Because jgtapy has to be upgraded with new column name, we wont use it until our next release
+        print("## --- NOT SURE YOU WILL GET WHAT YOU WANT ----")
         dfresult = Indicators.jgt_create_ids_indicators_as_dataframe(
             dfsrc,
-            enablegator_oscillator_flag,
-            enablemfi_flag,
+            rq.gator_oscillator_flag,
+            rq.mfi_flag,
             cleanupOriginalColumn,
             quiet,
         )
     else:
         dfresult = ids_add_indicators_LEGACY(
             dfsrc=dfsrc,
-            enablegator_oscillator_flag=enablegator_oscillator_flag,
-            enablemfi_flag=enablemfi_flag,
             dropnavalue=dropnavalue,
             quiet=quiet,
             min_nb_bar_on_chart=cc.min_bar_on_chart,
             bypass_index_reset=bypass_index_reset,
-            big_alligator=big_alligator,
             ids_request=rq,
         )
 
@@ -133,14 +125,8 @@ def round_columns(df, rounding_decimal_min=10):
 
 def ids_add_indicators_LEGACY(
     dfsrc,
-    enablegator_oscillator_flag=False,
-    enablemfi_flag=False,
     dropnavalue=True,
     quiet=True,
-    addAlligatorOffsetInFutur=False,
-    big_alligator=False,
-    balligator_period_jaws=89,
-    largest_fractal_period=89,
     min_nb_bar_on_chart=300,
     bypass_index_reset=False,
     ids_request: JGTIDSRequest = None,
@@ -150,13 +136,8 @@ def ids_add_indicators_LEGACY(
 
     Args:
     dfsrc (pandas.DataFrame): The input DataFrame.
-    enablegator_oscillator_flag (bool, optional): Whether to enable the Gator Oscillator indicator. Defaults to False.
-    enablemfi_flag (bool, optional): Whether to enable the Money Flow Index indicator. Defaults to False.
     dropnavalue (bool, optional): Whether to drop rows with NaN values. Defaults to True.
     quiet (bool, optional): Whether to suppress print statements. Defaults to False.
-    addAlligatorOffsetInFutur (bool, optional): (NOT IMPLEMENTED) Whether to add the Alligator offset in the future. Defaults to True.
-    big_alligator_jaws_period (int, optional): (NOT IMPLEMENTED) The period of the Alligator jaws. Defaults to 89.
-    largest_fractal_period (int, optional): (NOT IMPLEMENTED) The largest fractal period. Defaults to 89.
     min_nb_bar_on_chart (int, optional): The minimum number of bars on the chart. Defaults to 300.
     bypass_index_reset (bool, optional): Whether to bypass resetting the index. Defaults to False.
     ids_request (JGTIDSRequest, optional): The JGTIDSRequest object. Defaults to None.
@@ -168,6 +149,16 @@ def ids_add_indicators_LEGACY(
     if ids_request is None:
         ids_request = JGTIDSRequest()
 
+    #@a Migrating to the new JGTIDSRequest
+    enablegator_oscillator_flag=ids_request.gator_oscillator_flag
+    enablemfi_flag=ids_request.mfi_flag
+    addAlligatorOffsetInFutur=ids_request.addAlligatorOffsetInFutur
+    big_alligator=ids_request.balligator_flag
+    balligator_period_jaws=ids_request.balligator_period_jaws
+    largest_fractal_period=ids_request.largest_fractal_period
+    
+    
+    
     ldfsrc = len(dfsrc)
     # TODO
     df_nb_bars = min_nb_bar_on_chart  # @STCIssue: We have charts with as few as 80 bars and some indicators wont work. We need to find a way to make it work with less bars.
@@ -454,44 +445,34 @@ import JGTIDS as ids
 import JGTPDSP as pds
 from jgtutils.jgtos import get_data_path
 
-def _getPH_to_DF_wrapper_240304(instrument, timeframe, quiet, cc, use_full, rq,use_fresh=False ,run_jgtfxcli_on_error=True,columns_to_remove=None):
-
-    df=pds.getPH(instrument,
-            timeframe,
-            quiet=quiet,
-            use_full=use_full,
-            use_fresh=use_fresh,
-            run_jgtfxcli_on_error=run_jgtfxcli_on_error,
-            )
+def _getPH_to_DF_wrapper_240304_then_createIDS_df(rq ,run_jgtfxcli_on_error=True,columns_to_remove=None,quiet=True):
+    if rq is None:
+        rq = JGTIDSRequest()
+    df=pds.getPH(instrument=rq.instrument, 
+                 timeframe=rq.timeframe, 
+                 use_full=rq.use_full, 
+                 use_fresh=rq.use_fresh, run_jgtfxcli_on_error=run_jgtfxcli_on_error,
+                 quiet=quiet)
 
     if not quiet:
         print(df)
 
-    dfi = createFromDF(df, quiet=quiet, cc=cc,rq=rq,
+    dfi = createFromDF(df, quiet=quiet,rq=rq,
                        columns_to_remove=columns_to_remove)
     return dfi
 
 
 def createFromPDSFile(
-    instrument,
-    timeframe,
-    quiet=True,
-    cc: JGTChartConfig = None,
-    use_full=False, #@STCIssue USELESS Somehow here :NOPE it reads a different file
     rq:JGTIDSRequest=None,
+    quiet=True,
     run_jgtfxcli_on_error=True,
-    columns_to_remove=None,
-    use_fresh=False
+    columns_to_remove=None
 
 ):
     """Create IDS (Indicator Data Service) with Fresh Data on the filestore
 
     Args:
-        instrument (str): symbol
-        timeframe (str): TF
         quiet (bool,optional): Output quiet
-        cc (JGTChartConfig, optional): The JGTChartConfig object to use for the processing. Defaults to None.
-        use_full (bool, optional): If True, reads the full CDS file. Default is False.
         rq (JGTIDSRequest, optional): The JGTIDSRequest object to use for the processing. Defaults to None. 
         run_jgtfxcli_on_error (bool, optional): If True, runs jgtfxcli on error. Default is True.
         columns_to_remove (list, optional): List of column names to remove from the DataFrame. Default is None.
@@ -499,10 +480,11 @@ def createFromPDSFile(
     Returns:
         pandas.DataFrame: CDS DataFrame
     """
+    if rq is None:
+        rq = JGTIDSRequest()
     try:
-        df = _getPH_to_DF_wrapper_240304(instrument, timeframe, quiet, cc, use_full, rq=rq, run_jgtfxcli_on_error=run_jgtfxcli_on_error,
-        columns_to_remove=columns_to_remove,
-        use_fresh=use_fresh)
+        df = _getPH_to_DF_wrapper_240304_then_createIDS_df( quiet=quiet, rq=rq, run_jgtfxcli_on_error=run_jgtfxcli_on_error,
+        columns_to_remove=columns_to_remove)
         #print("DEBUG H8 240325:: len getPH DF:",len(df))
         
         return df
@@ -514,29 +496,20 @@ def createFromPDSFile(
 
 
 def createFromPDSFileToIDSFile(
-    instrument,
-    timeframe,
+    rq:JGTIDSRequest=None,
     columns_to_remove=None,
     quiet=True,
-    tlid_range=None,
-    use_full=False,
-    rq:JGTIDSRequest=None,
-    use_fresh=False,
 ):
     """
     Create a IDS file from a PDS file.
 
     Parameters:
-    instrument (str): The instrument name.
-    timeframe (str): The timeframe of the data.
-    columns_to_remove (list, optional): List of column names to remove from the CDS file. Default is None.
-    quiet (bool, optional): If True, suppresses the output. Default is True.
-    tlid_range (str, optional): The TLID range to retrieve. Default is None.
-    use_full (bool, optional): If True, reads/writes the full CDS file. Default is False.
     rq (JGTIDSRequest, optional): The JGTIDSRequest object to use for the processing. Defaults to None.
+    columns_to_remove (list, optional): List of column names to remove from the IDS file. Default is None.
+    quiet (bool, optional): If True, suppresses the output. Default is True.
 
     Returns:
-    - fpath (str): The file path of the created CDS file.
+    - fpath (str): The file path of the created IDS file.
     - c (DataFrame): The DataFrame containing the data.
 
     """
@@ -544,16 +517,14 @@ def createFromPDSFileToIDSFile(
         rq = JGTIDSRequest()
     
     cdf = createFromPDSFile(
-        instrument, timeframe, quiet,         
-        use_full=use_full, 
         rq=rq,
-        columns_to_remove=columns_to_remove,
-        use_fresh=use_fresh
+        quiet=quiet,       
+        columns_to_remove=columns_to_remove
     )
 
 
     # Define the file path based on the environment variable or local path
-    fpath = writeIDS(instrument, timeframe, use_full, cdf)
+    fpath = writeIDS(rq.instrument, rq.timeframe, rq.use_full, cdf)
 
     return fpath, cdf
 
@@ -673,14 +644,16 @@ def main():
     
     #enablegator_oscillator_flag, enablemfi_flag, big_alligator, balligator_period_jaws, largest_fractal_period
     #@STCIssue Bellow Validation required.
-    rq.enablegator_oscillator_flag=args.enablegator_oscillator_flag
-    rq.enablemfi_flag=args.enablemfi_flag
-    rq.big_alligator=args.big_alligator
+    rq.gator_oscillator_flag=args.enablegator_oscillator_flag
+    rq.mfi_flag=args.enablemfi_flag
+    rq.balligator_flag=args.big_alligator
     rq.balligator_period_jaws=args.balligator_period_jaws
     rq.largest_fractal_period=args.largest_fractal_period
     
     instrument = args.instrument
     timeframe = args.timeframe
+    rq.instrument=instrument
+    rq.timeframe=timeframe
     quotes_count = args.quotescount
     cc.nb_bar_on_chart = quotes_count
     
@@ -693,24 +666,20 @@ def main():
     fresh = False
     if args.fresh:
         fresh=True
+    rq.use_fresh=fresh
     
     if args.full:
         full = True
-
+    rq.use_full=full
     date_from = None
     date_to = None
     tlid_range = None
     if args.tlidrange:
-        # @STCGoal Get range prices from cache or request new
-        tlid_range = args.tlidrange
-        print("#FUTURE Support for tlid range")
-        tmpcmd = wsl._mkbash_cmd_string_jgtfxcli_range(
-            instrument, timeframe, tlid_range,verbose_level=verbose_level,
-            use_full=full
-        )
-        print(tmpcmd)
-        print("#-----------Stay tune -------- Quitting for now")
-        return
+        #not supported yet and wont
+        print("TLID Range not supported yet")
+        
+
+        
 
     if args.datefrom:
         date_from = args.datefrom.replace("/", ".")
@@ -739,34 +708,35 @@ def main():
 
         for instrument in instruments:
             for timeframe in timeframes:
+                rq= createIDSRequestFromArgs(args,instrument,timeframe)
                 createIDS_for_main(
-                    instrument,
-                    timeframe,
+                    rq=rq,
                     quiet=quiet,
                     verbose_level=verbose_level,
-                    tlid_range=tlid_range,
-                    cc=cc,
-                    use_full=full,
-                    use_fresh=fresh
                 )
 
 
     except Exception as e:
         jgtcommon.print_exception(e)
 
-
+def createIDSRequestFromArgs(args,instrument,timeframe):
+    rq = JGTIDSRequest()
+    rq.instrument=instrument
+    rq.timeframe=timeframe
+    rq.use_fresh=args.fresh if args.fresh else False
+    rq.use_full=args.full if args.full else False
+    rq.gator_oscillator_flag=args.enablegator_oscillator_flag
+    rq.mfi_flag=args.enablemfi_flag
+    rq.balligator_flag=args.big_alligator
+    rq.balligator_period_jaws=args.balligator_period_jaws
+    rq.largest_fractal_period=args.largest_fractal_period
+    return rq
 
 
 def createIDS_for_main(
-    instrument,
-    timeframe,
-    quiet,
-    verbose_level=0,
-    tlid_range=None,
-    cc: JGTChartConfig = None,
-    use_full=False,
-    use_fresh=False,
     rq: JGTIDSRequest = None,
+    quiet=True,
+    verbose_level=0,
 ):
     if rq is None:
         rq = JGTIDSRequest()
@@ -784,13 +754,8 @@ def createIDS_for_main(
         #@a Migrate to IDS Logics
         # cdspath, cdf = cds.createFromPDSFileToCDSFile( 
         cdspath, cdf = createFromPDSFileToIDSFile( 
-            instrument, 
-            timeframe, 
-            quiet=quietting,
             rq=rq,
-            #cc=cc,
-            use_full=use_full,
-            use_fresh=use_fresh,
+            quiet=quietting,
             columns_to_remove=col2remove,
         )  # @STCIssue: This is not supporting -c NB_BARS_TO_PROCESS, should it ?
         
