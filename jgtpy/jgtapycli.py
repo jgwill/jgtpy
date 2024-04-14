@@ -568,6 +568,8 @@ def toids(dfsrc, quiet=True, cc: JGTChartConfig = None, rq: JGTIDSRequest=None, 
         dfi = __format_boolean_columns_to_int(dfi, quiet=True)
     return dfi
 
+
+
 def __format_boolean_columns_to_int(dfsrc, quiet=True):
     for col in dfsrc.columns:
         if dfsrc[col].dtype == bool:
@@ -695,7 +697,7 @@ def main():
         for instrument in instruments:
             for timeframe in timeframes:
                 rq= createIDSRequestFromArgs(args,instrument,timeframe)
-                createIDS_for_main(
+                createIDSService(
                     rq=rq,
                     quiet=quiet,
                     verbose_level=verbose_level,
@@ -721,7 +723,7 @@ def createIDSRequestFromArgs(args,instrument,timeframe):
     return rq
 
 
-def createIDS_for_main(
+def createIDSService(
     rq: JGTIDSRequest = None,
     quiet=True,
     verbose_level=0,
