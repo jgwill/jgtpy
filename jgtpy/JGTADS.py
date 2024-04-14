@@ -110,16 +110,20 @@ def jgtxplot18c_231209(
     # print(len(data))
     # data.to_csv("debug_data" + instrument.replace("/","-") + timeframe + ".csv")
     try:
-        return plot_from_cds_df(
+        fig, axes, cdfdata = plot_from_cds_df(
             data,
             instrument,
             timeframe,
             show=show,
             plot_ao_peaks=plot_ao_peaks,
             cc=cc,
-            rq=rq,
-        )
+            rq=rq        )
+        if fig is not None:
+            return fig, axes, cdfdata
     except Exception as e:
+        if fig is not None:
+            print("   Fig is not none so we return it and wont try the ALT")
+            return fig, axes, cdfdata
         if rq.verbose_level> 1:
             print("Error plotting regular ADS for:" + instrument + " " + timeframe + ", exception: " + str(e))
             traceback.print_exc()

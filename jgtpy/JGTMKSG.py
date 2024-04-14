@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python -0 
 
 # %% Imports
 import sys
@@ -434,7 +434,7 @@ def main():
     parser.add_argument('-t','--timeframes', type=str, required=True)
     parser.add_argument('-tos','--tf_of_signal', type=str, required=False)
     parser.add_argument('-st','--sig_type_name', type=str, required=False, default="")
-    parser.add_argument('-cl','--crop_last_dt', type=str, required=False, default=None,help="crop date(s) in the format '2022-10-13 13:45:00' or '2022-10-13 13:45:00,2022-10-13 13:45:00' ")
+    parser.add_argument('-cl','--crop_last_dt', type=str, required=False,help="crop date(s) in the format '2022-10-13 13:45:00' or '2022-10-13 13:45:00,2022-10-13 13:45:00' ")
     parser.add_argument('-o','--scn_root_dir', type=str, default=None)
     parser.add_argument('-d','--default_char_dir_name', type=str, default="charts")
     parser.add_argument('--show_chart', type=bool, default=False)
@@ -458,7 +458,7 @@ def main():
         timeframes=args.timeframes,
         html_outdir_root=args.scn_root_dir,
         cc=None,
-        crop_last_dt=args.crop_last_dt_arr
+        crop_last_dt=args.crop_last_dt
         
       )
     else:
