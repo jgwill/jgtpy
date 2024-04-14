@@ -166,3 +166,9 @@ _tmp*
 test*.csv
 charts/
 mycharts/
+dfsrc.csv
+o_how_long_D1.log.txt
+rq.json
+jgtpy/_sample-data-SPX500-cds.csv
+logs/
+*.png
