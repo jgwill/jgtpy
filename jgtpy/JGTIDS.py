@@ -79,6 +79,7 @@ from jgtutils.jgtconstants import (
     FL34,
     FL55,
     FL89,
+    MFI
 )
 
 
