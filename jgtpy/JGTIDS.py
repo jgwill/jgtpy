@@ -981,13 +981,13 @@ def tocds(
         cc = JGTChartConfig()
 
     dfires = ids_add_indicators(dfsrc, quiet=quiet, cc=cc, rq=rq)
-    dfires = _ids_add_fdb_column_logics_v2(dfires, quiet=quiet)
-    dfires = cds_add_signals_to_indicators(dfires, quiet=quiet, cc=cc, rq=rq)
-    dfires = jgti_add_zlc_plus_other_AO_signal(dfires, quiet=quiet, rq=rq)
-    dfires = _pds_cleanse_original_columns(dfires, quiet=True)
+    dfires = _ids_add_fdb_column_logics_v2(dfires, quiet=quiet)                 #@STCIssue SignalBusiness Code
+    dfires = cds_add_signals_to_indicators(dfires, quiet=quiet, cc=cc, rq=rq)   #@STCIssue SignalBusiness Code
+    dfires = jgti_add_zlc_plus_other_AO_signal(dfires, quiet=quiet, rq=rq)      #@STCIssue SignalBusiness Code
+    dfires = _pds_cleanse_original_columns(dfires, quiet=True)  
     dfires = __cleanse_ao_peak_v1_secondary_columns(dfires, quiet=True)
     dfires = __format_boolean_columns_to_int(dfires, quiet=True)
-    dfires = add_ao_price_peaks_v2(dfires, quiet=True, rq=rq)
+    dfires = add_ao_price_peaks_v2(dfires, quiet=True, rq=rq)                   #@STCIssue SignalBusiness Code or LearningBusiness
     # Remove the specified columns
     if columns_to_remove is not None:
         dfires.drop(columns=columns_to_remove, errors="ignore", inplace=True)
@@ -1169,3 +1169,5 @@ def jgti_add_zlc_plus_other_AO_signal(
         if c < xc - 35:
             cPrice = row["Close"]
     return dfsrc
+
+

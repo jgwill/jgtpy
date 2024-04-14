@@ -10,10 +10,10 @@ from jgtpy import __version__ as version
 INSTALL_REQUIRES = [
     "pandas>=0.25.1",
     "python-dotenv>=0.19.2",
-    "jgtapy>=1.9.20",
-    "jgtutils>=0.1.45",
+    "jgtapy>=1.9.21",
+    "jgtutils>=0.1.50",
     "dropbox>=11.36.2",
-    "tlid>=0.1.13",
+    "tlid>=0.1.15",
     "scipy>=1.9.1",
     "matplotlib>=3.3.1",
     "plotly>=5.18.0",
@@ -54,7 +54,7 @@ setup(
     # packages=find_packages(include=['jgtpy', 'jgtpy.forexconnect', 'jgtpy.forexconnect.lib', 'jgtpy.forexconnect.lib.windows', 'jgtpy.forexconnect.lib.linux'], exclude=['*test*']),
     install_requires=INSTALL_REQUIRES,
     entry_points={
-        "console_scripts": ["jgtcli=jgtpy.jgtcli:main", "jgtmksg=jgtpy.JGTMKSG:main", "jgtads=jgtpy.JGTADS:main"],
+        "console_scripts": ["jgtcli=jgtpy.jgtcli:main", "jgtmksg=jgtpy.JGTMKSG:main", "jgtads=jgtpy.JGTADS:main", "jgtapycli=jgtpy.jgtapycli:main"],
     },
     extras_require={
         "dev": (EXTRAS_DEV_LINT + EXTRAS_DEV_TEST + EXTRAS_DEV_DOCS),
