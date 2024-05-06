@@ -228,7 +228,7 @@ def create(
     Returns:
         pandas.DataFrame: CDS DataFrame
     """
-    print("----THIS FUNCTION IS BEING UPGRADED  cds.create(...) # fresh data or not, not sure.  At least now IT GETS NON EXISTING DATA...")
+    print("CDS create is being called")
     if cc is None:
         cc = JGTChartConfig()
     if rq is None:
