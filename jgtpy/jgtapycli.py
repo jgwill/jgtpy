@@ -20,7 +20,7 @@ from jgtutils import (
     jgtcommon as jgtcommon,
 )
 
-from jgtapyhelper import createIDSService,createIDSRequestFromArgs
+from jgtapyhelper import createIDSService,createIDSRequestFromArgs,print_quiet
 
 
 
@@ -130,11 +130,6 @@ def main():
         jgtcommon.print_exception(e)
 
 
-
-
-def print_quiet(quiet, content):
-    if not quiet:
-        print(content)
 
 
 if __name__ == "__main__":
