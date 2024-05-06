@@ -457,7 +457,7 @@ def _getPH_to_DF_wrapper_240304_then_createIDS_df(
         run_jgtfxcli_on_error=run_jgtfxcli_on_error,
         quiet=quiet,
         quote_count=rq.quotescount,
-        keep_bid_ast=rq.keep_bid_ask,
+        keep_bid_ask=rq.keep_bid_ask,
     )
 
     if not quiet:
@@ -472,6 +472,7 @@ def createFromPDSFile(
     quiet=True,
     run_jgtfxcli_on_error=True,
     columns_to_remove=None,
+    keep_bid_ask=False,
 ):
     """Create IDS (Indicator Data Service) with Fresh Data on the filestore
 
@@ -480,6 +481,7 @@ def createFromPDSFile(
         rq (JGTIDSRequest, optional): The JGTIDSRequest object to use for the processing. Defaults to None.
         run_jgtfxcli_on_error (bool, optional): If True, runs jgtfxcli on error. Default is True.
         columns_to_remove (list, optional): List of column names to remove from the DataFrame. Default is None.
+        keep_bid_ask (bool, optional): If True, keeps the bid and ask columns. Default is False.
 
     Returns:
         pandas.DataFrame: CDS DataFrame
@@ -492,6 +494,7 @@ def createFromPDSFile(
             rq=rq,
             run_jgtfxcli_on_error=run_jgtfxcli_on_error,
             columns_to_remove=columns_to_remove,
+            keep_bid_ask=keep_bid_ask,
         )
         # print("DEBUG H8 240325:: len getPH DF:",len(df))
 
@@ -507,6 +510,7 @@ def createFromPDSFileToIDSFile(
     rq: JGTIDSRequest = None,
     columns_to_remove=None,
     quiet=True,
+    keep_bid_ask=False,
 ):
     """
     Create a IDS file from a PDS file.
@@ -515,6 +519,7 @@ def createFromPDSFileToIDSFile(
     rq (JGTIDSRequest, optional): The JGTIDSRequest object to use for the processing. Defaults to None.
     columns_to_remove (list, optional): List of column names to remove from the IDS file. Default is None.
     quiet (bool, optional): If True, suppresses the output. Default is True.
+    keep_bid_ask (bool, optional): If True, keeps the bid and ask columns. Default is False.
 
     Returns:
     - fpath (str): The file path of the created IDS file.
@@ -523,8 +528,9 @@ def createFromPDSFileToIDSFile(
     """
     if rq is None:
         rq = JGTIDSRequest()
-
-    cdf = createFromPDSFile(rq=rq, quiet=quiet, columns_to_remove=columns_to_remove)
+    # to workround the issue of the bid and ask columns, we set the request to the supplied value in this function
+    rq.keep_bid_ask = keep_bid_ask
+    cdf = createFromPDSFile(rq=rq, quiet=quiet, columns_to_remove=columns_to_remove,keep_bid_ask=keep_bid_ask)
 
     # Define the file path based on the environment variable or local path
     fpath = writeIDS(rq.instrument, rq.timeframe, rq.use_full, cdf)
@@ -575,6 +581,7 @@ def toids(
     rq: JGTIDSRequest = None,
     columns_to_remove=None,
     format_boolean_columns_to_int=True,
+    keep_bid_ask=False,
 ):
     dfi = ids_add_indicators(dfsrc, cc=cc, rq=rq)
     if format_boolean_columns_to_int:
@@ -642,6 +649,7 @@ def createIDSService(
             rq=rq,
             quiet=quietting,
             columns_to_remove=col2remove,
+            keep_bid_ask=rq.keep_bid_ask,
         )  # @STCIssue: This is not supporting -c NB_BARS_TO_PROCESS, should it ?
 
         print_quiet(quiet, cdspath)

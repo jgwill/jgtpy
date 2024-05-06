@@ -179,6 +179,7 @@ def createCDS_for_main(
             use_full=use_full,
             use_fresh=use_fresh,
             columns_to_remove=col2remove,
+            keep_bid_ask=True,
         )  # @STCIssue: This is not supporting -c NB_BARS_TO_PROCESS, should it ?
         
         print_quiet(quiet, cdspath)

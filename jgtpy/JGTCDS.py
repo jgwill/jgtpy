@@ -33,6 +33,7 @@ def createFromPDSFileToCDSFile(
     use_full=False,
     rq:JGTCDSRequest=None,
     use_fresh=False,
+    keep_bid_ask=True,
 ):
     """
     Create a CDS file from a PDS file.
@@ -45,6 +46,8 @@ def createFromPDSFileToCDSFile(
     tlid_range (str, optional): The TLID range to retrieve. Default is None.
     use_full (bool, optional): If True, reads/writes the full CDS file. Default is False.
     rq (JGTCDSRequest, optional): The JGTCDSRequest object to use for the processing. Defaults to None.
+    use_fresh (bool, optional): If True, retrieves and reads fresh data. Default is False.
+    keep_bid_ask (bool, optional): If True, keeps the bid and ask columns in the CDS file. Default is True.
 
     Returns:
     - fpath (str): The file path of the created CDS file.
@@ -53,7 +56,9 @@ def createFromPDSFileToCDSFile(
     """
     if rq is None:
         rq = JGTCDSRequest()
-    
+    # Working around an issue with keep_bid_ask, we use the value supplied in this function to override the value in the request
+    rq.keep_bid_ask = keep_bid_ask
+
     cdf = createFromPDSFile(
         instrument, timeframe, quiet,         
         use_full=use_full, 
