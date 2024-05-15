@@ -51,16 +51,6 @@ def parse_args():
 def main():
     cc = JGTChartConfig()
     args = parse_args()
-
-    gator_oscillator_flag = (
-        args.gator_oscillator_flag if args.gator_oscillator_flag else False
-    )
-    mfi_flag = args.mfi_flag if args.mfi_flag else False
-    balligator_flag = args.balligator_flag if args.balligator_flag else False
-    balligator_period_jaws = args.balligator_period_jaws
-    largest_fractal_period = args.largest_fractal_period
-
-
     instrument = args.instrument
     timeframe = args.timeframe
     quotes_count = args.quotescount
@@ -141,12 +131,7 @@ def main():
                     show_ads=show_ads,
                     cc=cc,
                     use_full=full,
-                    use_fresh=fresh,
-                    gator_oscillator_flag=gator_oscillator_flag,
-                    mfi_flag=mfi_flag,
-                    balligator_flag=balligator_flag,
-                    balligator_period_jaws=balligator_period_jaws,
-                    largest_fractal_period=largest_fractal_period,
+                    use_fresh=fresh
                 )
                 # else:
                 #     p = pds.getPH(instrument, timeframe, quotes_count, date_from, date_to, False, quiet)
@@ -179,11 +164,6 @@ def createCDS_for_main(
     cc: JGTChartConfig = None,
     use_full=False,
     use_fresh=False,
-    gator_oscillator_flag=False,
-    mfi_flag=False,
-    balligator_flag=False,
-    balligator_period_jaws=89,
-    largest_fractal_period=89,
 ):
     # implementation goes here
     col2remove = constants.columns_to_remove
@@ -205,11 +185,6 @@ def createCDS_for_main(
             use_fresh=use_fresh,
             columns_to_remove=col2remove,
             keep_bid_ask=True,
-            gator_oscillator_flag=gator_oscillator_flag,
-            mfi_flag=mfi_flag,
-            balligator_flag=balligator_flag,
-            balligator_period_jaws=balligator_period_jaws,
-            largest_fractal_period=largest_fractal_period,
         )  # @STCIssue: This is not supporting -c NB_BARS_TO_PROCESS, should it ?
         
         print_quiet(quiet, cdspath)

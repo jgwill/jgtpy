@@ -161,15 +161,12 @@ def ids_add_indicatorsV2(
 
 def ids_add_indicators(
     dfsrc,
-    enablegator_oscillator_flag=False,
-    enablemfi_flag=False,
     dropnavalue=True,
     quiet=True,
     cleanupOriginalColumn=True,
     useLEGACY=True,
     cc: JGTChartConfig = None,
     bypass_index_reset=False,
-    big_alligator=False,
     rq: JGTIDSRequest = None,
 ):
     """
@@ -177,15 +174,12 @@ def ids_add_indicators(
 
     Args:
     dfsrc (pandas.DataFrame): The DataFrame to which the indicators will be added.
-    enablegator_oscillator_flag (bool, optional): Whether to enable the Gator Oscillator indicator. Defaults to False.
-    enablemfi_flag (bool, optional): Whether to enable the Money Flow Index indicator. Defaults to False.
     dropnavalue (bool, optional): Whether to drop rows with NaN values. Defaults to True.
     quiet (bool, optional): Whether to suppress console output. Defaults to False.
     cleanupOriginalColumn (bool, optional): Whether to clean up the original column. Defaults to True.
     useLEGACY (bool, optional): Whether to use the legacy version of the function. Defaults to True.
     cc (JGTChartConfig, optional): The JGTChartConfig object. Defaults to None.
     bypass_index_reset (bool, optional): Whether to bypass resetting the index. Defaults to False.
-    big_alligator (bool, optional): Whether to enable the Alligator indicator. Defaults to False.
     rq (JGTIDSRequest, optional): The JGTIDSRequest object. Defaults to None.
 
     Returns:
@@ -198,6 +192,14 @@ def ids_add_indicators(
         rq = JGTIDSRequest()
 
     dfresult = None
+
+    #Migrated from Signature to Request Object
+    enablegator_oscillator_flag=rq.gator_oscillator_flag
+    enablemfi_flag=rq.mfi_flag
+    big_alligator=rq.balligator_flag
+    balligator_period_jaws=rq.balligator_period_jaws
+    largest_fractal_period=rq.largest_fractal_period
+
     if (
         not useLEGACY
     ):  # Because jgtapy has to be upgraded with new column name, we wont use it until our next release
@@ -219,6 +221,8 @@ def ids_add_indicators(
             bypass_index_reset=bypass_index_reset,
             big_alligator=big_alligator,
             ids_request=rq,
+            balligator_period_jaws=balligator_period_jaws,
+            largest_fractal_period=largest_fractal_period,
         )
 
     return round_columns(dfresult, rq.rounding_decimal_min)

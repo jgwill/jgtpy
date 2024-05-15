@@ -34,6 +34,11 @@ def createFromPDSFileToCDSFile(
     rq:JGTCDSRequest=None,
     use_fresh=False,
     keep_bid_ask=True,
+    gator_oscillator_flag=False,
+    mfi_flag=False,
+    balligator_flag=False,
+    balligator_period_jaws=89,
+    largest_fractal_period=89,
 ):
     """
     Create a CDS file from a PDS file.
@@ -48,6 +53,11 @@ def createFromPDSFileToCDSFile(
     rq (JGTCDSRequest, optional): The JGTCDSRequest object to use for the processing. Defaults to None.
     use_fresh (bool, optional): If True, retrieves and reads fresh data. Default is False.
     keep_bid_ask (bool, optional): If True, keeps the bid and ask columns in the CDS file. Default is True.
+    gator_oscillator_flag (bool, optional): If True, calculates the Gator Oscillator. Default is False.
+    mfi_flag (bool, optional): If True, calculates the Money Flow Index. Default is False.
+    balligator_flag (bool, optional): If True, calculates the Bill Williams Alligator. Default is False.
+    balligator_period_jaws (int, optional): The period for the Bill Williams Alligator Jaws. Default is 89.
+    largest_fractal_period (int, optional): The period for the largest fractal. Default is 89.
 
     Returns:
     - fpath (str): The file path of the created CDS file.
@@ -56,6 +66,12 @@ def createFromPDSFileToCDSFile(
     """
     if rq is None:
         rq = JGTCDSRequest()
+        rq.gator_oscillator_flag = gator_oscillator_flag
+        rq.mfi_flag = mfi_flag
+        rq.balligator_flag = balligator_flag
+        rq.balligator_period_jaws = balligator_period_jaws
+        rq.largest_fractal_period = largest_fractal_period
+
     # Working around an issue with keep_bid_ask, we use the value supplied in this function to override the value in the request
     rq.keep_bid_ask = keep_bid_ask
 
@@ -162,6 +178,7 @@ def _getPH_to_DF_wrapper_240304(instrument, timeframe, quiet, cc, use_full, rq,u
             use_full=use_full,
             use_fresh=use_fresh,
             run_jgtfxcli_on_error=run_jgtfxcli_on_error,
+            keep_bid_ask=rq.keep_bid_ask,
             )
 
     if not quiet:
