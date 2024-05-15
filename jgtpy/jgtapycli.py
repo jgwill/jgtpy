@@ -44,46 +44,50 @@ def parse_args():
     jgtcommon.add_use_full_argument(parser)
     jgtcommon.add_use_fresh_argument(parser)
     jgtcommon.add_keepbidask_argument(parser)
+    jgtcommon.add_ids_mfi_argument(parser)
+    jgtcommon.add_ids_gator_oscillator_argument(parser)
+    jgtcommon.add_ids_balligator_argument(parser)
+    jgtcommon.add_ids_fractal_largest_period_argument(parser)
 
-    parser.add_argument(
-        "-go",
-        "--gator_oscillator_flag",
-        action="store_true",
-        help="Enable the Gator Oscillator indicator.",
-    )
-    parser.add_argument(
-        "-mfi",
-        "--mfi_flag",
-        action="store_true",
-        help="Enable the Money Flow Index indicator.",
-    )
+    # parser.add_argument(
+    #     "-go",
+    #     "--gator_oscillator_flag",
+    #     action="store_true",
+    #     help="Enable the Gator Oscillator indicator.",
+    # )
+    # parser.add_argument(
+    #     "-mfi",
+    #     "--mfi_flag",
+    #     action="store_true",
+    #     help="Enable the Market Facilitation Index indicator.",
+    # )
 
     parser.add_argument(
         "--bypass_index_reset",
         action="store_true",
         help="Bypass resetting the index.",
     )
-    parser.add_argument(
-        "-ba",
-        "--balligator_flag",
-        action="store_true",
-        help="Enable the Alligator indicator.",
-    )
-    parser.add_argument(
-        "-bjaw",
-        "--balligator_period_jaws",
-        type=int,
-        default=89,
-        help="The period of the Alligator jaws.",
-    )
-    parser.add_argument(
-        "-lfp",
-        "--largest_fractal_period",
-        type=int,
-        default=89,
-        help="The largest fractal period.",
-    )
 
+    # parser.add_argument(
+    #     "-ba",
+    #     "--balligator_flag",
+    #     action="store_true",
+    #     help="Enable the Alligator indicator.",
+    # )
+    # parser.add_argument(
+    #     "-bjaw",
+    #     "--balligator_period_jaws",
+    #     type=int,
+    #     default=89,
+    #     help="The period of the Alligator jaws.",
+    # )
+    # parser.add_argument(
+    #     "-lfp",
+    #     "--largest_fractal_period",
+    #     type=int,
+    #     default=89,
+    #     help="The largest fractal period.",
+    # )
     args = parser.parse_args()
     return args
 
