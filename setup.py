@@ -54,7 +54,7 @@ setup(
     # packages=find_packages(include=['jgtpy', 'jgtpy.forexconnect', 'jgtpy.forexconnect.lib', 'jgtpy.forexconnect.lib.windows', 'jgtpy.forexconnect.lib.linux'], exclude=['*test*']),
     install_requires=INSTALL_REQUIRES,
     entry_points={
-        "console_scripts": ["jgtcli=jgtpy.jgtcli:main", "jgtcli2=jgtpy.jgtcli2:main","jgtmksg=jgtpy.JGTMKSG:main", "jgtads=jgtpy.JGTADS:main", "jgtapycli=jgtpy.jgtapycli:main"],
+        "console_scripts": ["jgtcli=jgtpy.jgtcli:main", "jgtmksg=jgtpy.JGTMKSG:main", "jgtads=jgtpy.JGTADS:main", "jgtapycli=jgtpy.jgtapycli:main"],
     },
     extras_require={
         "dev": (EXTRAS_DEV_LINT + EXTRAS_DEV_TEST + EXTRAS_DEV_DOCS),
@@ -62,7 +62,6 @@ setup(
         "dev-test": EXTRAS_DEV_TEST,
         "dev-docs": EXTRAS_DEV_DOCS,
     },
-    license="MIT",
     keywords="data",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
