@@ -488,13 +488,13 @@ def createFromPDSFile(
     """
     if rq is None:
         rq = JGTIDSRequest()
+    rq.keep_bid_ask = keep_bid_ask
     try:
         df = _getPH_to_DF_wrapper_240304_then_createIDS_df(
             quiet=quiet,
             rq=rq,
             run_jgtfxcli_on_error=run_jgtfxcli_on_error,
             columns_to_remove=columns_to_remove,
-            keep_bid_ask=keep_bid_ask,
         )
         # print("DEBUG H8 240325:: len getPH DF:",len(df))
 
