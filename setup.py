@@ -14,38 +14,38 @@ def read_version():
 
 version = read_version()
 
-INSTALL_REQUIRES = [
-    "pandas>=0.25.1",
-    "python-dotenv>=0.19.2",
-    "jgtapy>=1.9.21",
-    "jgtutils>=0.1.67",
-    "dropbox>=11.36.2",
-    "tlid>=0.1.15",
-    "scipy>=1.9.1",
-    "matplotlib>=3.3.1",
-    "plotly>=5.18.0",
-    "mplfinance>=0.12.10b0",
-    "panel>=1.2.3",
-    "tomli>=1.2.3",
-]
+# INSTALL_REQUIRES = [
+#     "pandas>=0.25.1",
+#     "python-dotenv>=0.19.2",
+#     "jgtapy>=1.9.21",
+#     "jgtutils>=0.1.67",
+#     "dropbox>=11.36.2",
+#     "tlid>=0.1.15",
+#     "scipy>=1.9.1",
+#     "matplotlib>=3.3.1",
+#     "plotly>=5.18.0",
+#     "mplfinance>=0.12.10b0",
+#     "panel>=1.2.3",
+#     "tomli>=1.2.3",
+# ]
 
-EXTRAS_DEV_LINT = [
-    "flake8>=3.6.0,<3.7.0",
-    "isort>=4.3.4,<4.4.0",
-]
+# EXTRAS_DEV_LINT = [
+#     "flake8>=3.6.0,<3.7.0",
+#     "isort>=4.3.4,<4.4.0",
+# ]
 
-EXTRAS_DEV_TEST = [
-    "coverage",
-    "pytest>=3.10",
-]
+# EXTRAS_DEV_TEST = [
+#     "coverage",
+#     "pytest>=3.10",
+# ]
 
-EXTRAS_DEV_DOCS = [
-    "readme_renderer",
-    "sphinx",
-    "sphinx_rtd_theme>=0.4.0",
-    "html2text>=2020.1.16",
-    "html2markdown>=0.1.7",
-]
+# EXTRAS_DEV_DOCS = [
+#     "readme_renderer",
+#     "sphinx",
+#     "sphinx_rtd_theme>=0.4.0",
+#     "html2text>=2020.1.16",
+#     "html2markdown>=0.1.7",
+# ]
 
 setup(
     name="jgtpy",
@@ -59,7 +59,7 @@ setup(
         include=["jgtpy", "test-*.py"], exclude=["test*log", "*test*csv", "*test*png"]
     ),
     # packages=find_packages(include=['jgtpy', 'jgtpy.forexconnect', 'jgtpy.forexconnect.lib', 'jgtpy.forexconnect.lib.windows', 'jgtpy.forexconnect.lib.linux'], exclude=['*test*']),
-    install_requires=INSTALL_REQUIRES,
+    #install_requires=INSTALL_REQUIRES,
     # entry_points={
     #     "console_scripts": [
     #       "jgtcli=jgtpy.jgtcli:main", 
@@ -68,13 +68,13 @@ setup(
     #       "jgtapycli=jgtpy.jgtapycli:main"
     #       ],
     # },
-    extras_require={
-        "dev": (EXTRAS_DEV_LINT + EXTRAS_DEV_TEST + EXTRAS_DEV_DOCS),
-        "dev-lint": EXTRAS_DEV_LINT,
-        "dev-test": EXTRAS_DEV_TEST,
-        "dev-docs": EXTRAS_DEV_DOCS,
-    },
-    keywords="data",
+    # extras_require={
+    #     "dev": (EXTRAS_DEV_LINT + EXTRAS_DEV_TEST + EXTRAS_DEV_DOCS),
+    #     "dev-lint": EXTRAS_DEV_LINT,
+    #     "dev-test": EXTRAS_DEV_TEST,
+    #     "dev-docs": EXTRAS_DEV_DOCS,
+    # },
+    #keywords="data",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Financial and Insurance Industry",

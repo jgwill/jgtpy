@@ -11,6 +11,7 @@ authors = [
 
 description = "Enhanced JGTPy CDS, IDS, PDSP Services"
 readme = "README.md"
+keywords = ["data"]
 requires-python = ">=3.7"
 dependencies = [
   'pandas>=0.25.1',
@@ -26,6 +27,21 @@ dependencies = [
   'panel>=1.2.3',
   'tomli>=1.2.3',
 ]	
+
+optional-dependencies = {  dev-lint = [
+    "flake8>=3.6.0,<3.7.0",
+    "isort>=4.3.4,<4.4.0",
+  ],  dev-test = [
+    "coverage",
+    "pytest>=3.10",
+  ],  dev-docs = [
+    "readme_renderer",
+    "sphinx",
+    "sphinx_rtd_theme>=0.4.0",
+    "html2text>=2020.1.16",
+    "html2markdown>=0.1.7",
+  ]}
+
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
