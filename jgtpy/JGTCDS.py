@@ -219,6 +219,12 @@ def createFromDF(df, quiet=True,
     
     return dfi
 
+def create2(
+    rq:JGTCDSRequest=None,  
+    cc: JGTChartConfig = None,      
+    quiet=True,
+):
+    return create(rq.instrument, rq.timeframe, quiet=quiet, cc=cc, rq=rq, use_full=rq.use_full, use_fresh=rq.use_fresh)
 
 def create(
     instrument,
