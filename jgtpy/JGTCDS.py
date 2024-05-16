@@ -11,7 +11,7 @@ from JGTCDSRequest import JGTCDSRequest
 # import jgtfxcon.JGTPDS as pds
 import JGTIDS as ids
 import JGTPDSP as pds
-from jgtutils.jgtos import get_data_path
+from jgtutils.jgtos import get_data_path,mk_fullpath
 from JGTChartConfig import JGTChartConfig
 
 # from . import jgtconstants
@@ -326,7 +326,7 @@ def _save_cds_data_to_file(df, instrument:str, timeframe:str):
 
 def writeCDS(instrument, timeframe, use_full, cdf):
     data_path_cds = get_data_path("cds", use_full=use_full)
-    fpath = pds.mk_fullpath(instrument, timeframe, "csv", data_path_cds)
+    fpath = mk_fullpath(instrument, timeframe, "csv", data_path_cds)
     # print(fpath)
     cdf.to_csv(fpath, index=True)
     return fpath
