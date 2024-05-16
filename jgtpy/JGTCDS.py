@@ -251,7 +251,8 @@ def create(
     Returns:
         pandas.DataFrame: CDS DataFrame
     """
-    print("CDS create is being called")
+    if not quiet:
+        print("CDS create is being called")
     if cc is None:
         cc = JGTChartConfig()
     if rq is None:

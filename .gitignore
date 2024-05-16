@@ -172,3 +172,5 @@ rq.json
 jgtpy/_sample-data-SPX500-cds.csv
 logs/
 *.png
+.nx/
+_output_*
