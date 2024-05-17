@@ -111,13 +111,13 @@ def ids_add_indicators(
             quiet,
         )
     else:
-        dfresult = ids_add_indicators_LEGACY(
+        dfresult = ids_add_indicators__legacy(
             dfsrc=dfsrc,
             dropnavalue=dropnavalue,
             quiet=quiet,
             min_nb_bar_on_chart=cc.min_bar_on_chart,
             bypass_index_reset=bypass_index_reset,
-            ids_request=rq,
+            rq=rq,
         )
 
     return round_columns(dfresult, rq.rounding_decimal_min)
@@ -131,13 +131,13 @@ def round_columns(df, rounding_decimal_min=10):
     return df
 
 
-def ids_add_indicators_LEGACY(
+def ids_add_indicators__legacy(
     dfsrc,
     dropnavalue=True,
     quiet=True,
     min_nb_bar_on_chart=300,
     bypass_index_reset=False,
-    ids_request: JGTIDSRequest = None,
+    rq: JGTIDSRequest = None,
 ):
     """
     Adds various technical indicators to the input DataFrame. Is the same as in the jgtapy.legacy module.
@@ -148,22 +148,22 @@ def ids_add_indicators_LEGACY(
     quiet (bool, optional): Whether to suppress print statements. Defaults to False.
     min_nb_bar_on_chart (int, optional): The minimum number of bars on the chart. Defaults to 300.
     bypass_index_reset (bool, optional): Whether to bypass resetting the index. Defaults to False.
-    ids_request (JGTIDSRequest, optional): The JGTIDSRequest object. Defaults to None.
+    rq (JGTIDSRequest, optional): The JGTIDSRequest object. Defaults to None.
 
     Returns:
     pandas.DataFrame: The input DataFrame with added technical indicators.
     """
 
-    if ids_request is None:
-        ids_request = JGTIDSRequest()
+    if rq is None:
+        rq = JGTIDSRequest()
 
     # @a Migrating to the new JGTIDSRequest
-    gator_oscillator_flag = ids_request.gator_oscillator_flag
-    mfi_flag = ids_request.mfi_flag
-    addAlligatorOffsetInFutur = ids_request.addAlligatorOffsetInFutur
-    balligator_flag = ids_request.balligator_flag
-    balligator_period_jaws = ids_request.balligator_period_jaws
-    largest_fractal_period = ids_request.largest_fractal_period
+    gator_oscillator_flag = rq.gator_oscillator_flag
+    mfi_flag = rq.mfi_flag
+    addAlligatorOffsetInFutur = rq.addAlligatorOffsetInFutur
+    balligator_flag = rq.balligator_flag
+    balligator_period_jaws = rq.balligator_period_jaws
+    largest_fractal_period = rq.largest_fractal_period
 
     ldfsrc = len(dfsrc)
     # TODO
@@ -206,12 +206,12 @@ def ids_add_indicators_LEGACY(
         print("alligator failed")
 
     # Assign numbers to variables with prefix 'balligator_'
-    balligator_period_jaws = ids_request.balligator_period_jaws
-    balligator_period_teeth = ids_request.balligator_period_teeth
-    balligator_period_lips = ids_request.balligator_period_lips
-    balligator_shift_jaws = ids_request.balligator_shift_jaws
-    balligator_shift_teeth = ids_request.balligator_shift_teeth
-    balligator_shift_lips = ids_request.balligator_shift_lips
+    balligator_period_jaws = rq.balligator_period_jaws
+    balligator_period_teeth = rq.balligator_period_teeth
+    balligator_period_lips = rq.balligator_period_lips
+    balligator_shift_jaws = rq.balligator_shift_jaws
+    balligator_shift_teeth = rq.balligator_shift_teeth
+    balligator_shift_lips = rq.balligator_shift_lips
 
     bAlligator_required_bar_offset = (
         minimal_bars_with_indicators + balligator_period_jaws + balligator_shift_jaws
@@ -443,8 +443,8 @@ import JGTIDS as ids
 import JGTPDSP as pds
 from jgtutils.jgtos import get_data_path
 
-
-def _getPH_to_DF_wrapper_240304_then_createIDS_df(
+#The new function name, following Python's PEP 8 style guide, could be `get_ph_to_df_and_create_ids_df`. This name is more readable and still describes what the function does: it gets PH to DataFrame and then creates IDS DataFrame.
+def get_ph_to_df_and_create_ids_df(
     rq, run_jgtfxcli_on_error=True, columns_to_remove=None, quiet=True
 ):
     if rq is None:
@@ -463,11 +463,11 @@ def _getPH_to_DF_wrapper_240304_then_createIDS_df(
     if not quiet:
         print(df)
 
-    dfi = createFromDF(df, quiet=quiet, rq=rq, columns_to_remove=columns_to_remove)
+    dfi = create_from_df(df, quiet=quiet, rq=rq, columns_to_remove=columns_to_remove)
     return dfi
 
 
-def createFromPDSFile(
+def create_from_pds_file(
     rq: JGTIDSRequest = None,
     quiet=True,
     run_jgtfxcli_on_error=True,
@@ -490,7 +490,7 @@ def createFromPDSFile(
         rq = JGTIDSRequest()
     rq.keep_bid_ask = keep_bid_ask
     try:
-        df = _getPH_to_DF_wrapper_240304_then_createIDS_df(
+        df = get_ph_to_df_and_create_ids_df(
             quiet=quiet,
             rq=rq,
             run_jgtfxcli_on_error=run_jgtfxcli_on_error,
@@ -506,7 +506,7 @@ def createFromPDSFile(
         return None
 
 
-def createFromPDSFileToIDSFile(
+def create_from_pds_file_to_ids_file(
     rq: JGTIDSRequest = None,
     columns_to_remove=None,
     quiet=True,
@@ -528,17 +528,17 @@ def createFromPDSFileToIDSFile(
     """
     if rq is None:
         rq = JGTIDSRequest()
-    # to workround the issue of the bid and ask columns, we set the request to the supplied value in this function
+    #to workround the issue of the bid and ask columns, we set the request to the supplied value in this function
     rq.keep_bid_ask = keep_bid_ask
-    cdf = createFromPDSFile(rq=rq, quiet=quiet, columns_to_remove=columns_to_remove,keep_bid_ask=keep_bid_ask)
+    cdf = create_from_pds_file(rq=rq, quiet=quiet, columns_to_remove=columns_to_remove,keep_bid_ask=keep_bid_ask)
 
     # Define the file path based on the environment variable or local path
-    fpath = writeIDS(rq.instrument, rq.timeframe, rq.use_full, cdf)
+    fpath = write_ids(rq.instrument, rq.timeframe, rq.use_full, cdf)
 
     return fpath, cdf
 
 
-def createFromDF(
+def create_from_df(
     df,
     quiet=True,
     cc: JGTChartConfig = None,
@@ -596,7 +596,7 @@ def __format_boolean_columns_to_int(dfsrc, quiet=True):
     return dfsrc
 
 
-def writeIDS(instrument, timeframe, use_full, cdf):
+def write_ids(instrument, timeframe, use_full, cdf):
     data_path_ids = get_data_path("ids", use_full=use_full)
     fpath = pds.mk_fullpath(instrument, timeframe, "csv", data_path_ids)
     # print(fpath)
@@ -606,7 +606,7 @@ def writeIDS(instrument, timeframe, use_full, cdf):
 
 
 
-def createIDSRequestFromArgs(args, instrument, timeframe):
+def create_ids_request_from_args(args, instrument, timeframe):
     rq = JGTIDSRequest()
     rq.instrument = instrument
     rq.keep_bid_ask = args.keepbidask
@@ -645,7 +645,7 @@ def createIDSService(
         # cdspath, cdf = cds.createFromPDSFileToCDSFile(
         # @a Migrate to IDS Logics
         # cdspath, cdf = cds.createFromPDSFileToCDSFile(
-        cdspath, cdf = createFromPDSFileToIDSFile(
+        cdspath, cdf = create_from_pds_file_to_ids_file(
             rq=rq,
             quiet=quietting,
             columns_to_remove=col2remove,
