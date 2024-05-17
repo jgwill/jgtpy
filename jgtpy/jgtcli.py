@@ -16,6 +16,7 @@ from jgtutils import (
 import argparse
 import JGTPDSP as pds
 import JGTCDS as cds
+import JGTCDSSvc as svc
 import JGTADS as ads
 from JGTChartConfig import JGTChartConfig
 
@@ -110,7 +111,7 @@ def main():
 
     # print("Verbose level : " + str(verbose_level))
     if process_cds:
-        print("Processing CDS")
+        if verbose_level > 0:print("Processing CDS")
         output = True
     # if args.compress:
     #    compress = args.compress
@@ -211,6 +212,9 @@ def createCDS_for_main(
             balligator_period_jaws=balligator_period_jaws,
             largest_fractal_period=largest_fractal_period,
         )  # @STCIssue: This is not supporting -c NB_BARS_TO_PROCESS, should it ?
+        #@STCGoal GENERATE THE ZONE from the FRESH CDF
+        fpath,zone_data = svc.zone_update_from_cdf(instrument,timeframe,cdf,quiet=quietting)
+        print(instrument," ",timeframe," zone: ",zone_data["zcol"].values[0])
         
         print_quiet(quiet, cdspath)
         print_quiet(quiet, cdf)
