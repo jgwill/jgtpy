@@ -18,7 +18,7 @@ class JGTPDSRequest(JGTBaseRequest):
         crop_last_dt: str = None,
         use_fresh: bool = False,
         use_full=False,
-        keep_bid_ask=False,
+        keep_bid_ask=True,
         quotescount=300,  # @a Migrate to Use TODO
         *args,
         **kwargs,
