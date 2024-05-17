@@ -249,7 +249,7 @@ def round_columns_v2(df, rounding_decimal_min=10):
 def ids_add_indicators_LEGACY(
     dfsrc,
     enablegator_oscillator_flag=False,
-    enablemfi_flag=False,
+    enablemfi_flag=True,
     dropnavalue=True,
     quiet=True,
     addAlligatorOffsetInFutur=False,

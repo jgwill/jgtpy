@@ -31,15 +31,21 @@ from jgtutils import jgtconstants as c
 def createCDSRequestFromArgs(args, instrument, timeframe):
     rq = JGTCDSRequest()
     rq.instrument = instrument
-    rq.keep_bid_ask = args.keepbidask
+    #rq.keep_bid_ask = args.keepbidask
+    if args.rmbidask:
+        rq.keep_bid_ask = False
     rq.timeframe = timeframe
     rq.quotescount = args.quotescount
     rq.use_fresh = args.fresh if args.fresh else False
+    if args.notfresh:
+        rq.use_fresh = False
     rq.use_full = args.full if args.full else False
     rq.gator_oscillator_flag = (
         args.gator_oscillator_flag if args.gator_oscillator_flag else False
     )
-    rq.mfi_flag = args.mfi_flag if args.mfi_flag else False
+    #rq.mfi_flag = args.mfi_flag if args.mfi_flag else False
+    if args.no_mfi_flag:
+        rq.mfi_flag = False
     rq.balligator_flag = args.balligator_flag if args.balligator_flag else False
     rq.balligator_period_jaws = args.balligator_period_jaws
     rq.largest_fractal_period = args.largest_fractal_period

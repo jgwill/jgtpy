@@ -56,7 +56,7 @@ def main():
     gator_oscillator_flag = (
         args.gator_oscillator_flag if args.gator_oscillator_flag else False
     )
-    mfi_flag = args.mfi_flag if args.mfi_flag else False
+    mfi_flag = True #mfi_flag = args.mfi_flag if args.mfi_flag else False
     balligator_flag = args.balligator_flag if args.balligator_flag else False
     balligator_period_jaws = args.balligator_period_jaws
     largest_fractal_period = args.largest_fractal_period
@@ -179,9 +179,9 @@ def createCDS_for_main(
     show_ads=False,
     cc: JGTChartConfig = None,
     use_full=False,
-    use_fresh=False,
+    use_fresh=True,
     gator_oscillator_flag=False,
-    mfi_flag=False,
+    mfi_flag=True,
     balligator_flag=False,
     balligator_period_jaws=89,
     largest_fractal_period=89,

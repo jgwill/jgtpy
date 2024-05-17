@@ -34,7 +34,7 @@ class JGTIDSRequest(JGTPDSRequest):
     def __init__(self, 
                  aof_flag=False, 
                  balligator_flag=False, 
-                 mfi_flag=False, 
+                 mfi_flag=True, 
                  gator_oscillator_flag=False,
                  balligator_period_jaws=89, 
                  balligator_period_teeth=55, 
