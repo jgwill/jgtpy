@@ -89,7 +89,7 @@ def get_higher_cdf(i,t,_level=1,default_timeframes = "M1,W1,D1,H4,H1,m15,m5",qui
     return hdf,htf
 
 
-def _get_zone_from_cdf(_cdf):
+def zone_get_value_from_cdf(_cdf):
   return _cdf[c.ZCOL].tail(1).values[0]
 
 def _get_zone_index_from_cdf(_cdf):
@@ -100,7 +100,7 @@ def zone_update(i,t,quiet=True,to_json=False): # We expect it to be saved in the
   return zone_update_from_cdf(i,t,cdf,quiet=quiet,to_json=to_json)
 
 def zone_update_from_cdf(i,t,cdf,quiet=True,to_json=False): # We expect it to be saved in the zone folder  
-  zone=_get_zone_from_cdf(cdf)
+  zone=zone_get_value_from_cdf(cdf)
   if not quiet:
     print("Zone: ",zone)
   
