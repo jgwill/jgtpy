@@ -184,16 +184,16 @@ def df_to_json(df,row_id=0,orient='records'):
   json_obj = json.loads(json_str)
   return json_obj[row_id] if json_obj else None
 
-def read_zone_to_json(i, t):
-  return zone_read(i, t, to_json=True)
+def read_zone_to_json(i, t,add_instrument_key=False,add_tf_key=False):
+  return zone_read(i, t, to_json=True,add_instrument_key=add_instrument_key,add_tf_key=add_tf_key)
 
 
 
 #read zone and higher timeframe level
-def zone_read_up(i,t,level=1,quiet=False,to_json=False):
+def zone_read_up(i,t,level=1,quiet=False,to_json=False,add_instrument_key=False,add_tf_key=False):
   res={}
   # cur_zdata=read_zone(i,t).to_dict(orient="records")
-  zone_data = zone_read(i,t,add_tf_key=False)
+  zone_data = zone_read(i,t,add_tf_key=add_tf_key,add_instrument_key=add_instrument_key)
   cur_zdata=df_to_json(zone_data)
   res[t]=cur_zdata
   #res.append(current)
