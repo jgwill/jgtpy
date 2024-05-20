@@ -55,6 +55,7 @@ from jgtutils.jgtconstants import (
     GL,
     GH,
     MFI,
+    VOLUME,
 )
 
 columns_to_normalize = IDS_COLUMNS_TO_NORMALIZE  # @a Migrate to jgtutils.jgtconstants
@@ -130,6 +131,19 @@ def round_columns(df, rounding_decimal_min=10):
             df[col] = df[col].apply(lambda x: 0 if "e" in str(x) else x)
     return df
 
+def calculate_mfi_sq(row, prev_row):
+    if pd.isna(row[VOLUME]):
+        return '0'
+    elif row[VOLUME] > prev_row[VOLUME] and row['MFI'] > prev_row['MFI']:
+        return '++ Green'
+    elif row[VOLUME] < prev_row[VOLUME] and row['MFI'] < prev_row['MFI']:
+        return '-- Fade'
+    elif row[VOLUME] < prev_row[VOLUME] and row['MFI'] > prev_row['MFI']:
+        return '-+ Fake'
+    elif row[VOLUME] > prev_row[VOLUME] and row['MFI'] < prev_row['MFI']:
+        return '+- Squat'
+    else:
+        return '0'
 
 def ids_add_indicators__legacy(
     dfsrc,
@@ -343,8 +357,20 @@ def ids_add_indicators__legacy(
     if mfi_flag:
         try:
             i.bw_mfi(column_name=MFI)
-        except:
+            # Add SQUAT Bar column to the DataFrame
+            ## formula
+            """
+            1. + Tick volume and + MFI  Indicator: ++ Green 
+            2. - Tick volume and - MFI  Indicator: -- Fade
+            3. - Tick volume and + MFI  Indicator: -+ Fake
+            4. + Tick volume and - MFI  Indicator: +- Squat
+            """
+            print(" ADDING SQUAT PROTO")
+            #i['mfi_sq'] = [calculate_mfi_sq(row, i.iloc[i.index.get_loc(row.name)-1]) if i.index.get_loc(row.name) != 0 else '0' for row in i.itertuples()]
+
+        except Exception as e:
             print("bw_mfi failed")
+            print(e)
 
     if addAlligatorOffsetInFutur:
         try:
