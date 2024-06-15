@@ -266,6 +266,30 @@ def _get_dt_requirement_for_tf(timeframe, is_UTC=True):
   return closing_times.get(timeframe, dt_friday_close)
 
 
+from dateutil.relativedelta import relativedelta
+
+#@STCIssue NOT WORKING, Has a more complex logic.  ex.  H4 is not -4 but last bar completed less than 4 hours ago which fits in what the markets define as H4 (ex.  H4 is updated as 1:00, 5:00, 9:00, 13:00, 17:00, 21:00)
+def get_dt_required_by_timeframes(input_datetime):
+  # Convert the input string to a datetime object if not already
+  if not isinstance(input_datetime, datetime):  input_datetime = datetime.strptime(input_datetime, "%Y-%m-%d %H:%M:%S")
+  timeframes = {
+    "M1": input_datetime - relativedelta(months=1),
+    "W1": input_datetime - relativedelta(weeks=1),
+    "D1": input_datetime - relativedelta(days=1),
+    "H8": input_datetime.replace(hour=8, minute=0, second=0),
+    "H6": input_datetime.replace(hour=6, minute=0, second=0),
+    "H4": input_datetime.replace(hour=4, minute=0, second=0),
+    "H3": input_datetime.replace(hour=3, minute=0, second=0),
+    "H2": input_datetime.replace(hour=2, minute=0, second=0),
+    "H1": input_datetime.replace(hour=1, minute=0, second=0),
+    "m30": input_datetime.replace(minute=30, second=0),
+    "m15": input_datetime.replace(minute=15, second=0),
+    "m5": input_datetime.replace(minute=5, second=0),
+    "m1": input_datetime.replace(minute=1, second=0)
+  }
+  return {k: v.strftime("%Y-%m-%d %H:%M:%S") for k, v in timeframes.items()}
+
+
 def _test_if_having_crop_last_dt(df,crop_last_dt, quiet:bool=True):
     tst=df.tail(1).copy()
     if not quiet:
