@@ -216,6 +216,16 @@ def _get_ph_surely_fresh(instrument, timeframe, quote_count, with_index, quiet, 
     add_df_to_full_cache(instrument, timeframe, df)
   return df
 
+
+from datetime import datetime, timedelta
+from pytz import timezone
+
+def _get_dt_requirement_for_tf(timeframe,is_UTC=False): #@STCIssue The rest of the process might change the timezone from ours, not sure
+  
+  dt_now = str(datetime.now())
+    
+  return dt_now
+
 def _if_crop_ph(dt_crop_last, df):
   if dt_crop_last is not None:
     return df[df.index <= dt_crop_last].copy() 
