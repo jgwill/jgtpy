@@ -132,7 +132,10 @@ def getPH(instrument:str,
   if cc is None:
     cc = JGTChartConfig()
   if quote_count == -1 and use_full == False: #@STCIssue JGTChartConfig being Replaced by JGTPDSPRequest
-    fix_240325 = 50
+    TALLIGATOR_JAW_PERIODS = 377
+    TALLIGATOR_JAW_SHIFT = 244
+    TALLIGATOR_REQUIRED_QUOTE_COUNT = TALLIGATOR_JAW_PERIODS+TALLIGATOR_JAW_SHIFT
+    fix_240325 = 50 if not talligator_flag else TALLIGATOR_REQUIRED_QUOTE_COUNT
     quote_count = cc.nb_bar_to_retrieve + fix_240325
   
   # If we dont have enough data in full when using crop_last_dt, we should use fresh
