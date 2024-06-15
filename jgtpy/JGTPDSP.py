@@ -232,7 +232,38 @@ def _if_crop_ph(dt_crop_last, df):
   return df
 
 
+from datetime import datetime, timedelta
+from pytz import timezone
+def _get_dt_requirement_for_tf(timeframe, is_UTC=True):
+  dt_now = datetime.now(timezone('EST')) if is_UTC else datetime.now()
+  dt_friday_close = dt_now.replace(hour=16, minute=55, second=0, microsecond=0)
 
+  # If it's the weekend, return the closing time of the previous Friday
+  if dt_now.weekday() >= 5: 
+    return dt_friday_close
+
+  # If it's a weekday but after closing time, return the closing time of that day
+  if dt_now.time() > dt_friday_close.time():
+    return dt_friday_close
+
+  # If it's a weekday and before closing time, return the closing time based on the timeframe
+  closing_times = {
+    'M1': dt_now.replace(hour=20, minute=44),
+    'W1': dt_now.replace(hour=21),
+    'D1': dt_now.replace(hour=21),
+    'H8': dt_now.replace(hour=13),
+    'H6': dt_now.replace(hour=15),
+    'H4': dt_now.replace(hour=17),
+    'H3': dt_now.replace(hour=18),
+    'H2': dt_now.replace(hour=19),
+    'H1': dt_now.replace(hour=20),
+    'm30': dt_now.replace(hour=20, minute=30),
+    'm15': dt_now.replace(hour=20, minute=45),
+    'm5': dt_now.replace(hour=20, minute=40),
+    'm1': dt_now.replace(hour=20, minute=44)
+  }
+
+  return closing_times.get(timeframe, dt_friday_close)
 
 
 def _test_if_having_crop_last_dt(df,crop_last_dt, quiet:bool=True):
