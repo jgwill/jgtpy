@@ -622,8 +622,6 @@ def _ids_clear_fdb_intermediaries_columns(dfsrc, quiet=False):
     return dfsrc
 
 
-# @title FDB Bullish logics
-# from : https://stackoverflow.com/questions/23330654/update-a-dataframe-in-pandas-while-iterating-row-by-row
 
 
 def _ids_add_fdb_column_logics_v2(dfsrc, quiet=False):
