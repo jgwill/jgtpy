@@ -31,8 +31,9 @@ _DROPBOX_ACCESS_TOKEN= _FXCM_DROPBOX_ACCESS_TOKEN
 local_fn_compression='gzip'
 
 
-def get_pov_local_data_filename(instrument:str,timeframe:str,local_data_dir='./data',local_fn_suffix='.full.csv.gz'):
+def get_pov_local_data_filename_DEPRECATED(instrument:str,timeframe:str,local_data_dir='./data',local_fn_suffix='.full.csv'):
   print("-------#@STCIssue FIXING REQUIRED-----------------")
+  print("  MIGRATING IT TO JGTPDSP....")
   tf=timeframe
   if tf=="m1":
     tf="mi1"
