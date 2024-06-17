@@ -37,7 +37,21 @@ class JGTPDSRequest(JGTBaseRequest):
             self.use_fresh = False
 
         self.__timeframes__(timeframes)
-
+    
+    # create JGTPDSRequest from args (argparse) considering the super has the same method
+    @staticmethod
+    def from_args(args):
+        return JGTPDSRequest(
+            instrument=args.instrument,
+            timeframe=args.timeframe,
+            timeframes=args.timeframes if args.timeframes else None,
+            crop_last_dt=args.crop_last_dt if args.crop_last_dt else None,
+            use_fresh=args.fresh if args.fresh else False,
+            use_full=args.full if args.full else False,
+            keep_bid_ask=False if args.rmbidask else True,
+            quotescount=args.quotescount if args.quotescount else 300,
+        )
+    
     def __timeframes__(self, timeframes=None):
         if isinstance(timeframes, list):
             self.timeframes = timeframes

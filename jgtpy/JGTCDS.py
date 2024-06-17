@@ -40,7 +40,10 @@ def createFromPDSFileToCDSFile(
     balligator_flag=False,
     balligator_period_jaws=89,
     largest_fractal_period=89,
+    talligator_flag=False,
+    talligator_period_jaws=377,
     viewpath=False,
+    quotescount=300,
 ):
     """
     Create a CDS file from a PDS file.
@@ -60,7 +63,10 @@ def createFromPDSFileToCDSFile(
     balligator_flag (bool, optional): If True, calculates the Bill Williams Alligator. Default is False.
     balligator_period_jaws (int, optional): The period for the Bill Williams Alligator Jaws. Default is 89.
     largest_fractal_period (int, optional): The period for the largest fractal. Default is 89.
+    talligator_flag (bool, optional): If True, calculates the Tide Alligator. Default is False.
+    talligator_period_jaws (int, optional): The period for the Tide Alligator Jaws. Default is 377.
     viewpath (bool, optional): If True, displays the file path. Default is False.
+    quotescount (int, optional): The number of quotes to keep. Default is 300.
 
     Returns:
     - fpath (str): The file path of the created CDS file.
@@ -68,12 +74,18 @@ def createFromPDSFileToCDSFile(
 
     """
     if rq is None:
+        print("rq is None in createFromPDSFileToCDSFile")
         rq = JGTCDSRequest()
+        rq.quotescount = quotescount
         rq.gator_oscillator_flag = gator_oscillator_flag
         rq.mfi_flag = mfi_flag
         rq.balligator_flag = balligator_flag
+        rq.talligator_flag = talligator_flag
         rq.balligator_period_jaws = balligator_period_jaws
+        rq.talligator_period_jaws = talligator_period_jaws
         rq.largest_fractal_period = largest_fractal_period
+        rq.viewpath=viewpath
+        rq.talligator_fix_quotescount()
     if rq.viewpath:
         cdspath = get_pov_local_data_filename(instrument,timeframe,use_full=use_full)
         print(cdspath)
@@ -177,9 +189,10 @@ def createFromPDSFile(
         return None
 
 def _getPH_to_DF_wrapper_240304(instrument, timeframe, quiet, cc, use_full, rq,use_fresh=False ,run_jgtfxcli_on_error=True,columns_to_remove=None):
-
+    #print("_getPH_to_DF_wrapper_240304 rq.quotescount:",rq.quotescount)
     df=pds.getPH(instrument,
             timeframe,
+            quote_count=rq.quotescount,
             quiet=quiet,
             use_full=use_full,
             use_fresh=use_fresh,

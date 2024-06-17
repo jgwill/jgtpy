@@ -8,6 +8,8 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 from JGTPDSRequest import JGTPDSRequest
 
+from jgtutils.jgtconstants import (TJAW_PERIODS, TTEETH_PERIODS)
+
 class JGTIDSRequest(JGTPDSRequest):
     """
     Represents a JGT IDS (Indicator Data Structure) request.
@@ -29,6 +31,14 @@ class JGTIDSRequest(JGTPDSRequest):
         peak_divider_min_height (int): Minimum height of the peak divider.
         rounding_decimal_min (int): Minimum decimal for rounding.
         disable_ao_peaks_v1 (bool): Flag indicating whether to disable AO Peak V1.
+        talligator_flag (bool): Flag indicating whether to include Talligator data.
+        talligator_period_jaws (int): Period for the jaws line of the Talligator indicator.
+        talligator_period_teeth (int): Period for the teeth line of the Talligator indicator.
+        talligator_period_lips (int): Period for the lips line of the Talligator indicator.
+        talligator_shift_jaws (int): Shift for the jaws line of the Talligator indicator.
+        talligator_shift_teeth (int): Shift for the teeth line of the Talligator indicator.
+        talligator_shift_lips (int): Shift for the lips line of the Talligator indicator.
+        
         
     """
     def __init__(self, 
@@ -51,6 +61,13 @@ class JGTIDSRequest(JGTPDSRequest):
                  include_ao_color=False,
                  include_ac_color=False,
                  addAlligatorOffsetInFutur=False,
+                 talligator_flag=False, 
+                 talligator_period_jaws=377, 
+                 talligator_period_teeth=233, 
+                 talligator_period_lips=144,
+                 talligator_shift_jaws=233, 
+                 talligator_shift_teeth=144, 
+                 talligator_shift_lips=89,
                  *args, 
                  **kwargs):
         #super().__init__(None, None, None)
@@ -74,12 +91,60 @@ class JGTIDSRequest(JGTPDSRequest):
         self.peak_width = peak_width
         self.peak_divider_min_height = peak_divider_min_height
         self.addAlligatorOffsetInFutur = addAlligatorOffsetInFutur
+        self.talligator_flag=talligator_flag
+        self.talligator_period_jaws = talligator_period_jaws
+        self.talligator_period_teeth = talligator_period_teeth
+        self.talligator_period_lips = talligator_period_lips
+        self.talligator_shift_jaws = talligator_shift_jaws
+        self.talligator_shift_teeth = talligator_shift_teeth
+        self.talligator_shift_lips = talligator_shift_lips
 
         #Migrated logics
-        self.balligator_period_jaws = self.balligator_period_jaws if self.balligator_flag else 0 #balligator_period_jaws will be 0 if it is not used
+        self.balligator_period_jaws = self.balligator_period_jaws 
+        #if self.balligator_flag else 0 #balligator_period_jaws will be 0 if it is not used
+        self.talligator_period_jaws = self.talligator_period_jaws 
+        #if self.talligator_flag else 0 #talligator_period_jaws will be 0 if it is not used
         
+        if self.talligator_flag:
+            self.talligator_fix_quotescount()
+    
+    # create a new JGTIDSRequest object from args (argparse)
+    @staticmethod
+    def from_args(args):
+        return JGTIDSRequest(
+            instrument=args.instrument,
+            timeframe=args.timeframe,
+            quotescount=args.quotescount,
+            viewpath=args.viewpath,
+            use_fresh=args.fresh,
+            use_full=args.full,
+            gator_oscillator_flag=args.gator_oscillator_flag,
+            mfi_flag=args.mfi_flag,
+            balligator_flag=args.balligator_flag,
+            balligator_period_jaws=args.balligator_period_jaws,
+            largest_fractal_period=args.largest_fractal_period,
+            talligator_flag=args.talligator_flag,
+            talligator_period_jaws=args.talligator_period_jaws,
+            verbose_level=args.verbose
+        )   
     def to_json(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=2) 
+    
+    def _get_talligator_required_additional_quotescount(self):            
+        TJAW_REQUIRED_CALC_BARS = TJAW_PERIODS+TTEETH_PERIODS #@STCIssue We should use : self.talligator_period_jaws ,... instead of TJAW_PERIODS, TTEETH_PERIODS
+        return TJAW_REQUIRED_CALC_BARS
+
+    def talligator_fix_quotescount(self,nb_bars_by_default=300):
+        if self.use_full:
+            return
         
-    # def __str__(self) -> str:
-    #     return super().__str__() + f"aof_flag: {self.aof_flag}\n" + f"balligator_flag: {self.balligator_flag}\n" + f"mfi_flag: {self.mfi_flag}\n" + f"gator_oscillator_flag: {self.gator_oscillator_flag}\n" + f"balligator_period_jaws: {self.balligator_period_jaws}\n" + f"balligator_period_teeth: {self.balligator_period_teeth}\n" + f"balligator_period_lips: {self.balligator_period_lips}\n" + f"balligator_shift_jaws: {self.balligator_shift_jaws}\n" + f"balligator_shift_teeth: {self.balligator_shift_teeth}\n" + f"balligator_shift_lips: {self.balligator_shift_lips}\n" + f"largest_fractal_period: {self.largest_fractal_period}\n" + f"peak_distance: {self.peak_distance}\n" + f"peak_width: {self.peak_width}\n" + f"peak_divider_min_height: {self.peak_divider_min_height}\n" + f"rounding_decimal_min: {self.rounding_decimal_min}\n"
+        if self.talligator_flag:
+            if self.quotescount==-1:
+                self.quotescount = nb_bars_by_default
+            TALLIGATOR_REQ_QUOTECOUNT=self._get_talligator_required_additional_quotescount()
+            print("self.quotescount:",self.quotescount)
+            self.quotescount = TALLIGATOR_REQ_QUOTECOUNT + self.quotescount
+            print("self.quotescount:",self.quotescount)
+            # if self.quotescount < TALLIGATOR_REQ_QUOTECOUNT + 300:
+            #     self.quotescount = TALLIGATOR_REQ_QUOTECOUNT
+

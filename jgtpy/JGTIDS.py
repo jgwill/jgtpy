@@ -944,6 +944,48 @@ def _add_ao_fractal_peak_v1(
 
 # @title Add CDS signals
 
+from jgtutils.jgtconstants import MFI,MFI_SQUAT,MFI_GREEN,MFI_FADE,MFI_FAKE,MFI_SIGNAL,MFI_VAL
+
+def _cds_add_mfi_squat_n_signals_column_logics_v1(dfsrc, quiet=False):
+    """
+    Adds MFI (Market Facilitation Index (reference: B. Williams)) squat column logics to the given DataFrame.
+
+    Parameters:
+    - dfsrc (DataFrame): The input DataFrame to which the MFI squat column logics will be added.
+    - quiet (bool): If True, suppresses the output messages. Default is False.
+
+    Returns:
+    - dfsrc (DataFrame): The updated DataFrame with the MFI squat column logics added.
+    """
+
+    dfsrc[MFI_SQUAT] = (
+        (dfsrc.Volume > 0)
+        & (dfsrc.Volume > dfsrc.Volume.shift())
+        & (dfsrc.mfi < dfsrc.mfi.shift())
+    ).astype(int)
+    dfsrc[MFI_GREEN] = (
+        (dfsrc.Volume > 0)
+        & (dfsrc.Volume > dfsrc.Volume.shift())
+        & (dfsrc.mfi > dfsrc.mfi.shift())
+    ).astype(int)
+    dfsrc[MFI_FADE] = (
+        (dfsrc.Volume > 0)
+        & (dfsrc.Volume < dfsrc.Volume.shift())
+        & (dfsrc.mfi < dfsrc.mfi.shift())
+    ).astype(int)
+    dfsrc[MFI_FAKE] = (
+        (dfsrc.Volume > 0)
+        & (dfsrc.Volume < dfsrc.Volume.shift())
+        & (dfsrc.mfi > dfsrc.mfi.shift())
+        ).astype(int)
+    dfsrc[MFI_SIGNAL] = dfsrc.apply(
+         lambda row: 4 if row[MFI_SQUAT] > 0 else 1 if row[MFI_GREEN] > 0 else 2 if row[MFI_FADE]>0 else 3 if row[MFI_FAKE]>0 else 0 , axis=1
+     )
+    dfsrc[MFI_VAL] = dfsrc.apply(
+         lambda row: "++" if row[MFI_SIGNAL] == 1 else "--" if row[MFI_SIGNAL] == 2 else "-+" if row[MFI_SIGNAL] == 3 else "+-" if row[MFI_SIGNAL] == 4 else "0" , axis=1)
+    return dfsrc
+
+
 
 def cds_add_signals_to_indicators(
     dfires,
@@ -977,13 +1019,20 @@ def tocds(
     cc: JGTChartConfig = None,
     rq: JGTIDSRequest = None,
     columns_to_remove=None,
+    use_v2_jgtapyhelper=True,
+    add_mfi_signals_proto=True,
 ):
     if rq is None:
         rq = JGTIDSRequest()
     if cc is None:
         cc = JGTChartConfig()
-
-    dfires = ids_add_indicators(dfsrc, quiet=quiet, cc=cc, rq=rq)
+    if use_v2_jgtapyhelper:
+        import jgtapyhelper as tah
+        dfires =tah.toids(dfsrc, cc=cc, rq=rq, quiet=quiet, columns_to_remove=columns_to_remove)
+    else:
+        print("DEPRECATION NOTICE: tocds() is deprecated and will be removed in a future release. Please use toids() from jgtapyhelper instead.")
+        dfires = ids_add_indicators(dfsrc, quiet=quiet, cc=cc, rq=rq)
+    
     dfires = _ids_add_fdb_column_logics_v2(dfires, quiet=quiet)                 #@STCIssue SignalBusiness Code
     dfires = cds_add_signals_to_indicators(dfires, quiet=quiet, cc=cc, rq=rq)   #@STCIssue SignalBusiness Code
     dfires = jgti_add_zlc_plus_other_AO_signal(dfires, quiet=quiet, rq=rq)      #@STCIssue SignalBusiness Code
@@ -991,7 +1040,10 @@ def tocds(
         dfires = _pds_cleanse_original_columns(dfires, quiet=True)  
     dfires = __cleanse_ao_peak_v1_secondary_columns(dfires, quiet=True)
     dfires = __format_boolean_columns_to_int(dfires, quiet=True)
-    dfires = add_ao_price_peaks_v2(dfires, quiet=True, rq=rq)                   #@STCIssue SignalBusiness Code or LearningBusiness
+    if add_mfi_signals_proto:
+        dfires= _cds_add_mfi_squat_n_signals_column_logics_v1(dfires, quiet=quiet)
+    
+    
     # Remove the specified columns
     if columns_to_remove is not None:
         dfires.drop(columns=columns_to_remove, errors="ignore", inplace=True)

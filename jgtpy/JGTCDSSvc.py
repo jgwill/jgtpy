@@ -35,7 +35,8 @@ def createCDSRequestFromArgs(args, instrument, timeframe):
     if args.rmbidask:
         rq.keep_bid_ask = False
     rq.timeframe = timeframe
-    rq.quotescount = args.quotescount
+    rq.quotescount = args.quotescount if args.quotescount else 300
+    rq.viewpath=args.viewpath if args.viewpath else False
     rq.use_fresh = args.fresh if args.fresh else False
     if args.notfresh:
         rq.use_fresh = False
@@ -47,7 +48,8 @@ def createCDSRequestFromArgs(args, instrument, timeframe):
     if args.no_mfi_flag:
         rq.mfi_flag = False
     rq.balligator_flag = args.balligator_flag if args.balligator_flag else False
-    rq.balligator_period_jaws = args.balligator_period_jaws
+    rq.talligator_flag = args.talligator_flag if args.talligator_flag else False
+    rq.balligator_period_jaws = args.balligator_period_jaws #@STCIssue That is useless not to have others balance lines
     rq.largest_fractal_period = args.largest_fractal_period
     rq.verbose_level = args.verbose
     return rq

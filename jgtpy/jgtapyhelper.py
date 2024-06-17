@@ -56,6 +56,9 @@ from jgtutils.jgtconstants import (
     GH,
     MFI,
     VOLUME,
+    TJAW,
+    TTEETH,
+    TLIPS,
 )
 
 from jgtutils import jgtos as jos
@@ -123,7 +126,10 @@ def ids_add_indicators(
             rq=rq,
         )
 
-    return round_columns(dfresult, rq.rounding_decimal_min)
+    #print("IDS::debug len(dfresult):" + str(len(dfresult)))
+    #print(" dfresult.columns:", dfresult.columns)
+    dfresult= round_columns(dfresult, rq.rounding_decimal_min)
+    return dfresult
 
 
 def round_columns(df, rounding_decimal_min=10):
@@ -220,29 +226,22 @@ def ids_add_indicators__legacy(
         )
     except:
         print("alligator failed")
-
-    # Assign numbers to variables with prefix 'balligator_'
-    balligator_period_jaws = rq.balligator_period_jaws
-    balligator_period_teeth = rq.balligator_period_teeth
-    balligator_period_lips = rq.balligator_period_lips
-    balligator_shift_jaws = rq.balligator_shift_jaws
-    balligator_shift_teeth = rq.balligator_shift_teeth
-    balligator_shift_lips = rq.balligator_shift_lips
+   
 
     bAlligator_required_bar_offset = (
-        minimal_bars_with_indicators + balligator_period_jaws + balligator_shift_jaws
+        minimal_bars_with_indicators + rq.balligator_period_jaws + rq.balligator_shift_jaws
     )
 
-    if ldfsrc >= bAlligator_required_bar_offset and balligator_flag:
+    if ldfsrc >= bAlligator_required_bar_offset and rq.balligator_flag:
 
         try:
             i.alligator(
-                period_jaws=balligator_period_jaws,
-                period_teeth=balligator_period_teeth,
-                period_lips=balligator_period_lips,
-                shift_jaws=balligator_shift_jaws,
-                shift_teeth=balligator_shift_teeth,
-                shift_lips=balligator_shift_lips,
+                period_jaws=rq.balligator_period_jaws,
+                period_teeth=rq.balligator_period_teeth,
+                period_lips=rq.balligator_period_lips,
+                shift_jaws=rq.balligator_shift_jaws,
+                shift_teeth=rq.balligator_shift_teeth,
+                shift_lips=rq.balligator_shift_lips,
                 column_name_jaws=BJAW,
                 column_name_teeth=BTEETH,
                 column_name_lips=BLIPS,
@@ -252,6 +251,44 @@ def ids_add_indicators__legacy(
     else:
         if not quiet:
             print("Skipping degree larger big Alligator")
+
+    # Tide Alligator
+
+    talligator_required_bar_offset = (
+        minimal_bars_with_indicators + rq.talligator_period_jaws + rq.talligator_shift_jaws
+    )
+
+    is_tide_alligator_has_enough_bar_in_dfsrc = ldfsrc >= talligator_required_bar_offset
+    if not is_tide_alligator_has_enough_bar_in_dfsrc:
+        print("Tide Alligator has not enough bars in the DataFrame")
+    we_add_tide_alligator_condition_met = is_tide_alligator_has_enough_bar_in_dfsrc and rq.talligator_flag
+    if rq.talligator_flag: 
+        print_quiet(quiet,"talligator_flag is True")
+    else:
+        print_quiet(quiet,"talligator_flag is False")
+        
+    if we_add_tide_alligator_condition_met:
+        print_quiet(quiet,"Adding Tide Alligator")
+
+        try:
+            i.alligator(
+                period_jaws=rq.talligator_period_jaws,
+                period_teeth=rq.talligator_period_teeth,
+                period_lips=rq.talligator_period_lips,
+                shift_jaws=rq.talligator_shift_jaws,
+                shift_teeth=rq.talligator_shift_teeth,
+                shift_lips=rq.talligator_shift_lips,
+                column_name_jaws=TJAW,
+                column_name_teeth=TTEETH,
+                column_name_lips=TLIPS,
+            )
+            #print("Added Tide Alligator")
+        except:
+            print("talligator_flag failed")
+    else:
+        #print("NOT Adding Tide Alligator, WHY ??")
+        if not quiet:
+            print("Skipping degree Tide Alligator")
 
     # Creating Fractal Indicators for degrees 2,3,5,8,13,21,34,55,89
 
@@ -326,7 +363,7 @@ def ids_add_indicators__legacy(
             print("Skipping Fractal 55")
 
     largest_fractal_bar_required_offset = (
-        minimal_bars_with_indicators + largest_fractal_period
+        minimal_bars_with_indicators + rq.largest_fractal_period
     )
     if df_nb_bars >= largest_fractal_bar_required_offset:
         try:
@@ -367,7 +404,7 @@ def ids_add_indicators__legacy(
             3. - Tick volume and + MFI  Indicator: -+ Fake
             4. + Tick volume and - MFI  Indicator: +- Squat
             """
-            print(" ADDING SQUAT PROTO")
+            #print(" ADDING SQUAT PROTO Will be in CDS Module")
             #i['mfi_sq'] = [calculate_mfi_sq(row, i.iloc[i.index.get_loc(row.name)-1]) if i.index.get_loc(row.name) != 0 else '0' for row in i.itertuples()]
 
         except Exception as e:
@@ -382,12 +419,20 @@ def ids_add_indicators__legacy(
 
     dfresult = i.df
 
+    #print("-------------------------------")
+    #print(dfresult)
+    #print("Lenght of dfresult b4 dropna: " + str(len(dfresult)))
+    #dropnavalue = False
     if dropnavalue:
         dfresult = dfresult.dropna()
     try:
         dfresult.set_index("Date", inplace=True)
     except TypeError:
         pass
+    #print("--------FOUND BUG 240615109 in dropna()-------")
+    #print("Lenght of dfresult after dropna: " + str(len(dfresult)))
+    #print(dfresult)
+    #print("-------------------------------")
 
     normalize = True
     if normalize:
@@ -486,12 +531,15 @@ def get_ph_to_df_and_create_ids_df(
         quiet=quiet,
         quote_count=rq.quotescount,
         keep_bid_ask=rq.keep_bid_ask,
+        talligator_flag=rq.talligator_flag,
     )
 
     if not quiet:
         print(df)
-
+    #print("rq.quotescount in get_ph_to_df_and_create_ids_df:", rq.quotescount)
     dfi = create_from_df(df, quiet=quiet, rq=rq, columns_to_remove=columns_to_remove)
+    #print("get_ph_to_df_and_create_ids_df:: len :create_from_df", len(dfi))
+    #exit(0)
     return dfi
 
 
@@ -637,17 +685,40 @@ def write_ids(instrument, timeframe, use_full, cdf):
     return fpath
 
 
+  ###################### CLEAN ME UP IF TALLIGATOR WORK >>>>>
 
+# from jgtutils.jgtconstants import (TJAW_PERIODS, TTEETH_PERIODS, TLIPS_PERIODS)
 
-def create_ids_request_from_args(args, instrument, timeframe,viewpath=False):
+# def get_talligator_required_quote_count(cc: JGTChartConfig=None,quote_count=-1):
+#     if cc is None:
+#         cc = JGTChartConfig()
+        
+#     TJAW_REQUIRED_CALC_BARS = TJAW_PERIODS+TTEETH_PERIODS
+#     tmp = cc.nb_bar_on_chart
+#     total = tmp + TJAW_REQUIRED_CALC_BARS
+#     return total
+
+# MIGRATED TO JGTIDSRequest
+# def _talligator_fix_quotescount(rq):
+#     if rq.talligator_flag:
+#         TALLIGATOR_REQ_QUOTECOUNT=get_talligator_required_quote_count(None,rq.quotescount)
+#         if rq.quotescount < TALLIGATOR_REQ_QUOTECOUNT + 300:
+#             rq.quotescount = TALLIGATOR_REQ_QUOTECOUNT
+#     return rq
+
+def create_ids_request_from_args(args, instrument, timeframe):
+    return JGTIDSRequest.from_args(args)
+
+###################### CLEAN ME UP IF JGTIDSRequest.from_args(args) WORK >>>>>
+def create_ids_request_from_args_LEGACY(args, instrument, timeframe):
     rq = JGTIDSRequest()
     rq.instrument = instrument
     #rq.keep_bid_ask = args.keepbidask # Now default to true and turn off only if needed by --rm
     if args.rmbidask:
         rq.keep_bid_ask = False
     rq.timeframe = timeframe
-    rq.quotescount = args.quotescount
-    rq.viewpath=viewpath
+    rq.quotescount = args.quotescount if args.quotescount else 300
+    rq.viewpath=args.viewpath if args.viewpath else False
     #rq.use_fresh = args.fresh if args.fresh else False
     if args.notfresh:
         rq.use_fresh = False
@@ -659,9 +730,20 @@ def create_ids_request_from_args(args, instrument, timeframe,viewpath=False):
     if args.no_mfi_flag:
         rq.mfi_flag = False
     rq.balligator_flag = args.balligator_flag if args.balligator_flag else False
+    rq.talligator_flag = args.talligator_flag if args.talligator_flag else False
     rq.balligator_period_jaws = args.balligator_period_jaws
+    rq.talligator_period_jaws = args.talligator_period_jaws
     rq.largest_fractal_period = args.largest_fractal_period
     rq.verbose_level = args.verbose
+    
+    rq.talligator_fix_quotescount()
+    #rq=_talligator_fix_quotescount(rq)
+    _DEBUG_TALLIGATOR_FIX_24061618=False
+    if _DEBUG_TALLIGATOR_FIX_24061618:
+        print("IDS RQ Now handle the talligator_flag")
+        print("rq.talligator_flag",rq.talligator_flag)
+        print("rq.quotescount:",rq.quotescount)
+        exit(0)
     return rq
 
 
@@ -680,7 +762,7 @@ def createIDSService(
     quietting = True
     if verbose_level > 1:
         quietting = False
-
+    
     if rq.viewpath:
         filepath=get_pov_local_data_filename(rq.instrument,rq.timeframe,rq.use_full)
         print(filepath)

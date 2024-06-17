@@ -47,6 +47,7 @@ def parse_args():
     jgtcommon.add_ids_mfi_argument(parser)
     jgtcommon.add_ids_gator_oscillator_argument(parser)
     jgtcommon.add_ids_balligator_argument(parser)
+    jgtcommon.add_ids_talligator_argument(parser)
     jgtcommon.add_ids_fractal_largest_period_argument(parser)
 
     jgtcommon.add_viewpath_argument(parser)
@@ -104,7 +105,7 @@ def main():
     timeframe = args.timeframe
 
     verbose_level = args.verbose
-    viewpath=args.viewpath
+    #viewpath=args.viewpath
     
     quiet = False
     if verbose_level == 0:
@@ -126,7 +127,7 @@ def main():
 
         for instrument in instruments:
             for timeframe in timeframes:
-                rq = create_ids_request_from_args(args, instrument, timeframe, viewpath=viewpath)
+                rq = create_ids_request_from_args(args, instrument, timeframe)
                 createIDSService(
                     rq=rq,
                     quiet=quiet,

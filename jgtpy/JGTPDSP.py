@@ -15,6 +15,7 @@ from datetime import datetime
 from jgtutils import jgtcommon,iprops,jgtos
 from jgtutils import jgtos as jos
 from jgtutils.jgtos import create_filestore_path, mk_fn, mk_fn_range, mk_fullpath
+#from jgtutils.jgtconstants import (TJAW_PERIODS,TTEETH_PERIODS)
 
 from JGTChartConfig import JGTChartConfig
 
@@ -103,6 +104,14 @@ def select_quote_count(quote_count, df, quiet=True):
     return selected
   
 
+###################### CLEAN ME UP IF TALLIGATOR WORK >>>>>
+# def get_talligator_required_quote_count(cc: JGTChartConfig,quote_count=-1):
+#   TJAW_REQUIRED_CALC_BARS = TJAW_PERIODS+TTEETH_PERIODS
+#   tmp = cc.nb_bar_on_chart
+#   total = tmp + TJAW_REQUIRED_CALC_BARS
+#   return total
+
+
 
 def getPH(instrument:str, 
           timeframe:str, 
@@ -121,7 +130,8 @@ def getPH(instrument:str,
           use_fresh=False,
           use_fresh_error_ignore=False,   
           use_cache_full=False,
-          keep_bid_ask=False
+          keep_bid_ask=False,
+          #talligator_flag=False,
           ):
   global df_full_cache
   if use_cache_full:
@@ -131,14 +141,29 @@ def getPH(instrument:str,
   #@a Adequate start and end from the stored file
   if cc is None:
     cc = JGTChartConfig()
-  if quote_count == -1 and use_full == False: #@STCIssue JGTChartConfig being Replaced by JGTPDSPRequest
-    TALLIGATOR_JAW_PERIODS = 377
-    TALLIGATOR_JAW_SHIFT = 244
-    TALLIGATOR_REQUIRED_QUOTE_COUNT = TALLIGATOR_JAW_PERIODS+TALLIGATOR_JAW_SHIFT
-    fix_240325 = 50 if not talligator_flag else TALLIGATOR_REQUIRED_QUOTE_COUNT
-    quote_count = cc.nb_bar_to_retrieve + fix_240325
+    
+  ###################### CLEAN ME UP IF TALLIGATOR WORK >>>>>
+  _DEBUG_2406161729=True
+
+  # if _DEBUG_2406161729:print("Quote count before fix and _get_ph_surely_fresh(2406161729): " + str(quote_count))
   
-  # If we dont have enough data in full when using crop_last_dt, we should use fresh
+  
+  # TALLIGATOR_REQUIRED_QUOTE_COUNT = get_talligator_required_quote_count(cc,quote_count)
+  # #print cc.nb_bar_to_retrieve
+  # if _DEBUG_2406161729:print("cc.nb_bar_to_retrieve: " + str(cc.nb_bar_to_retrieve))
+  # if quote_count == -1 and use_full == False: #@STCIssue JGTChartConfig being Replaced by JGTPDSPRequest
+  #   if _DEBUG_2406161729:print("NOT Usefull and quote_count == -1")
+  #   fix_240325 = 50 if not talligator_flag else TALLIGATOR_REQUIRED_QUOTE_COUNT
+  #   quote_count = cc.nb_bar_to_retrieve + fix_240325
+  # # If we have the talligator_flag on, we require a certain amount of bars to calculate the indicator so we make sure we have enough data
+  # if talligator_flag and quote_count < TALLIGATOR_REQUIRED_QUOTE_COUNT:
+  #   quote_count = TALLIGATOR_REQUIRED_QUOTE_COUNT
+    
+  # # If we dont have enough data in full when using crop_last_dt, we should use fresh
+  # if _DEBUG_2406161729:print("Quote count after if _get_ph_surely_fresh(2406161729): " + str(quote_count))
+  # if _DEBUG_2406161729:exit(0)
+  ###################### CLEAN ME UP IF TALLIGATOR WORK <<<<<
+  
   df = _get_ph_surely_fresh(instrument, timeframe, quote_count, with_index, quiet, convert_date_index_to_dt, use_full, dt_crop_last, tlid_range, run_jgtfxcli_on_error, use_fresh_error_ignore, use_cache_full,use_fresh=use_fresh,keep_bid_ask=keep_bid_ask)
   
   

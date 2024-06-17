@@ -42,6 +42,7 @@ def parse_args():
     jgtcommon.add_ids_mfi_argument(parser)
     jgtcommon.add_ids_gator_oscillator_argument(parser)
     jgtcommon.add_ids_balligator_argument(parser)
+    jgtcommon.add_ids_talligator_argument(parser)
     jgtcommon.add_ids_fractal_largest_period_argument(parser)
     
     # jgtcommon.add_cds_argument(parser)
@@ -58,14 +59,17 @@ def main():
     )
     mfi_flag = True #mfi_flag = args.mfi_flag if args.mfi_flag else False
     balligator_flag = args.balligator_flag if args.balligator_flag else False
+    talligator_flag = args.talligator_flag if args.talligator_flag else False
     balligator_period_jaws = args.balligator_period_jaws
+    talligator_period_jaws = args.talligator_period_jaws
     largest_fractal_period = args.largest_fractal_period
 
 
     instrument = args.instrument
     timeframe = args.timeframe
-    quotes_count = args.quotescount
-    cc.nb_bar_on_chart = quotes_count
+    quotescount = args.quotescount
+    #print("#@STCIssue : quotes_count is not passed , it should be !")
+    cc.nb_bar_on_chart = quotescount
     
     verbose_level = args.verbose
     quiet = False
@@ -148,7 +152,10 @@ def main():
                     balligator_flag=balligator_flag,
                     balligator_period_jaws=balligator_period_jaws,
                     largest_fractal_period=largest_fractal_period,
+                    talligator_flag=talligator_flag,
+                    talligator_period_jaws=talligator_period_jaws,
                     viewpath=viewpath,
+                    quotescount=quotescount
                 )
                 # else:
                 #     p = pds.getPH(instrument, timeframe, quotes_count, date_from, date_to, False, quiet)
@@ -186,7 +193,10 @@ def createCDS_for_main(
     balligator_flag=False,
     balligator_period_jaws=89,
     largest_fractal_period=89,
+    talligator_flag=False,
+    talligator_period_jaws=377,
     viewpath=False,
+    quotescount=300,
 ):
     # implementation goes here
     col2remove = constants.columns_to_remove
@@ -213,7 +223,10 @@ def createCDS_for_main(
             balligator_flag=balligator_flag,
             balligator_period_jaws=balligator_period_jaws,
             largest_fractal_period=largest_fractal_period,
+            talligator_flag=talligator_flag,
+            talligator_period_jaws=talligator_period_jaws,
             viewpath=viewpath,
+            quotescount=quotescount
         )  # @STCIssue: This is not supporting -c NB_BARS_TO_PROCESS, should it ?
         if cdspath is not None and cdf is None and viewpath:
             return #we printed it already.
