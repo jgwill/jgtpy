@@ -148,6 +148,7 @@ def main():
                     balligator_flag=balligator_flag,
                     balligator_period_jaws=balligator_period_jaws,
                     largest_fractal_period=largest_fractal_period,
+                    viewpath=viewpath,
                 )
                 # else:
                 #     p = pds.getPH(instrument, timeframe, quotes_count, date_from, date_to, False, quiet)
@@ -185,6 +186,7 @@ def createCDS_for_main(
     balligator_flag=False,
     balligator_period_jaws=89,
     largest_fractal_period=89,
+    viewpath=False,
 ):
     # implementation goes here
     col2remove = constants.columns_to_remove
@@ -211,7 +213,10 @@ def createCDS_for_main(
             balligator_flag=balligator_flag,
             balligator_period_jaws=balligator_period_jaws,
             largest_fractal_period=largest_fractal_period,
+            viewpath=viewpath,
         )  # @STCIssue: This is not supporting -c NB_BARS_TO_PROCESS, should it ?
+        if cdspath is not None and cdf is None and viewpath:
+            return #we printed it already.
         #@STCGoal GENERATE THE ZONE from the FRESH CDF
         fpath,zone_data = svc.zone_update_from_cdf(instrument,timeframe,cdf,quiet=quietting)
         print(instrument," ",timeframe," zone: ",zone_data["zcol"].values[0])

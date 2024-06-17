@@ -12,6 +12,7 @@ from JGTCDSRequest import JGTCDSRequest
 import JGTIDS as ids
 import JGTPDSP as pds
 from jgtutils.jgtos import get_data_path,mk_fullpath
+from jgtutils import jgtos as jos
 from JGTChartConfig import JGTChartConfig
 
 # from . import jgtconstants
@@ -39,6 +40,7 @@ def createFromPDSFileToCDSFile(
     balligator_flag=False,
     balligator_period_jaws=89,
     largest_fractal_period=89,
+    viewpath=False,
 ):
     """
     Create a CDS file from a PDS file.
@@ -58,6 +60,7 @@ def createFromPDSFileToCDSFile(
     balligator_flag (bool, optional): If True, calculates the Bill Williams Alligator. Default is False.
     balligator_period_jaws (int, optional): The period for the Bill Williams Alligator Jaws. Default is 89.
     largest_fractal_period (int, optional): The period for the largest fractal. Default is 89.
+    viewpath (bool, optional): If True, displays the file path. Default is False.
 
     Returns:
     - fpath (str): The file path of the created CDS file.
@@ -71,7 +74,10 @@ def createFromPDSFileToCDSFile(
         rq.balligator_flag = balligator_flag
         rq.balligator_period_jaws = balligator_period_jaws
         rq.largest_fractal_period = largest_fractal_period
-
+    if rq.viewpath:
+        cdspath = get_pov_local_data_filename(instrument,timeframe,use_full=use_full)
+        print(cdspath)
+        return cdspath,None
     # Working around an issue with keep_bid_ask, we use the value supplied in this function to override the value in the request
     rq.keep_bid_ask = keep_bid_ask
 
@@ -346,6 +352,10 @@ def createFromFile_and_clean_and_save_data(instrument:str, timeframe:str):
 
     return cdf
 
+
+def get_pov_local_data_filename(instrument:str,timeframe:str,use_full=False):
+  nsdir="cds"
+  return jos.get_pov_local_data_filename(instrument,timeframe,use_full=use_full,nsdir=nsdir)
 
 def getSubscribed():
     return pds.getSubscribed()

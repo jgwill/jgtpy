@@ -31,14 +31,6 @@ _DROPBOX_ACCESS_TOKEN= _FXCM_DROPBOX_ACCESS_TOKEN
 local_fn_compression='gzip'
 
 
-def get_pov_local_data_filename_DEPRECATED(instrument:str,timeframe:str,local_data_dir='./data',local_fn_suffix='.full.csv'):
-  print("-------#@STCIssue FIXING REQUIRED-----------------")
-  print("  MIGRATING IT TO JGTPDSP....")
-  tf=timeframe
-  if tf=="m1":
-    tf="mi1"
-  return local_data_dir + "/"+ instrument.replace("/","-") + "_" + tf + local_fn_suffix
-
 pysroot=os.getenv('pysroot')
 #pysroot='/w/o/pys/'
 CDS_URL_BASE=os.getenv('CDS_URL_BASE')

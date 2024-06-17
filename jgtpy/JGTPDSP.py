@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 import JGTPDHelper as jpd
 
-from JGTConfig import local_fn_compression,get_pov_local_data_filename_DEPRECATED as get_pov_local_data_filename_DEPRECATED
+from JGTConfig import local_fn_compression
 from JGTPDHelper import *
 from datetime import datetime
 from jgtutils import jgtcommon,iprops,jgtos
@@ -428,16 +428,12 @@ def read_ohlc_df_from_file(srcpath, quiet=True, compressed=False,with_index=True
 def get_data_path():
     return jgtos.get_data_path('pds')
   
-  
+ 
 
 def get_pov_local_data_filename(instrument:str,timeframe:str,use_full=False):
   nsdir="pds"
   return jos.get_pov_local_data_filename(instrument,timeframe,use_full=use_full,nsdir=nsdir)
-  # root_dir=jgtos.get_data_path(nsdir,use_full=use_full)
-  
-  # local_fn_suffix = ".csv"
-  # full_path=mk_fullpath(instrument, timeframe, local_fn_suffix, root_dir)
-  # return full_path
+
 
  
 

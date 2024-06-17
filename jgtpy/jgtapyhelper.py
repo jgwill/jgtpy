@@ -58,6 +58,8 @@ from jgtutils.jgtconstants import (
     VOLUME,
 )
 
+from jgtutils import jgtos as jos
+
 columns_to_normalize = IDS_COLUMNS_TO_NORMALIZE  # @a Migrate to jgtutils.jgtconstants
 
 from jgtutils import (
@@ -564,6 +566,11 @@ def create_from_pds_file_to_ids_file(
     return fpath, cdf
 
 
+def get_pov_local_data_filename(instrument:str,timeframe:str,use_full=False):
+  nsdir="ids"
+  return jos.get_pov_local_data_filename(instrument,timeframe,use_full=use_full,nsdir=nsdir)
+
+
 def create_from_df(
     df,
     quiet=True,
@@ -632,7 +639,7 @@ def write_ids(instrument, timeframe, use_full, cdf):
 
 
 
-def create_ids_request_from_args(args, instrument, timeframe):
+def create_ids_request_from_args(args, instrument, timeframe,viewpath=False):
     rq = JGTIDSRequest()
     rq.instrument = instrument
     #rq.keep_bid_ask = args.keepbidask # Now default to true and turn off only if needed by --rm
@@ -640,6 +647,7 @@ def create_ids_request_from_args(args, instrument, timeframe):
         rq.keep_bid_ask = False
     rq.timeframe = timeframe
     rq.quotescount = args.quotescount
+    rq.viewpath=viewpath
     #rq.use_fresh = args.fresh if args.fresh else False
     if args.notfresh:
         rq.use_fresh = False
@@ -673,6 +681,10 @@ def createIDSService(
     if verbose_level > 1:
         quietting = False
 
+    if rq.viewpath:
+        filepath=get_pov_local_data_filename(rq.instrument,rq.timeframe,rq.use_full)
+        print(filepath)
+        return
     try:
         # cdspath, cdf = cds.createFromPDSFileToCDSFile(
         # @a Migrate to IDS Logics
