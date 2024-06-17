@@ -178,14 +178,12 @@ def ids_add_indicators__legacy(
 
     if rq is None:
         rq = JGTIDSRequest()
-
+    
     # @a Migrating to the new JGTIDSRequest
     gator_oscillator_flag = rq.gator_oscillator_flag
     mfi_flag = rq.mfi_flag
     addAlligatorOffsetInFutur = rq.addAlligatorOffsetInFutur
-    balligator_flag = rq.balligator_flag
-    balligator_period_jaws = rq.balligator_period_jaws
-    largest_fractal_period = rq.largest_fractal_period
+    
 
     ldfsrc = len(dfsrc)
     # TODO

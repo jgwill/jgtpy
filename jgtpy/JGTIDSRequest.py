@@ -31,6 +31,9 @@ class JGTIDSRequest(JGTPDSRequest):
         peak_divider_min_height (int): Minimum height of the peak divider.
         rounding_decimal_min (int): Minimum decimal for rounding.
         disable_ao_peaks_v1 (bool): Flag indicating whether to disable AO Peak V1.
+        include_ao_color (bool): Flag indicating whether to include AO color data.
+        include_ac_color (bool): Flag indicating whether to include AC color data.
+        addAlligatorOffsetInFutur (bool): Flag indicating whether to add Alligator offset in the future.
         talligator_flag (bool): Flag indicating whether to include Talligator data.
         talligator_period_jaws (int): Period for the jaws line of the Talligator indicator.
         talligator_period_teeth (int): Period for the teeth line of the Talligator indicator.

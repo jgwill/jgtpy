@@ -1040,6 +1040,8 @@ def tocds(
         dfires = _pds_cleanse_original_columns(dfires, quiet=True)  
     dfires = __cleanse_ao_peak_v1_secondary_columns(dfires, quiet=True)
     dfires = __format_boolean_columns_to_int(dfires, quiet=True)
+    dfires = add_ao_price_peaks_v2(dfires, quiet=True, rq=rq)   
+    
     if add_mfi_signals_proto:
         dfires= _cds_add_mfi_squat_n_signals_column_logics_v1(dfires, quiet=quiet)
     

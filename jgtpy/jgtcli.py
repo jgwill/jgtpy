@@ -44,6 +44,7 @@ def parse_args():
     jgtcommon.add_ids_balligator_argument(parser)
     jgtcommon.add_ids_talligator_argument(parser)
     jgtcommon.add_ids_fractal_largest_period_argument(parser)
+    jgtcommon.add_viewpath_argument(parser)
     
     # jgtcommon.add_cds_argument(parser)
     args = parser.parse_args()
@@ -65,6 +66,8 @@ def main():
     largest_fractal_period = args.largest_fractal_period
 
 
+    viewpath=args.viewpath
+    
     instrument = args.instrument
     timeframe = args.timeframe
     quotescount = args.quotescount

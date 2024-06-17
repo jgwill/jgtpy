@@ -115,7 +115,8 @@ def main():
     process_ids = True
 
     if process_ids:
-        print("Processing IDS")
+        if not quiet:
+            print("Processing IDS")
         output = True
 
 
