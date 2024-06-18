@@ -111,11 +111,11 @@ def get_higher_cdf_datasets(i, t, use_full=False, use_fresh=True, quiet=True, qu
 
   # Define a function to be run in parallel
   def get_cdf(tf):
-    print("CDSSvc Get: ", tf, " of : ", t)
+    print("CDSSvc Get: ", tf, " of : ", t," for: ",i)
     return tf, get(i, tf, use_full=use_full, use_fresh=use_fresh, quiet=quiet, quotescount=quotescount)
 
   # Use a ThreadPoolExecutor to run the function in parallel for each tf in tf_array
-  with concurrent.futures.ThreadPoolExecutor() as executor:
+  with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
     futures = {executor.submit(get_cdf, tf) for tf in tf_array}
 
     for future in concurrent.futures.as_completed(futures):
