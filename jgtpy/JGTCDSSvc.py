@@ -86,7 +86,7 @@ def new_rq_default(instrument,timeframe,use_fresh=True,use_full=False,quotescoun
     #   print("Talligator flag is set")
     return rq
 
-def get(instrument,timeframe,use_full=False,use_fresh=True,quotescount=-1,quiet=True):
+def get(instrument,timeframe,use_full=False,use_fresh=True,quotescount=-1,quiet=True,dont_write_cds=False):
     """
     Generate the CDS to file
     """
@@ -99,17 +99,29 @@ def get(instrument,timeframe,use_full=False,use_fresh=True,quotescount=-1,quiet=
     rq = new_rq_default(instrument,timeframe,use_fresh=use_fresh,use_full=use_full,quotescount=quotescount)
 
     # Create CDS
-    return cds.create2(rq,quiet=quiet)
+    cdf= cds.create2(rq,quiet=quiet)
+    if not dont_write_cds:
+      cds.writeCDS(instrument, timeframe, use_full, cdf)
+      #cds.writeCDS(cdf=cdf,instrument=instrument,timeframe=timeframe,use_full=use_full,quotescount=quotescount,quiet=quiet)
+    return cdf
 
 def read(instrument,timeframe,use_full=False,quotescount=-1,quiet=True):
-  return cds.readCDSFile(instrument,timeframe,use_full=use_full,quote_count=quotescount,quiet=quiet)
+  try:
+    cdf= cds.readCDSFile(instrument,timeframe,use_full=use_full,quote_count=quotescount,quiet=quiet)
+  except:
+    cdf=None
+  if cdf is None:
+    print("CDS Could not read, so we create it....",timeframe)
+    cdf=get(instrument,timeframe,use_full=use_full,quotescount=quotescount,quiet=quiet)
+  #print("CDSSvc Read: cdf len: ", len(cdf))
+  return cdf
 
 import concurrent.futures
 
 # Move the get_cdf function to the top level
 def get_cdf(i, t, tf, use_full, use_fresh, quiet, quotescount,force_read=False):
   if force_read:
-    print("CDSSvc Read: ", tf, " of : ", t," for: ",i)
+    print("CDSSvc Read: ", tf, " of : ", t," for: ",i," use_full:",use_full)
     return tf, read(i, tf, use_full=use_full, quotescount=quotescount, quiet=quiet)
   else:
     print("CDSSvc Get: ", tf, " of : ", t," for: ",i)
