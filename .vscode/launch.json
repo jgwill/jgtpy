@@ -34,28 +34,6 @@
       ],
       "console": "internalConsole",
       "justMyCode": false
-    },
-    {
-      "name": "Persp-PTO",
-      "type": "python",
-      "request": "launch",
-      "program": "${workspaceFolder}/pto-pers-panel-02.py",
-      "args": [
-        "SPX500"
-      ],
-      "console": "internalConsole",
-      "justMyCode": false
-    },
-    {
-      "name": "jgtcli-fresh",
-      "type": "debugpy",
-      "request": "launch",
-      "program": "${workspaceFolder}/jgtpy/jgtcli.py",
-      "args": [
-        "-i","AUD/USD","-t","D1","--full"
-      ],
-      "console": "internalConsole",
-      "justMyCode": false
-    },
+    }
   ]
 }
