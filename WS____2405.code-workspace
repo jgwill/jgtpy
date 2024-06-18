@@ -27,6 +27,7 @@
 			"*.log": true
 		},
 		"explorerExclude.backup": {},
-		"editor.tabSize": 2
+		"editor.tabSize": 2,
+		"files.autoSave": "afterDelay"
 	}
 }

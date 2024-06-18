@@ -174,3 +174,8 @@ logs/
 *.png
 .nx/
 _output_*
+
+test*
+*.csv
+debug*
+
