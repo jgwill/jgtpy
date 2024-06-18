@@ -257,7 +257,7 @@ def ids_add_indicators__legacy(
     )
 
     is_tide_alligator_has_enough_bar_in_dfsrc = ldfsrc >= talligator_required_bar_offset
-    if not is_tide_alligator_has_enough_bar_in_dfsrc:
+    if not is_tide_alligator_has_enough_bar_in_dfsrc and rq.talligator_flag:
         print("Tide Alligator has not enough bars in the DataFrame")
     we_add_tide_alligator_condition_met = is_tide_alligator_has_enough_bar_in_dfsrc and rq.talligator_flag
     if rq.talligator_flag: 
