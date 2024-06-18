@@ -177,6 +177,7 @@ def ids_add_indicators__legacy(
     """
 
     if rq is None:
+        #print("rq is None is ids_add_indicators__legacy")
         rq = JGTIDSRequest()
     
     # @a Migrating to the new JGTIDSRequest
@@ -570,7 +571,6 @@ def create_from_pds_file(
             run_jgtfxcli_on_error=run_jgtfxcli_on_error,
             columns_to_remove=columns_to_remove,
         )
-        # print("DEBUG H8 240325:: len getPH DF:",len(df))
 
         return df
     except Exception as e:
@@ -604,6 +604,8 @@ def create_from_pds_file_to_ids_file(
         rq = JGTIDSRequest()
     #to workround the issue of the bid and ask columns, we set the request to the supplied value in this function
     rq.keep_bid_ask = keep_bid_ask
+    if not quiet:
+        print("columns_to_remove:", columns_to_remove)
     cdf = create_from_pds_file(rq=rq, quiet=quiet, columns_to_remove=columns_to_remove,keep_bid_ask=keep_bid_ask)
 
     # Define the file path based on the environment variable or local path
@@ -682,27 +684,6 @@ def write_ids(instrument, timeframe, use_full, cdf):
     cdf.to_csv(fpath, index=True)
     return fpath
 
-
-  ###################### CLEAN ME UP IF TALLIGATOR WORK >>>>>
-
-# from jgtutils.jgtconstants import (TJAW_PERIODS, TTEETH_PERIODS, TLIPS_PERIODS)
-
-# def get_talligator_required_quote_count(cc: JGTChartConfig=None,quote_count=-1):
-#     if cc is None:
-#         cc = JGTChartConfig()
-        
-#     TJAW_REQUIRED_CALC_BARS = TJAW_PERIODS+TTEETH_PERIODS
-#     tmp = cc.nb_bar_on_chart
-#     total = tmp + TJAW_REQUIRED_CALC_BARS
-#     return total
-
-# MIGRATED TO JGTIDSRequest
-# def _talligator_fix_quotescount(rq):
-#     if rq.talligator_flag:
-#         TALLIGATOR_REQ_QUOTECOUNT=get_talligator_required_quote_count(None,rq.quotescount)
-#         if rq.quotescount < TALLIGATOR_REQ_QUOTECOUNT + 300:
-#             rq.quotescount = TALLIGATOR_REQ_QUOTECOUNT
-#     return rq
 
 def create_ids_request_from_args(args, instrument, timeframe):
     return JGTIDSRequest.from_args(args)

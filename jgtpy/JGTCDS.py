@@ -74,7 +74,7 @@ def createFromPDSFileToCDSFile(
 
     """
     if rq is None:
-        print("rq is None in createFromPDSFileToCDSFile")
+        #print("rq is None in createFromPDSFileToCDSFile")
         rq = JGTCDSRequest()
         rq.quotescount = quotescount
         rq.gator_oscillator_flag = gator_oscillator_flag

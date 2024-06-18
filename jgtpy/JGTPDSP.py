@@ -29,6 +29,12 @@ cleanseOriginalColumns=True
 useLocal=True
 
 def refreshPH(instrument:str, timeframe:str,quote_count:int=-1, quiet:bool=True,use_full:bool=False,verbose_level=0,tlid_range=None):
+  #print debug information
+  # print(f"Refreshing {instrument} {timeframe}")
+  # print(f"quote_count: {quote_count}")
+  # print(f"use_full: {use_full}")
+  # print(f"verbose_level: {verbose_level}")
+  # print(f"tlid_range: {tlid_range}")
   
   if not quiet:
     print(f"Refreshing {instrument} {timeframe}")
@@ -180,12 +186,14 @@ def getPH(instrument:str,
   return df
 
 def _get_ph_surely_fresh(instrument, timeframe, quote_count, with_index, quiet, convert_date_index_to_dt, use_full, dt_crop_last, tlid_range, run_jgtfxcli_on_error, use_fresh_error_ignore, use_cache_full,use_fresh=False,keep_bid_ask=False):
-
-  _dt_requirements = str(datetime.now()) if dt_crop_last is None else dt_crop_last
-
+  use_UTC=False
+  _dt_requirements = _get_dt_requirement_for_tf(timeframe,use_UTC) if dt_crop_last is None else dt_crop_last
+  #@STCIssue Open: Sundays, between 5:00 and 5:15 pm EST. Close: Fridays, around 4:55 pm EST. Closed: Fridays 5:00 pm to Sunday 5:00 pm EST.
+  #print("_dt_requirements: " + str(_dt_requirements)  + " dt_crop_last: " + str(dt_crop_last))
+  
   # We are not using crop_last_dt neither full, we should use fresh anyways if our short stored data is not enough fresh
   # we will tel it our date is now
-  
+  #quiet=False
   our_data_is_ok=use_fresh
   if not use_fresh:
     print_quiet(quiet,"Checking if dt range has enough bars")
@@ -329,6 +337,7 @@ def _check_if_dt_range_has_enough_bars(instrument:str, timeframe:str, dt_last_we
     if not quiet:
       print("Checking if last row of full match out dt_crop_last with enough bars")
       print(" quote_count: " + str(quote_count_we_require) + " (REQUIRES enough bars after crops)")
+      print(" dt_last_we_want: " + str(dt_last_we_want))
     try:
       df_full = getPH_from_filestore(instrument, timeframe, quiet=quiet, use_full=use_full)
       res= _test_if_having_crop_last_dt(df_full,dt_last_we_want) and len(df_full) >= quote_count_we_require

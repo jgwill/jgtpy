@@ -24,7 +24,7 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 import JGTCDS as cds
 from JGTCDSRequest import JGTCDSRequest
-from jgtutils.jgtpov import get_higher_tf_by_level
+from jgtutils.jgtpov import get_higher_tf_by_level,get_higher_tf_array
 from jgtutils.jgtos import get_data_path,mk_fullpath
 from jgtutils import jgtconstants as c
 
@@ -55,7 +55,38 @@ def createCDSRequestFromArgs(args, instrument, timeframe):
     return rq
 
 
-def get(instrument,timeframe,use_full=False,use_fresh=True,quiet=True):
+def set_rq_defaults(rq):
+    rq.keep_bid_ask = True
+    if not rq.use_full and rq.quotescount == -1:
+      rq.quotescount = 300
+    rq.viewpath = False
+    rq.gator_oscillator_flag = False
+    rq.mfi_flag = True
+    rq.balligator_flag = True
+    rq.talligator_flag = True
+    
+    if rq.timeframe=="M1":
+      rq.talligator_flag = False
+      
+    rq.balligator_fix_quotescount()
+    rq.talligator_fix_quotescount()
+    return rq
+
+    
+    
+def new_rq_default(instrument,timeframe,use_fresh=True,use_full=False,quotescount=-1):
+    rq = JGTCDSRequest()
+    rq.instrument = instrument
+    rq.timeframe = timeframe
+    rq.quotescount = quotescount
+    rq.use_full = use_full
+    rq.use_fresh = use_fresh
+    rq=set_rq_defaults(rq)
+    # if rq.talligator_flag:
+    #   print("Talligator flag is set")
+    return rq
+
+def get(instrument,timeframe,use_full=False,use_fresh=True,quotescount=-1,quiet=True):
     """
     Generate the CDS to file
     """
@@ -65,16 +96,23 @@ def get(instrument,timeframe,use_full=False,use_fresh=True,quiet=True):
     # timeframe = args.timeframe
 
     # Create CDS request
-    rq = JGTCDSRequest()
-    rq.instrument = instrument
-    rq.timeframe = timeframe
-    rq.use_full = use_full
-    rq.use_fresh = use_fresh
+    rq = new_rq_default(instrument,timeframe,use_fresh=use_fresh,use_full=use_full,quotescount=quotescount)
 
     # Create CDS
     return cds.create2(rq,quiet=quiet)
 
-
+def get_higher_cdf_datasets(i,t,use_full=False,use_fresh=True,quiet=True,quotescount=300):
+  tf_array=get_higher_tf_array(t)
+  if not quiet:
+    print("Higher TF Array: ",tf_array)
+  res={}
+  for tf in tf_array:
+    #if not quiet:
+    print("CDSSvc Get: ",tf," of : ",t)
+    cdf=get(i,tf,use_full=use_full,use_fresh=use_fresh,quiet=quiet,quotescount=quotescount)
+    res[tf]=cdf
+    #res.append(cdf)
+  return res
 
 def get_higher_cdf(i,t,_level=1,default_timeframes = "M1,W1,D1,H4,H1,m15,m5",quiet=True):
   if default_timeframes=="T":# try read the os var "T"
