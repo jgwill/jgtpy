@@ -101,7 +101,30 @@ def get(instrument,timeframe,use_full=False,use_fresh=True,quotescount=-1,quiet=
     # Create CDS
     return cds.create2(rq,quiet=quiet)
 
-def get_higher_cdf_datasets(i,t,use_full=False,use_fresh=True,quiet=True,quotescount=300):
+import concurrent.futures
+
+def get_higher_cdf_datasets(i, t, use_full=False, use_fresh=True, quiet=True, quotescount=300):
+  tf_array = get_higher_tf_array(t)
+  if not quiet:
+    print("Higher TF Array: ", tf_array)
+  res = {}
+
+  # Define a function to be run in parallel
+  def get_cdf(tf):
+    print("CDSSvc Get: ", tf, " of : ", t)
+    return tf, get(i, tf, use_full=use_full, use_fresh=use_fresh, quiet=quiet, quotescount=quotescount)
+
+  # Use a ThreadPoolExecutor to run the function in parallel for each tf in tf_array
+  with concurrent.futures.ThreadPoolExecutor() as executor:
+    futures = {executor.submit(get_cdf, tf) for tf in tf_array}
+
+    for future in concurrent.futures.as_completed(futures):
+      tf, cdf = future.result()
+      res[tf] = cdf
+
+  return res
+
+def get_higher_cdf_datasets_no_concurrence(i,t,use_full=False,use_fresh=True,quiet=True,quotescount=300):
   tf_array=get_higher_tf_array(t)
   if not quiet:
     print("Higher TF Array: ",tf_array)
