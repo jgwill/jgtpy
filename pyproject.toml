@@ -57,4 +57,4 @@ classifiers = [
 jgtcli = "jgtpy.jgtcli:main"
 jgtmksg = "jgtpy.JGTMKSG:main"
 jgtads = "jgtpy.JGTADS:main"
-jgtapycli = "jgtpy.jgtapycli:main"
+jgtids = "jgtpy.jgtapycli:main"
