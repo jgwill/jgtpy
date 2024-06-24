@@ -350,7 +350,8 @@ def _check_if_dt_range_has_enough_bars(instrument:str, timeframe:str, dt_last_we
     except Exception as e:
       #print(str(e))
       #print("Error in _check_if_dt_range_has_enough_bars")
-      print("  Fixing issue with data....")
+      if not quiet:
+        print("  Fixing issue with data....")
       return False
 
 
