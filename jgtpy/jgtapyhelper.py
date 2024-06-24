@@ -264,7 +264,7 @@ def ids_add_indicators__legacy(
     if rq.timeframe == "M1":
         _msg_tide_nb_bars = "Tide Alligator not added to M1 timeframe"
     if not is_tide_alligator_has_enough_bar_in_dfsrc and rq.talligator_flag:
-        print(_msg_tide_nb_bars)
+        print_quiet(quiet,_msg_tide_nb_bars)
     we_add_tide_alligator_condition_met = is_tide_alligator_has_enough_bar_in_dfsrc and rq.talligator_flag and rq.timeframe != "M1"
     if rq.talligator_flag: 
         print_quiet(quiet,"talligator_flag is True")
