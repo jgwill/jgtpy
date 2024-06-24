@@ -121,7 +121,8 @@ import concurrent.futures
 # Move the get_cdf function to the top level
 def get_cdf(i, t, tf, use_full, use_fresh, quiet, quotescount,force_read=False):
   if force_read:
-      print("CDSSvc Read: ",i," ", tf, "/", t,":f" if use_full else "")
+    _f=":f" if use_full else ""
+    print("CDSSvc Read: ",i," ", tf, "/", t, _f)
     return tf, read(i, tf, use_full=use_full, quotescount=quotescount, quiet=quiet)
   else:
     print("CDSSvc Get: ", tf, " of : ", t," for: ",i)
