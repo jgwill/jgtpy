@@ -236,7 +236,7 @@ def createCDS_for_main(
         #@STCGoal GENERATE THE ZONE from the FRESH CDF
         #print("Zone updating...")
         fpath,zone_data = svc.zone_update_from_cdf(instrument,timeframe,cdf,quiet=quietting)
-        print(instrument," ",timeframe," zone: ",zone_data["zcol"].values[0])
+        print("    ",instrument," ",timeframe," zone: ",zone_data["zcol"].values[0])
         
         print_quiet(quiet, cdspath)
         print_quiet(quiet, cdf)
