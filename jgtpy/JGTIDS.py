@@ -1028,6 +1028,7 @@ def tocds(
         cc = JGTChartConfig()
     if use_v2_jgtapyhelper:
         import jgtapyhelper as tah
+        #print("RQ:", rq.timeframe)
         dfires =tah.toids(dfsrc, cc=cc, rq=rq, quiet=quiet, columns_to_remove=columns_to_remove)
     else:
         print("DEPRECATION NOTICE: tocds() is deprecated and will be removed in a future release. Please use toids() from jgtapyhelper instead.")

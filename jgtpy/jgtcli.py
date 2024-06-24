@@ -234,6 +234,7 @@ def createCDS_for_main(
         if cdspath is not None and cdf is None and viewpath:
             return #we printed it already.
         #@STCGoal GENERATE THE ZONE from the FRESH CDF
+        #print("Zone updating...")
         fpath,zone_data = svc.zone_update_from_cdf(instrument,timeframe,cdf,quiet=quietting)
         print(instrument," ",timeframe," zone: ",zone_data["zcol"].values[0])
         

@@ -12,8 +12,8 @@ from jgtutils import jgtconstants as c
 class JGTPDSRequest(JGTBaseRequest):
     def __init__(
         self,
-        instrument: str = "SPX500",
-        timeframe: str = "H4",
+        instrument: str = "",
+        timeframe: str = "",
         timeframes=None,
         crop_last_dt: str = None,
         use_fresh: bool = False,

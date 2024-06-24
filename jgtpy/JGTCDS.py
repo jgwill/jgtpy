@@ -76,6 +76,8 @@ def createFromPDSFileToCDSFile(
     if rq is None:
         #print("rq is None in createFromPDSFileToCDSFile")
         rq = JGTCDSRequest()
+        rq.timeframe=timeframe
+        rq.instrument=instrument
         rq.quotescount = quotescount
         rq.gator_oscillator_flag = gator_oscillator_flag
         rq.mfi_flag = mfi_flag

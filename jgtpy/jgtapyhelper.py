@@ -258,9 +258,14 @@ def ids_add_indicators__legacy(
     )
 
     is_tide_alligator_has_enough_bar_in_dfsrc = ldfsrc >= talligator_required_bar_offset
+    
+    _msg_tide_nb_bars = "Tide Alligator has not enough bars in the DataFrame"
+    #print("RQ.TIMEFRAME:",rq.timeframe)
+    if rq.timeframe == "M1":
+        _msg_tide_nb_bars = "Tide Alligator not added to M1 timeframe"
     if not is_tide_alligator_has_enough_bar_in_dfsrc and rq.talligator_flag:
-        print("Tide Alligator has not enough bars in the DataFrame")
-    we_add_tide_alligator_condition_met = is_tide_alligator_has_enough_bar_in_dfsrc and rq.talligator_flag
+        print(_msg_tide_nb_bars)
+    we_add_tide_alligator_condition_met = is_tide_alligator_has_enough_bar_in_dfsrc and rq.talligator_flag and rq.timeframe != "M1"
     if rq.talligator_flag: 
         print_quiet(quiet,"talligator_flag is True")
     else:
