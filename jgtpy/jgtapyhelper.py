@@ -410,7 +410,6 @@ def ids_add_indicators__legacy(
             df.replace(MFI_GREEN_STR, MFI_GREEN_ID, inplace=True)  # Green (++) signal
             """
             #print(" ADDING SQUAT PROTO Will be in CDS Module")
-            #i['mfi_sq'] = [calculate_mfi_sq(row, i.iloc[i.index.get_loc(row.name)-1]) if i.index.get_loc(row.name) != 0 else '0' for row in i.itertuples()]
 
         except Exception as e:
             print("bw_mfi failed")
