@@ -403,10 +403,11 @@ def ids_add_indicators__legacy(
             # Add SQUAT Bar column to the DataFrame
             ## formula
             """
-            1. + Tick volume and + MFI  Indicator: ++ Green 
-            2. - Tick volume and - MFI  Indicator: -- Fade
-            3. - Tick volume and + MFI  Indicator: -+ Fake
-            4. + Tick volume and - MFI  Indicator: +- Squat
+            from jgtutils.jgtconstants import MFI_SQUAT_STR,MFI_FAKE_STR,MFI_FADE_STR,MFI_GREEN_STR,MFI_SQUAT_ID,MFI_FAKE_ID,MFI_FADE_ID,MFI_GREEN_ID
+            df.replace(MFI_SQUAT_STR, MFI_SQUAT_ID, inplace=True)  # Squat (+-) signal
+            df.replace(MFI_FAKE_STR, MFI_FAKE_ID, inplace=True)    # Fake (-+) signal
+            df.replace(MFI_FADE_STR, MFI_FADE_ID, inplace=True)    # Fade (--) signal
+            df.replace(MFI_GREEN_STR, MFI_GREEN_ID, inplace=True)  # Green (++) signal
             """
             #print(" ADDING SQUAT PROTO Will be in CDS Module")
             #i['mfi_sq'] = [calculate_mfi_sq(row, i.iloc[i.index.get_loc(row.name)-1]) if i.index.get_loc(row.name) != 0 else '0' for row in i.itertuples()]
