@@ -1,14 +1,14 @@
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../'))
-sys.path.insert(0, os.path.abspath('../jgtpy'))
+#sys.path.insert(0, os.path.abspath('../'))
+#sys.path.insert(0, os.path.abspath('../jgtpy'))
 from jgtpy import __version__
-from jgtpy import jgtfxc,JGTPDS,JGTIDS,JGTCDS,jgtetl
+from jgtpy import JGTPDSP,JGTIDS,JGTCDS,jgtetl
 
 autodoc_mock_imports = ['pandas']
 
 project = 'jgtpy'
-copyright = '2023, Guillaume Isabelle'
+copyright = '2024, Guillaume Isabelle'
 author = 'Guillaume Isabelle'
 
 extensions = [

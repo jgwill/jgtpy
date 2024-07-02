@@ -944,7 +944,7 @@ def _add_ao_fractal_peak_v1(
 
 # @title Add CDS signals
 
-from jgtutils.jgtconstants import MFI,MFI_SQUAT,MFI_GREEN,MFI_FADE,MFI_FAKE,MFI_SIGNAL,MFI_VAL
+from jgtutils.jgtconstants import MFI,MFI_SQUAT,MFI_GREEN,MFI_FADE,MFI_FAKE,MFI_SIGNAL,MFI_VAL,MFI_SQUAT_STR,MFI_FAKE_STR,MFI_FADE_STR,MFI_GREEN_STR,MFI_SQUAT_ID,MFI_FAKE_ID,MFI_FADE_ID,MFI_GREEN_ID
 
 def _cds_add_mfi_squat_n_signals_column_logics_v1(dfsrc, quiet=False):
     """
@@ -979,10 +979,14 @@ def _cds_add_mfi_squat_n_signals_column_logics_v1(dfsrc, quiet=False):
         & (dfsrc.mfi > dfsrc.mfi.shift())
         ).astype(int)
     dfsrc[MFI_SIGNAL] = dfsrc.apply(
-         lambda row: 4 if row[MFI_SQUAT] > 0 else 1 if row[MFI_GREEN] > 0 else 2 if row[MFI_FADE]>0 else 3 if row[MFI_FAKE]>0 else 0 , axis=1
+         lambda row: MFI_SQUAT_ID if row[MFI_SQUAT] > 0 else MFI_GREEN_ID if row[MFI_GREEN] > 0 else MFI_FADE_ID if row[MFI_FADE]>0 else MFI_FAKE_ID if row[MFI_FAKE]>0 else 0 , axis=1
      )
+    #MFI_GREEN_STR = "++"
+    #MFI_FADE_STR = "--"
+    #MFI_FAKE_STR = "-+"
+    #MFI_SQUAT_STR = "+-"
     dfsrc[MFI_VAL] = dfsrc.apply(
-         lambda row: "++" if row[MFI_SIGNAL] == 1 else "--" if row[MFI_SIGNAL] == 2 else "-+" if row[MFI_SIGNAL] == 3 else "+-" if row[MFI_SIGNAL] == 4 else "0" , axis=1)
+         lambda row: MFI_GREEN_STR if row[MFI_SIGNAL] == MFI_GREEN_ID else MFI_FADE_STR if row[MFI_SIGNAL] == MFI_FADE_ID else MFI_FAKE_STR if row[MFI_SIGNAL] == MFI_FAKE_ID else MFI_SQUAT_STR if row[MFI_SIGNAL] == MFI_SQUAT_ID else "0" , axis=1)
     return dfsrc
 
 
