@@ -24,14 +24,8 @@ Indicators, Signals and data
 ============================
 
 .. autoclass:: jgtpy.JGTCDSSvc
-   :members:
 .. autoclass:: jgtpy.JGTPDSP
-   :members:
 .. autoclass:: jgtpy.JGTIDS
-   :members:
 .. autoclass:: jgtpy.JGTCDS
-   :members:
 .. autoclass:: jgtpy.JGTADS
-   :members:
 .. autoclass:: jgtpy.JGTMKSG
-   :members:
