@@ -25,16 +25,24 @@ Installation
 
    pip install jgtpy
 
-Indicators
+Indicators, Signals and data
 ==========
-.. autoclass:: jgtpy.JGTPDS
+.. autoclass:: jgtpy.JGTCDSSvc
+.. autoclass:: jgtpy.JGTPDSP
+.. autoclass:: jgtpy.JGTPDSRequest
 .. autoclass:: jgtpy.JGTIDS
+.. autoclass:: jgtpy.JGTIDSRequest
 .. autoclass:: jgtpy.JGTCDS
+.. autoclass:: jgtpy.JGTCDSRequest
 .. autoclass:: jgtpy.JGTADS
+.. autoclass:: jgtpy.JGTMKSG
 .. automodule:: __init__
-.. automodule:: jgtpy.JGTPDS
+.. automodule:: jgtpy.JGTCDSSvc
+.. automodule:: jgtpy.JGTPDSP
 .. automodule:: jgtpy.JGTIDS
 .. automodule:: jgtpy.JGTCDS
 .. automodule:: jgtpy.JGTADS
+.. automodule:: jgtpy.JGTMKSG
+.. automodule:: jgtpy.jgtapyhelper
 
 
