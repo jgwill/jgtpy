@@ -24,14 +24,8 @@ Indicators, Signals and data
 ============================
 
 .. autoclass:: jgtpy.JGTCDSSvc
-   :no-index:
 .. autoclass:: jgtpy.JGTPDSP
-   :no-index:
 .. autoclass:: jgtpy.JGTIDS
-   :no-index:
 .. autoclass:: jgtpy.JGTCDS
-   :no-index:
 .. autoclass:: jgtpy.JGTADS
-   :no-index:
 .. autoclass:: jgtpy.JGTMKSG
-   :no-index:
