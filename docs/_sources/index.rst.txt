@@ -35,3 +35,4 @@ Indicators, Signals and data
    :no-index:
 .. autoclass:: jgtpy.JGTMKSG
    :no-index:
+.. automodule:: jgtpy.JGTCDS
