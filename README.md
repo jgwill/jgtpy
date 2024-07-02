@@ -1,6 +1,6 @@
 
 
-# jgtpy (ids)
+# jgtpy (pdsp/ids/cds)
 
 Enhanced JGTPy CDS, IDS, PDS Services
 
@@ -33,6 +33,3 @@ pip install -U jgtpy
 
 ```
 
-## More
-
-* [DATA](DATA.md)

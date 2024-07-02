@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 Welcome to jgtpy's documentation!
-================================
+==================================
 
 :Source Code: https://github.com/jgwill/jgtpy
 :Issue Tracker: https://github.com/jgwill/jgtpy/issues
