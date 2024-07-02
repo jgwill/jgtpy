@@ -1,12 +1,23 @@
-
-#todo expose only the required functions to run CDS
-
-## Requirement:   
-
 """
-* Generate the CDS to file
-* --@STCIssue Parse the CDS and get Valid signal (not fully implemented)
+This module, JGTCDSSvc.py, is part of a larger application designed to interact with the Chaos Data Service (CDS). It includes functionality to create data requests for financial market data based on user-specified parameters. The module handles the initialization and configuration of these data requests, leveraging the Chaos Data Service's capabilities to fetch and process financial data.
 
+Imports:
+- warnings: Used to ignore FutureWarning messages that might arise.
+- sys, os: For path manipulations and system-level operations.
+- pandas (pd): For handling data structures and operations on them.
+- json: For parsing JSON data.
+
+The module also imports specific functionalities from other parts of the application:
+- JGTCDS: A module that likely contains core functionalities related to the Chaos Data Service.
+- JGTCDSRequest: A class definition for creating request objects to interact with the CDS.
+- jgtutils.jgtpov: Utilities for processing or obtaining higher timeframes from given data.
+- jgtutils.jgtos: Operating system utilities, such as path getters and creators.
+- jgtutils.jgtconstants (c): Constants used throughout the application, possibly including default values or configuration settings.
+
+Functions:
+- createCDSRequestFromArgs(args, instrument, timeframe): This function is the primary interface for creating a CDS request object. It takes command line arguments, a specified financial instrument, and a timeframe to create a JGTCDSRequest object. This object is then configured with various options such as whether to include bid/ask data, the number of quotes to retrieve, and specific analytical flags like the inclusion of the Gator Oscillator or the Money Flow Index. The function is well-documented with a detailed docstring explaining its parameters, functionality, and return value.
+
+Overall, this module serves as a bridge between the user's command-line inputs and the Chaos Data Service, enabling the dynamic creation and configuration of data requests based on user preferences and requirements.
 """
 
 import warnings
@@ -29,6 +40,35 @@ from jgtutils.jgtos import get_data_path,mk_fullpath
 from jgtutils import jgtconstants as c
 
 def createCDSRequestFromArgs(args, instrument, timeframe):
+    """
+    Creates a Chaos Data Service (CDS) request object from command line arguments.
+
+    This function initializes a JGTCDSRequest object with parameters specified through command line arguments for requesting data from the Chaos Data Service. The request object is configured with various options such as the financial instrument, timeframe, and additional flags for data processing.
+
+    Parameters:
+    - args (Namespace): The parsed command line arguments containing the options for the CDS request.
+    - instrument (str): The financial instrument for which the data is requested (e.g., "EUR/USD", "Gold").
+    - timeframe (str): The timeframe for the data request (e.g., "1m", "1h").
+
+    The function configures the JGTCDSRequest object with the following options:
+    - instrument: The financial instrument for the request.
+    - keep_bid_ask: A boolean indicating whether to keep bid/ask data. It is set to False if args.rmbidask is True, indicating the removal of bid/ask data.
+    - timeframe: The timeframe for the data request.
+    - quotescount: The number of quotes to retrieve. Defaults to 300 if not specified.
+    - viewpath: The path for the view. Defaults to False if not specified.
+    - use_fresh: A boolean indicating whether to use fresh data. Defaults to False if not specified or if args.notfresh is True, indicating stale data may be used.
+    - use_full: A boolean indicating whether to use full data. Defaults to False if not specified.
+    - gator_oscillator_flag: A boolean indicating whether to include the Gator Oscillator in the data. Defaults to False if not specified.
+    - mfi_flag: A boolean indicating whether to include the Money Flow Index in the data. Set to False if args.no_mfi_flag is True.
+    - balligator_flag: A boolean indicating whether to include the Bollinger Alligator in the data. Defaults to False if not specified.
+    - talligator_flag: A boolean indicating whether to include the T Alligator in the data. Defaults to False if not specified.
+    - balligator_period_jaws: The period for the jaws of the Bollinger Alligator. This option is currently not linked to other balance lines, which may limit its usefulness.
+    - largest_fractal_period: The largest period for fractals to be considered in the data.
+    - verbose_level: The verbosity level for logging purposes.
+
+    Returns:
+    - JGTCDSRequest: The initialized CDS request object.
+    """
     rq = JGTCDSRequest()
     rq.instrument = instrument
     #rq.keep_bid_ask = args.keepbidask
