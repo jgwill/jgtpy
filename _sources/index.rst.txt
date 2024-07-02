@@ -24,15 +24,14 @@ Indicators, Signals and data
 ============================
 
 .. autoclass:: jgtpy.JGTCDSSvc
-   :no-index:
+   :members:
 .. autoclass:: jgtpy.JGTPDSP
-   :no-index:
+   :members:
 .. autoclass:: jgtpy.JGTIDS
-   :no-index:
+   :members:
 .. autoclass:: jgtpy.JGTCDS
-   :no-index:
+   :members:
 .. autoclass:: jgtpy.JGTADS
-   :no-index:
+   :members:
 .. autoclass:: jgtpy.JGTMKSG
-   :no-index:
-.. automodule:: jgtpy.JGTCDS
+   :members:
