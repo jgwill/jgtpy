@@ -62,7 +62,7 @@ def column_mfi_str_in_dataframe_to_id(df,t):
         #check if the column exists in the dataframe
         if col_name not in df.columns:
             continue
-        df[col_name] = df[col_name].apply(lambda x: mfi_str_to_id(x)).copy()
+        df[col_name] = df[col_name].apply(lambda x: int(mfi_str_to_id(x)))
     return df
 
 def column_mfi_str_back_to_str_in_dataframe(df,t):
