@@ -38,9 +38,20 @@ def mfi_id_to_str(mfi_id):
         return "0"
 
 def get_mfi_features_column_list_by_timeframe(t):
-    mfi_str_selected_columns = ['mfi_str_M1','mfi_str_W1']
-    if t=='H4' or t=='H8' or t=='H6':
-      mfi_str_selected_columns.append('mfi_str_D1')
+    mfi_str_selected_columns = [MFI_VAL+'_M1',MFI_VAL+'_W1']
+    
+    if t=='H4' or t=='H8' or t=='H6' or t=='H1' or t=='m15' or t=='m5':
+      mfi_str_selected_columns.append(MFI_VAL+'_D1')
+      
+    if t=='H1' or t=='m15' or t=='m5':
+        mfi_str_selected_columns.append(MFI_VAL+'_H4')
+        
+    if t=='m15' or t=='m5':
+        mfi_str_selected_columns.append(MFI_VAL+'_H1')
+    
+    if t=='m5':
+        mfi_str_selected_columns.append(MFI_VAL+'_m15')
+        
     mfi_str_selected_columns.append(MFI_VAL)
     return mfi_str_selected_columns
 
@@ -52,4 +63,13 @@ def column_mfi_str_in_dataframe_to_id(df,t):
         if col_name not in df.columns:
             continue
         df[col_name] = df[col_name].apply(lambda x: mfi_str_to_id(x)).copy()
+    return df
+
+def column_mfi_str_back_to_str_in_dataframe(df,t):
+    mfi_str_selected_columns=get_mfi_features_column_list_by_timeframe(t)
+    for col_name in mfi_str_selected_columns:
+        #check if the column exists in the dataframe
+        if col_name not in df.columns:
+            continue
+        df[col_name] = df[col_name].apply(lambda x: mfi_id_to_str(x)).copy()
     return df
