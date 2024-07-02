@@ -38,6 +38,3 @@ Indicators
 .. automodule:: jgtpy.JGTADS
 
 
-
-
-========== 
