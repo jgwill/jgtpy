@@ -1,7 +1,3 @@
-.. jgtapy documentation master file, created by
-   sphinx-quickstart on Mon Sep 23 02:03:02 2019.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
 Welcome to jgtpy's documentation!
 ==================================
@@ -17,7 +13,6 @@ Welcome to jgtpy's documentation!
    :maxdepth: 3
    :caption: Contents
 
-   index
 
 Installation
 ============
@@ -27,22 +22,16 @@ Installation
 
 Indicators, Signals and data
 ============================
+
 .. autoclass:: jgtpy.JGTCDSSvc
+   :no-index:
 .. autoclass:: jgtpy.JGTPDSP
-.. autoclass:: jgtpy.JGTPDSRequest
+   :no-index:
 .. autoclass:: jgtpy.JGTIDS
-.. autoclass:: jgtpy.JGTIDSRequest
+   :no-index:
 .. autoclass:: jgtpy.JGTCDS
-.. autoclass:: jgtpy.JGTCDSRequest
+   :no-index:
 .. autoclass:: jgtpy.JGTADS
+   :no-index:
 .. autoclass:: jgtpy.JGTMKSG
-.. automodule:: __init__
-.. automodule:: jgtpy.JGTCDSSvc
-.. automodule:: jgtpy.JGTPDSP
-.. automodule:: jgtpy.JGTIDS
-.. automodule:: jgtpy.JGTCDS
-.. automodule:: jgtpy.JGTADS
-.. automodule:: jgtpy.JGTMKSG
-.. automodule:: jgtpy.jgtapyhelper
-
-
+   :no-index:
