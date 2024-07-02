@@ -3,7 +3,7 @@ import sys
 #sys.path.insert(0, os.path.abspath('../'))
 #sys.path.insert(0, os.path.abspath('../jgtpy'))
 from jgtpy import __version__
-from jgtpy import JGTPDSP,JGTIDS,JGTCDS,jgtetl
+from jgtpy import JGTPDSP,JGTIDS,JGTCDS,jgtetl,JGTCDSSvc,JGTPDSRequest,JGTIDSRequest,JGTCDSRequest,JGTMKSG,JGTADS,jgtapyhelper
 
 autodoc_mock_imports = ['pandas']
 
