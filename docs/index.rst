@@ -26,7 +26,7 @@ Installation
    pip install jgtpy
 
 Indicators, Signals and data
-==========
+============================
 .. autoclass:: jgtpy.JGTCDSSvc
 .. autoclass:: jgtpy.JGTPDSP
 .. autoclass:: jgtpy.JGTPDSRequest
