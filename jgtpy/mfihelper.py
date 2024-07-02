@@ -1,7 +1,7 @@
-
+import pandas as pd
 from jgtutils.jgtconstants import MFI,MFI_SQUAT,MFI_GREEN,MFI_FADE,MFI_FAKE,MFI_SIGNAL,MFI_VAL,MFI_SQUAT_STR,MFI_FAKE_STR,MFI_FADE_STR,MFI_GREEN_STR,MFI_SQUAT_ID,MFI_FAKE_ID,MFI_FADE_ID,MFI_GREEN_ID
 
-def mfi_str_to_id(mfi_str):
+def mfi_str_to_id(mfi_str:str):
     if mfi_str == MFI_SQUAT_STR:
         return MFI_SQUAT_ID
     elif mfi_str == MFI_FAKE_STR:
@@ -13,7 +13,7 @@ def mfi_str_to_id(mfi_str):
     else:
         return 0
 
-def mfi_signal_to_str(mfi_signal):
+def mfi_signal_to_str(mfi_signal:int):
     if mfi_signal == MFI_SQUAT:
         return MFI_SQUAT_STR
     elif mfi_signal == MFI_FAKE:
@@ -25,7 +25,7 @@ def mfi_signal_to_str(mfi_signal):
     else:
         return "0"
 
-def mfi_id_to_str(mfi_id):
+def mfi_id_to_str(mfi_id:int):
     if mfi_id == MFI_SQUAT_ID:
         return MFI_SQUAT_STR
     elif mfi_id == MFI_FAKE_ID:
@@ -37,7 +37,7 @@ def mfi_id_to_str(mfi_id):
     else:
         return "0"
 
-def get_mfi_features_column_list_by_timeframe(t):
+def get_mfi_features_column_list_by_timeframe(t:str):
     mfi_str_selected_columns = [MFI_VAL+'_M1',MFI_VAL+'_W1']
     
     if t=='H4' or t=='H8' or t=='H6' or t=='H1' or t=='m15' or t=='m5':
@@ -56,7 +56,7 @@ def get_mfi_features_column_list_by_timeframe(t):
     return mfi_str_selected_columns
 
 
-def column_mfi_str_in_dataframe_to_id(df,t):
+def column_mfi_str_in_dataframe_to_id(df:pd.DataFrame,t:str):
     mfi_str_selected_columns=get_mfi_features_column_list_by_timeframe(t)
     for col_name in mfi_str_selected_columns:
         #check if the column exists in the dataframe
@@ -65,7 +65,7 @@ def column_mfi_str_in_dataframe_to_id(df,t):
         df[col_name] = df[col_name].apply(lambda x: int(mfi_str_to_id(x)))
     return df
 
-def column_mfi_str_back_to_str_in_dataframe(df,t):
+def column_mfi_str_back_to_str_in_dataframe(df:pd.DataFrame,t:str):
     mfi_str_selected_columns=get_mfi_features_column_list_by_timeframe(t)
     for col_name in mfi_str_selected_columns:
         #check if the column exists in the dataframe
