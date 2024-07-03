@@ -1,0 +1,21 @@
+# ASSISTANT CLI HELPER
+JGX_ASSISTANT_LIST_INCLUDE_TAG="fts"
+JGX_ASSISTANT_LIST_EXCLUDE_TAG=""
+JGX_OPENAI_API_KEY__VARIABLE_NAME="OPENAI_API_KEY"
+
+
+#WS
+
+WS_ROOT_PATH="."
+WS_CURRENT_FILENAME="WS____2405.code-workspace"
+WS_CONDA_ENV_NAME=jgtpy
+
+# or read it from the pyproject.toml
+WS_PYPI_PACKAGE_NAME=jgtpy
+WS_CONDA_ENV_DEPENDING="jgtsd hfsp_basjupyterlab2406private jgtpy-test"
+
+# Other relative path where similar work is done
+#@STCGoal Mastery OpenAI Assistants
+WS_MASTERY_RELATED_PATH=/b/Dropbox/jgt
+
+
