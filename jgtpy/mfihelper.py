@@ -1,6 +1,8 @@
 import pandas as pd
 from jgtutils.jgtconstants import MFI,MFI_SQUAT,MFI_GREEN,MFI_FADE,MFI_FAKE,MFI_SIGNAL,MFI_VAL,MFI_SQUAT_STR,MFI_FAKE_STR,MFI_FADE_STR,MFI_GREEN_STR,MFI_SQUAT_ID,MFI_FAKE_ID,MFI_FADE_ID,MFI_GREEN_ID
 
+print("WARNING::jgtpy.mfihelper MIGHT Migrate to jgtml for now")
+
 def mfi_str_to_id(mfi_str:str):
     if mfi_str == MFI_SQUAT_STR:
         return MFI_SQUAT_ID
