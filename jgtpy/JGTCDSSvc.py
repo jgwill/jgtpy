@@ -370,7 +370,7 @@ def zone__from_cdf_to_zonedata(cdf,add_zone_int=True): # expect to keep one colu
     zone_data=zone_data[[c.ZCOL]]
 
     if add_zone_int:
-      zone_data["zint"]=1 if zone_data[c.ZCOL].values[0] == "green" else -1 if zone_data[c.ZCOL].values[0] == "red" else 0
+      zone_data[c.ZONE_INT]=1 if zone_data[c.ZCOL].values[0] == c.buyingZoneColor else -1 if zone_data[c.ZCOL].values[0] == c.sellingZoneColor else 0
     
     return zone_data
 
