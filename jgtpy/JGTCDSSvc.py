@@ -171,6 +171,9 @@ def get_cdf(i, t, tf, use_full, use_fresh, quiet, quotescount,force_read=False):
     return tf, get(i, tf, use_full=use_full, use_fresh=use_fresh, quiet=quiet, quotescount=quotescount)
 
 def get_higher_cdf_datasets(i, t, use_full=False, use_fresh=True, quiet=True, quotescount=-1,force_read=False):
+  if not use_fresh and not force_read:
+    force_read=True # We force read if not use_fresh
+    
   tf_array = get_higher_tf_array(t)
   if not quiet:
     print("Higher TF Array: ", tf_array)
