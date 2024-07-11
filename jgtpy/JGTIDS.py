@@ -79,9 +79,10 @@ from jgtutils.jgtconstants import (
     FL34,
     FL55,
     FL89,
-    MFI
+    MFI,
+    ZONE_SIGNAL,
 )
-
+from jgtutils.colconverthelper import zone_str_to_id
 
 # %%
 # @title Range shift add col drop na
@@ -1180,6 +1181,7 @@ def jgti_add_zlc_plus_other_AO_signal(
             zoneColor = buyingZoneColor
 
         dfsrc.at[i, signal_zcol_column_name] = zoneColor
+        dfsrc.at[i, ZONE_SIGNAL] = zone_str_to_id(zoneColor)
 
         # Sell Zone Signal
 
