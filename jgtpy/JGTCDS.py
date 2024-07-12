@@ -22,6 +22,9 @@ import pandas as pd
 
 
 from jgtutils import jgtconstants as c
+from jgtutils import coltypehelper
+
+DTYPE_COLTYPE = coltypehelper.get_dtype_definitions()
 
 
 # %%
@@ -134,7 +137,7 @@ def readCDSFile(
     # Define the file path based on the environment variable or local path
     data_path_cds = get_data_path("cds", use_full=use_full)
     fpath = pds.mk_fullpath(instrument, timeframe, "csv", data_path_cds)
-    cdf = pd.read_csv(fpath)
+    cdf = pd.read_csv(fpath,dtype=DTYPE_COLTYPE)
 
     # Set 'Date' as the index and convert it to datetime
     cdf["Date"] = pd.to_datetime(cdf["Date"])
@@ -352,7 +355,7 @@ def _save_cds_data_to_file(df, instrument:str, timeframe:str):
     return fpath
 
 
-def writeCDS(instrument, timeframe, use_full, cdf):
+def writeCDS(instrument, timeframe, use_full, cdf:pd.DataFrame):
     data_path_cds = get_data_path("cds", use_full=use_full)
     fpath = mk_fullpath(instrument, timeframe, "csv", data_path_cds)
     # print(fpath)
