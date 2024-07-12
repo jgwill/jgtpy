@@ -1134,9 +1134,9 @@ def jgti_add_zlc_plus_other_AO_signal(
         aobz = dfsrc.at[i, AOBZ]
 
         # ZLC
-        isZLCBuy = 0
-        isZLCSell = 0
-        zlcCode = 0
+        isZLCBuy:int = 0
+        isZLCSell:int = 0
+        zlcCode:int = 0
         if pao1 > 0 and aobz == 1:
             zlcCode = -1
             isZLCSell = 1
@@ -1144,9 +1144,9 @@ def jgti_add_zlc_plus_other_AO_signal(
             zlcCode = 1
             isZLCBuy = 1
 
-        dfsrc.at[i, ZLC] = zlcCode
-        dfsrc.at[i, ZLCB] = isZLCBuy
-        dfsrc.at[i, ZLCS] = isZLCSell
+        dfsrc.at[i, ZLC] = int(zlcCode)
+        dfsrc.at[i, ZLCB] = int(isZLCBuy)
+        dfsrc.at[i, ZLCS] = int(isZLCSell)
 
         # dfsrc[signal_zcol_column_name] = dfsrc[signal_zcol_column_name].astype(object)
         # Coloring AO
@@ -1170,12 +1170,12 @@ def jgti_add_zlc_plus_other_AO_signal(
 
         zoneColor = nonTradingZoneColor  # default Zone Color
 
-        redZone = 0
+        redZone:int = 0
         if cacred and caored and pac1red and pao1red:
-            redZone = 1
+            redZone:int = 1
             zoneColor = sellingZoneColor
 
-        greenZone = 0
+        greenZone:int = 0
         if cacgreen and caogreen and pac1green and pao1green:
             greenZone = 1
             zoneColor = buyingZoneColor
@@ -1185,13 +1185,13 @@ def jgti_add_zlc_plus_other_AO_signal(
 
         # Sell Zone Signal
 
-        dfsrc.at[i, SZ] = redZone
+        dfsrc.at[i, SZ] = int(redZone)
 
         # Buy Zone Signal
-        dfsrc.at[i, BZ] = greenZone
+        dfsrc.at[i, BZ] = int(greenZone)
 
         # AC Sell / Buy  3 AC Against AO af AC Bellow, 2 if above
-        acSell = 0
+        acSell:int = 0
         msgacSignal = "No "
         if cacred and pac1red and caogreen and pao1green:
             acSell = 1
@@ -1199,7 +1199,7 @@ def jgti_add_zlc_plus_other_AO_signal(
                 cac < 0 and pac2green
             ):  # We require 3 bars red on the AC When bellow zero
                 acSell = 0
-        acBuy = 0
+        acBuy:int = 0
         if cacgreen and pac1green and caored and pao1red:
             acBuy = 1
             if cac > 0 and pac2red:
@@ -1207,10 +1207,10 @@ def jgti_add_zlc_plus_other_AO_signal(
 
         # AC Sell Signal (Deceleration)
 
-        dfsrc.at[i, ACS] = acSell
+        dfsrc.at[i, ACS] = int(acSell)
 
         # AC Buy Signal (Acceleration)
-        dfsrc.at[i, ACB] = acBuy
+        dfsrc.at[i, ACB] = int(acBuy)
 
         if acSell and not quiet:
             print("AC Sell Signal with AC Bellow Zero Line " + str(i))
