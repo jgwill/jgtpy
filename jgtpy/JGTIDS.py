@@ -1219,16 +1219,16 @@ def jgti_add_zlc_plus_other_AO_signal(
 
         # Saucer Strategy
         # More on Saucer Strategy : http://simp.ly/p/2K1HBr
-        saucerSell = 0
+        saucerSell:int = 0
         if cao < 0 and caored and pao1green and pao2green:
             saucerSell = 1
 
-        saucerBuy = 0
+        saucerBuy:int = 0
         if cao > 0 and caogreen and pao1red and pao2red:
             saucerBuy = 1
 
-        dfsrc.at[i, SS] = saucerSell
-        dfsrc.at[i, SB] = saucerBuy
+        dfsrc.at[i, SS] = int(saucerSell)
+        dfsrc.at[i, SB] = int(saucerBuy)
 
         # What Happens on the Next PLUS 35 Periods ??
         if c < xc - 35:
