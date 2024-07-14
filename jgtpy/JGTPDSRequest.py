@@ -1,3 +1,4 @@
+import argparse
 import sys
 import os
 import json
@@ -20,6 +21,7 @@ class JGTPDSRequest(JGTBaseRequest):
         use_full=False,
         keep_bid_ask=True,
         quotescount=300,  # @a Migrate to Use TODO
+        dropna_volume=True,
         *args,
         **kwargs,
     ):
@@ -31,6 +33,10 @@ class JGTPDSRequest(JGTBaseRequest):
         self.use_fresh = use_fresh
         self.quotescount = quotescount
         self.keep_bid_ask = keep_bid_ask
+        self.dropna_volume = dropna_volume
+        if self.timeframe=="M1":
+            print("INFO(JGTPDSRequest): M1 timeframe detected, dropna_volume set to False")
+            self.dropna_volume = False
         if self.crop_last_dt is not None:
             print("-self.crop_last_dt is not None-")
             self.use_full = True
@@ -40,26 +46,54 @@ class JGTPDSRequest(JGTBaseRequest):
     
     # create JGTPDSRequest from args (argparse) considering the super has the same method
     @staticmethod
-    def from_args(args):
-        return JGTPDSRequest(
+    def from_args(args: argparse.Namespace):
+        print("INFO(JGTPDSRequest): from_args", args)
+        default_instance=JGTPDSRequest() # To get default values
+        instance=JGTPDSRequest(
             instrument=args.instrument,
             timeframe=args.timeframe,
-            timeframes=args.timeframes if args.timeframes else None,
+            timeframes=args.timeframes,
             crop_last_dt=args.crop_last_dt if args.crop_last_dt else None,
             use_fresh=args.fresh if args.fresh else False,
             use_full=args.full if args.full else False,
-            keep_bid_ask=False if args.rmbidask else True,
-            quotescount=args.quotescount if args.quotescount else 300,
+            keep_bid_ask=args.keep_bid_ask,
+            quotescount=args.quotescount if args.quotescount else default_instance.quotescount,
+            dropna_volume=args.dropna_volume ,
         )
+        
+        return instance
+        
+        # return JGTPDSRequest(
+        #     instrument=args.instrument,
+        #     timeframe=args.timeframe,
+        #     timeframes=args.timeframes if args.timeframes else None,
+        #     crop_last_dt=args.crop_last_dt if args.crop_last_dt else None,
+        #     use_fresh=args.fresh if args.fresh else False,
+        #     use_full=args.full if args.full else False,
+        #     keep_bid_ask=False if args.rmbidask else True,
+        #     quotescount=args.quotescount if args.quotescount else 300,
+        #     dropna_volume=args.dropna_volume or not args.dont_dropna_volume,
+        # )
     
     def __timeframes__(self, timeframes=None):
         if isinstance(timeframes, list):
             self.timeframes = timeframes
         else:
-            if timeframes == "default" or timeframes == "all" or timeframes is None:
-                self.timeframes = os.getenv("T", "M1,W1,D1,H8,H4").split(",")
+            from jgtutils import jgtcommon
+            if timeframes is not None:
+                self.timeframes = jgtcommon.parse_timeframes_helper(timeframes)
             else:
-                self.timeframes = timeframes.split(",")
+                self.timeframes = jgtcommon.parse_timeframes_helper(self.timeframe) # So we get an array specified also in the timeframe
+            # if timeframes == "default" or timeframes == "all" or timeframes is None:
+            #     try:
+            #         self.timeframes = os.getenv("T", "M1,W1,D1,H8,H4").split(",")
+            #     except:
+            #         self.timeframes = None
+            # else:
+            #     try:
+            #         self.timeframes = timeframes.split(",")
+            #     except:
+            #         self.timeframes = None
 
     def to_json(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=2)

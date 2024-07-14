@@ -10,8 +10,8 @@ class JGTBaseRequest:
     def from_args(args):
         return JGTBaseRequest(
             quiet=args.quiet,
-            verbose_level=args.verbose,
-            viewpath=args.viewpath
+            verbose_level=args.verbose if args.verbose else 0,
+            viewpath=args.viewpath if args.viewpath else False
         )
     def to_json(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=2)
