@@ -34,12 +34,14 @@ def parse_args():
     jgtcommon.add_instrument_timeframe_arguments(parser)
     jgtcommon.add_date_arguments(parser)
     jgtcommon.add_tlid_range_argument(parser)
-    jgtcommon.add_max_bars_arguments(parser)
+    #jgtcommon.add_tlid_date_V2_arguments(parser)
+    #jgtcommon.add_max_bars_arguments(parser)
     # jgtcommon.add_output_argument(parser)
     # jgtfxcommon.add_quiet_argument(parser)
     jgtcommon.add_verbose_argument(parser)
     jgtcommon.add_ads_argument(parser)
-    jgtcommon.add_use_full_argument(parser)
+    #jgtcommon.add_use_full_argument(parser)
+    jgtcommon.add_bars_amount_V2_arguments(parser)
     jgtcommon.add_use_fresh_argument(parser)
     
     jgtcommon.add_ids_mfi_argument(parser)
@@ -78,12 +80,12 @@ def main():
       rq=JGTPDSRequest.JGTPDSRequest.from_args(args)
       print(rq.to_json())
       
-    test_jgtids=True
+    test_jgtids=False
     if test_jgtids:
       rq=JGTIDSRequest.JGTIDSRequest.from_args(args)
       print(rq.to_json())
     
-    test_jgtcds=False
+    test_jgtcds=True
     if test_jgtcds:
       rq=JGTCDSRequest.JGTCDSRequest.from_args(args)
       print(rq.to_json())
