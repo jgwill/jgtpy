@@ -44,22 +44,27 @@ class JGTPDSRequest(JGTBaseRequest):
 
         self.__timeframes__(timeframes)
     
+    
+    # Set values from args
+    def __from_args__(self, args: argparse.Namespace):
+        super().__from_args__(args)
+        self.instrument = args.instrument
+        self.timeframe = args.timeframe
+        self.crop_last_dt = args.crop_last_dt
+        self.use_fresh = args.fresh
+        self.use_full = args.full
+        self.keep_bid_ask = args.keep_bid_ask
+        self.quotescount = args.quotescount  
+        self.dropna_volume = args.dropna_volume
+        self.__timeframes__(args.timeframes) 
+        
+    
     # create JGTPDSRequest from args (argparse) considering the super has the same method
     @staticmethod
     def from_args(args: argparse.Namespace):
-        print("INFO(JGTPDSRequest): from_args", args)
-        default_instance=JGTPDSRequest() # To get default values
-        instance=JGTPDSRequest(
-            instrument=args.instrument,
-            timeframe=args.timeframe,
-            timeframes=args.timeframes,
-            crop_last_dt=args.crop_last_dt if args.crop_last_dt else None,
-            use_fresh=args.fresh if args.fresh else False,
-            use_full=args.full if args.full else False,
-            keep_bid_ask=args.keep_bid_ask,
-            quotescount=args.quotescount if args.quotescount else default_instance.quotescount,
-            dropna_volume=args.dropna_volume ,
-        )
+        #print("INFO(JGTPDSRequest): from_args", args)
+        instance=JGTPDSRequest()
+        instance.__from_args__(args)
         
         return instance
         
