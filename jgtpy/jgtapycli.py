@@ -20,7 +20,7 @@ from jgtutils import (
     jgtcommon as jgtcommon,
 )
 
-from jgtapyhelper import createIDSService,create_ids_request_from_args,print_quiet
+from jgtapyhelper import createIDSService,print_quiet
 
 
 
@@ -128,7 +128,9 @@ def main():
 
         for instrument in instruments:
             for timeframe in timeframes:
-                rq = create_ids_request_from_args(args, instrument, timeframe)
+                rq = JGTIDSRequest.from_args(args)
+                rq.instrument=instrument
+                rq.timeframe=timeframe
                 createIDSService(
                     rq=rq,
                     quiet=quiet,

@@ -690,47 +690,6 @@ def write_ids(instrument, timeframe, use_full, cdf):
     return fpath
 
 
-def create_ids_request_from_args(args, instrument, timeframe):
-    return JGTIDSRequest.from_args(args)
-
-###################### CLEAN ME UP IF JGTIDSRequest.from_args(args) WORK >>>>>
-def create_ids_request_from_args_LEGACY(args, instrument, timeframe):
-    rq = JGTIDSRequest()
-    rq.instrument = instrument
-    #rq.keep_bid_ask = args.keepbidask # Now default to true and turn off only if needed by --rm
-    if args.rmbidask:
-        rq.keep_bid_ask = False
-    rq.timeframe = timeframe
-    rq.quotescount = args.quotescount if args.quotescount else 300
-    rq.viewpath=args.viewpath if args.viewpath else False
-    #rq.use_fresh = args.fresh if args.fresh else False
-    if args.notfresh:
-        rq.use_fresh = False
-    rq.use_full = args.full if args.full else False
-    rq.gator_oscillator_flag = (
-        args.gator_oscillator_flag if args.gator_oscillator_flag else False
-    )
-    #rq.mfi_flag = args.mfi_flag if args.mfi_flag else False
-    if args.no_mfi_flag:
-        rq.mfi_flag = False
-    rq.balligator_flag = args.balligator_flag if args.balligator_flag else False
-    rq.talligator_flag = args.talligator_flag if args.talligator_flag else False
-    rq.balligator_period_jaws = args.balligator_period_jaws
-    rq.talligator_period_jaws = args.talligator_period_jaws
-    rq.largest_fractal_period = args.largest_fractal_period
-    rq.verbose_level = args.verbose
-    
-    rq.talligator_fix_quotescount()
-    #rq=_talligator_fix_quotescount(rq)
-    _DEBUG_TALLIGATOR_FIX_24061618=False
-    if _DEBUG_TALLIGATOR_FIX_24061618:
-        print("IDS RQ Now handle the talligator_flag")
-        print("rq.talligator_flag",rq.talligator_flag)
-        print("rq.quotescount:",rq.quotescount)
-        exit(0)
-    return rq
-
-
 def createIDSService(
     rq: JGTIDSRequest = None,
     quiet=True,
