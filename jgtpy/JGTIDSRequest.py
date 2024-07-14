@@ -46,7 +46,7 @@ class JGTIDSRequest(JGTPDSRequest):
     """
     def __init__(self, 
                  aof_flag=False, 
-                 balligator_flag=False, 
+                 balligator_flag=True, 
                  mfi_flag=True, 
                  gator_oscillator_flag=False,
                  balligator_period_jaws=89, 
@@ -64,7 +64,7 @@ class JGTIDSRequest(JGTPDSRequest):
                  include_ao_color=False,
                  include_ac_color=False,
                  addAlligatorOffsetInFutur=False,
-                 talligator_flag=False, 
+                 talligator_flag=True, 
                  talligator_period_jaws=377, 
                  talligator_period_teeth=233, 
                  talligator_period_lips=144,
@@ -108,31 +108,89 @@ class JGTIDSRequest(JGTPDSRequest):
         self.talligator_period_jaws = self.talligator_period_jaws 
         #if self.talligator_flag else 0 #talligator_period_jaws will be 0 if it is not used
         
+        self.__values_changed__()
+
+    def __values_changed__(self):
         if self.talligator_flag:
             self.talligator_fix_quotescount()
         else:
             if self.balligator_flag:
                 self.balligator_fix_quotescount()
     
+    def __from_args__(self, args):
+        super().__from_args__(args)
+        self.include_ao_color = args.include_ao_color if hasattr(args, 'include_ao_color') else False
+        self.include_ac_color = args.include_ac_color if hasattr(args, 'include_ac_color') else False
+        self.disable_ao_peaks_v1 = args.disable_ao_peaks_v1 if hasattr(args, 'disable_ao_peaks_v1') else True
+        self.aof_flag = args.aof_flag if hasattr(args, 'aof_flag') else False
+        self.balligator_flag = args.balligator_flag
+        self.mfi_flag = args.mfi_flag
+        self.gator_oscillator_flag = args.gator_oscillator_flag if hasattr(args, 'gator_oscillator_flag') else False
+        self.balligator_period_jaws = args.balligator_period_jaws if hasattr(args, 'balligator_period_jaws') else 89
+        self.balligator_period_teeth = args.balligator_period_teeth if hasattr(args, 'balligator_period_teeth') else 55
+        self.balligator_period_lips = args.balligator_period_lips if hasattr(args, 'balligator_period_lips') else 34
+        self.balligator_shift_jaws = args.balligator_shift_jaws if hasattr(args, 'balligator_shift_jaws') else 55
+        self.balligator_shift_teeth = args.balligator_shift_teeth if hasattr(args, 'balligator_shift_teeth') else 34
+        self.balligator_shift_lips = args.balligator_shift_lips if hasattr(args, 'balligator_shift_lips') else 21
+        self.largest_fractal_period = args.largest_fractal_period if hasattr(args, 'largest_fractal_period') else 89
+        self.rounding_decimal_min = args.rounding_decimal_min if hasattr(args, 'rounding_decimal_min') else 11
+        self.peak_distance = args.peak_distance if hasattr(args, 'peak_distance') else 13
+        self.peak_width = args.peak_width if hasattr(args, 'peak_width') else 8
+        self.peak_divider_min_height = args.peak_divider_min_height if hasattr(args, 'peak_divider_min_height') else 3
+        self.addAlligatorOffsetInFutur = args.addAlligatorOffsetInFutur if hasattr(args, 'addAlligatorOffsetInFutur') else False
+        self.talligator_flag=args.talligator_flag
+        self.talligator_period_jaws = args.talligator_period_jaws if hasattr(args, 'talligator_period_jaws') else 377
+        self.talligator_period_teeth = args.talligator_period_teeth if hasattr(args, 'talligator_period_teeth') else 233
+        self.talligator_period_lips = args.talligator_period_lips if hasattr(args, 'talligator_period_lips') else 144
+        self.talligator_shift_jaws = args.talligator_shift_jaws if hasattr(args, 'talligator_shift_jaws') else 233
+        self.talligator_shift_teeth = args.talligator_shift_teeth if hasattr(args, 'talligator_shift_teeth') else 144
+        self.talligator_shift_lips = args.talligator_shift_lips if hasattr(args, 'talligator_shift_lips') else 89
+        
+        self.__values_changed__()
+        
     # create a new JGTIDSRequest object from args (argparse)
     @staticmethod
     def from_args(args):
-        return JGTIDSRequest(
-            instrument=args.instrument,
-            timeframe=args.timeframe,
-            quotescount=args.quotescount,
-            viewpath=args.viewpath,
-            use_fresh=args.fresh,
-            use_full=args.full,
-            gator_oscillator_flag=args.gator_oscillator_flag,
-            mfi_flag=args.mfi_flag,
-            balligator_flag=args.balligator_flag,
-            balligator_period_jaws=args.balligator_period_jaws,
-            largest_fractal_period=args.largest_fractal_period,
-            talligator_flag=args.talligator_flag,
-            talligator_period_jaws=args.talligator_period_jaws,
-            verbose_level=args.verbose
-        )   
+  
+        instance=JGTIDSRequest()
+        instance.__from_args__(args)
+        
+        # instance=JGTIDSRequest(
+        #     instrument=args.instrument,
+        #     timeframe=args.timeframe,
+        #     quotescount=args.quotescount,
+        #     viewpath=args.viewpath,
+        #     use_fresh=args.fresh,
+        #     use_full=args.full,
+        #     gator_oscillator_flag=args.gator_oscillator_flag,
+        #     mfi_flag=args.mfi_flag,
+        #     balligator_flag=args.balligator_flag,
+        #     balligator_period_jaws=args.balligator_period_jaws,
+        #     balligator_period_teeth=args.balligator_period_teeth,
+        #     balligator_period_lips=args.balligator_period_lips,
+        #     balligator_shift_jaws=args.balligator_shift_jaws,
+        #     balligator_shift_teeth=args.balligator_shift_teeth,
+        #     balligator_shift_lips=args.balligator_shift_lips,
+        #     largest_fractal_period=args.largest_fractal_period,
+        #     peak_distance=args.peak_distance,
+        #     peak_width=args.peak_width,
+        #     peak_divider_min_height=args.peak_divider_min_height,
+        #     rounding_decimal_min=args.rounding_decimal_min,
+        #     disable_ao_peaks_v1=args.disable_ao_peaks_v1,
+        #     include_ao_color=args.include_ao_color,
+        #     include_ac_color=args.include_ac_color,
+        #     addAlligatorOffsetInFutur=args.addAlligatorOffsetInFutur,
+        #     talligator_flag=args.talligator_flag,
+        #     talligator_period_jaws=args.talligator_period_jaws,
+        #     talligator_period_teeth=args.talligator_period_teeth,
+        #     talligator_period_lips=args.talligator_period_lips,
+        #     talligator_shift_jaws=args.talligator_shift_jaws,
+        #     talligator_shift_teeth=args.talligator_shift_teeth,
+        #     talligator_shift_lips=args.talligator_shift_lips,
+        #     verbose_level=args.verbose,
+        # )   
+        return instance
+
     def to_json(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=2) 
     
