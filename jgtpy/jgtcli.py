@@ -28,7 +28,8 @@ import pandas as pd
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Process command parameters.")
+    parser=jgtcommon.new_parser("jgtcli - Command Line Interface for JGTPY")
+    #parser = argparse.ArgumentParser(description="Process command parameters.")
     # jgtfxcommon.add_main_arguments(parser)
     jgtcommon.add_instrument_timeframe_arguments(parser)
     jgtcommon.add_date_arguments(parser)
