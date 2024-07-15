@@ -15,6 +15,7 @@ from datetime import datetime
 from jgtutils import jgtcommon,iprops,jgtos
 from jgtutils import jgtos as jos
 from jgtutils.jgtos import create_filestore_path, mk_fn, mk_fn_range, mk_fullpath
+from jgtutils.jgtconstants import VOLUME
 #from jgtutils.jgtconstants import (TJAW_PERIODS,TTEETH_PERIODS)
 
 from JGTChartConfig import JGTChartConfig
@@ -137,6 +138,7 @@ def getPH(instrument:str,
           use_fresh_error_ignore=False,   
           use_cache_full=False,
           keep_bid_ask=False,
+          dropna_volume=True,
           #talligator_flag=False,
           ):
   global df_full_cache
@@ -183,6 +185,11 @@ def getPH(instrument:str,
     if not use_full:
       df = df.iloc[-quote_count:]
   
+  if dropna_volume:
+    if VOLUME in df.columns:
+      df = df.dropna(subset=[VOLUME])
+      #also drop where VOLUME is 0
+      df = df[df[VOLUME] != 0]
   return df
 
 def _get_ph_surely_fresh(instrument, timeframe, quote_count, with_index, quiet, convert_date_index_to_dt, use_full, dt_crop_last, tlid_range, run_jgtfxcli_on_error, use_fresh_error_ignore, use_cache_full,use_fresh=False,keep_bid_ask=False):

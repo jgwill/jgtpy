@@ -118,6 +118,8 @@ class JGTIDSRequest(JGTPDSRequest):
                 self.balligator_fix_quotescount()
     
     def __from_args__(self, args):
+        
+        
         super().__from_args__(args)
         self.include_ao_color = args.include_ao_color if hasattr(args, 'include_ao_color') else False
         self.include_ac_color = args.include_ac_color if hasattr(args, 'include_ac_color') else False
@@ -151,14 +153,32 @@ class JGTIDSRequest(JGTPDSRequest):
     # create a new JGTIDSRequest object from args (argparse)
     @staticmethod
     def from_args(args):
-  
+        # if hasattr(args, 'json_content'):
+        #     #Create an instance from the json string content
+        #     ## Dont use from_json
+        #     rq = JGTIDSRequest()
+        #     rq.__dict__ = json.loads(args.json_content)
+        #     return rq
+        
         instance=JGTIDSRequest()
         instance.__from_args__(args)
         
         return instance
-
+    
+    @staticmethod
+    def from_json(json_str):
+        #print("json_str:",json_str)
+        return json.loads(json_str)
+    
+    @staticmethod
+    def from_json_file(json_file_path):
+        with open(json_file_path) as f:
+            data = json.load(f)
+            return data
+        return None
+    
     def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=2) 
+        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=False, indent=2) 
     
     def _get_talligator_required_additional_quotescount(self):            
         TJAW_REQUIRED_CALC_BARS = TJAW_PERIODS+TTEETH_PERIODS #@STCIssue We should use : self.talligator_period_jaws ,... instead of TJAW_PERIODS, TTEETH_PERIODS

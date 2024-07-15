@@ -46,8 +46,12 @@ def parse_args():
     jgtcommon.add_ids_fractal_largest_period_argument(parser)
     jgtcommon.add_viewpath_argument(parser)
     
+    #dropna_volume
+    jgtcommon.add_dropna_volume_argument(parser)
+
+    args=jgtcommon.parse_args(parser)
     # jgtcommon.add_cds_argument(parser)
-    args = parser.parse_args()
+    
     return args
 
 
@@ -132,6 +136,10 @@ def main():
         if date_to:
             print("Date to : " + str(date_to))
 
+    do_we_dropna_volume = args.dropna_volume
+    if do_we_dropna_volume:
+        print("Dropping NA Volume")
+    
     try:
 
         print_quiet(quiet, "Getting for : " + instrument + "_" + timeframe)
@@ -158,7 +166,8 @@ def main():
                     talligator_flag=talligator_flag,
                     talligator_period_jaws=talligator_period_jaws,
                     viewpath=viewpath,
-                    quotescount=quotescount
+                    quotescount=quotescount,
+                    dropna_volume=do_we_dropna_volume
                 )
                 # else:
                 #     p = pds.getPH(instrument, timeframe, quotes_count, date_from, date_to, False, quiet)
@@ -200,6 +209,7 @@ def createCDS_for_main(
     talligator_period_jaws=377,
     viewpath=False,
     quotescount=300,
+    dropna_volume=True,
 ):
     # implementation goes here
     col2remove = constants.columns_to_remove
@@ -212,7 +222,7 @@ def createCDS_for_main(
         
     try:
         #cdspath, cdf = cds.createFromPDSFileToCDSFile(
-        cdspath, cdf = cds.createFromPDSFileToCDSFile(
+        cdspath, cdf = cds.createFromPDSFileToCDSFile( #@STCIssue Old not Service method is used.  Refactoring should use JGTCDSSvc.get()
             instrument, 
             timeframe, 
             quiet=quietting,

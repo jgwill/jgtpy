@@ -47,6 +47,7 @@ def createFromPDSFileToCDSFile(
     talligator_period_jaws=377,
     viewpath=False,
     quotescount=300,
+    dropna_volume=True,
 ):
     """
     Create a CDS file from a PDS file.
@@ -97,6 +98,7 @@ def createFromPDSFileToCDSFile(
         return cdspath,None
     # Working around an issue with keep_bid_ask, we use the value supplied in this function to override the value in the request
     rq.keep_bid_ask = keep_bid_ask
+    rq.dropna_volume = dropna_volume
 
     cdf = createFromPDSFile(
         instrument, timeframe, quiet,         
@@ -203,6 +205,7 @@ def _getPH_to_DF_wrapper_240304(instrument, timeframe, quiet, cc, use_full, rq,u
             use_fresh=use_fresh,
             run_jgtfxcli_on_error=run_jgtfxcli_on_error,
             keep_bid_ask=rq.keep_bid_ask,
+            dropna_volume=rq.dropna_volume,
             )
 
     if not quiet:

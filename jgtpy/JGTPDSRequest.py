@@ -62,6 +62,9 @@ class JGTPDSRequest(JGTBaseRequest):
     # create JGTPDSRequest from args (argparse) considering the super has the same method
     @staticmethod
     def from_args(args: argparse.Namespace):
+        # if hasattr(args, 'json_content'):
+        #     rq = JGTPDSRequest.from_json(args.json_content)
+        #     return rq
         #print("INFO(JGTPDSRequest): from_args", args)
         instance=JGTPDSRequest()
         instance.__from_args__(args)
@@ -101,7 +104,10 @@ class JGTPDSRequest(JGTBaseRequest):
             #         self.timeframes = None
 
     def to_json(self):
-        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=2)
-
+        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=False, indent=2)
+    
+    @staticmethod
+    def from_json(json_str):
+        return json.loads(json_str)
     # def __str__(self) -> str:
     #     return super().__str__() + f"instrument: {self.instrument}\n" + f"timeframe: {self.timeframe}\n" + f"timeframes: {self.timeframes if self.timeframes is not None else 'None'}\n" + f"crop_last_dt: {self.crop_last_dt if self.crop_last_dt is not None else 'None'}\n" + f"use_fresh: {self.use_fresh}\n" + f"use_full: {self.use_full}\n"
