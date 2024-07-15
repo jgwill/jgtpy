@@ -40,7 +40,7 @@ from jgtutils import jgtconstants as c
 
 
 
-def set_rq_defaults(rq):
+def set_rq_defaults(rq): #@STCIssue We would migrate to use jgtutils/jgtclirqdata.py
     rq.keep_bid_ask = True
     if not rq.use_full and rq.quotescount == -1:
       rq.quotescount = 300
@@ -49,6 +49,7 @@ def set_rq_defaults(rq):
     rq.mfi_flag = True
     rq.balligator_flag = True
     rq.talligator_flag = True
+    rq.dropna_volume = True
     
     if rq.timeframe=="M1":
       rq.talligator_flag = False
