@@ -1,12 +1,12 @@
 usage: refacto__from_args__240714.py [-h] [-i INSTRUMENT] [-t TIMEFRAME]
                                      [-s "m.d.Y H:M:S"] [-e "m.d.Y H:M:S"]
-                                     [-r TLIDRANGE] [-c MAX] [-v VERBOSE]
-                                     [-ads] [-uf | -un] [-new | -old] [-mfi]
-                                     [-nomfi] [-go] [-ba]
+                                     [-r TLIDRANGE] [-v VERBOSE] [-ads]
+                                     [-c MAX | [-uf | -un]] [-new | -old]
+                                     [-mfi] [-nomfi] [-go] [-ba]
                                      [-bjaw BALLIGATOR_PERIOD_JAWS] [-ta]
                                      [-tjaw TALLIGATOR_PERIOD_JAWS]
-                                     [-lfp LARGEST_FRACTAL_PERIOD] [-vp] [-dv]
-                                     [-ddv]
+                                     [-lfp LARGEST_FRACTAL_PERIOD] [-vp]
+                                     [-dv | -ddv]
 
 Process command parameters.
 
@@ -30,15 +30,15 @@ options:
                         parameter.
   -r TLIDRANGE, --range TLIDRANGE
                         TLID range in the format YYMMDDHHMM_YYMMDDHHMM.
-  -c MAX, --quotescount MAX
-                        Max number of bars. 0 - Not limited
   -v VERBOSE, --verbose VERBOSE
                         Set the verbosity level. 0 = quiet, 1 = normal, 2 =
                         verbose, 3 = very verbose, etc.
   -ads, --ads           Action the creation of ADS and show the chart
+  -c MAX, --quotescount MAX
+                        Max number of bars. 0 - Not limited
   -uf, --full           Output/Input uses the full store.
   -un, --notfull        Output/Input uses NOT the full store.
-  -new, --fresh         Output/Input freshes storage with latest market.
+  -new, --fresh         Freshening the storage with latest market.
   -old, --notfresh      Output/Input wont be freshed from storage (weekend or
                         tests).
   -mfi, --mfi_flag      Enable the Market Facilitation Index indicator.
