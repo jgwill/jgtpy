@@ -9,14 +9,18 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 from JGTIDSRequest import JGTIDSRequest
 
 class JGTCDSRequest(JGTIDSRequest):
-    def __init__(self, *args, **kwargs):
+    def __init__(self,cds_notes=None, *args, **kwargs):
         super().__init__(*args, **kwargs) 
+        self.cds_notes = cds_notes
         
     def to_json(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=False, indent=2)
     
     def __from_args__(self, args):
+        print("CDS __from_args__")
         super().__from_args__(args)
+        if hasattr(args, 'cds_notes'):
+            self.cds_notes = args.cds_notes
         
     @staticmethod
     def from_args(args):

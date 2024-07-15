@@ -10,13 +10,12 @@ usage: refacto__from_args__240714.py [-h] [-i INSTRUMENT] [-t TIMEFRAME]
                                      [-pdsrqnormal] [-pdsrqfresh] [-pdsrqfull]
                                      [-pdsrqfullfresh] [-idsrq] [-cdsrq]
                                      [-cdsrqfull] [-cdsrqfullfresh]
-                                     [-cdsrqfresh]
+                                     [-cdsrqfresh] [-kba | -rmba]
 
 Process command parameters.
 
 options:
   -h, --help            show this help message and exit
-  -ads, --ads           Action the creation of ADS and show the chart
 
 POV:
   Point of view
@@ -50,6 +49,11 @@ Verbosity:
   -v VERBOSE, --verbose VERBOSE
                         Set the verbosity level. 0 = quiet, 1 = normal, 2 =
                         verbose, 3 = very verbose, etc.
+
+Interaction:
+  Interaction arguments
+
+  -ads, --ads           Action the creation of ADS and show the chart
 
 Bars:
   Bars flags
@@ -96,6 +100,8 @@ Cleanup:
                         (note.Montly chart does not dropna volume)
   -ddv, --dont_dropna_volume
                         Do not dropna volume
+  -kba, --keepbidask    Keep Bid/Ask in storage.
+  -rmba, --rmbidask     Remove Bid/Ask in storage.
 
 RQ Pattern:
   RQ Pattern to use. Future practice to create request patterns to load into

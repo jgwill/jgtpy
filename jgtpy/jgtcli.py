@@ -61,37 +61,37 @@ def main():
     cc = JGTChartConfig()
     args = parse_args()
 
-    gator_oscillator_flag = (
-        args.gator_oscillator_flag if args.gator_oscillator_flag else False
-    )
-    mfi_flag = True #mfi_flag = args.mfi_flag if args.mfi_flag else False
-    balligator_flag = args.balligator_flag if args.balligator_flag else False
-    talligator_flag = args.talligator_flag if args.talligator_flag else False
-    balligator_period_jaws = args.balligator_period_jaws
-    talligator_period_jaws = args.talligator_period_jaws
-    largest_fractal_period = args.largest_fractal_period
+    # gator_oscillator_flag = (
+    #     args.gator_oscillator_flag if args.gator_oscillator_flag else False
+    # )
+    # mfi_flag = True #mfi_flag = args.mfi_flag if args.mfi_flag else False
+    # balligator_flag = args.balligator_flag if args.balligator_flag else False
+    # talligator_flag = args.talligator_flag if args.talligator_flag else False
+    # balligator_period_jaws = args.balligator_period_jaws
+    # talligator_period_jaws = args.talligator_period_jaws
+    # largest_fractal_period = args.largest_fractal_period
 
 
-    viewpath=args.viewpath
+    # viewpath=args.viewpath
     
-    instrument = args.instrument
-    timeframe = args.timeframe
-    quotescount = args.quotescount
+    # instrument = args.instrument
+    # timeframe = args.timeframe
+    # quotescount = args.quotescount
     #print("#@STCIssue : quotes_count is not passed , it should be !")
-    cc.nb_bar_on_chart = quotescount
+    cc.nb_bar_on_chart = args.quotescount
     
     verbose_level = args.verbose
-    quiet = False
-    if verbose_level == 0:
-        quiet = True
+    # quiet = False
+    # if verbose_level == 0:
+    #     quiet = True
     
-    full = False
-    fresh = False
-    if args.fresh:
-        fresh=True
+    # full = False
+    # fresh = False
+    # if args.fresh:
+    #     fresh=True
     
-    if args.full:
-        full = True
+    # if args.full:
+    #     full = True
 
     date_from = None
     date_to = None
@@ -102,7 +102,7 @@ def main():
         print("#FUTURE Support for tlid range")
         tmpcmd = wsl._mkbash_cmd_string_jgtfxcli_range(
             instrument, timeframe, tlid_range,verbose_level=verbose_level,
-            use_full=full
+            use_full=args.full
         )
         print(tmpcmd)
         print("#-----------Stay tune -------- Quitting for now")
@@ -144,31 +144,31 @@ def main():
     
     try:
 
-        print_quiet(quiet, "Getting for : " + instrument + "_" + timeframe)
-        instruments = instrument.split(",")
-        timeframes = timeframe.split(",")
+        print_quiet(args.quiet, "Getting for : " + args.instrument + "_" + args.timeframe)
+        instruments = args.instrument.split(",")
+        timeframes = args.timeframe.split(",")
 
         for instrument in instruments:
             for timeframe in timeframes:
                 createCDS_for_main(
-                    instrument,
-                    timeframe,
-                    quiet=quiet,
+                    args.instrument,
+                    args.timeframe,
+                    quiet=args.quiet,
                     verbose_level=verbose_level,
                     tlid_range=tlid_range,
                     show_ads=show_ads,
                     cc=cc,
-                    use_full=full,
-                    use_fresh=fresh,
-                    gator_oscillator_flag=gator_oscillator_flag,
-                    mfi_flag=mfi_flag,
-                    balligator_flag=balligator_flag,
-                    balligator_period_jaws=balligator_period_jaws,
-                    largest_fractal_period=largest_fractal_period,
-                    talligator_flag=talligator_flag,
-                    talligator_period_jaws=talligator_period_jaws,
-                    viewpath=viewpath,
-                    quotescount=quotescount,
+                    use_full=args.full,
+                    use_fresh=args.fresh,
+                    gator_oscillator_flag=args.gator_oscillator_flag,
+                    mfi_flag=args.mfi_flag,
+                    balligator_flag=args.balligator_flag,
+                    balligator_period_jaws=args.balligator_period_jaws,
+                    largest_fractal_period=args.largest_fractal_period,
+                    talligator_flag=args.talligator_flag,
+                    talligator_period_jaws=args.talligator_period_jaws,
+                    viewpath=args.viewpath,
+                    quotescount=args.quotescount,
                     dropna_volume=do_we_dropna_volume
                 )
                 # else:
@@ -241,7 +241,8 @@ def createCDS_for_main(
             talligator_flag=talligator_flag,
             talligator_period_jaws=talligator_period_jaws,
             viewpath=viewpath,
-            quotescount=quotescount
+            quotescount=quotescount,
+            dropna_volume=dropna_volume,
         )  # @STCIssue: This is not supporting -c NB_BARS_TO_PROCESS, should it ?
         if cdspath is not None and cdf is None and viewpath:
             return #we printed it already.

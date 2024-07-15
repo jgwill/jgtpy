@@ -1,4 +1,5 @@
 
+import json
 import JGTBaseRequest,JGTIDSRequest,JGTPDSRequest,JGTCDSRequest
 
 
@@ -53,13 +54,30 @@ def parse_args():
     
     #dropna_volume
     jgtcommon.add_dropna_volume_argument(parser)
-
+    jgtcommon.add_load_json_file_argument(parser)
+    jgtcommon.add_jgtclirqdata_arguments(parser)
+    
+    jgtcommon.add_keepbidask_argument(parser)
+    
+    # print("Action groups:")
+    # for g in parser._action_groups:
+    #     print(g.__dict__)
+    
     args=jgtcommon.parse_args(parser)
     # jgtcommon.add_cds_argument(parser)
     
     return args
 
-
+_IDS_RQ_JSON_SAMPLE01="""
+{
+  "use_full": true,
+  "use_fresh": false,
+  "mfi_flag": true,
+  "balligator_flag": true,
+  "talligator_flag": true,
+  "dropna_volume": true
+}
+"""
 
 def main():
     cc = JGTChartConfig()
@@ -85,7 +103,30 @@ def main():
       rq=JGTIDSRequest.JGTIDSRequest.from_args(args)
       print(rq.to_json())
     
-    test_jgtcds=True
+    test_jgtids3=True
+    if test_jgtids3:
+      rq=JGTIDSRequest.JGTIDSRequest.from_args(args)
+      rq.__from_json__(_IDS_RQ_JSON_SAMPLE01)
+      print(rq.to_json())
+    
+    # test_jgtids2=True
+    # if test_jgtids2:
+    #   print(args.json_file)
+    #   rq=JGTIDSRequest.JGTIDSRequest.from_(args.json_file)
+    #   print(rq.to_json())
+    #   sys.exit(0)
+    #   rq=JGTIDSRequest.JGTIDSRequest.from_args(args)
+    
+    test_jgtids_from_json=False
+    if test_jgtids_from_json:
+      json_sample_file_path="samples/JGTIDSRequest_c1000_ba_ta_mfi.json"
+      rq=JGTIDSRequest.JGTIDSRequest.from_json_file(json_sample_file_path)
+        
+      #rq=JGTIDSRequest.JGTIDSRequest.from_args(args)
+      print(rq)
+      
+      
+    test_jgtcds=False
     if test_jgtcds:
       rq=JGTCDSRequest.JGTCDSRequest.from_args(args)
       print(rq.to_json())
