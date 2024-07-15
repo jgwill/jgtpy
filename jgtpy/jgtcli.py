@@ -31,12 +31,11 @@ def parse_args():
     jgtcommon.add_instrument_timeframe_arguments(parser)
     jgtcommon.add_date_arguments(parser)
     jgtcommon.add_tlid_range_argument(parser)
-    jgtcommon.add_max_bars_arguments(parser)
     # jgtcommon.add_output_argument(parser)
     # jgtfxcommon.add_quiet_argument(parser)
     jgtcommon.add_verbose_argument(parser)
     jgtcommon.add_ads_argument(parser)
-    jgtcommon.add_use_full_argument(parser)
+    jgtcommon.add_bars_amount_V2_arguments(parser)
     jgtcommon.add_use_fresh_argument(parser)
     
     jgtcommon.add_ids_mfi_argument(parser)
@@ -48,7 +47,10 @@ def parse_args():
     
     #dropna_volume
     jgtcommon.add_dropna_volume_argument(parser)
-
+    
+    #add_jgtclirqdata_arguments
+    jgtcommon.add_load_json_file_argument(parser)
+    jgtcommon.add_jgtclirqdata_arguments(parser)
     args=jgtcommon.parse_args(parser)
     # jgtcommon.add_cds_argument(parser)
     
