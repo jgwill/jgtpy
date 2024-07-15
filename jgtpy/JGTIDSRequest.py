@@ -155,40 +155,6 @@ class JGTIDSRequest(JGTPDSRequest):
         instance=JGTIDSRequest()
         instance.__from_args__(args)
         
-        # instance=JGTIDSRequest(
-        #     instrument=args.instrument,
-        #     timeframe=args.timeframe,
-        #     quotescount=args.quotescount,
-        #     viewpath=args.viewpath,
-        #     use_fresh=args.fresh,
-        #     use_full=args.full,
-        #     gator_oscillator_flag=args.gator_oscillator_flag,
-        #     mfi_flag=args.mfi_flag,
-        #     balligator_flag=args.balligator_flag,
-        #     balligator_period_jaws=args.balligator_period_jaws,
-        #     balligator_period_teeth=args.balligator_period_teeth,
-        #     balligator_period_lips=args.balligator_period_lips,
-        #     balligator_shift_jaws=args.balligator_shift_jaws,
-        #     balligator_shift_teeth=args.balligator_shift_teeth,
-        #     balligator_shift_lips=args.balligator_shift_lips,
-        #     largest_fractal_period=args.largest_fractal_period,
-        #     peak_distance=args.peak_distance,
-        #     peak_width=args.peak_width,
-        #     peak_divider_min_height=args.peak_divider_min_height,
-        #     rounding_decimal_min=args.rounding_decimal_min,
-        #     disable_ao_peaks_v1=args.disable_ao_peaks_v1,
-        #     include_ao_color=args.include_ao_color,
-        #     include_ac_color=args.include_ac_color,
-        #     addAlligatorOffsetInFutur=args.addAlligatorOffsetInFutur,
-        #     talligator_flag=args.talligator_flag,
-        #     talligator_period_jaws=args.talligator_period_jaws,
-        #     talligator_period_teeth=args.talligator_period_teeth,
-        #     talligator_period_lips=args.talligator_period_lips,
-        #     talligator_shift_jaws=args.talligator_shift_jaws,
-        #     talligator_shift_teeth=args.talligator_shift_teeth,
-        #     talligator_shift_lips=args.talligator_shift_lips,
-        #     verbose_level=args.verbose,
-        # )   
         return instance
 
     def to_json(self):
