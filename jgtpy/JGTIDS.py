@@ -958,7 +958,7 @@ def _cds_add_mfi_squat_n_signals_column_logics_v1(dfsrc, quiet=False):
     Returns:
     - dfsrc (DataFrame): The updated DataFrame with the MFI squat column logics added.
     """
-
+    #@STCIssue If MFI Flags off that bugs. 'DataFrame' object has no attribute 'mfi'
     dfsrc[MFI_SQUAT] = (
         (dfsrc.Volume > 0)
         & (dfsrc.Volume > dfsrc.Volume.shift())

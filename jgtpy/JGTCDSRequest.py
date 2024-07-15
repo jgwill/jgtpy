@@ -17,7 +17,7 @@ class JGTCDSRequest(JGTIDSRequest):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=False, indent=2)
     
     def __from_args__(self, args):
-        print("CDS __from_args__")
+        #print("CDS __from_args__")
         super().__from_args__(args)
         if hasattr(args, 'cds_notes'):
             self.cds_notes = args.cds_notes

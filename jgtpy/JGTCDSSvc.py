@@ -82,6 +82,7 @@ def get(instrument,timeframe,use_full=False,use_fresh=True,quotescount=-1,quiet=
     # timeframe = args.timeframe
 
     # Create CDS request
+    #@STCIssue SHOULD Use JGTCDSRequest !!!
     rq = new_rq_default(instrument,timeframe,use_fresh=use_fresh,use_full=use_full,quotescount=quotescount)
 
     # Create CDS

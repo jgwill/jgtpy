@@ -3,6 +3,7 @@
 import sys
 import os
 
+
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 # import .
@@ -19,6 +20,7 @@ import JGTCDS as cds
 import JGTCDSSvc as svc
 import JGTADS as ads
 from JGTChartConfig import JGTChartConfig
+import JGTCDSRequest
 
 import  JGTADSRequest as RQ
 
@@ -139,7 +141,7 @@ def main():
             print("Date to : " + str(date_to))
 
     do_we_dropna_volume = args.dropna_volume
-    if do_we_dropna_volume:
+    if do_we_dropna_volume and not args.quiet:
         print("Dropping NA Volume")
     
     try:
@@ -150,6 +152,8 @@ def main():
 
         for instrument in instruments:
             for timeframe in timeframes:
+                #rq=JGTCDSRequest.JGTCDSRequest.from_args(args)
+                
                 createCDS_for_main(
                     args.instrument,
                     args.timeframe,
@@ -191,6 +195,7 @@ def main():
 # print("")
 # #input("Done! Press enter key to exit\n")
 
+        
 
 def createCDS_for_main(
     instrument,
@@ -224,7 +229,7 @@ def createCDS_for_main(
         
     try:
         #cdspath, cdf = cds.createFromPDSFileToCDSFile(
-        cdspath, cdf = cds.createFromPDSFileToCDSFile( #@STCIssue Old not Service method is used.  Refactoring should use JGTCDSSvc.get()
+        cdspath, cdf = cds.createFromPDSFileToCDSFile( #@STCIssue Old not Service method is used.  Refactoring should use JGTCDSSvc.get() and even there, it is not using the request, cleanup, cleanup !!!
             instrument, 
             timeframe, 
             quiet=quietting,
