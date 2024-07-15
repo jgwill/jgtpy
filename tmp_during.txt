@@ -2,22 +2,35 @@ usage: refacto__from_args__240714.py [-h] [-i INSTRUMENT] [-t TIMEFRAME]
                                      [-s "m.d.Y H:M:S"] [-e "m.d.Y H:M:S"]
                                      [-r TLIDRANGE] [-v VERBOSE] [-ads]
                                      [-c MAX | [-uf | -un]] [-new | -old]
-                                     [-mfi] [-nomfi] [-go] [-ba]
+                                     [-mfi | -nomfi] [-go] [-ba]
                                      [-bjaw BALLIGATOR_PERIOD_JAWS] [-ta]
                                      [-tjaw TALLIGATOR_PERIOD_JAWS]
                                      [-lfp LARGEST_FRACTAL_PERIOD] [-vp]
-                                     [-dv | -ddv] [-jsonf JSON_FILE]
+                                     [-dv | -ddv] [-jsonf JSON_FILE] [-pdsrq]
+                                     [-pdsrqnormal] [-pdsrqfresh] [-pdsrqfull]
+                                     [-pdsrqfullfresh] [-idsrq] [-cdsrq]
+                                     [-cdsrqfull] [-cdsrqfullfresh]
+                                     [-cdsrqfresh]
 
 Process command parameters.
 
 options:
   -h, --help            show this help message and exit
+  -ads, --ads           Action the creation of ADS and show the chart
+
+POV:
+  Point of view
+
   -i INSTRUMENT, --instrument INSTRUMENT
                         An instrument which you want to use in sample. For
                         example, "EUR/USD".
   -t TIMEFRAME, --timeframe TIMEFRAME
                         Time period which forms a single candle. For example,
                         m1 - for 1 minute, H1 - for 1 hour.
+
+DTRange:
+  Date and range selection
+
   -s "m.d.Y H:M:S", --datefrom "m.d.Y H:M:S"
                         Date/time from which you want to receive historical
                         prices. If you leave this argument as it is, it will
@@ -30,10 +43,17 @@ options:
                         parameter.
   -r TLIDRANGE, --range TLIDRANGE
                         TLID range in the format YYMMDDHHMM_YYMMDDHHMM.
+
+Verbosity:
+  control the verbosity of the output
+
   -v VERBOSE, --verbose VERBOSE
                         Set the verbosity level. 0 = quiet, 1 = normal, 2 =
                         verbose, 3 = very verbose, etc.
-  -ads, --ads           Action the creation of ADS and show the chart
+
+Bars:
+  Bars flags
+
   -c MAX, --quotescount MAX
                         Max number of bars. 0 - Not limited
   -uf, --full           Output/Input uses the full store.
@@ -41,6 +61,10 @@ options:
   -new, --fresh         Freshening the storage with latest market.
   -old, --notfresh      Output/Input wont be freshed from storage (weekend or
                         tests).
+
+Indicators:
+  Indicators flags
+
   -mfi, --mfi_flag      Enable the Market Facilitation Index indicator.
   -nomfi, --no_mfi_flag
                         Disable the Market Facilitation Index indicator.
@@ -56,11 +80,44 @@ options:
                         The period of the Tide Alligator jaws.
   -lfp LARGEST_FRACTAL_PERIOD, --largest_fractal_period LARGEST_FRACTAL_PERIOD
                         The largest fractal period.
+
+Output:
+  Output arguments
+
   -vp, --viewpath       flag to just view the path of files from arguments -i
                         -t.
+  -jsonf JSON_FILE, --json_file JSON_FILE
+                        JSON filepath content to be loaded.
+
+Cleanup:
+  Cleanup data
+
   -dv, --dropna_volume  Drop rows with NaN (or 0) in volume column.
                         (note.Montly chart does not dropna volume)
   -ddv, --dont_dropna_volume
                         Do not dropna volume
-  -jsonf JSON_FILE, --json_file JSON_FILE
-                        JSON filepath content to be loaded.
+
+RQ Pattern:
+  RQ Pattern to use. Future practice to create request patterns to load into
+  the args later.
+
+  -pdsrq, --pds_rq_json_base
+                        Use PDS_RQ_JSON_BASE
+  -pdsrqnormal, --pds_rq_json_normal
+                        Use PDS_RQ_JSON_NORMAL
+  -pdsrqfresh, --pds_rq_json_normal_fresh
+                        Use PDS_RQ_JSON_NORMAL_FRESH
+  -pdsrqfull, --pds_rq_json_full
+                        Use PDS_RQ_JSON_FULL
+  -pdsrqfullfresh, --pds_rq_json_full_fresh
+                        Use PDS_RQ_JSON_FULL_FRESH
+  -idsrq, --ids_rq_json_base
+                        Use IDS_RQ_JSON_BASE
+  -cdsrq, --cds_rq_json_normal
+                        Use CDS_RQ_JSON_NORMAL
+  -cdsrqfull, --cds_rq_json_full
+                        Use CDS_RQ_JSON_FULL
+  -cdsrqfullfresh, --cds_rq_json_full_fresh
+                        Use CDS_RQ_JSON_FULL_FRESH
+  -cdsrqfresh, --cds_rq_json_norm_fresh
+                        Use CDS_RQ_JSON_NORM_FRESH
