@@ -6,7 +6,7 @@ usage: refacto__from_args__240714.py [-h] [-i INSTRUMENT] [-t TIMEFRAME]
                                      [-bjaw BALLIGATOR_PERIOD_JAWS] [-ta]
                                      [-tjaw TALLIGATOR_PERIOD_JAWS]
                                      [-lfp LARGEST_FRACTAL_PERIOD] [-vp]
-                                     [-dv | -ddv]
+                                     [-dv | -ddv] [-jsonf JSON_FILE]
 
 Process command parameters.
 
@@ -62,3 +62,5 @@ options:
                         (note.Montly chart does not dropna volume)
   -ddv, --dont_dropna_volume
                         Do not dropna volume
+  -jsonf JSON_FILE, --json_file JSON_FILE
+                        JSON filepath content to be loaded.
