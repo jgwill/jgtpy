@@ -29,9 +29,9 @@ from jgtapyhelper import createIDSService,print_quiet
 
 import argparse
 
-
-def parse_args():
-    parser = argparse.ArgumentParser(description="Process command parameters.")
+def _parse_args():
+    from jgtpyconstants import JGTADS_PROG_DESCRIPTION, JGTAPY_PROG_NAME, JGTADS_PROG_EPILOG
+    parser=jgtcommon.new_parser(JGTADS_PROG_DESCRIPTION,JGTAPY_PROG_NAME,JGTADS_PROG_EPILOG)
     # jgtfxcommon.add_main_arguments(parser)
     jgtcommon.add_instrument_timeframe_arguments(parser)
     # jgtcommon.add_date_arguments(parser)
@@ -90,7 +90,7 @@ def parse_args():
     #     default=89,
     #     help="The largest fractal period.",
     # )
-    args = parser.parse_args()
+    args = jgtcommon.parse_args(parser)
     return args
 
 
@@ -98,7 +98,7 @@ def main():
 
     rq = JGTIDSRequest()
 
-    args = parse_args()
+    args = _parse_args()
 
     # There might be multiple for now
     instrument = args.instrument

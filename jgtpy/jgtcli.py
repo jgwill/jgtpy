@@ -29,7 +29,7 @@ import  JGTADSRequest as RQ
 import pandas as pd
 
 
-def parse_args():
+def _parse_args():
     parser=jgtcommon.new_parser(JGTCLI_PROG_DESCRIPTION,prog=JGTCLI_PROG_NAME,epilog=JGTCLI_EPILOG)
     
     #parser = argparse.ArgumentParser(description="Process command parameters.")
@@ -65,7 +65,7 @@ def parse_args():
 
 def main():
     cc = JGTChartConfig()
-    args = parse_args()
+    args = _parse_args()
 
     # gator_oscillator_flag = (
     #     args.gator_oscillator_flag if args.gator_oscillator_flag else False

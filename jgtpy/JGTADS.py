@@ -1459,14 +1459,21 @@ def plot(
 
 import argparse
 
-
 def main():
-    print("JGTADS v0.1")
+    from jgtutils import jgtcommon
+    from jgtpyconstants import JGTADS_PROG_DESCRIPTION, JGTADS_PROG_NAME, JGTADS_PROG_EPILOG
+    
+    #print("JGTADS v0.1")
     # Parse arguments
-    parser = argparse.ArgumentParser(description="Plot the chart for a given instrument and timeframe.")
-    parser.add_argument("-i","--instrument", type=str, help="The name of the instrument.",required=True,metavar="instrument")
-    parser.add_argument("-t","--timeframe", type=str, help="The timeframe for the chart.",required=True,metavar="timeframe")
+    parser=jgtcommon.new_parser(JGTADS_PROG_DESCRIPTION,JGTADS_PROG_NAME,JGTADS_PROG_EPILOG)
+    #parser = argparse.ArgumentParser(description="Plot the chart for a given instrument and timeframe.")
+    parser=jgtcommon.add_instrument_timeframe_arguments(parser)
+    
+    # parser.add_argument("-i","--instrument", type=str, help="The name of the instrument.",required=True,metavar="instrument")
+    # parser.add_argument("-t","--timeframe", type=str, help="The timeframe for the chart.",required=True,metavar="timeframe")
+    
     #use fresh
+    parser=jgtcommon.add_use_fresh_argument(parser)
     parser.add_argument("-uf","--fresh", action="store_true", help="Whether to use fresh data.",default=False)
     #crop dt
     parser.add_argument("-dt","--crop_last_dt", type=str, help="The last date-time to crop the data.")
@@ -1477,10 +1484,11 @@ def main():
     parser.add_argument("-pov", "--save_figure_as_pov_name", action="store_true", help="Save the figure as pov file.",default=False)
     #save dpi
     parser.add_argument("-dpi", "--save_additional_figures_dpi", type=int, help="The DPI of the saved figures.",default=300)
-    #verbose level
-    parser.add_argument("-v","--verbose_level", type=int, help="The verbose level.",default=0)
     
-    args = parser.parse_args()
+    parser=jgtcommon.add_verbose_argument(parser)
+    #verbose level
+    
+    args=jgtcommon.parse_args(parser)
     if not args.show and args.save_figure is None and args.save_figure_as_pov_name is False:
         print("No output will be generated. Use -s or -sf to display or save the figure.")
         return
