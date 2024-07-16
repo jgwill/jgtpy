@@ -3,6 +3,8 @@
 import sys
 import os
 
+from jgtpyconstants import JGTCLI_EPILOG, JGTCLI_PROG_DESCRIPTION, JGTCLI_PROG_NAME
+
 
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
@@ -28,7 +30,8 @@ import pandas as pd
 
 
 def parse_args():
-    parser=jgtcommon.new_parser("jgtcli - Command Line Interface for JGTPY")
+    parser=jgtcommon.new_parser(JGTCLI_PROG_DESCRIPTION,prog=JGTCLI_PROG_NAME,epilog=JGTCLI_EPILOG)
+    
     #parser = argparse.ArgumentParser(description="Process command parameters.")
     # jgtfxcommon.add_main_arguments(parser)
     jgtcommon.add_instrument_timeframe_arguments(parser)
