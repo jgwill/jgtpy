@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jgtpy"
-version = "0.4.99"
+version = "0.4.100"
 authors = [
   { name="Guillaume Isabelle", email="jgi@jgwill.com" },
 ]
