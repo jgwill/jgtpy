@@ -37,7 +37,7 @@ with warnings.catch_warnings():
 
 
 from JGTCore import (
-    __version__,
+    version,
 )
 
 
@@ -75,7 +75,7 @@ def help():
     print(
         "JGTPY\n",
         "Version: ",
-        __version__,
+        version,
         "\n",
         "JGTPY is a set of tools to help with the analysis of financial markets.\n",
         "It is a Python library that can be used to process data from various sources.\n",

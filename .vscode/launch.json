@@ -34,6 +34,22 @@
       ],
       "console": "internalConsole",
       "justMyCode": false
-    }
+    },
+    {
+      "name": "jgtcli_240807_H4",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/jgtcli.py",
+      "console": "integratedTerminal",
+      "args": "-i SPX500 -t H4 -c 444 -mfi -ba -ta --fresh"
+    },
+    {
+      "name": "jgtcli_240807_D1",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/jgtcli.py",
+      "console": "integratedTerminal",
+      "args": "-i SPX500 -t D1 -c 444 -mfi -ba -ta --fresh"
+    },
   ]
 }

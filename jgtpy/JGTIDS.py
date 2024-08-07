@@ -1181,7 +1181,7 @@ def jgti_add_zlc_plus_other_AO_signal(
             zoneColor = buyingZoneColor
 
         dfsrc.at[i, signal_zcol_column_name] = zoneColor
-        dfsrc.at[i, ZONE_SIGNAL] = zone_str_to_id(zoneColor)
+        dfsrc.at[i, ZONE_SIGNAL] = int(zone_str_to_id(zoneColor))
 
         # Sell Zone Signal
 

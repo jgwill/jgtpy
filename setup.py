@@ -5,14 +5,16 @@ jgtpy
 
 from setuptools import find_packages, setup
 
-#from jgtpy import __version__ as version
+import re
+
 def read_version():
     with open("jgtpy/JGTCore.py") as f:
-        for line in f:
-            if line.startswith("__version__"):
-                return line.strip().split()[-1][1:-1]
+        content=f.read()
+        version_match = re.search(r"version=['\"]([^'\"]*)['\"]", content)
+        return version_match.group(1)
 
 version = read_version()
+
 
 
 setup(
