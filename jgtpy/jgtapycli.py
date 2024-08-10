@@ -31,7 +31,7 @@ import argparse
 
 def _parse_args():
     from jgtpyconstants import JGTADS_PROG_DESCRIPTION, JGTAPY_PROG_NAME, JGTADS_PROG_EPILOG
-    parser=jgtcommon.new_parser(JGTADS_PROG_DESCRIPTION,JGTAPY_PROG_NAME,JGTADS_PROG_EPILOG)
+    parser=jgtcommon.new_parser(JGTADS_PROG_DESCRIPTION,prog=JGTAPY_PROG_NAME,epilog=JGTADS_PROG_EPILOG)
     # jgtfxcommon.add_main_arguments(parser)
     jgtcommon.add_instrument_timeframe_arguments(parser)
     # jgtcommon.add_date_arguments(parser)
