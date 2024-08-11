@@ -29,7 +29,7 @@ addOhlc=True
 cleanseOriginalColumns=True
 useLocal=True
 
-def refreshPH(instrument:str, timeframe:str,quote_count:int=-1, quiet:bool=True,use_full:bool=False,verbose_level=0,tlid_range=None):
+def refreshPH(instrument:str, timeframe:str,quote_count:int=-1, quiet:bool=True,use_full:bool=False,verbose_level=0,tlid_range=None,keep_bid_ask=False):
   #print debug information
   # print(f"Refreshing {instrument} {timeframe}")
   # print(f"quote_count: {quote_count}")
@@ -40,7 +40,7 @@ def refreshPH(instrument:str, timeframe:str,quote_count:int=-1, quiet:bool=True,
   if not quiet:
     print(f"Refreshing {instrument} {timeframe}")
   try:
-    wsl.getPH(instrument, timeframe,quote_count=quote_count, tlid_range=tlid_range, use_full=use_full,verbose_level=verbose_level)
+    wsl.getPH(instrument, timeframe,quote_count=quote_count, tlid_range=tlid_range, use_full=use_full,verbose_level=verbose_level,keep_bid_ask=keep_bid_ask)
   except Exception as e:
     print("Error in refreshPH")
     raise e
@@ -221,7 +221,7 @@ def _get_ph_surely_fresh(instrument, timeframe, quote_count, with_index, quiet, 
 
   if use_fresh:
     try:
-      refreshPH(instrument, timeframe,quote_count=quote_count, tlid_range=tlid_range, use_full=use_full,verbose_level=1)
+      refreshPH(instrument, timeframe,quote_count=quote_count, tlid_range=tlid_range, use_full=use_full,verbose_level=1,keep_bid_ask=keep_bid_ask)
     except: #Raise ExceptionUseFreshData
       print("Error in getPH when using fresh")
       if use_fresh_error_ignore:
@@ -236,7 +236,7 @@ def _get_ph_surely_fresh(instrument, timeframe, quote_count, with_index, quiet, 
     try: 
       if run_jgtfxcli_on_error:
         print("Running jgtfxcli")
-        refreshPH(instrument, timeframe,quote_count=quote_count, tlid_range=tlid_range, use_full=use_full,verbose_level=1)
+        refreshPH(instrument, timeframe,quote_count=quote_count, tlid_range=tlid_range, use_full=use_full,verbose_level=1,keep_bid_ask=keep_bid_ask)
       # CALL IT BACK AGAIN
         df = getPH_from_filestore(instrument, timeframe, quiet, False, with_index,convert_date_index_to_dt,use_full=use_full,tlid_range=tlid_range)
       else:
