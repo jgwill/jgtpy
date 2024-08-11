@@ -30,7 +30,8 @@ import pandas as pd
 
 
 def _parse_args():
-    parser=jgtcommon.new_parser(JGTCLI_PROG_DESCRIPTION,prog=JGTCLI_PROG_NAME,epilog=JGTCLI_EPILOG)
+    parser=jgtcommon.new_parser("(CDS) "+JGTCLI_PROG_DESCRIPTION,prog="cdscli",epilog=JGTCLI_EPILOG + " (New cdscli) ")
+    settings=jgtcommon.load_settings()
     
     #parser = argparse.ArgumentParser(description="Process command parameters.")
     # jgtfxcommon.add_main_arguments(parser)
@@ -44,10 +45,10 @@ def _parse_args():
     jgtcommon.add_bars_amount_V2_arguments(parser)
     jgtcommon.add_use_fresh_argument(parser)
     
-    jgtcommon.add_ids_mfi_argument(parser)
+    jgtcommon.add_ids_mfi_argument(parser,flag_default_value=True)
     jgtcommon.add_ids_gator_oscillator_argument(parser)
-    jgtcommon.add_ids_balligator_argument(parser)
-    jgtcommon.add_ids_talligator_argument(parser)
+    jgtcommon.add_ids_balligator_argument(parser,)
+    jgtcommon.add_ids_talligator_argument(parser,flag_default_value=False)
     jgtcommon.add_ids_fractal_largest_period_argument(parser)
     jgtcommon.add_viewpath_argument(parser)
     
@@ -224,9 +225,11 @@ def createCDS_for_main(
 ):
     # implementation goes here
     col2remove = constants.columns_to_remove
-    config = jgtcommon.readconfig()
-    if "columns_to_remove" in config:  # read it from config otherwise
-        col2remove = config["columns_to_remove"]
+    #config = jgtcommon.readconfig()
+    col2remove=jgtcommon.load_arg_default_from_settings("columns_to_remove",constants.columns_to_remove)
+    
+    #if "columns_to_remove" in config:  # read it from config otherwise
+    #    col2remove = config["columns_to_remove"]
     quietting = True
     if verbose_level > 1:
         quietting = False

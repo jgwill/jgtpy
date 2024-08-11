@@ -51,5 +51,13 @@
       "console": "integratedTerminal",
       "args": "-i SPX500 -t D1 -c 444 -mfi -ba -ta --fresh"
     },
+    {
+      "name": "jgtcli_240809_Debug_",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/jgtcli.py",
+      "console": "integratedTerminal",
+      "args": "-i SPX500 -t D1 --full --fresh"
+    },
   ]
 }
