@@ -5,7 +5,8 @@ def bump_version(version):
     patch += 1
     return f"{major}.{minor}.{patch}"
 
-with open('jgtpy/JGTCore.py', 'r') as file:
+PY_FILE_WITH_VERSION = 'jgtpy/__init__.py'
+with open(PY_FILE_WITH_VERSION, 'r') as file:
     package_init_content = file.read()
     #print(package_init_content)
 
@@ -15,7 +16,7 @@ if version_match:
     new_version = bump_version(current_version)
     new_package_init_content = re.sub(r"version=['\"]([^'\"]*)['\"]", f"version='{new_version}'", package_init_content)
 
-    with open('jgtpy/JGTCore.py', 'w') as file:
+    with open(PY_FILE_WITH_VERSION, 'w') as file:
         file.write(new_package_init_content)
     
     #Also patch pyproject.toml

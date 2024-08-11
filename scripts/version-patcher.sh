@@ -11,7 +11,7 @@ npm version patch && \
 if [ "$cversion" == "" ]; then echo "bahhhh cversion has no value"
 else
 	echo "Patching files for $cversion from $pversion"
-	for f in pyproject.toml jgtpy/JGTCore.py ;do sed -i 's/'$pversion'/'$cversion'/g' $f;done
+	for f in pyproject.toml jgtpy/__init__.py ;do sed -i 's/'$pversion'/'$cversion'/g' $f;done
 fi
 else echo "Must executer $0 from current directory of package.json"
 fi

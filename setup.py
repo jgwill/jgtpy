@@ -8,7 +8,7 @@ from setuptools import find_packages, setup
 import re
 
 def read_version():
-    with open("jgtpy/JGTCore.py") as f:
+    with open("jgtpy/__init__.py") as f:
         content=f.read()
         version_match = re.search(r"version=['\"]([^'\"]*)['\"]", content)
         return version_match.group(1)
