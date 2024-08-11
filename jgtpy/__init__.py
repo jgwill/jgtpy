@@ -36,9 +36,7 @@ with warnings.catch_warnings():
     )
 
 
-from JGTCore import (
-    version,
-)
+version='0.4.105'
 
 
 from JGTCDS import (
