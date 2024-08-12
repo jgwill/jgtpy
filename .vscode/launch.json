@@ -59,5 +59,13 @@
       "console": "integratedTerminal",
       "args": "-i SPX500 -t D1 --full --fresh"
     },
+    {
+      "name": "use_fresh_cdscli_jgtfxcli_settings_240809",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/cdscli.py",
+      "console": "integratedTerminal",
+      "args": "-ls tests/test_settings_01_spec_instrument_timeframe.json --fresh"
+    },
   ]
 }
