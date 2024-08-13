@@ -72,6 +72,10 @@ def new_rq_default(instrument,timeframe,use_fresh=True,use_full=False,quotescoun
     #   print("Talligator flag is set")
     return rq
 
+def create(rq: JGTCDSRequest):
+    cdf= cds.create2(rq)
+    return cdf
+
 def get(instrument,timeframe,use_full=False,use_fresh=True,quotescount=-1,quiet=True,dont_write_cds=False):
     """
     Generate the CDS to file
