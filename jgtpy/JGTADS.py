@@ -109,6 +109,7 @@ def jgtxplot18c_231209(
     # @STCIssue Desired Number of Bars ALREADY SELECTED IN THERE
     # print(len(data))
     # data.to_csv("debug_data" + instrument.replace("/","-") + timeframe + ".csv")
+    fig,axes,cdfdata=None,None,None
     try:
         fig, axes, cdfdata = plot_from_cds_df(
             data,
@@ -124,7 +125,7 @@ def jgtxplot18c_231209(
         if fig is not None:
             print("   Fig is not none so we return it and wont try the ALT")
             return fig, axes, cdfdata
-        if rq.verbose_level> 1:
+        if rq is not None and rq.verbose_level> 1:
             print("Error plotting regular ADS for:" + instrument + " " + timeframe + ", exception: " + str(e))
             traceback.print_exc()
         print("ALT Plotting (" + instrument + " " + timeframe + ")" )
@@ -305,6 +306,7 @@ def plot_from_cds_df(
     if nb_bar_on_chart != tst_len_data: #@STCIssue Isn't this already done ???
         data_last_selection = _select_charting_nb_bar_on_chart(data, nb_bar_on_chart)
     l_datasel = len(data_last_selection)
+    desired_number_of_bars=l_datasel>=nb_bar_on_chart
 
     # Make OHLC bars plot
     ohlc = data_last_selection[[OPEN, HIGH, LOW, CLOSE]]
@@ -389,9 +391,10 @@ def plot_from_cds_df(
             print("Added AO ABove/Bellow Peaks plot")
         
         
+    price_peak_offset_value = average_bar_height / 3 * 5
+    
     # PRICE_PEAK_ABOVE / PRICE_PEAK_ABOVE
     if plot_ao_peaks and cc.show_price_peak:
-        price_peak_offset_value = average_bar_height / 3 * 5
 
 
         data_last_selection.loc[:, PRICE_PEAK_ABOVE] = np.where(
@@ -462,12 +465,12 @@ def plot_from_cds_df(
 
      
     # FDB
+    fdb_tick_offset = average_bar_height  # pipsize * 111
+    fdb_offset_value = average_bar_height / 2  # pipsize * fdb_tick_offset
     if cc.show_fdb_signal:
 
 
            
-        fdb_tick_offset = average_bar_height  # pipsize * 111
-        fdb_offset_value = average_bar_height / 2  # pipsize * fdb_tick_offset
 
         fdbb_up_plot, fdbs_down_plot = make_plot__fdb_signals(
             data=data_last_selection,
@@ -606,12 +609,7 @@ def plot_from_cds_df(
 
 
        
-            
-
-    tst_addplot = len(addplot)
-
-    if not rq.quiet:
-        print("addplot count: " + str(tst_addplot))
+    
     #print("addplot dict : " + str(addplot))
 
     # get date time of the last bar
@@ -640,7 +638,6 @@ def plot_from_cds_df(
 
     if rq.verbose_level> 1:
         print("Chart fmt :",fmt)
-        
     fig, axes = mpf.plot(
         ohlc,
         type=cc.main_plot_type,
@@ -872,7 +869,7 @@ def save_add_figure(instrument, timeframe, rq, fig):
                 os.path.isdir(rq.save_additional_figures_path) and not is_an_image_path
             ) or last_char_is_slash or rq.save_additional_figures_path == "pov":
             try:
-                os.path.mkdir(rq.save_additional_figures_path, exist_ok=True)
+                os.makedirs(rq.save_additional_figures_path, exist_ok=True)
             except:
                 pass
             exn = ".png"
@@ -1052,6 +1049,9 @@ def plot_from_cds_df_ALT(
     # Set the font size of the Date column
     axes[main_plot_panel_id].tick_params(axis="x", labelsize=6)
 
+    if rq.save_additional_figures_path is not None:
+        save_add_figure(instrument, timeframe, rq, fig)
+    
     if show:
         plt.show()
     return fig, axes, data_last_selection

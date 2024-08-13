@@ -1,6 +1,7 @@
 #!/usr/bin/env python -0 
 
 # %% Imports
+import datetime
 import sys
 import os
 
@@ -20,8 +21,8 @@ import matplotlib.pyplot as plt
 plt.rcParams["figure.max_open_warning"] = 100
 
 import pandas as pd
-from jgtpy import JGTADS as ads, adshelper as ah, JGTPDSP as pds, JGTADSRequest as RQ
-from jgtpy import JGTChartConfig
+import JGTADS as ads, adshelper as ah, JGTPDSP as pds, JGTADSRequest as RQ
+import JGTChartConfig
 
 import tlid
 
@@ -90,6 +91,8 @@ def generate_market_snapshots(instruments:str, timeframes:str, html_outdir_root:
       print("Environment variable JGTPY_DATA is not set. Default to ./charts.")
       
       html_outdir_root = os.path.join(default_chart_output_dir,default_char_dir_name)
+  if timeframes is None:
+    timeframes=os.getenv("T")
   timeframes = timeframes.split(",")
   perspectives = {}
   ptabs = pn.Tabs(width=width, height=height)
@@ -217,6 +220,10 @@ def generate_market_snapshots_for_many_crop_dt(i:str, timeframes, crop_last_dt_a
 
   html_outdir_root = _mk_html_outdir_root_default(html_outdir_root, default_char_dir_name, default_chart_output_dir, jgtpy_data_var)
 
+  if timeframes is None:
+    from jgtutils.jgtconstants import TIMEFRAMES_DEFAULT
+    timeframes = os.getenv("T", TIMEFRAMES_DEFAULT)
+  
   if isinstance(timeframes, str):
     timeframes = timeframes.split(",")
 
@@ -430,14 +437,14 @@ def main():
   from jgtutils import jgtcommon as jgtcommon
   from jgtpyconstants import JGTMKS_PROG_DESCRIPTION, JGTMKS_PROG_NAME, JGTMKS_PROG_EPILOG
   parser=jgtcommon.new_parser(JGTMKS_PROG_DESCRIPTION,JGTMKS_PROG_NAME,JGTMKS_PROG_EPILOG)
-  
-  parser.add_argument('-i','--instrument', type=str, required=True)
-  parser.add_argument('-t','--timeframes', type=str, required=True)
+  parser=jgtcommon.add_instrument_timeframe_arguments(parser)
+  #parser.add_argument('-i','--instrument', type=str, required=True)
+  #parser.add_argument('-t','--timeframes', type=str, required=False)
   parser.add_argument('-tos','--tf_of_signal', type=str, required=False)
   parser.add_argument('-st','--sig_type_name', type=str, required=False, default="")
   parser.add_argument('-cl','--crop_last_dt', type=str, required=False,help="crop date(s) in the format '2022-10-13 13:45:00' or '2022-10-13 13:45:00,2022-10-13 13:45:00' ")
-  parser.add_argument('-o','--scn_root_dir', type=str, default=None)
-  parser.add_argument('-d','--default_char_dir_name', type=str, default="charts")
+  parser.add_argument('-srd','--scn_root_dir', type=str, default=None)
+  parser.add_argument('-dcdn','--default_char_dir_name', type=str, default="charts")
   parser.add_argument('--show_chart', type=bool, default=False)
   parser.add_argument('--show_tabs', type=bool, default=False)
   parser.add_argument('--save_fig_image', type=bool, default=True)
@@ -464,12 +471,13 @@ def main():
     )
   else:
     print("Generating market snapshots for multiple crop dates / signal dates")
+    crop_last_dt_arr = args.crop_last_dt_arr if hasattr(args,"crop_last_dt_arr")  else datetime.datetime.now(tz=datetime.timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
     pto_generate_snapshot_240302_v2_by_crop_dates(
       i=args.instrument,
       timeframes=args.timeframes,
       tf_of_signal=args.tf_of_signal,
       sig_type_name=args.sig_type_name,
-      crop_last_dt_arr=args.crop_last_dt_arr,
+      crop_last_dt_arr=crop_last_dt_arr,
       scn_root_dir=args.scn_root_dir,
       default_char_dir_name=args.default_char_dir_name,
       show_chart=args.show_chart,

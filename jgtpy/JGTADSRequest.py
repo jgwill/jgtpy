@@ -81,21 +81,25 @@ class JGTADSRequest(JGTCDSRequest):
         
         self.nb_bar_to_retrieve = nb_bar_to_retrieve if nb_bar_to_retrieve is not None else self.nb_bar_on_chart + self.cds_required_amount_of_bar_for_calc
         
-        if self.balligator_period_jaws == 0 and self.largest_fractal_period != 0:
-            self.cds_required_amount_of_bar_for_calc = self.largest_fractal_period
+        #@STCIssue Fix quotescount 
+        if self.nb_bar_to_retrieve< self.quotescount:
+            self.nb_bar_to_retrieve = self.quotescount
+        
+        #if self.balligator_period_jaws == 0 and self.largest_fractal_period != 0:
+        #    self.cds_required_amount_of_bar_for_calc = self.largest_fractal_period
             
         
-        self.reset()
+        #self.reset()
     
     def set_feature_2403_plot(self, value:bool):
         self.show_feature_2403_plot = value
         self.cc.show_feature_2403_plot = value
-        self.reset()
+        #self.reset()
     
     def set_feature_one_plot(self, value:bool):
         self.show_feature_one_plot = value
         self.cc.show_feature_one_plot = value
-        self.reset()
+        #self.reset()
         
     def set_feature_two_plot(self, value:bool):
         self.show_feature_two_plot = value
@@ -104,11 +108,11 @@ class JGTADSRequest(JGTCDSRequest):
     def set_plain_plot(self, value:bool):
         self.show_plain_plot = value
         self.cc.show_plain_plot = value
-        self.reset()
+        #self.reset()
      
     def reset(self):
         
-        self.cc.reset()
+        #self.cc.reset()
         
         #@STCIssue Backward compatibility for using cc
         # self.cc.nb_bar_on_chart = self.nb_bar_on_chart

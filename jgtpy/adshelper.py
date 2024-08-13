@@ -43,7 +43,7 @@ def prep(
     use_cache_if_available=False,
     rq: JGTADSRequest = None,
 ):
-    return prepare_cds_for_ads_data(
+    df = prepare_cds_for_ads_data(
         instrument=instrument,
         timeframe=timeframe,
         tlid_range=tlid_range,
@@ -53,6 +53,8 @@ def prep(
         use_cache_if_available=use_cache_if_available,
         rq=rq,
     )
+
+    return df
 
 
 def prepare_cds_for_ads_data(
@@ -153,9 +155,11 @@ def prepare_cds_for_ads_data(
     if cache_data:
         data.to_csv(fnpath_cache)
 
-    return prepare_cds_for_ads_data_from_cdsdf(
+    df = prepare_cds_for_ads_data_from_cdsdf(
         data, instrument, timeframe, tlid_range, cc, crop_last_dt
     )
+
+    return df
 
 
 def prepare_cds_for_ads_data_from_cdsdf(
