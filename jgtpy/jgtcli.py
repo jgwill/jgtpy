@@ -159,8 +159,8 @@ def main():
                 #rq=JGTCDSRequest.JGTCDSRequest.from_args(args)
                 
                 createCDS_for_main(
-                    args.instrument,
-                    args.timeframe,
+                    instrument,
+                    timeframe,
                     quiet=args.quiet,
                     verbose_level=verbose_level,
                     tlid_range=tlid_range,
