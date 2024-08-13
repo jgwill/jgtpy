@@ -1474,10 +1474,10 @@ def main():
     
     #use fresh
     parser=jgtcommon.add_use_fresh_argument(parser)
-    parser.add_argument("-uf","--fresh", action="store_true", help="Whether to use fresh data.",default=False)
+    #parser.add_argument("-uf","--fresh", action="store_true", help="Whether to use fresh data.",default=False)
     #crop dt
     parser.add_argument("-dt","--crop_last_dt", type=str, help="The last date-time to crop the data.")
-    parser.add_argument("-s","--show", action="store_true", help="Whether to display the plot.",default=False)
+    parser.add_argument("--show", action="store_true", help="Whether to display the plot.",default=False)
     #save figure 
     parser.add_argument("-sf", "--save_figure", type=str, help="Save the figure to the given path.",default=None)
     #save_figure_as_pov_name flag
@@ -1490,12 +1490,12 @@ def main():
     
     args=jgtcommon.parse_args(parser)
     if not args.show and args.save_figure is None and args.save_figure_as_pov_name is False:
-        print("No output will be generated. Use -s or -sf to display or save the figure.")
+        print("No output will be generated. Use -show or -sf to display or save the figure.")
         return
 
     # Create a JGTADSRequest object
     rq = JGTADSRequest()
-    rq.verbose_level = args.verbose_level
+    rq.verbose_level = args.verbose
 
     # Set the instrument and timeframe
     rq.instrument = args.instrument
