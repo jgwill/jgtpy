@@ -36,7 +36,7 @@ with warnings.catch_warnings():
     )
 
 
-version='0.5.14'
+version='0.5.15'
 
 
 from JGTCDS import (
