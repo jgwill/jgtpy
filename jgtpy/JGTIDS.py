@@ -10,6 +10,7 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 
 import pandas as pd
+pd.options.mode.copy_on_write = True
 import datetime
 from JGTPDHelper import (
     jgtpd_drop_col_by_name,
