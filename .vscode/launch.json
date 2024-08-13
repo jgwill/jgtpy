@@ -60,6 +60,14 @@
       "args": "-i EUR/CAD -tos H4 -t W1,D1,H4,H1"
     },
     {
+      "name": "jgtmksg_EURUSD",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/JGTMKSG.py",
+      "console": "integratedTerminal",
+      "args": "-i EUR/USD -tos H4 --save_fig_image /tmp/charts -srd /tmp/charts"
+    },
+    {
       "name": "jgtmksg_2",
       "type": "debugpy",
       "request": "launch",
@@ -92,12 +100,20 @@
       "args": "-i SPX500 -t D1 --full --fresh"
     },
     {
-      "name": "use_fresh_cdscli_jgtfxcli_settings_240809",
+      "name": "cdscli_jgtfxcli_settings_240809_fresh",
       "type": "debugpy",
       "request": "launch",
       "program": "jgtpy/cdscli.py",
       "console": "integratedTerminal",
       "args": "-ls tests/test_settings_01_spec_instrument_timeframe.json --fresh"
+    },
+    {
+      "name": "cdscli_240813",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/cdscli.py",
+      "console": "integratedTerminal",
+      "args": "-i EUR/USD -t D1 --full"
     },
   ]
 }
