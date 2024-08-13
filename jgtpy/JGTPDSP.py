@@ -97,7 +97,8 @@ def getPH_crop(instrument:str,
   
   df=getPH(instrument, timeframe, quiet=quiet,dt_crop_last=dt_crop_last,use_full=True,use_cache_full=use_cache_full)
   
-  return select_quote_count(quote_count, df, quiet=quiet)
+  df = select_quote_count(quote_count, df, quiet=quiet)
+  return df
 
 
 def select_quote_count(quote_count, df, quiet=True):
@@ -185,7 +186,7 @@ def getPH(instrument:str,
     if not use_full:
       df = df.iloc[-quote_count:]
   
-  if dropna_volume:
+  if dropna_volume and timeframe != "M1":
     if VOLUME in df.columns:
       df = df.dropna(subset=[VOLUME])
       #also drop where VOLUME is 0
