@@ -36,6 +36,38 @@
       "justMyCode": false
     },
     {
+      "name": "jgtads_M1",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/JGTADS.py",
+      "console": "integratedTerminal",
+      "args": "-i EUR/CAD -t M1 -sf /tmp"
+    },
+    {
+      "name": "jgtads_D1",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/JGTADS.py",
+      "console": "integratedTerminal",
+      "args": "-i EUR/CAD -t D1 -sf /tmp"
+    },
+    {
+      "name": "jgtmksg",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/JGTMKSG.py",
+      "console": "integratedTerminal",
+      "args": "-i EUR/CAD -tos H4 -t W1,D1,H4,H1"
+    },
+    {
+      "name": "jgtmksg_2",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/JGTMKSG.py",
+      "console": "integratedTerminal",
+      "args": "-i EUR/CAD -t M1,W1,D1,H4"
+    },
+    {
       "name": "jgtcli_240807_H4",
       "type": "debugpy",
       "request": "launch",
