@@ -108,6 +108,14 @@
       "args": "-i GBP/CAD -t M1,W1,D1,H4,H1 --full"
     },
     {
+      "name": "cdscli_240813_Debug_",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/cdscli.py",
+      "console": "integratedTerminal",
+      "args": "-i GBP/CAD -t M1,W1,D1,H4,H1 --full"
+    },
+    {
       "name": "cdscli_jgtfxcli_settings_240809_fresh",
       "type": "debugpy",
       "request": "launch",
