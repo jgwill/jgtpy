@@ -56,6 +56,12 @@ def prep(
 
     return df
 
+def __rq_patch(instrument,timeframe,rq):
+    if rq is None:
+        rq = JGTADSRequest()
+    rq.instrument = instrument
+    rq.timeframe = timeframe
+    return rq
 
 def prepare_cds_for_ads_data(
     instrument: str,
@@ -85,8 +91,8 @@ def prepare_cds_for_ads_data(
     """
     if cc is None:
         cc = JGTChartConfig()
-    if rq is None:
-        rq = JGTADSRequest()
+    rq=__rq_patch(instrument,timeframe,rq)
+    
     # @STCIssue Deprecating this value for later
 
     # print("AH:DEBUG::Tlid_range:",tlid_range)

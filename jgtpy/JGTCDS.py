@@ -195,7 +195,15 @@ def createFromPDSFile(
             
         return None
 
+def __rq_patch(instrument,timeframe,rq):
+    if rq is None:
+        rq = JGTCDSRequest()
+        rq.instrument=instrument
+        rq.timeframe=timeframe
+    return rq
+
 def _getPH_to_DF_wrapper_240304(instrument, timeframe, quiet, cc, use_full, rq,use_fresh=False ,run_jgtfxcli_on_error=True,columns_to_remove=None):
+    rq=__rq_patch(instrument,timeframe,rq)
     #print("_getPH_to_DF_wrapper_240304 rq.quotescount:",rq.quotescount)
     df=pds.getPH(instrument,
             timeframe,

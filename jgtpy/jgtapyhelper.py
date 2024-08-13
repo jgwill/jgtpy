@@ -180,6 +180,11 @@ def ids_add_indicators__legacy(
         #print("rq is None is ids_add_indicators__legacy")
         rq = JGTIDSRequest()
     
+    if rq.timeframe == "M1":
+        #print("rq.timeframe is M1")
+        rq.balligator_flag = False
+        rq.talligator_flag = False
+    
     # @a Migrating to the new JGTIDSRequest
     gator_oscillator_flag = rq.gator_oscillator_flag
     mfi_flag = rq.mfi_flag
