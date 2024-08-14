@@ -192,11 +192,9 @@ class JGTIDSRequest(JGTPDSRequest):
             if self.quotescount==-1:
                 self.quotescount = nb_bars_by_default
             TALLIGATOR_REQ_QUOTECOUNT=self._get_talligator_required_additional_quotescount()
-            #print("self.quotescount:",self.quotescount)
+
             self.quotescount = TALLIGATOR_REQ_QUOTECOUNT + self.quotescount
-            #print("self.quotescount:",self.quotescount)
-            # if self.quotescount < TALLIGATOR_REQ_QUOTECOUNT + 300:
-            #     self.quotescount = TALLIGATOR_REQ_QUOTECOUNT
+
     
     def _get_balligator_required_additional_quotescount(self):            
         BJAW_REQUIRED_CALC_BARS = self.balligator_period_jaws+self.balligator_shift_jaws 
