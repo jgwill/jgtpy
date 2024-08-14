@@ -24,6 +24,8 @@ import pandas as pd
 from jgtutils import jgtconstants as c
 from jgtutils.coltypehelper import DTYPE_DEFINITIONS
 
+from jgtutils.jgtconstants import NB_BARS_BY_DEFAULT_IN_CDS
+
 #DTYPE_COLTYPE = coltypehelper.get_dtype_definitions()
 
 
@@ -46,7 +48,7 @@ def createFromPDSFileToCDSFile(
     talligator_flag=False,
     talligator_period_jaws=377,
     viewpath=False,
-    quotescount=300,
+    quotescount=NB_BARS_BY_DEFAULT_IN_CDS,
     dropna_volume=True,
 ):
     """
