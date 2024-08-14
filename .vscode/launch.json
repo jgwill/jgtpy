@@ -100,6 +100,14 @@
       "args": "-i SPX500 -t D1 --full --fresh"
     },
     {
+      "name": "jgtcli_240814_fixC",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/jgtcli.py",
+      "console": "integratedTerminal",
+      "args": "-i NZD/USD -t H4 --fresh"
+    },
+    {
       "name": "jgtcli_240813_Debug_",
       "type": "debugpy",
       "request": "launch",

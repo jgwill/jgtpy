@@ -28,6 +28,9 @@
 		},
 		"explorerExclude.backup": {},
 		"editor.tabSize": 2,
-		"files.autoSave": "afterDelay"
+		"files.autoSave": "afterDelay",
+		"python.analysis.extraPaths": [
+			"/a/src/_jgt/jgtutils/jgtutils/"
+		]
 	}
 }
