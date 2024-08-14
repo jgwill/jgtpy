@@ -68,37 +68,9 @@ def main():
     cc = JGTChartConfig()
     args = _parse_args()
 
-    # gator_oscillator_flag = (
-    #     args.gator_oscillator_flag if args.gator_oscillator_flag else False
-    # )
-    # mfi_flag = True #mfi_flag = args.mfi_flag if args.mfi_flag else False
-    # balligator_flag = args.balligator_flag if args.balligator_flag else False
-    # talligator_flag = args.talligator_flag if args.talligator_flag else False
-    # balligator_period_jaws = args.balligator_period_jaws
-    # talligator_period_jaws = args.talligator_period_jaws
-    # largest_fractal_period = args.largest_fractal_period
-
-
-    # viewpath=args.viewpath
-    
-    # instrument = args.instrument
-    # timeframe = args.timeframe
-    # quotescount = args.quotescount
-    #print("#@STCIssue : quotes_count is not passed , it should be !")
     cc.nb_bar_on_chart = args.quotescount
     
     verbose_level = args.verbose
-    # quiet = False
-    # if verbose_level == 0:
-    #     quiet = True
-    
-    # full = False
-    # fresh = False
-    # if args.fresh:
-    #     fresh=True
-    
-    # if args.full:
-    #     full = True
 
     date_from = None
     date_to = None
@@ -124,20 +96,13 @@ def main():
     if args.ads:
         show_ads = True
 
-    # process_cds=args.cds
+    
     process_cds = True
-    # output=False
-    # compress=False
-
-    # print("Verbose level : " + str(verbose_level))
+    
     if process_cds:
         if verbose_level > 0:print("Processing CDS")
         output = True
-    # if args.compress:
-    #    compress = args.compress
-    #     output = True # in case
-    # if args.output:
-    #     output = True
+    
 
     if verbose_level > 1:
         if date_from:
@@ -180,25 +145,11 @@ def main():
                     quotescount=args.quotescount,
                     dropna_volume=do_we_dropna_volume
                 )
-                # else:
-                #     p = pds.getPH(instrument, timeframe, quotes_count, date_from, date_to, False, quiet)
-                #     if verbose_level > 0:
-                #         print(p)
+                
 
     except Exception as e:
         jgtcommon.print_exception(e)
 
-    # try:
-    #    jgtpy.off()
-    # except Exception as e:
-    #    jgtfxcommon.print_exception(e)
-
-
-# if __name__ == "__main__":
-#     main()
-
-# print("")
-# #input("Done! Press enter key to exit\n")
 
         
 
