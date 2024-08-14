@@ -30,7 +30,6 @@ def read_csv(csv_fn):
     return df
 
 
-# IN_CHART_BARS=300
 
 
 def prep(

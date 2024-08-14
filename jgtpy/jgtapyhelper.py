@@ -59,6 +59,7 @@ from jgtutils.jgtconstants import (
     TJAW,
     TTEETH,
     TLIPS,
+    NB_BARS_BY_DEFAULT_IN_CDS,
 )
 
 from jgtutils import jgtos as jos
@@ -157,7 +158,7 @@ def ids_add_indicators__legacy(
     dfsrc,
     dropnavalue=True,
     quiet=True,
-    min_nb_bar_on_chart=300,
+    min_nb_bar_on_chart=NB_BARS_BY_DEFAULT_IN_CDS,
     bypass_index_reset=False,
     rq: JGTIDSRequest = None,
 ):

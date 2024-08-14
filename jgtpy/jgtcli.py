@@ -15,6 +15,7 @@ from jgtutils import (
     jgtcommon as jgtcommon,
     jgtwslhelper as wsl,
 )
+from jgtutils.jgtconstants import NB_BARS_BY_DEFAULT_IN_CDS
 
 import argparse
 import JGTPDSP as pds
@@ -219,7 +220,7 @@ def createCDS_for_main(
     talligator_flag=False,
     talligator_period_jaws=377,
     viewpath=False,
-    quotescount=300,
+    quotescount=NB_BARS_BY_DEFAULT_IN_CDS,
     dropna_volume=True,
 ):
     # implementation goes here

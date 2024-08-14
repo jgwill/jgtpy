@@ -23,6 +23,7 @@ plt.rcParams["figure.max_open_warning"] = 100
 import pandas as pd
 import JGTADS as ads, adshelper as ah, JGTPDSP as pds, JGTADSRequest as RQ
 import JGTChartConfig
+from jgtutils.jgtconstants import NB_BARS_BY_DEFAULT_IN_CDS
 
 import tlid
 
@@ -33,7 +34,7 @@ def create_default_chart_config():
     cc.ac_signals_marker_size = 14
     cc.fig_ratio_x = 31
     cc.fig_ratio_y = 16
-    cc.nb_bar_on_chart = 300
+    cc.nb_bar_on_chart = NB_BARS_BY_DEFAULT_IN_CDS
     cc.plot_style = "yahoo"
     return cc
   

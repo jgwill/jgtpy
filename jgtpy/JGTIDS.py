@@ -258,7 +258,7 @@ def ids_add_indicators_LEGACY(
     big_alligator=False,
     balligator_period_jaws=89,
     largest_fractal_period=89,
-    min_nb_bar_on_chart=300,
+    min_nb_bar_on_chart=NB_BARS_BY_DEFAULT_IN_CDS,
     bypass_index_reset=False,
     ids_request: JGTIDSRequest = None,
 ):
@@ -274,7 +274,7 @@ def ids_add_indicators_LEGACY(
     addAlligatorOffsetInFutur (bool, optional): (NOT IMPLEMENTED) Whether to add the Alligator offset in the future. Defaults to True.
     big_alligator_jaws_period (int, optional): (NOT IMPLEMENTED) The period of the Alligator jaws. Defaults to 89.
     largest_fractal_period (int, optional): (NOT IMPLEMENTED) The largest fractal period. Defaults to 89.
-    min_nb_bar_on_chart (int, optional): The minimum number of bars on the chart. Defaults to 300.
+    min_nb_bar_on_chart (int, optional): The minimum number of bars on the chart. Defaults to NB_BARS_BY_DEFAULT_IN_CDS.
     bypass_index_reset (bool, optional): Whether to bypass resetting the index. Defaults to False.
     ids_request (JGTIDSRequest, optional): The JGTIDSRequest object. Defaults to None.
 

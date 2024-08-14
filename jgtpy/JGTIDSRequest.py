@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 from JGTPDSRequest import JGTPDSRequest
 
-from jgtutils.jgtconstants import (TJAW_PERIODS, TTEETH_PERIODS)
+from jgtutils.jgtconstants import (TJAW_PERIODS, TTEETH_PERIODS, NB_BARS_BY_DEFAULT_IN_CDS)
 
 class JGTIDSRequest(JGTPDSRequest):
     """
@@ -184,7 +184,7 @@ class JGTIDSRequest(JGTPDSRequest):
         TJAW_REQUIRED_CALC_BARS = TJAW_PERIODS+TTEETH_PERIODS #@STCIssue We should use : self.talligator_period_jaws ,... instead of TJAW_PERIODS, TTEETH_PERIODS
         return TJAW_REQUIRED_CALC_BARS
 
-    def talligator_fix_quotescount(self,nb_bars_by_default=300):
+    def talligator_fix_quotescount(self,nb_bars_by_default=NB_BARS_BY_DEFAULT_IN_CDS):
         if self.use_full:
             return
         
@@ -200,7 +200,7 @@ class JGTIDSRequest(JGTPDSRequest):
         BJAW_REQUIRED_CALC_BARS = self.balligator_period_jaws+self.balligator_shift_jaws 
         return BJAW_REQUIRED_CALC_BARS
 
-    def balligator_fix_quotescount(self,nb_bars_by_default=300):
+    def balligator_fix_quotescount(self,nb_bars_by_default=NB_BARS_BY_DEFAULT_IN_CDS):
         if self.use_full:
             return
         

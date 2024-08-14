@@ -38,12 +38,13 @@ from jgtutils.jgtpov import get_higher_tf_by_level,get_higher_tf_array
 from jgtutils.jgtos import get_data_path,mk_fullpath
 from jgtutils import jgtconstants as c
 
+from jgtutils.jgtconstants import NB_BARS_BY_DEFAULT_IN_CDS
 
 
 def set_rq_defaults(rq): #@STCIssue We would migrate to use jgtutils/jgtclirqdata.py
     rq.keep_bid_ask = True
     if not rq.use_full and rq.quotescount == -1:
-      rq.quotescount = 300
+      rq.quotescount = NB_BARS_BY_DEFAULT_IN_CDS
     rq.viewpath = False
     rq.gator_oscillator_flag = False
     rq.mfi_flag = True
@@ -140,7 +141,7 @@ def get_higher_cdf_datasets(i, t, use_full=False, use_fresh=True, quiet=True, qu
 
   return res
 
-def get_higher_cdf_datasets__ThreadPoolExecutor(i, t, use_full=False, use_fresh=True, quiet=True, quotescount=300):
+def get_higher_cdf_datasets__ThreadPoolExecutor(i, t, use_full=False, use_fresh=True, quiet=True, quotescount=NB_BARS_BY_DEFAULT_IN_CDS):
   tf_array = get_higher_tf_array(t)
   if not quiet:
     print("Higher TF Array: ", tf_array)
@@ -161,7 +162,7 @@ def get_higher_cdf_datasets__ThreadPoolExecutor(i, t, use_full=False, use_fresh=
 
   return res
 
-def get_higher_cdf_datasets_no_concurrence(i,t,use_full=False,use_fresh=True,quiet=True,quotescount=300):
+def get_higher_cdf_datasets_no_concurrence(i,t,use_full=False,use_fresh=True,quiet=True,quotescount=NB_BARS_BY_DEFAULT_IN_CDS):
   tf_array=get_higher_tf_array(t)
   if not quiet:
     print("Higher TF Array: ",tf_array)

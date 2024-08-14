@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 from JGTBaseRequest import JGTBaseRequest
 from jgtutils import jgtconstants as c
-
+from jgtutils.jgtconstants import NB_BARS_BY_DEFAULT_IN_CDS
 
 class JGTPDSRequest(JGTBaseRequest):
     def __init__(
@@ -20,7 +20,7 @@ class JGTPDSRequest(JGTBaseRequest):
         use_fresh: bool = False,
         use_full=False,
         keep_bid_ask=True,
-        quotescount=300,  # @a Migrate to Use TODO
+        quotescount=NB_BARS_BY_DEFAULT_IN_CDS,  # @a Migrate to Use TODO
         dropna_volume=True,
         *args,
         **kwargs,
