@@ -18,6 +18,9 @@ import pandas as pd
 from jgtpy import JGTADS as ads, adshelper as ah, JGTPDSP as pds, JGTCDS as cds
 from jgtpy import JGTChartConfig
 
+from jgtutils.jgtconstants import NB_BARS_BY_DEFAULT_IN_CDS
+
+
 import tlid
 
 # @STCGoal An online Platform to View charting

@@ -28,7 +28,6 @@ from jgtutils.jgtconstants import NB_BARS_BY_DEFAULT_IN_CDS
 
 #DTYPE_COLTYPE = coltypehelper.get_dtype_definitions()
 
-
 # %%
 def createFromPDSFileToCDSFile(
     instrument,

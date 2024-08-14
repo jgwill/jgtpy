@@ -169,7 +169,7 @@ def ids_add_indicators__legacy(
     dfsrc (pandas.DataFrame): The input DataFrame.
     dropnavalue (bool, optional): Whether to drop rows with NaN values. Defaults to True.
     quiet (bool, optional): Whether to suppress print statements. Defaults to False.
-    min_nb_bar_on_chart (int, optional): The minimum number of bars on the chart. Defaults to 300.
+    min_nb_bar_on_chart (int, optional): The minimum number of bars on the chart. Defaults to NB_BARS_BY_DEFAULT.
     bypass_index_reset (bool, optional): Whether to bypass resetting the index. Defaults to False.
     rq (JGTIDSRequest, optional): The JGTIDSRequest object. Defaults to None.
 
