@@ -55,7 +55,7 @@ class JGTPDSRequest(JGTBaseRequest):
         self.use_full = args.full
         self.keep_bid_ask = args.keep_bid_ask
         self.quotescount = args.quotescount  
-        self.dropna_volume = args.dropna_volume
+        self.dropna_volume = args.dropna_volume if args.dropna_volume else False
         self.__timeframes__(args.timeframes) 
         
     
