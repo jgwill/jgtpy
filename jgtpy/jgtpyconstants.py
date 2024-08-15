@@ -20,7 +20,7 @@ IDSCLI_PROG_DESCRIPTION="JGTAPY Command Line Interface"
 
 
 
-JGTMKS_PROG_NAME="mkscli"
-JGTMKS_PROG_DESCRIPTION="Market Data Service Command Line Interface"
-JGTMKS_PROG_EPILOG="Market Data Service Command Line Interface"
+MKSCLI_PROG_NAME="mkscli"
+MKSCLI_PROG_DESCRIPTION="Market Data Service Command Line Interface"
+MKSCLI_PROG_EPILOG="Market Data Service Command Line Interface"
 
