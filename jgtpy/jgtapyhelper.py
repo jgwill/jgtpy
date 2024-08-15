@@ -695,6 +695,19 @@ def write_ids(instrument, timeframe, use_full, cdf):
     cdf.to_csv(fpath, index=True)
     return fpath
 
+from jgtutils.coltypehelper import DTYPE_DEFINITIONS
+
+def read_ids(instrument, timeframe, use_full):
+    data_path_ids = get_data_path("ids", use_full=use_full)
+    fpath = pds.mk_fullpath(instrument, timeframe, "csv", data_path_ids)
+    if not os.path.exists(fpath):
+        rq: JGTIDSRequest = JGTIDSRequest()
+        rq.instrument = instrument
+        rq.timeframe = timeframe
+        rq.use_full = use_full
+        createIDSService(rq)
+    cdf = pd.read_csv(fpath, index_col=0,parse_dates=True,dtype=DTYPE_DEFINITIONS)
+    return cdf
 
 def createIDSService(
     rq: JGTIDSRequest = None,
