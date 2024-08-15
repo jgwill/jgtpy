@@ -36,12 +36,12 @@ def _parse_args():
     jgtcommon.add_instrument_timeframe_arguments(parser)
     # jgtcommon.add_date_arguments(parser)
     # jgtcommon.add_tlid_range_argument(parser)
-    jgtcommon.add_max_bars_arguments(parser)
+    #add_bars_amount_V2_arguments
+    jgtcommon.add_bars_amount_V2_arguments(parser)
     # jgtcommon.add_output_argument(parser)
     # jgtfxcommon.add_quiet_argument(parser)
     jgtcommon.add_verbose_argument(parser)
 
-    jgtcommon.add_use_full_argument(parser)
     jgtcommon.add_use_fresh_argument(parser)
     jgtcommon.add_keepbidask_argument(parser)
     jgtcommon.add_ids_mfi_argument(parser)
@@ -49,6 +49,8 @@ def _parse_args():
     jgtcommon.add_ids_balligator_argument(parser)
     jgtcommon.add_ids_talligator_argument(parser)
     jgtcommon.add_ids_fractal_largest_period_argument(parser)
+    
+    jgtcommon.add_dropna_volume_argument(parser)
 
     jgtcommon.add_viewpath_argument(parser)
     # parser.add_argument(
@@ -96,8 +98,8 @@ def _parse_args():
 
 def main():
 
-    rq = JGTIDSRequest()
 
+    rq = JGTIDSRequest()
     args = _parse_args()
 
     # There might be multiple for now
