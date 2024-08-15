@@ -697,7 +697,7 @@ def write_ids(instrument, timeframe, use_full, cdf):
 
 from jgtutils.coltypehelper import DTYPE_DEFINITIONS
 
-def read_ids(instrument, timeframe, use_full):
+def read_ids(instrument, timeframe, use_full=False):
     data_path_ids = get_data_path("ids", use_full=use_full)
     fpath = pds.mk_fullpath(instrument, timeframe, "csv", data_path_ids)
     if not os.path.exists(fpath):
