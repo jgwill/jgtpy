@@ -33,7 +33,6 @@ import pandas as pd
 def _parse_args():
     parser=jgtcommon.new_parser(JGTCLI_PROG_DESCRIPTION,prog=JGTCLI_PROG_NAME,epilog=JGTCLI_EPILOG)
     
-    #parser = argparse.ArgumentParser(description="Process command parameters.")
     # jgtfxcommon.add_main_arguments(parser)
     jgtcommon.add_instrument_timeframe_arguments(parser)
     jgtcommon.add_date_arguments(parser)
