@@ -373,10 +373,17 @@ def pto_generate_snapshot_240302_v2_by_crop_dates(
   ifn = i.replace("/", "-")
   subdir_scene_name = f"{ifn}_{tf_of_signal}_{sig_type_name}_{scntlid}"  # GBP-USD_2307132100
 
-  if scn_root_dir is None:
+  if scn_root_dir is None or scn_root_dir=="__DATA__" or scn_root_dir=="_d":
+    scn_root_dir = os.environ["JGTPY_DATA"]
+    
+  if scn_root_dir is None or scn_root_dir=="__FULL__" or scn_root_dir=="_f":
     scn_root_dir = os.environ["JGTPY_DATA_FULL"]
   
-  scn_chart_dir = os.path.join(os.path.join(scn_root_dir,  default_char_dir_name), subdir_scene_name)
+  if scn_root_dir == "." or scn_root_dir=="__CURR__" or scn_root_dir=="_c" or scn_root_dir=="cwd":
+    scn_root_dir = os.getcwd()
+  
+  default_char_dir_name_fixed=default_char_dir_name.replace("/","-")
+  scn_chart_dir = os.path.join(os.path.join(scn_root_dir,  default_char_dir_name_fixed), subdir_scene_name)
   os.makedirs(scn_chart_dir, exist_ok=True)
   
   
