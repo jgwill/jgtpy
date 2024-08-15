@@ -1465,7 +1465,7 @@ def main():
     
     #print("JGTADS v0.1")
     # Parse arguments
-    parser=jgtcommon.new_parser(JGTADS_PROG_DESCRIPTION,JGTADS_PROG_NAME,JGTADS_PROG_EPILOG)
+    parser=jgtcommon.new_parser(JGTADS_PROG_DESCRIPTION,JGTADS_PROG_EPILOG,JGTADS_PROG_NAME)
     #parser = argparse.ArgumentParser(description="Plot the chart for a given instrument and timeframe.")
     parser=jgtcommon.add_instrument_timeframe_arguments(parser)
     

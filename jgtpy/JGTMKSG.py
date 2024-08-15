@@ -437,7 +437,7 @@ import argparse
 def main():
   from jgtutils import jgtcommon as jgtcommon
   from jgtpyconstants import JGTMKS_PROG_DESCRIPTION, JGTMKS_PROG_NAME, JGTMKS_PROG_EPILOG
-  parser=jgtcommon.new_parser(JGTMKS_PROG_DESCRIPTION,JGTMKS_PROG_NAME,JGTMKS_PROG_EPILOG)
+  parser=jgtcommon.new_parser(JGTMKS_PROG_DESCRIPTION,JGTMKS_PROG_EPILOG,JGTMKS_PROG_NAME)
   parser=jgtcommon.add_instrument_timeframe_arguments(parser)
   #parser.add_argument('-i','--instrument', type=str, required=True)
   #parser.add_argument('-t','--timeframes', type=str, required=False)
