@@ -1,3 +1,4 @@
+git commit package.json pyproject.toml jgtpy/__init__.py -m bump &>/dev/null
 
 pip install -U jgtutils&>/dev/null && echo "jgtutils upgraded" || echo "jgtutils not installed"
 . scripts/version-patcher.sh
