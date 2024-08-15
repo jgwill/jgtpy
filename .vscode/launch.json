@@ -14,6 +14,14 @@
       "justMyCode": false
     },
     {
+      "name": "idscli_01",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/jgtapycli.py",
+      "console": "integratedTerminal",
+      "args": "-i EUR/USD -t H4 -c 555 --fresh"
+    },
+    {
       "name": "jgtcli-ads",
       "type": "debugpy",
       "request": "launch",
