@@ -541,7 +541,7 @@ def get_ph_to_df_and_create_ids_df(
         quiet=quiet,
         quote_count=rq.quotescount,
         keep_bid_ask=rq.keep_bid_ask,
-        talligator_flag=rq.talligator_flag,
+        dropna_volume=rq.dropna_volume,
     )
 
     if not quiet:
