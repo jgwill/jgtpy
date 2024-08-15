@@ -3,7 +3,7 @@
 import sys
 import os
 
-from jgtpyconstants import JGTCLI_EPILOG, JGTCLI_PROG_DESCRIPTION, JGTCLI_PROG_NAME
+from jgtpyconstants import CDSCLI_PROG_DESCRIPTION, CDSCLI_EPILOG,CDSCLI_PROG_NAME
 
 
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
@@ -30,10 +30,9 @@ import pandas as pd
 
 
 def _parse_args():
-    parser=jgtcommon.new_parser("(CDS) "+JGTCLI_PROG_DESCRIPTION,prog="cdscli",epilog=JGTCLI_EPILOG + " (New cdscli) ")
+    parser=jgtcommon.new_parser(CDSCLI_PROG_DESCRIPTION,CDSCLI_EPILOG,CDSCLI_PROG_NAME)
     #settings=jgtcommon.get_settings()
     
-    #parser = argparse.ArgumentParser(description="Process command parameters.")
     # jgtfxcommon.add_main_arguments(parser)
     jgtcommon.add_instrument_timeframe_arguments(parser)
     jgtcommon.add_date_arguments(parser)

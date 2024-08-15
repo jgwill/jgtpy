@@ -59,3 +59,7 @@ cdscli = "jgtpy.cdscli:main"
 jgtmksg = "jgtpy.JGTMKSG:main"
 jgtads = "jgtpy.JGTADS:main"
 jgtids = "jgtpy.jgtapycli:main"
+
+adscli = "jgtpy.JGTADS:main"
+mkscli = "jgtpy.JGTMKSG:main"
+idscli = "jgtpy.jgtapycli:main"
