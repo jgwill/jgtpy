@@ -1461,12 +1461,12 @@ import argparse
 
 def main():
     from jgtutils import jgtcommon
-    from jgtpyconstants import JGTADS_PROG_DESCRIPTION, JGTADS_PROG_NAME, JGTADS_PROG_EPILOG
+    from jgtpyconstants import ADSCLI_PROG_DESCRIPTION, ADSCLI_PROG_NAME, ADSCLI_PROG_EPILOG
     
     #print("JGTADS v0.1")
     # Parse arguments
-    parser=jgtcommon.new_parser(JGTADS_PROG_DESCRIPTION,JGTADS_PROG_EPILOG,JGTADS_PROG_NAME)
-    #parser = argparse.ArgumentParser(description="Plot the chart for a given instrument and timeframe.")
+    parser=jgtcommon.new_parser(ADSCLI_PROG_DESCRIPTION,ADSCLI_PROG_EPILOG,ADSCLI_PROG_NAME)
+
     parser=jgtcommon.add_instrument_timeframe_arguments(parser)
     
     # parser.add_argument("-i","--instrument", type=str, help="The name of the instrument.",required=True,metavar="instrument")

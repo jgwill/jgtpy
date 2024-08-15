@@ -30,8 +30,8 @@ from jgtapyhelper import createIDSService,print_quiet
 import argparse
 
 def _parse_args():
-    from jgtpyconstants import JGTADS_PROG_DESCRIPTION, JGTAPY_PROG_NAME, JGTADS_PROG_EPILOG
-    parser=jgtcommon.new_parser(JGTADS_PROG_DESCRIPTION,prog=JGTAPY_PROG_NAME,epilog=JGTADS_PROG_EPILOG)
+    from jgtpyconstants import IDSCLI_PROG_DESCRIPTION, IDSCLI_PROG_NAME, IDSCLI_PROG_EPILOG
+    parser=jgtcommon.new_parser(IDSCLI_PROG_DESCRIPTION,prog=IDSCLI_PROG_NAME,epilog=IDSCLI_PROG_EPILOG)
     # jgtfxcommon.add_main_arguments(parser)
     jgtcommon.add_instrument_timeframe_arguments(parser)
     # jgtcommon.add_date_arguments(parser)
