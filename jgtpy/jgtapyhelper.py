@@ -709,6 +709,24 @@ def read_ids(instrument, timeframe, use_full=False):
     cdf = pd.read_csv(fpath, index_col=0,parse_dates=True,dtype=DTYPE_DEFINITIONS)
     return cdf
 
+def select_value_in_currentbar(instrument, timeframe,coln, use_full=False):
+    current_bar_data = read_ids_currentbar(instrument, timeframe, use_full)
+    return current_bar_data[coln]
+
+def select_value_in_lastcompleted(instrument, timeframe,coln, use_full=False):
+    completed_bar = read_ids_lastcompletedbar(instrument, timeframe, use_full)
+    return completed_bar[coln]
+
+def read_ids_currentbar(instrument, timeframe, use_full):
+    df=read_ids(instrument, timeframe, use_full)
+    current_bar=df.iloc[-1]
+    return current_bar
+
+def read_ids_lastcompletedbar(instrument, timeframe, use_full):
+    df=read_ids(instrument, timeframe, use_full)
+    lastcompleted_bar=df.iloc[-2]
+    return lastcompleted_bar
+
 def createIDSService(
     rq: JGTIDSRequest = None,
     quiet=True,
