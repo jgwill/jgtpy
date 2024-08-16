@@ -713,7 +713,7 @@ def select_value_in_currentbar(instrument, timeframe,coln, use_full=False):
     current_bar_data = read_ids_currentbar(instrument, timeframe, use_full)
     return current_bar_data[coln]
 
-def select_value_in_lastcompleted(instrument, timeframe,coln, use_full=False):
+def select_value_in_lastcompletedbar(instrument, timeframe,coln, use_full=False):
     completed_bar = read_ids_lastcompletedbar(instrument, timeframe, use_full)
     return completed_bar[coln]
 
