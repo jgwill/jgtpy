@@ -44,6 +44,22 @@
       "justMyCode": false
     },
     {
+      "name": "jgtads_m15_SPX500Issue",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/JGTADS.py",
+      "console": "integratedTerminal",
+      "args": "-i SPX500 -t m15 -sf charts/m15.png"
+    },
+    {
+      "name": "jgtads_m15_Issue240815",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/JGTADS.py",
+      "console": "integratedTerminal",
+      "args": "-i EUR/USD -t m15 -sf charts/m15.png"
+    },
+    {
       "name": "jgtads_M1",
       "type": "debugpy",
       "request": "launch",
