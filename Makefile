@@ -76,6 +76,17 @@ release:
 	git push origin $(version)
 	make pypi-release
 
+.PHONY: bump_version
+bump_version:
+	python bump_version.py
+	git commit package.json pyproject.toml jgtpy/__init__.py -m bump &>/dev/null
+
+.PHONY: quick-release
+quick-release:
+	make bump_version
+	make dist
+	make pypi-release
+
 .PHONY: dev-pypi-release
 dev-pypi-release:
 	twine --version
