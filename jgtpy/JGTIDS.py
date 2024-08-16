@@ -21,7 +21,6 @@ from JGTPDHelper import (
 
 from jgtapy import Indicators
 
-from scipy.signal import find_peaks
 from aohelper import add_ao_price_peaks_v2
 
 from JGTChartConfig import JGTChartConfig
