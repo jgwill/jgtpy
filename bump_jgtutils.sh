@@ -3,6 +3,7 @@
 
 # This wont be run by post_dist rather its just a flag to run _bump_jgtutils function
 
+pip install --user -U jgtutils
 
 
 
