@@ -78,7 +78,7 @@ release:
 
 .PHONY: bump_jgtutils
 bump_jgtutils:
-	bash bump_jgtutils.sh &>/dev/null
+	bash bump_jgtutils.sh||true
 
 
 .PHONY: bump_version
@@ -105,6 +105,6 @@ dev-release:
 
 .PHONY: dev-release-plus
 dev-release-plus:
-	pip install -U jgtutils
+	pip install --user -U jgtutils
 	make dev-release
 	twine upload dist/*
