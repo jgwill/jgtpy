@@ -1385,7 +1385,7 @@ def plot_perspective(rq: JGTADSRequest):
 
 
 def plot_v2(rq: JGTADSRequest, BETA_TRY=True):
-    rq.reset()
+    #rq.reset()
     if BETA_TRY:
         return plot(rq=rq)
     # (rq.instrument,
