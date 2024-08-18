@@ -1,4 +1,5 @@
 version := $(shell python3 -c 'from jgtpy import version; print(version)')
+SHELL := /bin/bash
 
 .PHONY: venv
 venv:
@@ -78,8 +79,7 @@ release:
 
 .PHONY: bump_jgtutils
 bump_jgtutils:
-	bash bump_jgtutils.sh||true
-
+	. /opt/binscripts/load.sh && _bump_jgtutils
 
 .PHONY: bump_version
 bump_version:
