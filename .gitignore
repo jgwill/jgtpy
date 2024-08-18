@@ -186,3 +186,5 @@ samples/JGT*.json
 samples/CDSRequest_ba_ta_mfi__full.json
 zarch/
 jgtpy/refacto__from_args__240714.ipynb
+dev_dk_refresh.sh
+dev_jgtutils_makedist_reinstall_jgtutils.sh
