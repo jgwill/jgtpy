@@ -1,6 +1,6 @@
 {
   "name": "jgtpy",
-  "version": "0.5.55",
+  "version": "0.5.56",
   "description": "Enhanced JGTPy CDS, IDS, PDSP Services",
   "main": "index.js",
   "directories": {
