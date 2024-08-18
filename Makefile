@@ -76,6 +76,11 @@ release:
 	git push origin $(version)
 	make pypi-release
 
+.PHONY: bump_jgtutils
+bump_jgtutils:
+	bash bump_jgtutils.sh &>/dev/null
+
+
 .PHONY: bump_version
 bump_version:
 	python bump_version.py
