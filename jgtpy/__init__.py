@@ -25,7 +25,7 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 
-from jgtutils import jgtlogging as l
+#from jgtutils import jgtlogging as l
 
 
 import warnings
@@ -39,28 +39,29 @@ with warnings.catch_warnings():
 version='0.5.55'
 
 
-from JGTCDS import (
-    create as cds_create,
-    createFromDF as fromdf,
-    readCDSFile as read,
-)
+# from JGTCDS import (
+#     create as cds_create,
+#     createFromDF as fromdf,
+#     readCDSFile as read,
+# )
 
-import JGTADS as ads
-from JGTADS import (
-    plot as plot,
-    plot as ads_create,
-    plot_perspective as plot_perspective,
-)
+# import JGTADS as ads
+from JGTADS import (plot_v2 as plot)
+#     plot as plot,
+#     plot as ads_create,
+#     plot_perspective as plot_perspective,
+# )
 
-# @STCGoal Planning to replace the plot with plot_v2
-from JGTADS import plot_v2, plot_v2 as ads_create_v2
-from JGTADSRequest import JGTADSRequest as ads_request
-import adshelper as adh
-from adshelper import prep as prep_ads
 
-import JGTChartConfig as CC
+# # @STCGoal Planning to replace the plot with plot_v2
+# from JGTADS import plot_v2, plot_v2 as ads_create_v2
+# from JGTADSRequest import JGTADSRequest as ads_request
+# import adshelper as adh
+# from adshelper import prep as prep_ads
 
-import JGTMKSG as mksg
+# import JGTChartConfig as CC
+
+# import JGTMKSG as mksg
 from JGTMKSG import (
     pto_generate_snapshot_240302_v2_by_crop_dates as mksg_by_crop_dates,
     pto_generate_snapshot_240302_v2_by_crop_dates as mksg_create_crops,
@@ -68,6 +69,9 @@ from JGTMKSG import (
     generate_market_snapshots as mksg_create_pov,
 )
 
+import JGTIDSSvc as idssvc
+
+import JGTCDSSvc as cdssvc 
 
 def help():
     print(
