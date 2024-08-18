@@ -751,7 +751,7 @@ def createIDSService(
         # cdspath, cdf = cds.createFromPDSFileToCDSFile(
         # @a Migrate to IDS Logics
         # cdspath, cdf = cds.createFromPDSFileToCDSFile(
-        idspath, cdf = create_from_pds_file_to_ids_file(
+        idspath, idf = create_from_pds_file_to_ids_file(
             rq=rq,
             quiet=quietting,
             columns_to_remove=col2remove,
@@ -759,8 +759,9 @@ def createIDSService(
         )  # @STCIssue: This is not supporting -c NB_BARS_TO_PROCESS, should it ?
 
         print_quiet(quiet, idspath)
-        print_quiet(quiet, cdf)
-        return idspath, cdf
+        if verbose_level >1:
+            print_quiet(quiet, idf)
+        return idspath, idf
     except Exception as e:
         print("Failed to create IDS for : " + rq.instrument + "_" + rq.timeframe)
         print("jgtapycli::Exception in ...(: " + str(e))
