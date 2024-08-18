@@ -738,7 +738,7 @@ def createIDSService(
     col2remove = constants.columns_to_remove
     config = jgtcommon.readconfig()
     if "columns_to_remove" in config:  # read it from config otherwise
-        col2remove = config["columns_to_remove"]
+        col2remove = config["columns_to_remove"] #@STCIssue Should be using settings (jgtutils) or what would be supplied in the request.
     quietting = True
     if verbose_level > 1:
         quietting = False
