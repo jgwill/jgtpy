@@ -25,3 +25,4 @@ markdown-it-py
 panel
 flask
 scipy
+jinja2

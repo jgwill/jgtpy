@@ -26,6 +26,7 @@ dependencies = [
   'mplfinance>=0.12.10b0',
   'panel>=1.2.3',
   'tomli>=1.2.3',
+  'jinja2'
 ]	
 
 optional-dependencies = {  dev-lint = [
