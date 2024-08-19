@@ -51,7 +51,7 @@ import JGTPDSP as pds  # Should be managed by cds
 #import JGTIDS as ids
 #from JGTIDS import getMinByTF
 import JGTCDS as cds
-from jgtutils import jgtwslhelper as wsl
+
 
 # @STCGoal Unified JGTChartConfig & JGTADSRequest
 from JGTChartConfig import JGTChartConfig
