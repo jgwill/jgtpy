@@ -857,6 +857,7 @@ def ao_max_min(data):
     ao_min = data[AO].min()
     return ao_max,ao_min
 
+from jgtutils.jgtos import ensure_directory_exists
 def save_add_figure(instrument, timeframe, rq, fig):
     print("Saving figure to: " + rq.save_additional_figures_path)
     try:
@@ -865,6 +866,17 @@ def save_add_figure(instrument, timeframe, rq, fig):
         is_an_image_path =False
         if len(rq.save_additional_figures_path) > 4:
             is_an_image_path = rq.save_additional_figures_path[-4] == "."
+            #@STCIssue Directory must exist 24081921
+            try: #Make directories where the image will be saved
+                #Must extract the directory from the path (it has a filename)
+                directory=ensure_directory_exists(rq.save_additional_figures_path)
+                if not rq.quiet:
+                    print("Directory created: " + directory)
+            except Exception as e:
+                print("Error creating directory for image: " + rq.save_additional_figures_path)
+                print(e)
+                #traceback.print_exc()
+                
 
         # if rq.save_additional_figures_path is a filepath ,Save the figure
         if (
@@ -893,18 +905,6 @@ def save_add_figure(instrument, timeframe, rq, fig):
         #traceback.print_exc()
         
 
-def _get_dt_fmt_for_timeframe(timeframe):
-    if timeframe == "H1" or timeframe == "H4" or timeframe == "H8" or timeframe == "H6" or timeframe == "H3" or timeframe == "H2" :
-        fmt = "%y-%m-%d\n%H"
-    else: 
-        if timeframe == "m5" or timeframe == "m15":
-            fmt = "%y-%m-%d\n%H:%M"
-        else:
-            if timeframe == "M1":
-                fmt = "%Y-%m"
-            else:
-                fmt = "%Y-%m-%d"
-    return fmt
 
 
 def make_alligator_plots(
