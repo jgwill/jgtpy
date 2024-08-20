@@ -46,6 +46,8 @@ from jgtutils.jgtconstants import (
 
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
+from jgtpyhelper import get_dt_fmt_for_timeframe
+
 # import jgtpy
 import JGTPDSP as pds  # Should be managed by cds
 #import JGTIDS as ids
@@ -634,7 +636,7 @@ def plot_from_cds_df(
     # marketcolor_overrides=mco
     # print(data_last_selection)
     
-    fmt = _get_dt_fmt_for_timeframe(timeframe)
+    fmt = get_dt_fmt_for_timeframe(timeframe)
 
     if rq.verbose_level> 1:
         print("Chart fmt :",fmt)
