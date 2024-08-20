@@ -3,6 +3,7 @@
 # # @title ADS
 
 # Imports
+from matplotlib.figure import Figure
 import numpy as np
 import pandas as pd
 import warnings
@@ -49,6 +50,7 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 from jgtutils.jgtos import ensure_directory_exists
 
 from jgtpyhelper import get_dt_fmt_for_timeframe
+
 
 # import jgtpy
 import JGTPDSP as pds  # Should be managed by cds
@@ -99,7 +101,7 @@ def jgtxplot18c_231209(
     crop_last_dt: str = None,
     use_fresh=False,
     rq: JGTADSRequest = None,
-):
+)->{Figure,list,pd.DataFrame}:
 
     data = ah.prepare_cds_for_ads_data(
         instrument,
@@ -152,7 +154,7 @@ def plot_from_pds_df(
     cc: JGTChartConfig = None,
     tlid_range: str = None,
     rq: JGTADSRequest = None,
-):
+)->{Figure,list,pd.DataFrame}:
     if rq is not None:
         cc = rq.cc
     if cc is None:
@@ -207,7 +209,7 @@ def plot_from_cds_df(
     plot_ao_peaks: bool = True,
     cc: JGTChartConfig = None,
     rq: JGTADSRequest = None,
-):
+)->{Figure,list,pd.DataFrame}:
     """
     Plot OHLC bars, indicators, and signals from a pandas DataFrame.
 
@@ -304,7 +306,7 @@ def plot_from_cds_df(
 
     # Select the last 400 bars of the data
 
-    data_last_selection = data
+    data_last_selection:pd.DataFrame = data
     # Select the last 400 bars of the data
     tst_len_data = len(data)
     if nb_bar_on_chart != tst_len_data: #@STCIssue Isn't this already done ???
@@ -642,6 +644,8 @@ def plot_from_cds_df(
 
     if rq.verbose_level> 1:
         print("Chart fmt :",fmt)
+    fig:Figure=None
+    axes:list=None
     fig, axes = mpf.plot(
         ohlc,
         type=cc.main_plot_type,
@@ -734,7 +738,7 @@ def plot_from_cds_df(
 
         ax.grid(show_grid)
 
-    if rq.save_additional_figures_path is not None:
+    if rq.save_additional_figures_path is not None or rq.save_figure_as_timeframe:
         save_add_figure(instrument, timeframe, rq, fig)
 
     if show:
@@ -859,8 +863,8 @@ def ao_max_min(data):
     ao_min = data[AO].min()
     return ao_max,ao_min
 
-def save_add_figure(instrument, timeframe, rq, fig):
-    print("Saving figure to: " + rq.save_additional_figures_path)
+def save_add_figure(instrument:str, timeframe:str, rq:JGTADSRequest, fig:Figure):
+    
     try:
             
         last_char_is_slash = rq.save_additional_figures_path[-1] == "/"
@@ -888,15 +892,23 @@ def save_add_figure(instrument, timeframe, rq, fig):
             except:
                 pass
             exn = ".png"
+            
+            
             path_part1 = rq.save_additional_figures_path
-            if path_part1 == "pov":
+            if path_part1 == "pov" or rq.save_figure_as_pov:
                 path_part1 = os.getcwd() #saving in current directory
-            fn=instrument.replace("/", "-") + "_"  + timeframe  + exn
+            if rq.save_figure_as_timeframe:
+                fn = timeframe + exn
+            else:
+                fn=instrument.replace("/", "-") + "_"  + timeframe  + exn
+            final_figure_path = os.path.join(path_part1, fn)
+            print("Saving figure to: " + final_figure_path)
             fig.savefig(
-                os.path.join(path_part1, fn),
+                final_figure_path,
                 dpi=rq.save_additional_figures_dpi,
                 )
         else:
+            print("Saving figure to: " + rq.save_additional_figures_path)
             fig.savefig(
                     rq.save_additional_figures_path, dpi=rq.save_additional_figures_dpi
                 )
@@ -1482,7 +1494,9 @@ def main():
     parser.add_argument("-dt","--crop_last_dt", type=str, help="The last date-time to crop the data.")
     parser.add_argument("--show", action="store_true", help="Whether to display the plot.",default=False)
     #save figure 
-    parser.add_argument("-sf", "--save_figure", type=str, help="Save the figure to the given path.",default=None)
+    parser.add_argument("-sf", "--save_figure", type=str, help="Save the figure to the given path.  Use t",default=None)
+    #save_figure_as_pov_name flag
+    parser.add_argument("-tf", "--save_figure_as_timeframe", action="store_true", help="Save the figure using just the timeframe as basename (ex. H4.png).",default=False)
     #save_figure_as_pov_name flag
     parser.add_argument("-pov", "--save_figure_as_pov_name", action="store_true", help="Save the figure as pov file.",default=False)
     #save dpi
@@ -1497,7 +1511,7 @@ def main():
         return
 
     # Create a JGTADSRequest object
-    rq = JGTADSRequest()
+    rq:JGTADSRequest = JGTADSRequest()
     rq.verbose_level = args.verbose
 
     # Set the instrument and timeframe
@@ -1513,11 +1527,34 @@ def main():
         
     rq.save_additional_figures_dpi = args.save_additional_figures_dpi
     
-    if  args.save_figure_as_pov_name and args.save_figure is None:#if save_figure_as_pov_name is set and save_figure is not set
+    if args.save_figure is not None and (args.save_figure=='ct' or args.save_figure=='ctf'  or args.save_figure=='tc' or args.save_figure=='tcf' ):
+        args.save_figure_as_timeframe=True
+        args.save_figure="charts/"    
+    elif args.save_figure is not None and (args.save_figure=='cpov' or args.save_figure=='cp' or args.save_figure=='cit' or args.save_figure=='itc'  or args.save_figure=='ic' or args.save_figure=='ci' ):
+        args.save_figure_as_pov_name=True
+        args.save_figure="charts/"    
+    elif args.save_figure is not None and (args.save_figure=='t' or args.save_figure=='timeframe'  or args.save_figure=='tf'):
+        args.save_figure_as_timeframe=True
+        args.save_figure="."
+    elif args.save_figure is not None and (args.save_figure=='pov' or args.save_figure=='it' or args.save_figure=='p' or args.save_figure=='i' ):
+    
+        args.save_figure_as_pov_name=True
+        args.save_figure="."
+    
+    if  (args.save_figure_as_pov_name or args.save_figure_as_timeframe) and (args.save_figure is None or args.save_figure == "."):#if save_figure_as_pov_name is set and save_figure is not set
+    
         rq.save_additional_figures_path = os.getcwd() #saving in current directory
+    
+    rq.save_figure_as_timeframe = args.save_figure_as_timeframe
+    rq.save_figure_as_pov = args.save_figure_as_pov_name
+    
     if args.save_figure is not None:
         rq.save_additional_figures_path = args.save_figure
+    #print(args.save_figure)
+    #print(rq.save_additional_figures_path)
+    #exit()
     
+        
     #many timeframs if , in the string timeframe
     if "," in rq.timeframe:
         timeframes = rq.timeframe.split(",")

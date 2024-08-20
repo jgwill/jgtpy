@@ -27,6 +27,8 @@ class JGTADSRequest(JGTCDSRequest):
                  show_feature_one_plot=False,
                  show_feature_two_plot=False,
                  show_feature_2403_plot=False,
+                 save_figure_as_pov:bool=False,
+                 save_figure_as_timeframe:bool=False,
                  *args, 
                  **kwargs):
         super().__init__(*args, **kwargs)
@@ -80,6 +82,10 @@ class JGTADSRequest(JGTCDSRequest):
         self.cds_required_amount_of_bar_for_calc = cds_required_amount_of_bar_for_calc if cds_required_amount_of_bar_for_calc is not None else self.balligator_period_jaws
         
         self.nb_bar_to_retrieve = nb_bar_to_retrieve if nb_bar_to_retrieve is not None else self.nb_bar_on_chart + self.cds_required_amount_of_bar_for_calc
+        
+        
+        self.save_figure_as_pov=save_figure_as_pov
+        self.save_figure_as_timeframe=save_figure_as_timeframe
         
         #@STCIssue Fix quotescount 
         if self.nb_bar_to_retrieve< self.quotescount:
