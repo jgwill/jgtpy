@@ -46,6 +46,8 @@ from jgtutils.jgtconstants import (
 
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
+from jgtutils.jgtos import ensure_directory_exists
+
 from jgtpyhelper import get_dt_fmt_for_timeframe
 
 # import jgtpy
@@ -857,7 +859,6 @@ def ao_max_min(data):
     ao_min = data[AO].min()
     return ao_max,ao_min
 
-from jgtutils.jgtos import ensure_directory_exists
 def save_add_figure(instrument, timeframe, rq, fig):
     print("Saving figure to: " + rq.save_additional_figures_path)
     try:
