@@ -718,7 +718,18 @@ def select_value_in_lastcompletedbar(instrument, timeframe,coln, use_full=False)
     completed_bar = read_ids_lastcompletedbar(instrument, timeframe, use_full)
     return completed_bar[coln]
 
-def get_bar_at_index(df:pd.DataFrame,idx=-1):
+
+def get_bar_at_index(df:pd.DataFrame,idx=-1,format='%Y-%m-%d %H:%M:%S'):
+  if 'Date' in df.columns:
+    df2 = df.copy()
+  else:
+      df2 = df.copy().reset_index()
+  df2['Date'] = pd.to_datetime(df2['Date'], format=format)
+  tbar = df2.iloc[idx]
+  tbar_json_str = tbar.to_json()
+  return json.loads(tbar_json_str)
+
+def get_bar_at_index_no_dt(df:pd.DataFrame,idx=-1):
     tbar = df.iloc[idx]
     tbar_json_str = tbar.to_json()
     return json.loads(tbar_json_str)
