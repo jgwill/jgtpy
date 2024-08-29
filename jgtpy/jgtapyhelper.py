@@ -5,6 +5,7 @@ warnings.simplefilter(action="ignore", category=FutureWarning)
 
 import sys
 import os
+import json
 
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
@@ -717,14 +718,19 @@ def select_value_in_lastcompletedbar(instrument, timeframe,coln, use_full=False)
     completed_bar = read_ids_lastcompletedbar(instrument, timeframe, use_full)
     return completed_bar[coln]
 
+def get_bar_at_index(df:pd.DataFrame,idx=-1):
+    tbar = df.iloc[idx]
+    tbar_json_str = tbar.to_json()
+    return json.loads(tbar_json_str)
+
 def read_ids_currentbar(instrument, timeframe, use_full):
     df=read_ids(instrument, timeframe, use_full)
-    current_bar=df.iloc[-1]
+    current_bar=get_bar_at_index(df,-1)
     return current_bar
 
 def read_ids_lastcompletedbar(instrument, timeframe, use_full):
     df=read_ids(instrument, timeframe, use_full)
-    lastcompleted_bar=df.iloc[-2]
+    lastcompleted_bar=get_bar_at_index(df,-2)
     return lastcompleted_bar
 
 def createIDSService(
