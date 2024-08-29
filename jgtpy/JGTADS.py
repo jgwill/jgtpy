@@ -901,7 +901,7 @@ def save_add_figure(instrument:str, timeframe:str, rq:JGTADSRequest, fig:Figure)
                 fn = timeframe + exn
             else:
                 fn=instrument.replace("/", "-") + "_"  + timeframe  + exn
-            final_figure_path = os.path.join(path_part1, fn)
+            final_figure_path = os.path.join(path_part1, fn.replace("m1","min1"))
             print("Saving figure to: " + final_figure_path)
             fig.savefig(
                 final_figure_path,
@@ -909,8 +909,9 @@ def save_add_figure(instrument:str, timeframe:str, rq:JGTADSRequest, fig:Figure)
                 )
         else:
             print("Saving figure to: " + rq.save_additional_figures_path)
+            saved_figure_path = rq.save_additional_figures_path
             fig.savefig(
-                    rq.save_additional_figures_path, dpi=rq.save_additional_figures_dpi
+                    saved_figure_path.replace("m1","min1"), dpi=rq.save_additional_figures_dpi
                 )
     except Exception as e:
         print("Error saving figure to: " + rq.save_additional_figures_path)
