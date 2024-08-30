@@ -895,28 +895,46 @@ def save_add_figure(instrument:str, timeframe:str, rq:JGTADSRequest, fig:Figure)
             
             
             path_part1 = rq.save_additional_figures_path
-            if path_part1 == "pov" or rq.save_figure_as_pov:
+            if rq.save_figure_as_pov and rq.save_additional_figures_path == "charts/":
+                path_part1 = path_part1+instrument.replace("/", "-") + "/"
+                
+            if (path_part1 == "pov" or rq.save_figure_as_pov) and rq.save_additional_figures_path != "charts/":
                 path_part1 = os.getcwd() #saving in current directory
-            if rq.save_figure_as_timeframe:
-                fn = timeframe + exn
+            
+            if rq.save_figure_as_timeframe and rq.save_figure_as_pov:
+                fn = timeframe + exn                
+            elif rq.save_figure_as_timeframe:
+                fn = timeframe + exn 
             else:
                 fn=instrument.replace("/", "-") + "_"  + timeframe  + exn
-            final_figure_path = os.path.join(path_part1, fn.replace("m1","min1"))
-            print("Saving figure to: " + final_figure_path)
+            
+            updated_filename =fix_timeframed_path(timeframe,fn)
+            final_figure_path = os.path.join(path_part1, updated_filename)
+            if not rq.quiet:
+                print("Saving figure to: " + final_figure_path)
             fig.savefig(
                 final_figure_path,
                 dpi=rq.save_additional_figures_dpi,
                 )
         else:
-            print("Saving figure to: " + rq.save_additional_figures_path)
+            if not rq.quiet:
+                print("Saving figure to: " + rq.save_additional_figures_path)
             saved_figure_path = rq.save_additional_figures_path
+            updated_figure_path = fix_timeframed_path(timeframe, saved_figure_path)
             fig.savefig(
-                    saved_figure_path.replace("m1","min1"), dpi=rq.save_additional_figures_dpi
+                    updated_figure_path, dpi=rq.save_additional_figures_dpi
                 )
     except Exception as e:
         print("Error saving figure to: " + rq.save_additional_figures_path)
         print(e)
-        #traceback.print_exc()
+
+def fix_timeframed_path(timeframe, original_path):
+    if timeframe=="m1":
+        updated_path = original_path.replace("m1","mi1")
+    else:
+        updated_path = original_path
+    return updated_path
+
         
 
 
@@ -1481,7 +1499,7 @@ def main():
     
     #print("JGTADS v0.1")
     # Parse arguments
-    parser=jgtcommon.new_parser(ADSCLI_PROG_DESCRIPTION,ADSCLI_PROG_EPILOG,ADSCLI_PROG_NAME)
+    parser=jgtcommon.new_parser(ADSCLI_PROG_DESCRIPTION,ADSCLI_PROG_EPILOG,ADSCLI_PROG_NAME,add_exiting_quietly_flag=True)
 
     parser=jgtcommon.add_instrument_timeframe_arguments(parser)
     
@@ -1495,7 +1513,7 @@ def main():
     parser.add_argument("-dt","--crop_last_dt", type=str, help="The last date-time to crop the data.")
     parser.add_argument("--show", action="store_true", help="Whether to display the plot.",default=False)
     #save figure 
-    parser.add_argument("-sf", "--save_figure", type=str, help="Save the figure to the given path.  Use t",default=None)
+    parser.add_argument("-sf", "--save_figure", type=str, help="Save the figure to the given path.  Use t:cwd,tc:./charts/t,pc:charts/pov",default=None)
     #save_figure_as_pov_name flag
     parser.add_argument("-tf", "--save_figure_as_timeframe", action="store_true", help="Save the figure using just the timeframe as basename (ex. H4.png).",default=False)
     #save_figure_as_pov_name flag
@@ -1533,6 +1551,7 @@ def main():
         args.save_figure="charts/"    
     elif args.save_figure is not None and (args.save_figure=='cpov' or args.save_figure=='cp' or args.save_figure=='cit' or args.save_figure=='itc'  or args.save_figure=='ic' or args.save_figure=='ci' ):
         args.save_figure_as_pov_name=True
+        args.save_figure_as_timeframe=True
         args.save_figure="charts/"    
     elif args.save_figure is not None and (args.save_figure=='t' or args.save_figure=='timeframe'  or args.save_figure=='tf'):
         args.save_figure_as_timeframe=True
