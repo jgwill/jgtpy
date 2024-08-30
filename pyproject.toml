@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jgtpy"
-version = "0.5.81"
+version = "0.5.83"
 authors = [
   { name="Guillaume Isabelle", email="jgi@jgwill.com" },
 ]
@@ -17,7 +17,7 @@ dependencies = [
   'pandas>=0.25.1',
   'python-dotenv>=0.19.2',
   'jgtapy>=1.9.21',
-  'jgtutils>=0.2.174',
+  'jgtutils>=0.2.177',
   'dropbox>=11.36.2',
   'tlid>=0.1.15',
   'scipy>=1.7.3',
