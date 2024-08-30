@@ -895,10 +895,15 @@ def save_add_figure(instrument:str, timeframe:str, rq:JGTADSRequest, fig:Figure)
             
             
             path_part1 = rq.save_additional_figures_path
-            if rq.save_figure_as_pov and rq.save_additional_figures_path == "charts/":
-                path_part1 = path_part1+instrument.replace("/", "-") + "/"
+            is_chart_saving_directory = rq.save_additional_figures_path == "charts/"
+            
+            if is_chart_saving_directory:
+                path_part1 = os.path.join(os.getcwd(), "charts/")
+            
+            if rq.save_figure_as_pov and is_chart_saving_directory:
+                path_part1 = os.path.join(path_part1,instrument.replace("/", "-"))
                 
-            if (path_part1 == "pov" or rq.save_figure_as_pov) and rq.save_additional_figures_path != "charts/":
+            if (path_part1 == "pov" or rq.save_figure_as_pov) and not is_chart_saving_directory:
                 path_part1 = os.getcwd() #saving in current directory
             
             if rq.save_figure_as_timeframe and rq.save_figure_as_pov:
@@ -909,6 +914,7 @@ def save_add_figure(instrument:str, timeframe:str, rq:JGTADSRequest, fig:Figure)
                 fn=instrument.replace("/", "-") + "_"  + timeframe  + exn
             
             updated_filename =fix_timeframed_path(timeframe,fn)
+            ensure_directory_exists(path_part1)
             final_figure_path = os.path.join(path_part1, updated_filename)
             if not rq.quiet:
                 print("Saving figure to: " + final_figure_path)
