@@ -444,8 +444,8 @@ import argparse
 def main():
   from jgtutils import jgtcommon as jgtcommon
   from jgtpyconstants import MKSCLI_PROG_DESCRIPTION, MKSCLI_PROG_NAME, MKSCLI_PROG_EPILOG
-  parser=jgtcommon.new_parser(MKSCLI_PROG_DESCRIPTION,MKSCLI_PROG_EPILOG,MKSCLI_PROG_NAME)
-  parser=jgtcommon.add_instrument_timeframe_arguments(parser)
+  parser=jgtcommon.new_parser(MKSCLI_PROG_DESCRIPTION,MKSCLI_PROG_EPILOG,MKSCLI_PROG_NAME,add_exiting_quietly_flag=True)
+  parser=jgtcommon.add_instrument_timeframe_arguments(parser,from_jgt_env=True)
   #parser.add_argument('-i','--instrument', type=str, required=True)
   #parser.add_argument('-t','--timeframes', type=str, required=False)
   parser.add_argument('-tos','--tf_of_signal', type=str, required=False)
