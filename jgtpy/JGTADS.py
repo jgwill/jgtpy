@@ -927,6 +927,8 @@ def save_add_figure(instrument:str, timeframe:str, rq:JGTADSRequest, fig:Figure)
                 print("Saving figure to: " + rq.save_additional_figures_path)
             saved_figure_path = rq.save_additional_figures_path
             updated_figure_path = fix_timeframed_path(timeframe, saved_figure_path)
+            directory = os.path.dirname(updated_figure_path)
+            ensure_directory_exists(directory)
             fig.savefig(
                     updated_figure_path, dpi=rq.save_additional_figures_dpi
                 )
