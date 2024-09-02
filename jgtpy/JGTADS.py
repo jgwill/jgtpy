@@ -203,8 +203,8 @@ def plot_from_pds_df(
 
 def plot_from_cds_df(
     data: pd.DataFrame,
-    instrument: str,
-    timeframe: str,
+    instrument: str=None,
+    timeframe: str=None,
     show=True,
     plot_ao_peaks: bool = True,
     cc: JGTChartConfig = None,
@@ -230,8 +230,16 @@ def plot_from_cds_df(
         cc = rq.cc
     if cc is None:
         cc = JGTChartConfig()
-    if rq is None:
+    if rq is None and instrument is not None and timeframe is not None:
         rq = JGTADSRequest()
+    if instrument is None:
+        instrument = rq.instrument
+    if timeframe is None:
+        timeframe = rq.timeframe
+    if timeframe is None:
+        raise ValueError("Timeframe is required. As args or in the request")
+    if instrument is None:
+        raise ValueError("Instrument is required. As args or in the request")
 
     fhh = FH + str(cc.fractal_high_degree)
     flh = FL + str(cc.fractal_high_degree)
