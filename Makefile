@@ -44,6 +44,7 @@ clean:
 	find . -name "*.pyc" -print0 | xargs -0 rm -f
 	rm -Rf dist
 	rm -Rf *.egg-info
+	rm -rf charts
 
 .PHONY: docs
 docs:
@@ -84,11 +85,11 @@ bump_jgtutils:
 .PHONY: bump_version
 bump_version:
 	python bump_version.py
-	git commit package.json pyproject.toml jgtpy/__init__.py -m bump &>/dev/null
+	#git commit package.json pyproject.toml jgtpy/__init__.py -m bump &>/dev/null
 
 .PHONY: quick-release
 quick-release:
-	make bump_jgtutils
+	#make bump_jgtutils
 	make bump_version
 	make dist
 	make pypi-release
