@@ -148,6 +148,11 @@ class JGTADSRequest(JGTCDSRequest):
     @staticmethod
     def from_json(json_str:str):
         return json.loads(json_str)
+    
+    @staticmethod
+    def new_feature_plot(instrument,timeframe,feature_plot:int, save_additional_figures_path=None,show=False,*args, **kwargs):
+        cc = JGTChartConfig.new_feature_plot(feature_plot)
+        return JGTADSRequest(instrument=instrument,timeframe=timeframe,cc=cc,save_additional_figures_path=save_additional_figures_path,show=show,*args, **kwargs)
         
 # Create an instance with default values
 default_config = JGTADSRequest()

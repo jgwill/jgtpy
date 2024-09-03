@@ -874,7 +874,7 @@ def ao_max_min(data):
 def save_add_figure(instrument:str, timeframe:str, rq:JGTADSRequest, fig:Figure):
     
     try:
-            
+        print("DEBUG::rq.save_additional_figures_path: " + rq.save_additional_figures_path)
         last_char_is_slash = rq.save_additional_figures_path[-1] == "/"
         is_an_image_path =False
         if len(rq.save_additional_figures_path) > 4:
@@ -935,7 +935,9 @@ def save_add_figure(instrument:str, timeframe:str, rq:JGTADSRequest, fig:Figure)
                 print("Saving figure to: " + rq.save_additional_figures_path)
             saved_figure_path = rq.save_additional_figures_path
             updated_figure_path = fix_timeframed_path(timeframe, saved_figure_path)
+            #print("DEBUG::rq.save_additional_figures_path: " + updated_figure_path)
             directory = os.path.dirname(updated_figure_path)
+            #print("DEBUG::directory: " + directory)
             ensure_directory_exists(directory)
             fig.savefig(
                     updated_figure_path, dpi=rq.save_additional_figures_dpi

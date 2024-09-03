@@ -56,7 +56,8 @@ class JGTChartConfig:
                  show_alligator=True,
                  show_zlc=True,
                  fractal_high_degree=8,
-                 fractal_ultra_high_degree=21):
+                 fractal_ultra_high_degree=21,
+                 show_feature_one_plot_var2=False):
         
         self.fractal_high_degree = fractal_high_degree     
         self.fractal_ultra_high_degree = fractal_ultra_high_degree   
@@ -77,6 +78,7 @@ class JGTChartConfig:
         self.show_feature_one_plot = show_feature_one_plot
         self.show_feature_two_plot = show_feature_two_plot
         self.show_feature_2403_plot = show_feature_2403_plot
+        self.show_feature_one_plot_var2 = show_feature_one_plot_var2
 
         
         self.nb_bar_on_chart = nb_bar_on_chart
@@ -155,7 +157,10 @@ class JGTChartConfig:
         
         self.reset()
         
-    def reset(self):
+    def reset(self): #@STCIssue This is confusing, renaming it update
+        self.update()
+    
+    def update(self):
         
         if self.show_feature_2403_plot:
             self.show_ac = False
@@ -188,6 +193,18 @@ class JGTChartConfig:
             self.show_ao_peaks = True
             self.show_zlc = True
         
+        if self.show_feature_one_plot_var2:
+            self.show_fractal_higher = True
+            self.show_fractal = True
+            self.show_fdb_signal = True
+            self.show_alligator = True
+            self.show_ac = False
+            self.show_ao = True
+            self.show_price_peak = True
+            self.show_saucer = False
+            self.show_ao_peaks = True
+            self.show_zlc = True
+            
         if self.show_feature_two_plot:                        
             self.show_ac=False
             self.show_fractal=False
@@ -211,6 +228,15 @@ class JGTChartConfig:
     def to_json(self):
         return json.dumps(self.__dict__)
     
+    @staticmethod
+    def new_feature_plot(feature_plot=1):
+        cc = JGTChartConfig()
+        cc.show_feature_one_plot = True if feature_plot == 1 else False
+        cc.show_feature_one_plot_var2 = True if feature_plot == 11 else False
+        cc.show_feature_two_plot = True if feature_plot == 2 else False
+        cc.show_feature_2403_plot = True if feature_plot == 3 else False
+        cc.update()
+        return cc
     # def __str__(self) -> str:
     #     return f"JGTChartConfig(nb_bar_on_chart={self.nb_bar_on_chart}, min_bar_on_chart={self.min_bar_on_chart}, balligator_period_jaws={self.balligator_period_jaws}, cds_required_amount_of_bar_for_calc={self.cds_required_amount_of_bar_for_calc}, nb_bar_to_retrieve={self.nb_bar_to_retrieve}, show_grid={self.show_grid}, subtitle_x_pos={self.subtitle_x_pos}, subtitle_y_pos={self.subtitle_y_pos}, subtitle_ha={self.subtitle_ha}, subtitle_fontsize={self.subtitle_fontsize}, title_x_pos={self.title_x_pos}, title_y_pos={self.title_y_pos}, title_ha={self.title_ha}, title_fontsize={self.title_fontsize}, jaw_line_width={self.jaw_line_width}, teeth_line_width={self.teeth_line_width}, lips_line_width={self.lips_line_width}, fig_ratio_x={self.fig_ratio_x}, fig_ratio_y={self.fig_ratio_y}, fdb_marker_size={self.fdb_marker_size}, fractal_marker_size={self.fractal_marker_size}, ac_signals_marker_size={self.ac_signals_marker_size}, saucer_marker_size={self.saucer_marker_size}, fractal_degreehigher_marker_size={self.fractal_degreehigher_marker_size}, price_peak_marker_size={self.price_peak_marker_size}, ao_peaks_marker_size={self.ao_peaks_marker_size}, fdb_signal_marker={self.fdb_signal_marker}, fractal_up_marker={self.fractal_up_marker}, fractal_up_marker_higher={self.fractal_up_marker_higher}, fractal_dn_marker_higher={self.fractal_dn_marker_higher}, fractal_dn_marker={self.fractal_dn_marker}, ac_signal_marker={self.ac_signal_marker}, acb_plot_type={self.acb_plot_type}, ao_peak_above_marker_higher={self.ao_peak_above_marker_higher}, ao_peak_bellow__marker_higher={self.ao_peak_bellow__marker_higher}, saucer_marker={self.saucer_marker}, zcol_marker={self.zcol_marker}, aop_bellow_color={self.aop_bellow_color}, aop_above_color={self.aop_above_color}, ao_upbar_color={self.ao_upbar_color}, ao_dnbar_color={self.ao_dnbar_color}, ac_up_color={self.ac_up_color}, ac_dn_color={self.ac_dn_color}, fdb_signal_buy_color={self.fdb_signal_buy_color}, fdb_signal_sell_color={self.fdb_signal_sell_color}, jaw_color={self.jaw_color}, teeth_color={self.teeth_color}, lips_color={self.lips_color}, fractal_up_color={self.fractal_up_color}, fractal_dn_color={self.fractal_dn_color}, fractal_dn_color_higher={self.fractal_dn_color_higher}, fractal_up_color_higher={self.fractal_up_color_higher}, ac_signal_buy_color={self.ac_signal_buy_color}, ac_signal_sell_color={self.ac_signal_sell_color}, saucer_buy_color={self.saucer_buy_color}, saucer_sell_color={self.saucer_sell_color}, price_peak_bellow_marker={self.price_peak_bellow_marker}, price_peak_above_marker={self.price_peak_above_marker}, price_peak_above_color={self.price_peak_above_color}, price_peak_bellow_color={self.price_peak_bellow_color}, ao_peak_offset_value={self.ao_peak_offset_value}, plot_style={self.plot_style}, ao_plot_type={self.ao_plot_type}, ac_plot_type={self.ac_plot_type}, main_plot_panel_id={self.main_plot_panel_id}, ao_plot_panel_id={self.ao_plot_panel_id}, ac_plot_panel_id={self.ac_plot_panel_id})"
 
