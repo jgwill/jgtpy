@@ -17,7 +17,7 @@ dependencies = [
   'pandas>=0.25.1',
   'python-dotenv>=0.19.2',
   'jgtapy>=1.9.21',
-  'jgtutils>=0.2.210',
+  'jgtutils>=0.2.211',
   'dropbox>=11.36.2',
   'tlid>=0.1.15',
   'scipy>=1.7.3',
@@ -57,6 +57,7 @@ classifiers = [
 [project.scripts]
 jgtcli = "jgtpy.jgtcli:main"
 cdscli = "jgtpy.cdscli:main"
+pds2cds = "jgtpy.pds2cds:main"
 jgtmksg = "jgtpy.JGTMKSG:main"
 jgtads = "jgtpy.JGTADS:main"
 jgtids = "jgtpy.jgtapycli:main"
