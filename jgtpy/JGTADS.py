@@ -74,7 +74,7 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 # import kaleido
 # import plotly
 
-import JGTConfig as jgtc
+
 
 
 # import plotly.graph_objects as go

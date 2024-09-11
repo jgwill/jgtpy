@@ -3,7 +3,7 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
-import JGTConfig as jgtc
+
 import dropbox
 import pathlib
 from dropbox.exceptions import AuthError
@@ -15,8 +15,9 @@ import JGTCore as jko
 from pathlib import Path
 import pathlib
 
+DROPBOX_ETC_PATH= '/w/etc/'
 
-_DROPBOX_ACCESS_TOKEN=jgtc._DROPBOX_ACCESS_TOKEN
+_DROPBOX_ACCESS_TOKEN="__UNDEFINED__"
 def mkdir_existok(tpath):
     pathlib.Path(tpath).mkdir(parents=True, exist_ok=True)
      
@@ -34,7 +35,7 @@ def etc_dl(fn,local_tdir='.',etcsubdir='.'):
     local_file_path =  local_tdir + '/'+ fn
     #os.path.join(local_tdir,fn)
     print('Local file: ' + local_file_path)
-    etcpath = jgtc.DROPBOX_ETC_PATH
+    etcpath = DROPBOX_ETC_PATH
     if etcsubdir != '.':
         etcpath = etcpath + '/' + etcsubdir
     etcpath=etcpath.replace('//','/')

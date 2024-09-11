@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 import JGTPDHelper as jpd
 
-from JGTConfig import local_fn_compression
+local_fn_compression='gzip'
 from JGTPDHelper import *
 from datetime import datetime
 from jgtutils import jgtcommon,iprops,jgtos
