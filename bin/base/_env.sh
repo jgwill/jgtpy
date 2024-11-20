@@ -8,14 +8,22 @@ dkhostname=$containername
 # PORT
 #dkport=4000:4000
 
-xmount=$HOME/.jgt/config.json:/root/.jgt/config.json
-xmount2=$HOME/.jgt/settings.json:/root/.jgt/settings.json
+if [ -f "/etc/jgt/config.json" ];then
+        xmount=/etc/jgt/config.json:/etc/jgt/config.json
+
+fi
+xmount2=/tmp/fxdata:/data
+rm -rf /tmp/fxdata
+mkdir -p /tmp/fxdata
+#xmount2=$HOME/.jgt/settings.json:$HOME/.jgt/settings.json
 #xmount2=/var:/a/var
 
 
 dkcommand=bash #command to execute (default is the one in the dockerfile)
 
-dkextra=" -v $(realpath $(pwd)/../../):/app "
+dkextra=" -v $(realpath $(pwd)/../../):/app \
+        -v /home/jgi/.jgt:/home/jgi/.jgt "
+    #    -e JGT_CONFIG=$JGT_CONFIG "
 
 #dkmounthome=true
 
