@@ -26,3 +26,4 @@ panel
 flask
 scipy
 jinja2
+dash
