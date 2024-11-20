@@ -26,8 +26,9 @@ dependencies = [
   'mplfinance>=0.12.10b0',
   'panel>=1.2.3',
   'tomli>=1.2.3',
-  'jinja2'
-]	
+  'jinja2',
+  'dash'
+]
 
 optional-dependencies = {  dev-lint = [
     "flake8>=3.6.0,<3.7.0",
