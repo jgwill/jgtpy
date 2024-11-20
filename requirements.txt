@@ -28,3 +28,4 @@ scipy
 jinja2
 dash
 panel
+tdqm
