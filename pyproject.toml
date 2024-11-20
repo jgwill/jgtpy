@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jgtpy"
-version = "0.5.101"
+version = "0.5.102"
 authors = [
   { name="Guillaume Isabelle", email="jgi@jgwill.com" },
 ]
@@ -44,6 +44,7 @@ optional-dependencies = {  dev-lint = [
     "sphinx_rtd_theme>=0.4.0",
     "html2text>=2020.1.16",
     "html2markdown>=0.1.7",
+    "twine",
   ]}
 
 classifiers = [
