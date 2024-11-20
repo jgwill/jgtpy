@@ -27,3 +27,4 @@ flask
 scipy
 jinja2
 dash
+panel

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jgtpy"
-version = "0.5.100"
+version = "0.5.101"
 authors = [
   { name="Guillaume Isabelle", email="jgi@jgwill.com" },
 ]
@@ -27,7 +27,8 @@ dependencies = [
   'panel>=1.2.3',
   'tomli>=1.2.3',
   'jinja2',
-  'dash'
+  'dash',
+  'panel'
 ]
 
 optional-dependencies = {  dev-lint = [
