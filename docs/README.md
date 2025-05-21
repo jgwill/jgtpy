@@ -27,6 +27,26 @@
 
 <!-- * [Fractal_Trading_Strategies_231117](Fractal_Trading_Strategies_231117.md) -->
 
+## What the package offers
+
+The package offers functionalities for creating, reading, and managing Chaos Data Service (CDS) files from Price Data Service (PDS) files. It also provides functionalities for generating and managing IDS (Indicator Data Service) files. The package includes various technical indicators and signals for financial market analysis and trading decisions.
+
+## Appendix
+
+### [docs/IDS_data_columns.md](IDS_data_columns.md)
+- Documentation of all columns in `JGTIDS.py`.
+
+### [docs/CDS_data_columns.md](CDS_data_columns.md)
+- Documentation of all columns in `JGTCDS.py`.
+
+### [docs/IDS_purpose.md](IDS_purpose.md)
+- Purpose of `JGTIDS.py` and the end-results it produces in terms of data for `JGTCDS.py`.
+
+### [docs/CDS_purpose.md](CDS_purpose.md)
+- Purpose of `JGTCDS.py` after it gets data from `JGTIDS.py` and preparation for what `JGTCDSSvc.py` will produce.
+
+### [docs/CDSSvc_purpose.md](CDSSvc_purpose.md)
+- Documentation of functions in `JGTCDSSvc.py` that are not covered in `JGTCDS.py`.
 
 ----
 
