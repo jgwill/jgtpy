@@ -10,14 +10,24 @@ snote_cache_folder = os.path.join(os.getcwd(), snote_cache_folder_name)
 
 print(snote_cache_folder)
 
-def generate_markdown(data_file_path='_snote_content_cache/data.json'):
+def generate_markdown(data_file_path=f'{snote_cache_folder}/data.json'):
+    
     # Load summaries and hashes of previously processed URLs, if the file exists
     try:
         with open(data_file_path, 'r') as data_file:
             data = json.load(data_file)
     except FileNotFoundError:
         print(data_file_path)
+        print("----Try Debugging------")
         print("FileNotFoundError: [Errno 2] No such file or directory: './_snote_content_cache/data.json'")
+        data_file_path = os.path.join(snote_cache_folder,"data.json")
+        try:
+            with open(data_file_path, 'r') as data_file:
+                data = json.load(data_file)
+        except FileNotFoundError:
+            print(data_file_path)
+            print("----Could not debug Debugging------")
+            print("FileNotFoundError: [Errno 2] No such file or directory: './_snote_content_cache/data.json'")
         return
 
     # Create a list of tuples (link, title) from the data
@@ -51,4 +61,4 @@ def generate_markdown(data_file_path='_snote_content_cache/data.json'):
     print('Markdown file generated successfully.')
 
 # Call the function
-generate_markdown(snote_cache_folder)
+generate_markdown(snote_cache_folder + '/data.json')

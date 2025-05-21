@@ -1,4 +1,4 @@
-# Copyright 2023 Jean Guillaume Isabelle
+# Copyright 2024 Jean Guillaume Isabelle
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,96 +16,89 @@
 .. moduleauthor:: Jean Guillaume Isabelle <jgi@jgwill.com>
 """
 
-# from jgtfxcommon.BatchOrderMonitor import BatchOrderMonitor
-# from jgtfxcommon.OrderMonitor import OrderMonitor
-# from jgtfxcommon.OrderMonitorNetting import OrderMonitorNetting
-# from jgtfxcommon.TableListenerContainer import TableListenerContainer
-# from jgtfxcommon.common import add_main_arguments, add_instrument_timeframe_arguments, \
-#     add_candle_open_price_mode_argument, add_direction_rate_lots_arguments, add_account_arguments, \
-#     valid_datetime, add_date_arguments, add_report_date_arguments, add_max_bars_arguments, add_bars_arguments, \
-#     print_exception, session_status_changed, diff_month, convert_timeframe_to_seconds
 
 import os
 import platform
 import sys
-from . import jgtflags
+
+
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
+
+#from jgtutils import jgtlogging as l
 
 
 import warnings
 
 with warnings.catch_warnings():
-    warnings.filterwarnings("ignore", category=RuntimeWarning, module="importlib._bootstrap")
-    # your code here
-
-class NotCompatibleException(Exception):
-    pass
-
-#from jgtpy.common_samples import common_samples
-from .jgtetl import svc_offset_dt_by_tf as etl_offset_dt_by_tf,offsetdt as etl_offsetdt
-from .JGTCore import __version__ #,json2dict,jsonfile2prop,json2prop,jsonfile2dict,d2p,fixdtindf,offsetdt
-#from .JGTConfig import getenv,setreal,setdemo,env
-
-if platform.system() == 'Linux':
-  #sys.path.append(os.path.abspath('./'))
-
-  origin_work_dir = os.getcwd()
-  here = os.path.abspath(os.path.dirname(__file__))
-  os.chdir(here)
-  try:
-     from . import forexconnect
-  except:
-     from jgtpy import forexconnect 
-  os.chdir(origin_work_dir)   
-
-else:
-  try:
-    try:
-      from . import forexconnect       
-    except:
-     from jgtpy import forexconnect 
-  except:
-    print("----------------------------------------------------------------")
-    print("---Failed to load forexconnect --- Please Install forexconnect")
-    print("--------- > pip install forexconnect (only an python =< 3.7)")
-    print("--------")
-    print("-----WINDOWS USER : ----")
-    print("--If you are on an above Windows Python 3.7, it wont work.  ")
-    print("--I made forexconnect to work on later than 3.7 only on Linux, ")
-    print("-- sorry guys, migrate on Linux ;) or get involved migrating it ;) ")
-    print("-----------------------------------------")
-    raise NotCompatibleException("Forexconnect is not compatible with your current environment.")
+    warnings.filterwarnings(
+        "ignore", category=RuntimeWarning, module="importlib._bootstrap"
+    )
 
 
-
-# os.chdir(origin_work_dir)   
-from .jgtfxcommon import _JGT_CONFIG_JSON_SECRET
+version='0.5.102'
 
 
-from .JGTPDS import getPH as get_price, stayConnectedSetter as set_stay_connected, disconnect,connect as on,disconnect as off, status as connection_status,  getPH2file as get_price_to_file, getPHByRange as get_price_range, stayConnectedSetter as sc,getPH as ph,getPH_to_filestore as ph2fs
-def stay():
-    sc(True)
-def up():
-    sc(False)
-def h(instrument,timeframe,quote_count=335,start=None,end=None,quiet=True):
-        stay()
-        #df= ph(instrument,timeframe,quote_count,start,end,False,quiet)
-        fpath,df = ph2fs(instrument,timeframe,quote_count,start,end,False,quiet)
-        return df
+# from JGTCDS import (
+#     create as cds_create,
+#     createFromDF as fromdf,
+#     readCDSFile as read,
+# )
 
-from .JGTIDS import tocds as tocds
-#mk_fn,mk_fullpath,getSubscribed,getPH,getPHByRange,tryConnect
-from .JGTCDS import create as createCDS,createByRange,createFromDF,startSession,stopSession,getLast,getPresentBar,getPresentBarAsList,getLastCompletedBarAsList,createFromDF,createFromFile_and_clean_and_save_data as fromfile,createFromFile_and_clean_and_save_data as ff,createFromDF as fp
+# import JGTADS as ads
+from JGTADS import (plot_v2 as plot)
+#     plot as plot,
+#     plot as ads_create,
+#     plot_perspective as plot_perspective,
+# )
+
+
+# # @STCGoal Planning to replace the plot with plot_v2
+# from JGTADS import plot_v2, plot_v2 as ads_create_v2
+# from JGTADSRequest import JGTADSRequest as ads_request
+# import adshelper as adh
+# from adshelper import prep as prep_ads
+
+# import JGTChartConfig as CC
+
+# import JGTMKSG as mksg
+from JGTMKSG import (
+    pto_generate_snapshot_240302_v2_by_crop_dates as mksg_by_crop_dates,
+    pto_generate_snapshot_240302_v2_by_crop_dates as mksg_create_crops,
+    generate_market_snapshots as mksg_by_pov,
+    generate_market_snapshots as mksg_create_pov,
+)
+
+import JGTIDSSvc as idssvc
+
+import JGTCDSSvc as cdssvc 
 
 def help():
-    print(".h(i,t,400)\t\tGet Prices (PDS): \n\t\t\tjgtpy.h(instrument,timeframe,quote_count=335,start=None,end=None,quiet=True)")
-    print("\t\t\t\t\treturn DataFrame of PDS Type")
-    print("\t\t\t\t\t(Will connect and stay connected)")
-    print(".fp(df)\t\t Create CDS from PDS DF \n\t\t\tjgtpy.fp(df [pd.DataFrame])")
-    print("\t\t\t\t\treturn DataFrame of CDS Type")
-    print(".off()\t\t Disconnect (Bugged)\n\t\t\tjgtpy.off()")
-
-# from jgtpy.JGTADS import ads_chart_pto,retrieve_n_chart as ads_retrieve_n_chart
-
-# from .jgtcli import main as __main__
-#from jgtpy.jgtconstants import *
-
+    print(
+        "JGTPY\n",
+        "Version: ",
+        version,
+        "\n",
+        "JGTPY is a set of tools to help with the analysis of financial markets.\n",
+        "It is a Python library that can be used to process data from various sources.\n",
+        "It is also a command line tool that can be used to generate charts and reports.\n",
+        "> import jgtpy as jgt\n",
+        '> i="SPX500"\n',
+        '> t="H4"\n',
+        "> #CDS \n",
+        "> df=jgt.cds_create(i,t)\n",
+        "> df_fresh=jgt.cds_create(i,t,use_fresh=True)\n",
+        "> df_fresh_full=jgt.cds_create(i,t,use_fresh=True,use_full=True)\n",
+        "> \n",
+        "> \n",
+        "> #ADS \n",
+        "> ads_chart,_ads_plt_arr,_ads_df = jgt.ads_create(i,t)\n",
+        "> ads_chart.show()\n",
+        "> \n",
+        "> df=jgt.read(i,t)\n",
+        "> \n",
+        "> #MKS \n",
+        '> jgt.mksg_by_crop_dates(i,t,"H4","Fractal","2023-01-01",scn_root_dir="./data",show_chart=True,show_tabs=True,save_fig_image=True,save_cds_data=True)\n',
+        "> \n",
+        "For more information, please visit: https://jgtpy.jgwill.com\n",
+    )

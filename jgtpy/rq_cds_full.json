@@ -1,0 +1,10 @@
+{
+  "use_full": true,
+  "use_fresh": false,
+  "mfi_flag": true,
+  "balligator_flag": true,
+  "talligator_flag": true,
+  "quotescount": -1,
+  "dropna_volume": true,
+  "keep_bid_ask": true
+}

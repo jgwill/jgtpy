@@ -22,10 +22,11 @@ import re
 import os
 
 model_to_use = "text-davinci-002"
-
-
-
+snoter_datasource_csv = 'jgtsnoter.csv'
 snote_cache_folder_name = '_snote_content_cache'
+
+
+
 snote_cache_folder = os.path.join(os.getcwd(), snote_cache_folder_name)
 
 print(snote_cache_folder)
@@ -77,6 +78,12 @@ def clean_url_response2text(response):
     
 
 
+
+def write_to_debug_file(choices):
+    with open('debug-summary-completion.choices.txt', 'a') as f:
+        for choice in choices:
+            f.write(choice.text.strip() + os.linesep)
+
 def get_summary(response, temperature=0.5):
     prompt_text = clean_url_response2text(response)
     completion = client.completions.create(
@@ -84,6 +91,7 @@ def get_summary(response, temperature=0.5):
         prompt=prompt_text,
         temperature=temperature,
     )
+    write_to_debug_file(completion.choices)
     return completion.choices[0].text.strip() if completion.choices else ""
 
 def get_summary_diff(new_text, old_text, temperature=0.5):
@@ -93,9 +101,8 @@ def get_summary_diff(new_text, old_text, temperature=0.5):
         prompt=prompt_text,
         temperature=temperature,
     )
+    write_to_debug_file(completion.choices)
     return completion.choices[0].text.strip() if completion.choices else ""
-
-
 
 
 
@@ -113,8 +120,8 @@ _api_key=os.getenv('OPENAI_API_KEY')
 
 
 # Create directory if not exists
-if not os.path.exists('{scache_folder}'):
-    os.makedirs('{scache_folder}')
+if not os.path.exists(f'{snote_cache_folder}'):
+    os.makedirs(f'{snote_cache_folder}')
 
 
 client = OpenAI(api_key=_api_key)
@@ -124,12 +131,12 @@ client = OpenAI(api_key=_api_key)
 # Load summaries and hashes of previously processed URLs, if the file exists
 try:
     print('Load summaries and hashes of previously processed URLs, if the file exists')
-    with open('{scache_folder}/data.json', 'r') as data_file:
+    with open('{snote_cache_folder}/data.json', 'r') as data_file:
         data = json.load(data_file)
 except FileNotFoundError:
     data = {}
 
-with open('jgtsnoter.csv', 'r') as csv_file:
+with open(snoter_datasource_csv, 'r') as csv_file:
     csv_reader = csv.reader(csv_file)
     link_titles = []
 
@@ -183,7 +190,7 @@ with open('jgtsnoter.csv', 'r') as csv_file:
             data[url] = {'hash': content_hash, 'summary': new_summary, 'changes': changes, 'title': title}
 
     # Save the data of the processed URLs
-    with open('{scache_folder}/data.json', 'w') as data_file:
+    with open(f'{snote_cache_folder}/data.json', 'w') as data_file:
         json.dump(data, data_file)
     
 

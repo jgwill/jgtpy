@@ -4,24 +4,49 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jgtpy"
-version = "0.1.85"
+version = "0.5.102"
 authors = [
   { name="Guillaume Isabelle", email="jgi@jgwill.com" },
 ]
 
-description = "Enhanced JGTPy CDS, IDS, PDS Services"
+description = "Enhanced JGTPy CDS, IDS, PDSP Services"
 readme = "README.md"
+keywords = ["data"]
 requires-python = ">=3.7"
 dependencies = [
   'pandas>=0.25.1',
   'python-dotenv>=0.19.2',
-  'jgtapy>=1.9.17',
+  'jgtapy>=1.9.21',
+  'jgtutils>=0.2.218',
   'dropbox>=11.36.2',
-  'kaleido>=0.2.1',
+  'tlid>=0.1.15',
+  'scipy>=1.7.3',
   'matplotlib>=3.3.1',
   'plotly>=5.18.0',
-  'mplfinance>=0.12.10b0'
-]	
+  'mplfinance>=0.12.10b0',
+  'panel>=1.2.3',
+  'tomli>=1.2.3',
+  'jinja2',
+  'dash',
+  'panel',
+  'tdqm',
+]
+
+optional-dependencies = {  dev-lint = [
+    "flake8>=3.6.0,<3.7.0",
+    "isort>=4.3.4,<4.4.0",
+  ],  dev-test = [
+    "coverage",
+    "pytest>=3.10",
+  ],  dev-docs = [
+    "readme_renderer",
+    "sphinx",
+    "sphinx_rtd_theme>=0.4.0",
+    "html2text>=2020.1.16",
+    "html2markdown>=0.1.7",
+    "twine",
+  ]}
+
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -33,3 +58,16 @@ classifiers = [
 "Bug Tracker" = "https://github.com/jgwill/jgtpy/issues"
 
 
+[project.scripts]
+jgtcli = "jgtpy.jgtcli:main"
+cdscli = "jgtpy.cdscli:main"
+pds2cds = "jgtpy.pds2cds:main"
+jgtmksg = "jgtpy.JGTMKSG:main"
+jgtads = "jgtpy.JGTADS:main"
+jgtids = "jgtpy.jgtapycli:main"
+
+adscli = "jgtpy.JGTADS:main"
+mkscli = "jgtpy.JGTMKSG:main"
+idscli = "jgtpy.jgtapycli:main"
+#jgtpy/adsfromcdsfile.py
+adsfromcds = "jgtpy.adsfromcdsfile:main"

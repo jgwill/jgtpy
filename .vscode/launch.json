@@ -1,0 +1,191 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+
+    {
+      "name": "Python: Current File",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "idscli_01",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/jgtapycli.py",
+      "console": "integratedTerminal",
+      "args": "-i EUR/USD -t H4 -c 555 --fresh"
+    },
+    {
+      "name": "jgtcli-ads",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/jgtpy/jgtcli.py",
+      "args": [
+        "-i","USD/CAD","-t","m5","--ads","-v","2"
+      ],
+      "console": "internalConsole",
+      "justMyCode": false
+    },
+    {
+      "name": "ADS-tst-chart",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/test-ads.py",
+      "args": [
+        "SPX500"
+      ],
+      "console": "internalConsole",
+      "justMyCode": false
+    },
+    {
+      "name": "jgtads_m15_SPX500Issue",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/JGTADS.py",
+      "console": "integratedTerminal",
+      "args": "-i SPX500 -t m15 -sf charts/m15.png"
+    },
+    {
+      "name": "jgtads_m15_pov1",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/JGTADS.py",
+      "console": "integratedTerminal",
+      "args": "-i SPX500 -t m15 -sf cp"
+    },
+    {
+      "name": "jgtads_m15_tc1",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/JGTADS.py",
+      "console": "integratedTerminal",
+      "args": "-i SPX500 -t m15 -sf tc"
+    },
+    {
+      "name": "jgtads_m15_Issue240815",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/JGTADS.py",
+      "console": "integratedTerminal",
+      "args": "-i EUR/USD -t m15 -sf charts/m15.png"
+    },
+    {
+      "name": "jgtads_M1",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/JGTADS.py",
+      "console": "integratedTerminal",
+      "args": "-i EUR/CAD -t M1 -sf /tmp"
+    },
+    {
+      "name": "jgtads_D1",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/JGTADS.py",
+      "console": "integratedTerminal",
+      "args": "-i EUR/CAD -t D1 -sf /tmp"
+    },
+    {
+      "name": "jgtmksg",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/JGTMKSG.py",
+      "console": "integratedTerminal",
+      "args": "-i EUR/CAD -tos H4 -t W1,D1,H4,H1"
+    },
+    {
+      "name": "jgtmksg_EURUSD",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/JGTMKSG.py",
+      "console": "integratedTerminal",
+      "args": "-i EUR/USD -tos H4 --save_fig_image /tmp/charts -srd /tmp/charts"
+    },
+    {
+      "name": "jgtmksg_2",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/JGTMKSG.py",
+      "console": "integratedTerminal",
+      "args": "-i EUR/CAD -t M1,W1,D1,H4"
+    },
+    {
+      "name": "jgtcli_240807_H4",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/jgtcli.py",
+      "console": "integratedTerminal",
+      "args": "-i SPX500 -t H4 -c 444 -mfi -ba -ta --fresh"
+    },
+    {
+      "name": "jgtcli_240807_D1",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/jgtcli.py",
+      "console": "integratedTerminal",
+      "args": "-i SPX500 -t D1 -c 444 -mfi -ba -ta --fresh"
+    },
+    {
+      "name": "jgtcli_240809_Debug_",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/jgtcli.py",
+      "console": "integratedTerminal",
+      "args": "-i SPX500 -t D1 --full --fresh"
+    },
+    {
+      "name": "jgtcli_240814_fixC",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/jgtcli.py",
+      "console": "integratedTerminal",
+      "args": "-i NZD/USD -t H4 --fresh"
+    },
+    {
+      "name": "jgtcli_240813_Debug_",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/jgtcli.py",
+      "console": "integratedTerminal",
+      "args": "-i GBP/CAD -t M1,W1,D1,H4,H1 --full"
+    },
+    {
+      "name": "cdscli_240813_Debug_",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/cdscli.py",
+      "console": "integratedTerminal",
+      "args": "-i GBP/CAD -t M1,W1,D1,H4,H1 --full"
+    },
+    {
+      "name": "cdscli_240911_issue_5_Debug",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/cdscli.py",
+      "console": "integratedTerminal",
+      "args": "-i GBP/CAD -t H4 --full"
+    },
+    {
+      "name": "cdscli_jgtfxcli_settings_240809_fresh",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/cdscli.py",
+      "console": "integratedTerminal",
+      "args": "-ls tests/test_settings_01_spec_instrument_timeframe.json --fresh"
+    },
+    {
+      "name": "cdscli_240813",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "jgtpy/cdscli.py",
+      "console": "integratedTerminal",
+      "args": "-i EUR/USD -t D1 --full"
+    },
+  ]
+}

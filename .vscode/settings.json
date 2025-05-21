@@ -1,0 +1,13 @@
+{
+  "python.testing.unittestArgs": [
+    "-v",
+    "-s",
+    "./jgtpy",
+    "-p",
+    "test_*.py"
+  ],
+  "python.testing.pytestEnabled": false,
+  "python.testing.unittestEnabled": true,
+  "editor.tabSize": 2,
+  "files.autoSave": "afterDelay"
+}

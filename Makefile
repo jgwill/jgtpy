@@ -1,4 +1,5 @@
-version := $(shell python3 -c 'from jgtpy import __version__; print(__version__)')
+version := $(shell python3 -c 'from jgtpy import version; print(version)')
+SHELL := /bin/bash
 
 .PHONY: venv
 venv:
@@ -43,6 +44,7 @@ clean:
 	find . -name "*.pyc" -print0 | xargs -0 rm -f
 	rm -Rf dist
 	rm -Rf *.egg-info
+	rm -rf charts
 
 .PHONY: docs
 docs:
@@ -56,6 +58,11 @@ authors:
 
 .PHONY: dist
 dist:
+	make clean
+	python -m build
+
+.PHONY: disto
+disto:
 	make clean
 	python setup.py sdist --format=gztar bdist_wheel
 
@@ -71,3 +78,35 @@ release:
 	git push origin $(version)
 	make pypi-release
 
+.PHONY: bump_jgtutils
+bump_jgtutils:
+	. /opt/binscripts/load.sh && _bump_jgtutils
+
+.PHONY: bump_version
+bump_version:
+	python bump_version.py
+	#git commit package.json pyproject.toml jgtpy/__init__.py -m bump &>/dev/null
+
+.PHONY: quick-release
+quick-release:
+	#make bump_jgtutils
+	make bump_version
+	make dist
+	make pypi-release
+
+.PHONY: dev-pypi-release
+dev-pypi-release:
+	twine --version
+	twine upload --repository pypi-dev dist/*
+
+.PHONY: dev-release
+dev-release:
+	python bump_version.py
+	make dist
+	make dev-pypi-release
+
+.PHONY: dev-release-plus
+dev-release-plus:
+	pip install --user -U jgtutils
+	make dev-release
+	twine upload dist/*

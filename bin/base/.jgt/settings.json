@@ -1,0 +1,24 @@
+{
+  "balligator_flag" : true,
+  "ta": false,
+  "go": true,
+  "keepbidask1": false,
+  "i": "EUR/USD",
+  "t": "D1",
+  "columns_to_remove": [
+    "fdbbhigh",
+    "fdbblow",
+    "fdbshigh",
+    "fdbslow",
+    "aofhighao",
+    "aoflowao",
+    "aofhigh",
+    "aoflow",
+    "mfi",
+    "price_peak_bellow",
+    "ao_peak_above",
+    "ao_peak_bellow",
+    "fh55","fl55","fh89","fl89"
+  ]
+}
+

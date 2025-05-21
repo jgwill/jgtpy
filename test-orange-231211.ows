@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='utf-8'?>
+<scheme version="2.0" title="" description="">
+	<nodes>
+		<node id="0" name="CSV File Import" qualified_name="Orange.widgets.data.owcsvimport.OWCSVFileImport" project_name="Orange3" version="" title="H1" position="(201.0, 487.0)" />
+		<node id="1" name="Line Chart" qualified_name="orangecontrib.timeseries.widgets.owlinechart.OWLineChart" project_name="Orange3-Timeseries" version="" title="Line Chart" position="(377.0, 558.0)" />
+		<node id="2" name="Spiralogram" qualified_name="orangecontrib.timeseries.widgets.owspiralogram.OWSpiralogram" project_name="Orange3-Timeseries" version="" title="Spiralogram" position="(513.0, 420.0)" />
+		<node id="3" name="CSV File Import" qualified_name="Orange.widgets.data.owcsvimport.OWCSVFileImport" project_name="Orange3" version="" title="h4" position="(200.0, 288.0)" />
+		<node id="4" name="Spiralogram" qualified_name="orangecontrib.timeseries.widgets.owspiralogram.OWSpiralogram" project_name="Orange3-Timeseries" version="" title="Spiralogram (1)" position="(480.0, 287.0)" />
+		<node id="5" name="CSV File Import" qualified_name="Orange.widgets.data.owcsvimport.OWCSVFileImport" project_name="Orange3" version="" title="m15" position="(197.0, 659.0)" />
+		<node id="6" name="Spiralogram" qualified_name="orangecontrib.timeseries.widgets.owspiralogram.OWSpiralogram" project_name="Orange3-Timeseries" version="" title="Spiralogram (2)" position="(424.0, 727.0)" />
+		<node id="7" name="CSV File Import" qualified_name="Orange.widgets.data.owcsvimport.OWCSVFileImport" project_name="Orange3" version="" title="D1" position="(167.0, 125.0)" />
+		<node id="8" name="Spiralogram" qualified_name="orangecontrib.timeseries.widgets.owspiralogram.OWSpiralogram" project_name="Orange3-Timeseries" version="" title="Spiralogram (3)" position="(516.0, 120.0)" />
+	</nodes>
+	<links>
+		<link id="0" source_node_id="0" sink_node_id="1" source_channel="Data" sink_channel="Time series" enabled="true" />
+		<link id="1" source_node_id="0" sink_node_id="2" source_channel="Data" sink_channel="Time series" enabled="true" />
+		<link id="2" source_node_id="3" sink_node_id="4" source_channel="Data" sink_channel="Time series" enabled="true" />
+		<link id="3" source_node_id="5" sink_node_id="6" source_channel="Data" sink_channel="Time series" enabled="true" />
+		<link id="4" source_node_id="7" sink_node_id="8" source_channel="Data" sink_channel="Time series" enabled="true" />
+	</links>
+	<annotations />
+	<thumbnail />
+	<node_properties>
+		<properties node_id="0" format="literal">{'_session_items': [], '_session_items_v2': [({'type': 'AbsPath', 'path': 'C:/usr/src/_jgt/ids/data/cds/GBP-USD_H1.csv'}, {'encoding': 'utf-8', 'delimiter': ',', 'quotechar': '"', 'doublequote': True, 'skipinitialspace': True, 'quoting': 0, 'columntypes': [{'start': 0, 'stop': 53, 'value': 'Auto'}], 'rowspec': [{'start': 0, 'stop': 1, 'value': 'Header'}], 'decimal_separator': '.', 'group_separator': ''}), ({'type': 'AbsPath', 'path': 'C:/usr/src/_jgt/ids/data/pds/GBP-USD_H4.csv'}, {'encoding': 'utf-8', 'delimiter': ',', 'quotechar': '"', 'doublequote': True, 'skipinitialspace': True, 'quoting': 0, 'columntypes': [{'start': 0, 'stop': 7, 'value': 'Auto'}], 'rowspec': [{'start': 0, 'stop': 1, 'value': 'Header'}], 'decimal_separator': '.', 'group_separator': ''})], 'compatibility_mode': False, 'controlAreaVisible': True, 'dialog_state': {'directory': 'C:/usr/src/_jgt/ids/data/cds', 'filter': 'Text - comma separated (*.csv, *)'}, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x035\x00\x00\x01s\x00\x00\x04J\x00\x00\x02\xa7\x00\x00\x035\x00\x00\x01s\x00\x00\x04J\x00\x00\x02\xa7\x00\x00\x00\x00\x00\x00\x00\x00\x07\x80\x00\x00\x035\x00\x00\x01s\x00\x00\x04J\x00\x00\x02\xa7', '__version__': 3}</properties>
+		<properties node_id="1" format="pickle">gASVbQIAAAAAAAB9lCiMEmNvbnRyb2xBcmVhVmlzaWJsZZSIjBNzYXZlZFdpZGdldEdlb21ldHJ5
+lENCAdnQywADAAD/////////+gAAB4AAAAQbAAACIwAAARMAAAVcAAADBgAAAAACAAAAB4AAAAAA
+AAAAFwAAB38AAAQalIwLX192ZXJzaW9uX1+USwKMEGNvbnRleHRfc2V0dGluZ3OUXZSMFW9yYW5n
+ZXdpZGdldC5zZXR0aW5nc5SMB0NvbnRleHSUk5QpgZR9lIwGdmFsdWVzlH2UKIwFYXR0cnOUXZRd
+lCiMFE9yYW5nZS5kYXRhLnZhcmlhYmxllIwNbWFrZV92YXJpYWJsZZSTlGgRjBJDb250aW51b3Vz
+VmFyaWFibGWUk5ROjANqYXeUh5RSlH2UKIwFX25hbWWUaBaMDl9jb21wdXRlX3ZhbHVllE6MC3Vu
+a25vd25fc3RylI+UKIwAlIwDbmFulEd/+AAAAAAAAE6MAS6UjAJOQZSMAX6UjAE/lJCMD3NvdXJj
+ZV92YXJpYWJsZZROjAZzcGFyc2WUiYwKYXR0cmlidXRlc5R9lIwPX21heF9yb3VuZF9kaWZmlEsA
+jBNfbnVtYmVyX29mX2RlY2ltYWxzlEsDjA9hZGp1c3RfZGVjaW1hbHOUSwKMC19mb3JtYXRfc3Ry
+lIwCJWeUdWJoE2gVTowIamF3c190bXCUh5RSlH2UKGgaaC1oG05oHGgdaCROaCWJaCZ9lGgoSwBo
+KUsDaCpLAmgraCx1YmVhjAhpc19sb2dpdJRdlIlhjAlwbG90X3R5cGWUXZSMBGxpbmWUYWgESwJ1
+c2JhdS4=
+</properties>
+		<properties node_id="2" format="pickle">gASVeQMAAAAAAAB9lCiMEmNvbnRyb2xBcmVhVmlzaWJsZZSIjA1oaWRlX3JfbGFiZWxzlIiME3Nh
+dmVkV2lkZ2V0R2VvbWV0cnmUQ0IB2dDLAAMAAP///AcAAAJfAAAA/AAABPj///wIAAACbwAAAPsA
+AAT3AAAAAQAAAAAEAP///AgAAAJvAAAA+wAABPeUjAtfX3ZlcnNpb25fX5RLAYwQY29udGV4dF9z
+ZXR0aW5nc5RdlIwVb3Jhbmdld2lkZ2V0LnNldHRpbmdzlIwHQ29udGV4dJSTlCmBlH2UKIwGdmFs
+dWVzlH2UKIwSX3BlbmRpbmdfc2VsZWN0aW9ulE5K/v///4aUjAthZ2dyZWdhdGlvbpSMCk1lYW4g
+dmFsdWWUSv7///+GlIwPYmlubmVyX3NldHRpbmdzlH2UKIwBeJRLAIwBcpRLAHVK/v///4aUjAlj
+b2xvcl92YXKUTkr+////hpSMBXJfdmFylIwCYW+US2aGlIwFeF92YXKUjAREYXRllEtohpRoBUsB
+dYwKYXR0cmlidXRlc5R9lCiMClVubmFtZWQ6IDCUSwJoH0sEjAZWb2x1bWWUSwKMBE9wZW6USwKM
+BEhpZ2iUSwKMA0xvd5RLAowFQ2xvc2WUSwKMBk1lZGlhbpRLAowCYWOUSwKMA2phd5RLAowFdGVl
+dGiUSwKMBGxpcHOUSwKMBGJqYXeUSwKMBmJ0ZWV0aJRLAowFYmxpcHOUSwJoHEsCjAJmaJRLAYwC
+ZmyUSwGMA2ZoM5RLAYwDZmwzlEsBjANmaDWUSwGMA2ZsNZRLAYwDZmg4lEsBjANmbDiUSwGMBGZo
+MTOUSwGMBGZsMTOUSwGMBGZoMjGUSwGMBGZsMjGUSwGMBGZoMzSUSwGMBGZsMzSUSwGMBGZoNTWU
+SwGMBGZsNTWUSwGMBGZoODmUSwGMBGZsODmUSwGMCGphd3NfdG1wlEsCjAl0ZWV0aF90bXCUSwKM
+CGxpcHNfdG1wlEsCjARmZGJilEsBjARmZGJzlEsBjANmZGKUSwKMA2FvZpRLAowEYW9hepRLAYwE
+YW9iepRLAYwDemxjlEsCjAR6bGNilEsBjAR6bGNzlEsBjAR6Y29slEsBjAJzepRLAYwCYnqUSwGM
+A2Fjc5RLAYwDYWNilEsBjAJzc5RLAYwCc2KUSwF1jAVtZXRhc5R9lHViYXUu
+</properties>
+		<properties node_id="3" format="literal">{'_session_items': [], '_session_items_v2': [({'type': 'AbsPath', 'path': 'C:/usr/src/_jgt/ids/data/cds/GBP-USD_H4.csv'}, {'encoding': 'utf-8', 'delimiter': ',', 'quotechar': '"', 'doublequote': True, 'skipinitialspace': True, 'quoting': 0, 'columntypes': [{'start': 0, 'stop': 53, 'value': 'Auto'}], 'rowspec': [{'start': 0, 'stop': 1, 'value': 'Header'}], 'decimal_separator': '.', 'group_separator': ''}), ({'type': 'AbsPath', 'path': 'C:/usr/src/_jgt/ids/data/cds/GBP-USD_H1.csv'}, {'encoding': 'utf-8', 'delimiter': ',', 'quotechar': '"', 'doublequote': True, 'skipinitialspace': True, 'quoting': 0, 'columntypes': [{'start': 0, 'stop': 53, 'value': 'Auto'}], 'rowspec': [{'start': 0, 'stop': 1, 'value': 'Header'}], 'decimal_separator': '.', 'group_separator': ''}), ({'type': 'AbsPath', 'path': 'C:/usr/src/_jgt/ids/data/pds/GBP-USD_H4.csv'}, {'encoding': 'utf-8', 'delimiter': ',', 'quotechar': '"', 'doublequote': True, 'skipinitialspace': True, 'quoting': 0, 'columntypes': [{'start': 0, 'stop': 7, 'value': 'Auto'}], 'rowspec': [{'start': 0, 'stop': 1, 'value': 'Header'}], 'decimal_separator': '.', 'group_separator': ''})], 'compatibility_mode': False, 'controlAreaVisible': True, 'dialog_state': {'directory': 'C:/usr/src/_jgt/ids/data/cds', 'filter': 'Text - comma separated (*.csv, *)'}, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x034\x00\x00\x01V\x00\x00\x04K\x00\x00\x02\xa8\x00\x00\x035\x00\x00\x01s\x00\x00\x04J\x00\x00\x02\xa7\x00\x00\x00\x00\x00\x00\x00\x00\x07\x80\x00\x00\x035\x00\x00\x01s\x00\x00\x04J\x00\x00\x02\xa7', '__version__': 3}</properties>
+		<properties node_id="4" format="pickle">gASVgQMAAAAAAAB9lCiMEmNvbnRyb2xBcmVhVmlzaWJsZZSIjA1oaWRlX3JfbGFiZWxzlIiME3Nh
+dmVkV2lkZ2V0R2VvbWV0cnmUQ0IB2dDLAAMAAP///AQAAAAP////8QAAAkP///wFAAAAH/////AA
+AAJCAAAAAQAAAAAEAP///AUAAAAf////8AAAAkKUjAtfX3ZlcnNpb25fX5RLAYwQY29udGV4dF9z
+ZXR0aW5nc5RdlIwVb3Jhbmdld2lkZ2V0LnNldHRpbmdzlIwHQ29udGV4dJSTlCmBlH2UKIwGdmFs
+dWVzlH2UKIwSX3BlbmRpbmdfc2VsZWN0aW9ulE5K/v///4aUjAthZ2dyZWdhdGlvbpSMCk1lYW4g
+dmFsdWWUSv7///+GlIwPYmlubmVyX3NldHRpbmdzlH2UKIwBeJRLAIwBcpRLAHVK/v///4aUjAlj
+b2xvcl92YXKUTkr+////hpSMBXJfdmFylIwCYW+US2aGlIwFeF92YXKUjAREYXRllEtohpRoBUsB
+dYwKYXR0cmlidXRlc5R9lCiMClVubmFtZWQ6IDCUSwKMBERhdGWUSwSMBlZvbHVtZZRLAowET3Bl
+bpRLAowESGlnaJRLAowDTG93lEsCjAVDbG9zZZRLAowGTWVkaWFulEsCjAJhY5RLAowDamF3lEsC
+jAV0ZWV0aJRLAowEbGlwc5RLAowEYmphd5RLAowGYnRlZXRolEsCjAVibGlwc5RLAowCYW+USwKM
+AmZolEsBjAJmbJRLAYwDZmgzlEsBjANmbDOUSwGMA2ZoNZRLAYwDZmw1lEsBjANmaDiUSwGMA2Zs
+OJRLAYwEZmgxM5RLAYwEZmwxM5RLAYwEZmgyMZRLAYwEZmwyMZRLAYwEZmgzNJRLAYwEZmwzNJRL
+AYwEZmg1NZRLAYwEZmw1NZRLAYwEZmg4OZRLAYwEZmw4OZRLAYwIamF3c190bXCUSwKMCXRlZXRo
+X3RtcJRLAowIbGlwc190bXCUSwKMBGZkYmKUSwGMBGZkYnOUSwGMA2ZkYpRLAowDYW9mlEsCjARh
+b2F6lEsBjARhb2J6lEsBjAN6bGOUSwKMBHpsY2KUSwGMBHpsY3OUSwGMBHpjb2yUSwGMAnN6lEsB
+jAJiepRLAYwDYWNzlEsBjANhY2KUSwGMAnNzlEsBjAJzYpRLAXWMBW1ldGFzlH2UdWJhdS4=
+</properties>
+		<properties node_id="5" format="literal">{'_session_items': [], '_session_items_v2': [({'type': 'AbsPath', 'path': 'C:/usr/src/_jgt/ids/data/cds/GBP-USD_m15.csv'}, {'encoding': 'utf-8', 'delimiter': ',', 'quotechar': '"', 'doublequote': True, 'skipinitialspace': True, 'quoting': 0, 'columntypes': [{'start': 0, 'stop': 53, 'value': 'Auto'}], 'rowspec': [{'start': 0, 'stop': 1, 'value': 'Header'}], 'decimal_separator': '.', 'group_separator': ''}), ({'type': 'AbsPath', 'path': 'C:/usr/src/_jgt/ids/data/cds/GBP-USD_H4.csv'}, {'encoding': 'utf-8', 'delimiter': ',', 'quotechar': '"', 'doublequote': True, 'skipinitialspace': True, 'quoting': 0, 'columntypes': [{'start': 0, 'stop': 53, 'value': 'Auto'}], 'rowspec': [{'start': 0, 'stop': 1, 'value': 'Header'}], 'decimal_separator': '.', 'group_separator': ''}), ({'type': 'AbsPath', 'path': 'C:/usr/src/_jgt/ids/data/cds/GBP-USD_H1.csv'}, {'encoding': 'utf-8', 'delimiter': ',', 'quotechar': '"', 'doublequote': True, 'skipinitialspace': True, 'quoting': 0, 'columntypes': [{'start': 0, 'stop': 53, 'value': 'Auto'}], 'rowspec': [{'start': 0, 'stop': 1, 'value': 'Header'}], 'decimal_separator': '.', 'group_separator': ''}), ({'type': 'AbsPath', 'path': 'C:/usr/src/_jgt/ids/data/pds/GBP-USD_H4.csv'}, {'encoding': 'utf-8', 'delimiter': ',', 'quotechar': '"', 'doublequote': True, 'skipinitialspace': True, 'quoting': 0, 'columntypes': [{'start': 0, 'stop': 7, 'value': 'Auto'}], 'rowspec': [{'start': 0, 'stop': 1, 'value': 'Header'}], 'decimal_separator': '.', 'group_separator': ''})], 'compatibility_mode': False, 'controlAreaVisible': True, 'dialog_state': {'directory': 'C:/usr/src/_jgt/ids/data/cds', 'filter': 'Text - comma separated (*.csv, *)'}, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x034\x00\x00\x01V\x00\x00\x04K\x00\x00\x02\xa8\x00\x00\x035\x00\x00\x01s\x00\x00\x04J\x00\x00\x02\xa7\x00\x00\x00\x00\x00\x00\x00\x00\x07\x80\x00\x00\x035\x00\x00\x01s\x00\x00\x04J\x00\x00\x02\xa7', '__version__': 3}</properties>
+		<properties node_id="6" format="pickle">gASVgQMAAAAAAAB9lCiMEmNvbnRyb2xBcmVhVmlzaWJsZZSIjA1oaWRlX3JfbGFiZWxzlIiME3Nh
+dmVkV2lkZ2V0R2VvbWV0cnmUQ0IB2dDLAAMAAP/////////6AAAHgAAABBv////yAAACVwAAASgA
+AAMgAAAAAAIAAAAHgAAAAAAAAAAXAAAHfwAABBqUjAtfX3ZlcnNpb25fX5RLAYwQY29udGV4dF9z
+ZXR0aW5nc5RdlIwVb3Jhbmdld2lkZ2V0LnNldHRpbmdzlIwHQ29udGV4dJSTlCmBlH2UKIwGdmFs
+dWVzlH2UKIwSX3BlbmRpbmdfc2VsZWN0aW9ulE5K/v///4aUjAthZ2dyZWdhdGlvbpSMCk1lYW4g
+dmFsdWWUSv7///+GlIwPYmlubmVyX3NldHRpbmdzlH2UKIwBeJRLAIwBcpRLAHVK/v///4aUjAlj
+b2xvcl92YXKUTkr+////hpSMBXJfdmFylIwCYW+US2aGlIwFeF92YXKUjAREYXRllEtohpRoBUsB
+dYwKYXR0cmlidXRlc5R9lCiMClVubmFtZWQ6IDCUSwKMBERhdGWUSwSMBlZvbHVtZZRLAowET3Bl
+bpRLAowESGlnaJRLAowDTG93lEsCjAVDbG9zZZRLAowGTWVkaWFulEsCjAJhY5RLAowDamF3lEsC
+jAV0ZWV0aJRLAowEbGlwc5RLAowEYmphd5RLAowGYnRlZXRolEsCjAVibGlwc5RLAowCYW+USwKM
+AmZolEsBjAJmbJRLAYwDZmgzlEsBjANmbDOUSwGMA2ZoNZRLAYwDZmw1lEsBjANmaDiUSwGMA2Zs
+OJRLAYwEZmgxM5RLAYwEZmwxM5RLAYwEZmgyMZRLAYwEZmwyMZRLAYwEZmgzNJRLAYwEZmwzNJRL
+AYwEZmg1NZRLAYwEZmw1NZRLAYwEZmg4OZRLAYwEZmw4OZRLAYwIamF3c190bXCUSwKMCXRlZXRo
+X3RtcJRLAowIbGlwc190bXCUSwKMBGZkYmKUSwGMBGZkYnOUSwGMA2ZkYpRLAowDYW9mlEsCjARh
+b2F6lEsBjARhb2J6lEsBjAN6bGOUSwKMBHpsY2KUSwGMBHpsY3OUSwGMBHpjb2yUSwGMAnN6lEsB
+jAJiepRLAYwDYWNzlEsBjANhY2KUSwGMAnNzlEsBjAJzYpRLAXWMBW1ldGFzlH2UdWJhdS4=
+</properties>
+		<properties node_id="7" format="literal">{'_session_items': [], '_session_items_v2': [({'type': 'AbsPath', 'path': 'C:/usr/src/_jgt/ids/data/cds/GBP-USD_D1.csv'}, {'encoding': 'utf-8', 'delimiter': ',', 'quotechar': '"', 'doublequote': True, 'skipinitialspace': True, 'quoting': 0, 'columntypes': [{'start': 0, 'stop': 53, 'value': 'Auto'}], 'rowspec': [{'start': 0, 'stop': 1, 'value': 'Header'}], 'decimal_separator': '.', 'group_separator': ''})], 'compatibility_mode': False, 'controlAreaVisible': True, 'dialog_state': {'directory': 'C:/usr/src/_jgt/ids/data/cds', 'filter': 'Text - comma separated (*.csv, *)'}, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x034\x00\x00\x01c\x00\x00\x04K\x00\x00\x02\xb5\x00\x00\x035\x00\x00\x01\x80\x00\x00\x04J\x00\x00\x02\xb4\x00\x00\x00\x00\x00\x00\x00\x00\x07\x80\x00\x00\x035\x00\x00\x01\x80\x00\x00\x04J\x00\x00\x02\xb4', '__version__': 3}</properties>
+		<properties node_id="8" format="pickle">gASVeQMAAAAAAAB9lCiMEmNvbnRyb2xBcmVhVmlzaWJsZZSIjA1oaWRlX3JfbGFiZWxzlIiME3Nh
+dmVkV2lkZ2V0R2VvbWV0cnmUQ0IB2dDLAAMAAP/////////6AAAHgAAABBsAAAAAAAAAFwAAB38A
+AAQaAAAAAAAAAAAHgAAAAAAAAAAXAAAHfwAABBqUjAtfX3ZlcnNpb25fX5RLAYwQY29udGV4dF9z
+ZXR0aW5nc5RdlIwVb3Jhbmdld2lkZ2V0LnNldHRpbmdzlIwHQ29udGV4dJSTlCmBlH2UKIwGdmFs
+dWVzlH2UKIwSX3BlbmRpbmdfc2VsZWN0aW9ulE5K/v///4aUjAthZ2dyZWdhdGlvbpSMCk1lYW4g
+dmFsdWWUSv7///+GlIwPYmlubmVyX3NldHRpbmdzlH2UKIwBeJRLAIwBcpRLAHVK/v///4aUjAlj
+b2xvcl92YXKUTkr+////hpSMBXJfdmFylIwCYW+US2aGlIwFeF92YXKUjAREYXRllEtohpRoBUsB
+dYwKYXR0cmlidXRlc5R9lCiMClVubmFtZWQ6IDCUSwJoH0sEjAZWb2x1bWWUSwKMBE9wZW6USwKM
+BEhpZ2iUSwKMA0xvd5RLAowFQ2xvc2WUSwKMBk1lZGlhbpRLAowCYWOUSwKMA2phd5RLAowFdGVl
+dGiUSwKMBGxpcHOUSwKMBGJqYXeUSwKMBmJ0ZWV0aJRLAowFYmxpcHOUSwJoHEsCjAJmaJRLAYwC
+ZmyUSwGMA2ZoM5RLAYwDZmwzlEsBjANmaDWUSwGMA2ZsNZRLAYwDZmg4lEsBjANmbDiUSwGMBGZo
+MTOUSwGMBGZsMTOUSwGMBGZoMjGUSwGMBGZsMjGUSwGMBGZoMzSUSwGMBGZsMzSUSwGMBGZoNTWU
+SwGMBGZsNTWUSwGMBGZoODmUSwGMBGZsODmUSwGMCGphd3NfdG1wlEsCjAl0ZWV0aF90bXCUSwKM
+CGxpcHNfdG1wlEsCjARmZGJilEsBjARmZGJzlEsBjANmZGKUSwKMA2FvZpRLAowEYW9hepRLAYwE
+YW9iepRLAYwDemxjlEsCjAR6bGNilEsBjAR6bGNzlEsBjAR6Y29slEsBjAJzepRLAYwCYnqUSwGM
+A2Fjc5RLAYwDYWNilEsBjAJzc5RLAYwCc2KUSwF1jAVtZXRhc5R9lHViYXUu
+</properties>
+	</node_properties>
+	<session_state>
+		<window_groups />
+	</session_state>
+</scheme>
