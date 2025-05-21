@@ -36,7 +36,7 @@ def refreshPH(instrument:str, timeframe:str,quote_count:int=-1, quiet:bool=True,
   # print(f"use_full: {use_full}")
   # print(f"verbose_level: {verbose_level}")
   # print(f"tlid_range: {tlid_range}")
-  
+
   if not quiet:
     print(f"Refreshing {instrument} {timeframe}")
   try:
@@ -52,14 +52,14 @@ def add_df_to_full_cache(instrument:str, timeframe:str, df,quiet:bool=True):
   key = instrument + "_" + timeframe
   df_full_cache[key] = df
 
-def _get_full_ph_from_cache_and_add(instrument:str, 
+def _get_full_ph_from_cache_and_add(instrument:str,
                           timeframe:str,
                           quiet:bool=True,
                           quote_count:int=-1,
                           dt_crop_last=None ):
   global df_full_cache
   key = instrument + "_" + timeframe
-  
+
   if key not in df_full_cache:
     #df = getPH(instrument, timeframe, quiet=quiet, use_full=True)
     getPH_crop(instrument, timeframe,
@@ -70,12 +70,12 @@ def _get_full_ph_from_cache_and_add(instrument:str,
                   use_cache_full=True)
   return df_full_cache[key]
 
-def getPH_crop_use_cache(instrument:str, 
-                               timeframe:str, 
-                               dt_crop_last, 
-                               quote_count:int=-1, 
+def getPH_crop_use_cache(instrument:str,
+                               timeframe:str,
+                               dt_crop_last,
+                               quote_count:int=-1,
                                quiet:bool=True):
-  
+
   df=_get_full_ph_from_cache_and_add(instrument, timeframe, quiet=quiet)
   selected = _if_crop_ph(dt_crop_last, df)
   return select_quote_count(quote_count, selected, quiet=quiet)
@@ -85,18 +85,18 @@ def getPH_crop(instrument:str,
                timeframe:str,
                dt_crop_last,
                quote_count:int=-1,
-               quiet:bool=True,   
+               quiet:bool=True,
                use_cache_full=False
           ):
   global df_full_cache
-  if not quiet:  
+  if not quiet:
     print("getting cropped data....")
     print(" dt_crop_last: " + str(dt_crop_last))
     print(" quote_count: " + str(quote_count))
-  
-  
+
+
   df=getPH(instrument, timeframe, quiet=quiet,dt_crop_last=dt_crop_last,use_full=True,use_cache_full=use_cache_full)
-  
+
   df = select_quote_count(quote_count, df, quiet=quiet)
   return df
 
@@ -110,7 +110,7 @@ def select_quote_count(quote_count, df, quiet=True):
     else:
       selected = df.copy()
     return selected
-  
+
 
 ###################### CLEAN ME UP IF TALLIGATOR WORK >>>>>
 # def get_talligator_required_quote_count(cc: JGTChartConfig,quote_count=-1):
@@ -121,12 +121,12 @@ def select_quote_count(quote_count, df, quiet=True):
 
 
 
-def getPH(instrument:str, 
-          timeframe:str, 
-          quote_count:int=-1, 
-          start=None, 
-          end=None, 
-          with_index=True, 
+def getPH(instrument:str,
+          timeframe:str,
+          quote_count:int=-1,
+          start=None,
+          end=None,
+          with_index=True,
           quiet:bool=True,
           convert_date_index_to_dt:bool=True,
           cc: JGTChartConfig=None,
@@ -136,7 +136,7 @@ def getPH(instrument:str,
           tlid_range=None,
           run_jgtfxcli_on_error=True,
           use_fresh=False,
-          use_fresh_error_ignore=False,   
+          use_fresh_error_ignore=False,
           use_cache_full=False,
           keep_bid_ask=False,
           dropna_volume=True,
@@ -145,18 +145,18 @@ def getPH(instrument:str,
   global df_full_cache
   if use_cache_full:
     use_full=True
-  
+
   #@STCissue quote_count is ignored or irrelevant in start/end
   #@a Adequate start and end from the stored file
   if cc is None:
     cc = JGTChartConfig()
-    
+
   ###################### CLEAN ME UP IF TALLIGATOR WORK >>>>>
   _DEBUG_2406161729=True
 
   # if _DEBUG_2406161729:print("Quote count before fix and _get_ph_surely_fresh(2406161729): " + str(quote_count))
-  
-  
+
+
   # TALLIGATOR_REQUIRED_QUOTE_COUNT = get_talligator_required_quote_count(cc,quote_count)
   # #print cc.nb_bar_to_retrieve
   # if _DEBUG_2406161729:print("cc.nb_bar_to_retrieve: " + str(cc.nb_bar_to_retrieve))
@@ -167,25 +167,26 @@ def getPH(instrument:str,
   # # If we have the talligator_flag on, we require a certain amount of bars to calculate the indicator so we make sure we have enough data
   # if talligator_flag and quote_count < TALLIGATOR_REQUIRED_QUOTE_COUNT:
   #   quote_count = TALLIGATOR_REQUIRED_QUOTE_COUNT
-    
+
   # # If we dont have enough data in full when using crop_last_dt, we should use fresh
   # if _DEBUG_2406161729:print("Quote count after if _get_ph_surely_fresh(2406161729): " + str(quote_count))
   # if _DEBUG_2406161729:exit(0)
   ###################### CLEAN ME UP IF TALLIGATOR WORK <<<<<
-  
+
+  #@STCIssue Might be here that we ask not to use_fresh but it does anyway !!!
   df = _get_ph_surely_fresh(instrument, timeframe, quote_count, with_index, quiet, convert_date_index_to_dt, use_full, dt_crop_last, tlid_range, run_jgtfxcli_on_error, use_fresh_error_ignore, use_cache_full,use_fresh=use_fresh,keep_bid_ask=keep_bid_ask)
-  
-  
+
+
   df = if_select_start_end(df, start, end,quiet)
-    
-  
+
+
   df = _if_crop_ph(dt_crop_last, df)
-      
+
   ldf = len(df)
   if ldf > quote_count and not get_them_all and quote_count > 50:
     if not use_full:
       df = df.iloc[-quote_count:]
-  
+
   if dropna_volume and timeframe != "M1":
     if VOLUME in df.columns:
       df = df.dropna(subset=[VOLUME])
@@ -198,7 +199,7 @@ def _get_ph_surely_fresh(instrument, timeframe, quote_count, with_index, quiet, 
   _dt_requirements = _get_dt_requirement_for_tf(timeframe,use_UTC) if dt_crop_last is None else dt_crop_last
   #@STCIssue Open: Sundays, between 5:00 and 5:15 pm EST. Close: Fridays, around 4:55 pm EST. Closed: Fridays 5:00 pm to Sunday 5:00 pm EST.
   #print("_dt_requirements: " + str(_dt_requirements)  + " dt_crop_last: " + str(dt_crop_last))
-  
+
   # We are not using crop_last_dt neither full, we should use fresh anyways if our short stored data is not enough fresh
   # we will tel it our date is now
   #quiet=False
@@ -208,7 +209,7 @@ def _get_ph_surely_fresh(instrument, timeframe, quote_count, with_index, quiet, 
     our_data_is_ok=_check_if_dt_range_has_enough_bars(instrument, timeframe, _dt_requirements, quote_count, quiet,use_full=use_full)
   else:
     print_quiet(quiet,"We are using fresh, skipping checking if dt range has enough bars")
-    
+
   if not our_data_is_ok:
     if not quiet:
       print("Our data is not ok, using fresh")
@@ -216,9 +217,9 @@ def _get_ph_surely_fresh(instrument, timeframe, quote_count, with_index, quiet, 
   else:
     if not quiet:
       print("Our data is ok, not using fresh")
-  
 
-  
+
+
 
   if use_fresh:
     try:
@@ -226,15 +227,15 @@ def _get_ph_surely_fresh(instrument, timeframe, quote_count, with_index, quiet, 
     except: #Raise ExceptionUseFreshData
       print("Error in getPH when using fresh")
       if use_fresh_error_ignore:
-        pass      
+        pass
       raise Exception("Error in getPH, use_fresh failed")
-  
+
   df = getPH_from_filestore(instrument, timeframe, quiet, False, with_index,convert_date_index_to_dt,use_full=use_full,tlid_range=tlid_range)
   if df  is None and run_jgtfxcli_on_error:
     print_quiet(quiet,"NO DATA IN DF, running jgtfxcli")
   #df = getPH_from_filestore(instrument, timeframe, quiet, False, with_index,convert_date_index_to_dt,use_full=use_full)
   #@STCIssue its more PDSP that should run this logics
-    try: 
+    try:
       if run_jgtfxcli_on_error:
         print("Running jgtfxcli")
         refreshPH(instrument, timeframe,quote_count=quote_count, tlid_range=tlid_range, use_full=use_full,verbose_level=1,keep_bid_ask=keep_bid_ask)
@@ -246,8 +247,8 @@ def _get_ph_surely_fresh(instrument, timeframe, quote_count, with_index, quiet, 
         print("Error when running jgtfxcli")
         print(e)
         print("------------------------------------")
-  
-  
+
+
   if not quiet:
     print(df.columns)
     print(df.index)
@@ -262,14 +263,14 @@ from datetime import datetime, timedelta
 from pytz import timezone
 
 def _get_dt_requirement_for_tf(timeframe,is_UTC=False): #@STCIssue The rest of the process might change the timezone from ours, not sure
-  
+
   dt_now = str(datetime.now())
-    
+
   return dt_now
 
 def _if_crop_ph(dt_crop_last, df):
   if dt_crop_last is not None:
-    return df[df.index <= dt_crop_last].copy() 
+    return df[df.index <= dt_crop_last].copy()
   return df
 
 
@@ -280,7 +281,7 @@ def _get_dt_requirement_for_tf(timeframe, is_UTC=True):
   dt_friday_close = dt_now.replace(hour=16, minute=55, second=0, microsecond=0)
 
   # If it's the weekend, return the closing time of the previous Friday
-  if dt_now.weekday() >= 5: 
+  if dt_now.weekday() >= 5:
     return dt_friday_close
 
   # If it's a weekday but after closing time, return the closing time of that day
@@ -365,28 +366,28 @@ def _check_if_dt_range_has_enough_bars(instrument:str, timeframe:str, dt_last_we
 
 def if_select_start_end(df, start=None, end=None,quiet=True):
   if start is not None:
-        
+
     if end is None:  # end is not provided
       end = datetime.now()
-      
+
     if not quiet:
         print("start: " + str(start))
         print("end: " + str(end))
-        
+
     if 'Date' in df.columns:
       mask = (df['Date'] >= start) & (df['Date'] <= end)
     else:
       mask = (df.index >= start) & (df.index <= end)
-    
+
     selected_df = df.loc[mask].copy()
     return selected_df
-  
+
   return df
 
 
 def str_to_datetime(date_str):
     formats = ['%m.%d.%Y %H:%M:%S', '%Y-%m-%d %H:%M:%S', '%Y/%m/%d %H:%M:%S', '%Y/%m/%d', '%Y-%m-%d']
-    
+
     for fmt in formats:
         try:
             return datetime.strptime(date_str, fmt)
@@ -417,17 +418,17 @@ def getPH_from_filestore(instrument:str,timeframe:str,quiet=True, compressed:boo
 
   Returns:
     pandas.DataFrame: The OHLC data for the given instrument and timeframe.
-  """  
-  
+  """
+
   srcpath = create_filestore_path(instrument, timeframe,quiet, compressed,tlid_range=tlid_range,output_path=output_path,nsdir=nsdir,use_full=use_full)
-  
+
   print_quiet(quiet,srcpath)
-  
+
   df = None
   try:
     df = read_ohlc_df_from_file(srcpath,quiet,compressed,with_index,convert_date_index_to_dt)
   except:
-    pass 
+    pass
   return df
 
 
@@ -459,32 +460,32 @@ def read_ohlc_df_from_file(srcpath, quiet=True, compressed=False,with_index=True
   if with_index and df is not None:
     if 'Date' in df.columns:
       df.set_index('Date', inplace=True)
-      
+
       if convert_date_index_to_dt:
         df.index = pd.to_datetime(df.index)
     else:
       raise ValueError("Column 'Date' is not present in the DataFrame")
   return df
- 
+
 
 
 def get_data_path():
     return jgtos.get_data_path('pds')
-  
- 
+
+
 
 def get_pov_local_data_filename(instrument:str,timeframe:str,use_full=False):
   nsdir="pds"
   return jos.get_pov_local_data_filename(instrument,timeframe,use_full=use_full,nsdir=nsdir)
 
 
- 
+
 
 def get_instrument_properties(instrument:str, quiet=False,from_file=True):
   if not from_file:
     print("NOT SUPORTED in PDSP")
   else:
-    
+
     # # Define the path to the directory
     instrument_properties = {}
     try:
@@ -504,4 +505,4 @@ def get_instrument_properties(instrument:str, quiet=False,from_file=True):
 def print_quiet(quiet,content):
     if not quiet:
         print(content)
-        
+
