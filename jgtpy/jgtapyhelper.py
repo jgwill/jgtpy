@@ -789,3 +789,64 @@ def print_quiet(quiet, content):
         print(content)
 
 
+def calculate_mouth_state(df):
+    """
+    Calculate the mouth state based on the Alligator indicator.
+
+    Args:
+    df (pandas.DataFrame): The DataFrame containing the Alligator indicator data.
+
+    Returns:
+    str: The mouth state ('open', 'closed', 'transitioning').
+    """
+    jaw = df[BJAW]
+    teeth = df[BTEETH]
+    lips = df[BLIPS]
+
+    if (jaw > teeth).all() and (teeth > lips).all():
+        return 'open'
+    elif (jaw < teeth).all() and (teeth < lips).all():
+        return 'closed'
+    else:
+        return 'transitioning'
+
+
+def calculate_water_state(df):
+    """
+    Calculate the water state based on the Alligator indicator and price position.
+
+    Args:
+    df (pandas.DataFrame): The DataFrame containing the Alligator indicator and price position data.
+
+    Returns:
+    str: The water state ('splashing', 'eating', 'drowning', 'floating').
+    """
+    mouth_state = calculate_mouth_state(df)
+    price_position = df[CLOSE]
+
+    if mouth_state == 'open':
+        if price_position > df[BJAW].max():
+            return 'splashing'
+        else:
+            return 'eating'
+    elif mouth_state == 'closed':
+        if price_position < df[BLIPS].min():
+            return 'drowning'
+        else:
+            return 'floating'
+    else:
+        return 'transitioning'
+
+
+def integrate_water_state(df):
+    """
+    Integrate the water state into the existing data processing pipeline.
+
+    Args:
+    df (pandas.DataFrame): The DataFrame containing the Alligator indicator and price position data.
+
+    Returns:
+    pandas.DataFrame: The DataFrame with the water state added as a new column.
+    """
+    df['water_state'] = df.apply(calculate_water_state, axis=1)
+    return df
