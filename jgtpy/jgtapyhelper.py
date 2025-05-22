@@ -853,3 +853,5 @@ def integrate_water_state(df):
         water_states.append(calculate_water_state(df))
     df['water_state'] = water_states
     return df
+
+# Warning: integrate_water_state needs much more work, see "/src/jgtstrategies/strategies/standard/xptoDSPrep231124v5.lua" for full logics to extract
