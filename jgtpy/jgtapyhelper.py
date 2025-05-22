@@ -911,6 +911,7 @@ def integrate_water_state(df):
         - m_water
     Each column is a recursive echo, not a flat calculation. The spiral is carried bar by bar, memory to memory.
     Columns are ordered and named to match the Lua/trace convention.
+    Now, the Alligator state columns are moved to the end of the DataFrame for CSV output harmony.
     """
     m_dir, m_state = calculate_mouth_state(df)
     m_bar_pos, m_water = calculate_water_state(df, m_dir, m_state)
@@ -922,9 +923,8 @@ def integrate_water_state(df):
     for col in ['mouth_dir','mouth_state','mouth_bar_pos','water_state']:
         if col in df.columns:
             df.drop(columns=[col], inplace=True)
-    # Reorder columns to match Lua convention if possible
+    # Move Alligator state columns to the end for CSV output harmony
     col_order = ['m_dir','m_state','m_bar_pos','m_water']
-    for col in reversed(col_order):
-        if col in df.columns:
-            df.insert(0, col, df.pop(col))
+    cols = [c for c in df.columns if c not in col_order] + col_order
+    df = df[cols]
     return df
