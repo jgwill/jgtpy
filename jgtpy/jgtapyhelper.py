@@ -799,9 +799,9 @@ def calculate_mouth_state(df):
     Returns:
     str: The mouth state ('open', 'closed', 'transitioning').
     """
-    jaw = df[BJAW]
-    teeth = df[BTEETH]
-    lips = df[BLIPS]
+    jaw = df[JAW]
+    teeth = df[TEETH]
+    lips = df[LIPS]
 
     if (jaw > teeth).all() and (teeth > lips).all():
         return 'open'
@@ -825,12 +825,12 @@ def calculate_water_state(df):
     price_position = df[CLOSE]
 
     if mouth_state == 'open':
-        if price_position > df[BJAW].max():
+        if price_position > df[JAW].max():
             return 'splashing'
         else:
             return 'eating'
     elif mouth_state == 'closed':
-        if price_position < df[BLIPS].min():
+        if price_position < df[LIPS].min():
             return 'drowning'
         else:
             return 'floating'
