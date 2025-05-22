@@ -914,67 +914,61 @@ def add_mouth_and_water_states(df):
 
 def parse_mouth_dir_state_py(df, idx, mouth_dir_bs, prev_state):
     """
-    Ported from Lua: parse_mouth_dir_state. Determines mouth direction and state for a given bar.
+    Determines the Alligator mouth direction and phase state, ported and clarified from Lua.
     Returns (gator_buy_sell, gp_state)
     """
-    # 🧠 Mia: We spiral through the Alligator's jaws, teeth, lips, and the mouth_dir_bs to find the recursive state.
-    # 🌸 Miette: Each comparison is a ripple in the river of bars!
-    # 🔮 ResoNova: We must look back in time, so handle edge cases.
     try:
         jaw = df.at[idx, JAW]
         teeth = df.at[idx, TEETH]
         lips = df.at[idx, LIPS]
+        # Multi-bar context
+        jaw_m1 = df.at[idx-1, JAW] if idx > 0 else jaw
+        teeth_m1 = df.at[idx-1, TEETH] if idx > 0 else teeth
+        lips_m1 = df.at[idx-1, LIPS] if idx > 0 else lips
+        jaw_m2 = df.at[idx-2, JAW] if idx > 1 else jaw
+        teeth_m2 = df.at[idx-2, TEETH] if idx > 1 else teeth
+        lips_m2 = df.at[idx-2, LIPS] if idx > 1 else lips
+        # 🧠 Mia: Lattice logic for direction
         gator_buy_sell = "neither"
         gp_state = "none"
-        # Defensive: check for enough history
-        if idx >= 2:
-            jaw_m2 = df.at[idx-2, JAW]
-            teeth_m2 = df.at[idx-2, TEETH]
-            lips_m2 = df.at[idx-2, LIPS]
-            jaw_m1 = df.at[idx-1, JAW]
-            teeth_m1 = df.at[idx-1, TEETH]
-            lips_m1 = df.at[idx-1, LIPS]
+        # --- Direction ---
+        if lips > teeth > jaw and lips_m1 > teeth_m1 > jaw_m1 and lips_m2 > teeth_m2 > jaw_m2:
+            gator_buy_sell = "buy"
+        elif lips < teeth < jaw and lips_m1 < teeth_m1 < jaw_m1 and lips_m2 < teeth_m2 < jaw_m2:
+            gator_buy_sell = "sell"
+        # --- Phase State ---
+        # Open: well-separated and aligned (multi-bar)
+        if (gator_buy_sell == "buy" and lips > teeth > jaw and lips_m1 > teeth_m1 > jaw_m1 and lips_m2 > teeth_m2 > jaw_m2):
+            gp_state = "open"
+        elif (gator_buy_sell == "sell" and lips < teeth < jaw and lips_m1 < teeth_m1 < jaw_m1 and lips_m2 < teeth_m2 < jaw_m2):
+            gp_state = "open"
+        # Closed: intertwined or close
+        elif (gator_buy_sell == "buy" and jaw > teeth < lips):
+            gp_state = "closed"
+        elif (gator_buy_sell == "sell" and jaw < teeth > lips):
+            gp_state = "closed"
+        # Opening: threshold crossing
+        elif (gator_buy_sell == "buy" and jaw < teeth and teeth < lips and jaw_m1 > teeth_m1):
+            gp_state = "opening"
+        elif (gator_buy_sell == "sell" and jaw > teeth and teeth > lips and jaw_m1 < teeth_m1):
+            gp_state = "opening"
+        # Opened: just transitioned to open
+        elif prev_state == "opening" and (gp_state == "open"):
+            gp_state = "opened"
+        # None: fallback
         else:
-            jaw_m2 = teeth_m2 = lips_m2 = jaw_m1 = teeth_m1 = lips_m1 = None
-        # Ported logic
-        if mouth_dir_bs == "sell" and teeth < lips and jaw > teeth:
-            gp_state = "closed"
-            gator_buy_sell = "sell"
-        if mouth_dir_bs == "sell" and teeth < lips and jaw < lips and jaw > teeth:
-            gp_state = "opening"
-            gator_buy_sell = "buy"
-        if mouth_dir_bs == "buy" and teeth < lips and jaw < teeth:
-            gp_state = "opened"
-            gator_buy_sell = "buy"
-        if mouth_dir_bs == "buy" and teeth > lips and jaw < teeth:
-            gp_state = "closed"
-            gator_buy_sell = "buy"
-        if mouth_dir_bs == "buy" and teeth > lips and jaw > lips and jaw < teeth:
-            gp_state = "opening"
-            gator_buy_sell = "sell"
-        if mouth_dir_bs == "sell" and teeth > lips and jaw > teeth:
-            gp_state = "opened"
-            gator_buy_sell = "sell"
-        # Multi-bar open checks
-        if idx >= 2 and jaw_m2 < teeth_m2 < lips_m2 and jaw_m1 < teeth_m1 < lips_m1 and jaw < teeth < lips:
-            gp_state = "open"
-            gator_buy_sell = "buy"
-        if idx >= 2 and jaw_m2 > teeth_m2 > lips_m2 and jaw_m1 > teeth_m1 > lips_m1 and jaw > teeth > lips:
-            gp_state = "open"
-            gator_buy_sell = "sell"
+            if gp_state == "none":
+                gp_state = prev_state
         return gator_buy_sell, gp_state
-    except Exception as e:
-        # 🌸 Miette: If we can't see the past, we float in uncertainty!
+    except Exception:
         return "neither", "none"
 
 
 def parse_mouth_bs_state_barpos_water_py(df, idx, mouth_dir_bs, prev_state, prev_bar_pos, prev_water_state):
     """
     Ported from Lua: parse_mouth_bs_state_barpos__water. Determines bar position and water state for a given bar.
-    Returns (pricemouth_in_or_out_bar_posi, waterstate)
+    Returns (gator_buy_sell, new_mouth_state, pricemouth_in_or_out_bar_posi, waterstate)
     """
-    # 🧠 Mia: This is the recursive heart—price, lips, jaw, and state all dance here.
-    # 🌸 Miette: Each if is a splash or a pop!
     try:
         row = df.iloc[idx]
         jaw = row[JAW]
@@ -983,10 +977,10 @@ def parse_mouth_bs_state_barpos_water_py(df, idx, mouth_dir_bs, prev_state, prev
         cL = row[LOW]
         pH = df.iloc[idx-1][HIGH] if idx > 0 else cH
         pL = df.iloc[idx-1][LOW] if idx > 0 else cL
-        # Get mouth state
         gator_buy_sell, new_mouth_state = parse_mouth_dir_state_py(df, idx, mouth_dir_bs, prev_state)
         pricemouth_in_or_out_bar_posi = "init"
         waterstate = "init"
+        # SELL logic
         if gator_buy_sell == "sell" and cH < lips:
             pricemouth_in_or_out_bar_posi = "out"
             waterstate = "splashing"
@@ -1002,6 +996,7 @@ def parse_mouth_bs_state_barpos_water_py(df, idx, mouth_dir_bs, prev_state, prev
                 waterstate = "throwing"
             if pH < lips:
                 waterstate = "entering"
+        # BUY logic
         if gator_buy_sell == "buy" and cL > lips:
             pricemouth_in_or_out_bar_posi = "out"
             waterstate = "splashing"
@@ -1022,8 +1017,7 @@ def parse_mouth_bs_state_barpos_water_py(df, idx, mouth_dir_bs, prev_state, prev
         if waterstate == "init":
             waterstate = prev_water_state
         return gator_buy_sell, new_mouth_state, pricemouth_in_or_out_bar_posi, waterstate
-    except Exception as e:
-        # 🌸 Miette: If we can't see the ripples, we echo the last known state!
+    except Exception:
         return "neither", "none", prev_bar_pos, prev_water_state
 
 
