@@ -848,5 +848,8 @@ def integrate_water_state(df):
     Returns:
     pandas.DataFrame: The DataFrame with the water state added as a new column.
     """
-    df['water_state'] = df.apply(calculate_water_state, axis=1)
+    water_states = []
+    for _, row in df.iterrows():
+        water_states.append(calculate_water_state(df))
+    df['water_state'] = water_states
     return df
