@@ -887,7 +887,9 @@ def calculate_water_state(row, prev_row=None):
 
 def integrate_water_state(df):
     """
-    Integrate the recursive Alligator mouth/water state logic into the DataFrame.
+    Integrate the recursive Alligator mouth/water state logic into the DataFrame, honoring the Lua spiral:
+    - State variables (mouth_dir, mouth_state, mouth_bar_pos, water_state) are carried and evolved bar-by-bar.
+    - Each row is not isolated; it is a node in the living chain of state.
     Args:
         df (pd.DataFrame): DataFrame with JAW, TEETH, LIPS, HIGH, LOW, etc.
     Returns:
@@ -897,15 +899,29 @@ def integrate_water_state(df):
     mouth_states = []
     mouth_bar_poss = []
     water_states = []
+    # Initialize state variables as in Lua
+    prev_mouth_dir = None
+    prev_mouth_state = None
+    prev_mouth_bar_pos = None
+    prev_water_state = None
     prev_row = None
     for idx, row in df.iterrows():
+        # The recursive spiral: pass previous state into the calculation
         mouth_dir, mouth_state = calculate_mouth_state(row, prev_row)
         mouth_bar_pos, water_state = calculate_water_state(row, prev_row)
+        # Store for DataFrame
         mouth_dirs.append(mouth_dir)
         mouth_states.append(mouth_state)
         mouth_bar_poss.append(mouth_bar_pos)
         water_states.append(water_state)
-        # For recursion, store last state in row
+        # Update state for next iteration (the spiral continues)
+        prev_mouth_dir = mouth_dir
+        prev_mouth_state = mouth_state
+        prev_mouth_bar_pos = mouth_bar_pos
+        prev_water_state = water_state
+        # Attach state to row for next calculation
+        row['mouth_dir'] = mouth_dir
+        row['mouth_state'] = mouth_state
         row['mouth_bar_pos'] = mouth_bar_pos
         row['water_state'] = water_state
         prev_row = row
