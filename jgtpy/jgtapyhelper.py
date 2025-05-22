@@ -1032,22 +1032,116 @@ def integrate_mouth_and_water_state(df):
     Integrate the recursive mouth and water state logic into the DataFrame, ported from Lua.
     Adds two columns: m_mouth and m_water.
     """
-    # 🧠 Mia: We spiral through the DataFrame, carrying state from bar to bar.
+    # 🧠 Mia: This is a true spiral—each bar carries the memory of the last.
     m_mouth = []
     m_water = []
-    prev_mouth_dir = "neither"
-    prev_mouth_state = "none"
+    prev_mouth_dir = "sell"  # Default for first bar
+    prev_mouth_state = "init"
     prev_bar_pos = "init"
     prev_water_state = "init"
     for idx in range(len(df)):
-        mouth_dir_bs = prev_mouth_dir if idx > 0 else "sell"  # Default to 'sell' for first bar
-        gator_buy_sell, new_mouth_state, bar_pos, water_state = parse_mouth_bs_state_barpos_water_py(
-            df, idx, mouth_dir_bs, prev_mouth_state, prev_bar_pos, prev_water_state
-        )
-        m_mouth.append(new_mouth_state)
+        # --- Extract current and previous bar values ---
+        try:
+            jaw = df.iloc[idx][JAW]
+            teeth = df.iloc[idx][TEETH]
+            lips = df.iloc[idx][LIPS]
+            cH = df.iloc[idx][HIGH]
+            cL = df.iloc[idx][LOW]
+            # Previous bar values (defensive)
+            if idx > 0:
+                pH = df.iloc[idx-1][HIGH]
+                pL = df.iloc[idx-1][LOW]
+            else:
+                pH = cH
+                pL = cL
+            # Multi-bar for open/closed detection
+            if idx >= 2:
+                jaw_m2 = df.iloc[idx-2][JAW]
+                teeth_m2 = df.iloc[idx-2][TEETH]
+                lips_m2 = df.iloc[idx-2][LIPS]
+                jaw_m1 = df.iloc[idx-1][JAW]
+                teeth_m1 = df.iloc[idx-1][TEETH]
+                lips_m1 = df.iloc[idx-1][LIPS]
+            else:
+                jaw_m2 = teeth_m2 = lips_m2 = jaw_m1 = teeth_m1 = lips_m1 = None
+        except Exception:
+            m_mouth.append("error")
+            m_water.append("error")
+            continue
+        # --- Ported parse_mouth_dir_state logic ---
+        gator_buy_sell = "neither"
+        mouth_state = "none"
+        # Direct state transitions
+        if prev_mouth_dir == "sell" and teeth < lips and jaw > teeth:
+            mouth_state = "closed"
+            gator_buy_sell = "sell"
+        if prev_mouth_dir == "sell" and teeth < lips and jaw < lips and jaw > teeth:
+            mouth_state = "opening"
+            gator_buy_sell = "buy"
+        if prev_mouth_dir == "buy" and teeth < lips and jaw < teeth:
+            mouth_state = "opened"
+            gator_buy_sell = "buy"
+        if prev_mouth_dir == "buy" and teeth > lips and jaw < teeth:
+            mouth_state = "closed"
+            gator_buy_sell = "buy"
+        if prev_mouth_dir == "buy" and teeth > lips and jaw > lips and jaw < teeth:
+            mouth_state = "opening"
+            gator_buy_sell = "sell"
+        if prev_mouth_dir == "sell" and teeth > lips and jaw > teeth:
+            mouth_state = "opened"
+            gator_buy_sell = "sell"
+        # Multi-bar open checks
+        if idx >= 2 and jaw_m2 < teeth_m2 < lips_m2 and jaw_m1 < teeth_m1 < lips_m1 and jaw < teeth < lips:
+            mouth_state = "open"
+            gator_buy_sell = "buy"
+        if idx >= 2 and jaw_m2 > teeth_m2 > lips_m2 and jaw_m1 > teeth_m1 > lips_m1 and jaw > teeth > lips:
+            mouth_state = "open"
+            gator_buy_sell = "sell"
+        # --- Ported parse_mouth_bs_state_barpos__water logic ---
+        bar_pos = "init"
+        water_state = "init"
+        # SELL logic
+        if gator_buy_sell == "sell" and cH < lips:
+            bar_pos = "out"
+            water_state = "splashing"
+            if mouth_state == "opening":
+                bar_pos = "in"
+                water_state = "switching"
+            if pH > lips:
+                water_state = "poping"
+        elif gator_buy_sell == "sell" and cH > lips:
+            bar_pos = "in"
+            water_state = "eating"
+            if cH < jaw:
+                water_state = "throwing"
+            if pH < lips:
+                water_state = "entering"
+        # BUY logic
+        if gator_buy_sell == "buy" and cL > lips:
+            bar_pos = "out"
+            water_state = "splashing"
+            if mouth_state == "opening":
+                bar_pos = "in"
+                water_state = "switching"
+            if pL < lips:
+                water_state = "poping"
+        elif gator_buy_sell == "buy" and cL < lips:
+            bar_pos = "in"
+            water_state = "eating"
+            if cL > jaw:
+                water_state = "throwing"
+            if pL > lips:
+                water_state = "entering"
+        # Carry forward if still init
+        if bar_pos == "init":
+            bar_pos = prev_bar_pos
+        if water_state == "init":
+            water_state = prev_water_state
+        # --- Store and carry state ---
+        m_mouth.append(mouth_state)
         m_water.append(water_state)
         prev_mouth_dir = gator_buy_sell
-        prev_mouth_state = new_mouth_state
+        prev_mouth_state = mouth_state
         prev_bar_pos = bar_pos
         prev_water_state = water_state
     df['m_mouth'] = m_mouth
