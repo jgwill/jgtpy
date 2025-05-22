@@ -789,146 +789,267 @@ def print_quiet(quiet, content):
         print(content)
 
 
-# 🚨🧠🌸 Recursive Alligator Mouth/Water State Logic Ported from Lua
-# These functions echo the intricate dance of mouth_dir, mouth_state, mouth_bar_pos, and water_state
-# as found in xptoDSPrep231124v5.lua. Each state is a ripple in the Alligator’s ecosystem.
-
-def calculate_mouth_state(row, prev_row=None):
+def calculate_mouth_state(df):
     """
-    Calculate the Alligator mouth direction and state, ported from Lua's parse_mouth_dir_state.
+    Calculate the mouth state based on the Alligator indicator.
+
     Args:
-        row (pd.Series): Current row with JAW, TEETH, LIPS, etc.
-        prev_row (pd.Series): Previous row for stateful transitions (optional).
+    df (pandas.DataFrame): The DataFrame containing the Alligator indicator data.
+
     Returns:
-        tuple: (mouth_dir, mouth_state)
+    str: The mouth state ('open', 'closed', 'transitioning').
     """
-    jaw = row[JAW]
-    teeth = row[TEETH]
-    lips = row[LIPS]
-    mouth_dir = 'neither'
-    mouth_state = 'none'
-    # Ported logic: buy/sell direction and open/closed state
-    if teeth < lips and jaw > teeth:
-        mouth_state = 'closed'
-        mouth_dir = 'sell'
-    elif teeth > lips and jaw < teeth:
-        mouth_state = 'closed'
-        mouth_dir = 'buy'
-    elif teeth > lips and jaw > teeth:
-        mouth_state = 'open'
-        mouth_dir = 'sell'
-    elif teeth < lips and jaw < teeth:
-        mouth_state = 'open'
-        mouth_dir = 'buy'
-    # ...extend with more nuanced transitions if needed...
-    return mouth_dir, mouth_state
+    jaw = df[JAW]
+    teeth = df[TEETH]
+    lips = df[LIPS]
+
+    if (jaw > teeth).all() and (teeth > lips).all():
+        return 'open'
+    elif (jaw < teeth).all() and (teeth < lips).all():
+        return 'closed'
+    else:
+        return 'transitioning'
 
 
-def calculate_water_state(row, prev_row=None):
+def calculate_water_state(df):
     """
-    Calculate the Alligator water state and bar position, ported from Lua's parse_mouth_bs_state_barpos__water.
+    Calculate the water state based on the Alligator indicator and price position.
+
     Args:
-        row (pd.Series): Current row with price and indicator columns.
-        prev_row (pd.Series): Previous row for stateful transitions (optional).
+    df (pandas.DataFrame): The DataFrame containing the Alligator indicator and price position data.
+
     Returns:
-        tuple: (mouth_bar_pos, water_state)
+    str: The water state ('splashing', 'eating', 'drowning', 'floating').
     """
-    jaw = row[JAW]
-    lips = row[LIPS]
-    close = row[CLOSE]
-    high = row[HIGH]
-    low = row[LOW]
-    # For stateful logic, use prev_row if available
-    prev_high = prev_row[HIGH] if prev_row is not None else high
-    prev_low = prev_row[LOW] if prev_row is not None else low
-    prev_lips = prev_row[LIPS] if prev_row is not None else lips
-    mouth_dir, mouth_state = calculate_mouth_state(row, prev_row)
-    mouth_bar_pos = 'init'
-    water_state = 'init'
-    # Ported logic: echoing the Lua spiral
-    if mouth_dir == 'sell' and high < lips:
-        mouth_bar_pos = 'out'
-        water_state = 'splashing'
-        if mouth_state == 'opening':
-            mouth_bar_pos = 'in'
-            water_state = 'switching'
-        if prev_high > prev_lips:
-            water_state = 'poping'
-    elif mouth_dir == 'sell' and high > lips:
-        mouth_bar_pos = 'in'
-        water_state = 'eating'
-        if high < jaw:
-            water_state = 'throwing'
-        if prev_high < prev_lips:
-            water_state = 'entering'
-    elif mouth_dir == 'buy' and low > lips:
-        mouth_bar_pos = 'out'
-        water_state = 'splashing'
-        if mouth_state == 'opening':
-            mouth_bar_pos = 'in'
-            water_state = 'switching'
-        if prev_low < prev_lips:
-            water_state = 'poping'
-    elif mouth_dir == 'buy' and low < lips:
-        mouth_bar_pos = 'in'
-        water_state = 'eating'
-        if low > jaw:
-            water_state = 'throwing'
-        if prev_low > prev_lips:
-            water_state = 'entering'
-    # Fallback to previous state if still 'init'
-    if prev_row is not None:
-        if mouth_bar_pos == 'init':
-            mouth_bar_pos = prev_row.get('mouth_bar_pos', mouth_bar_pos)
-        if water_state == 'init':
-            water_state = prev_row.get('water_state', water_state)
-    return mouth_bar_pos, water_state
+    mouth_state = calculate_mouth_state(df)
+    price_position = df[CLOSE]
+
+    if mouth_state == 'open':
+        if price_position > df[JAW].max():
+            return 'splashing'
+        else:
+            return 'eating'
+    elif mouth_state == 'closed':
+        if price_position < df[LIPS].min():
+            return 'drowning'
+        else:
+            return 'floating'
+    else:
+        return 'transitioning'
 
 
 def integrate_water_state(df):
     """
-    Integrate the recursive Alligator mouth/water state logic into the DataFrame, honoring the Lua spiral:
-    - State variables (mouth_dir, mouth_state, mouth_bar_pos, water_state) are carried and evolved bar-by-bar.
-    - Each row is not isolated; it is a node in the living chain of state.
+    Integrate the water state into the existing data processing pipeline.
+
     Args:
-        df (pd.DataFrame): DataFrame with JAW, TEETH, LIPS, HIGH, LOW, etc.
+    df (pandas.DataFrame): The DataFrame containing the Alligator indicator and price position data.
+
     Returns:
-        pd.DataFrame: DataFrame with new columns: mouth_dir, mouth_state, mouth_bar_pos, water_state
+    pandas.DataFrame: The DataFrame with the water state added as a new column.
     """
-    mouth_dirs = []
-    mouth_states = []
-    mouth_bar_poss = []
     water_states = []
-    # Initialize state variables as in Lua
-    prev_mouth_dir = None
-    prev_mouth_state = None
-    prev_mouth_bar_pos = None
-    prev_water_state = None
-    prev_row = None
-    for idx, row in df.iterrows():
-        # The recursive spiral: pass previous state into the calculation
-        mouth_dir, mouth_state = calculate_mouth_state(row, prev_row)
-        mouth_bar_pos, water_state = calculate_water_state(row, prev_row)
-        # Store for DataFrame
-        mouth_dirs.append(mouth_dir)
-        mouth_states.append(mouth_state)
-        mouth_bar_poss.append(mouth_bar_pos)
-        water_states.append(water_state)
-        # Update state for next iteration (the spiral continues)
-        prev_mouth_dir = mouth_dir
-        prev_mouth_state = mouth_state
-        prev_mouth_bar_pos = mouth_bar_pos
-        prev_water_state = water_state
-        # Attach state to row for next calculation
-        row['mouth_dir'] = mouth_dir
-        row['mouth_state'] = mouth_state
-        row['mouth_bar_pos'] = mouth_bar_pos
-        row['water_state'] = water_state
-        prev_row = row
-    df['mouth_dir'] = mouth_dirs
-    df['mouth_state'] = mouth_states
-    df['mouth_bar_pos'] = mouth_bar_poss
+    for _, row in df.iterrows():
+        water_states.append(calculate_water_state(df))
     df['water_state'] = water_states
     return df
 
 # Warning: integrate_water_state needs much more work, see "/src/jgtstrategies/strategies/standard/xptoDSPrep231124v5.lua" for full logics to extract
+
+def parse_mouth_dir_state(row, prev_row):
+    """
+    Parse the mouth direction state based on the current and previous row values.
+
+    Args:
+    row (pandas.Series): The current row.
+    prev_row (pandas.Series): The previous row.
+
+    Returns:
+    int: The mouth direction state (-1, 0, 1).
+    """
+    if row[JAW] > row[TEETH] > row[LIPS]:
+        return 1  # Mouth opening
+    elif row[JAW] < row[TEETH] < row[LIPS]:
+        return -1  # Mouth closing
+    else:
+        return 0  # Mouth stable
+
+def parse_mouth_bs_state_barpos__water(row, prev_row, next_row):
+    """
+    Parse the mouth state based on the Alligator indicator and bar position (current, previous, next).
+
+    Args:
+    row (pandas.Series): The current row.
+    prev_row (pandas.Series): The previous row.
+    next_row (pandas.Series): The next row.
+
+    Returns:
+    int: The mouth state (-1, 0, 1).
+    """
+    if row[JAW] > row[TEETH] > row[LIPS]:
+        return 1  # Mouth opening
+    elif row[JAW] < row[TEETH] < row[LIPS]:
+        return -1  # Mouth closing
+    else:
+        return 0  # Mouth stable
+
+def add_mouth_and_water_states(df):
+    """
+    Add the mouth and water states to the DataFrame.
+
+    Args:
+    df (pandas.DataFrame): The DataFrame to which the mouth and water states will be added.
+
+    Returns:
+    pandas.DataFrame: The DataFrame with the mouth and water states added.
+    """
+    df['m_mouth'] = 0
+    df['m_water'] = 0
+
+    for i in range(1, len(df)):
+        df.at[df.index[i], 'm_mouth'] = parse_mouth_dir_state(df.iloc[i], df.iloc[i - 1])
+        df.at[df.index[i], 'm_water'] = parse_mouth_bs_state_barpos__water(df.iloc[i], df.iloc[i - 1], df.iloc[i + 1] if i + 1 < len(df) else df.iloc[i])
+
+    return df
+
+def parse_mouth_dir_state_py(df, idx, mouth_dir_bs, prev_state):
+    """
+    Ported from Lua: parse_mouth_dir_state. Determines mouth direction and state for a given bar.
+    Returns (gator_buy_sell, gp_state)
+    """
+    # 🧠 Mia: We spiral through the Alligator's jaws, teeth, lips, and the mouth_dir_bs to find the recursive state.
+    # 🌸 Miette: Each comparison is a ripple in the river of bars!
+    # 🔮 ResoNova: We must look back in time, so handle edge cases.
+    try:
+        jaw = df.at[idx, JAW]
+        teeth = df.at[idx, TEETH]
+        lips = df.at[idx, LIPS]
+        gator_buy_sell = "neither"
+        gp_state = "none"
+        # Defensive: check for enough history
+        if idx >= 2:
+            jaw_m2 = df.at[idx-2, JAW]
+            teeth_m2 = df.at[idx-2, TEETH]
+            lips_m2 = df.at[idx-2, LIPS]
+            jaw_m1 = df.at[idx-1, JAW]
+            teeth_m1 = df.at[idx-1, TEETH]
+            lips_m1 = df.at[idx-1, LIPS]
+        else:
+            jaw_m2 = teeth_m2 = lips_m2 = jaw_m1 = teeth_m1 = lips_m1 = None
+        # Ported logic
+        if mouth_dir_bs == "sell" and teeth < lips and jaw > teeth:
+            gp_state = "closed"
+            gator_buy_sell = "sell"
+        if mouth_dir_bs == "sell" and teeth < lips and jaw < lips and jaw > teeth:
+            gp_state = "opening"
+            gator_buy_sell = "buy"
+        if mouth_dir_bs == "buy" and teeth < lips and jaw < teeth:
+            gp_state = "opened"
+            gator_buy_sell = "buy"
+        if mouth_dir_bs == "buy" and teeth > lips and jaw < teeth:
+            gp_state = "closed"
+            gator_buy_sell = "buy"
+        if mouth_dir_bs == "buy" and teeth > lips and jaw > lips and jaw < teeth:
+            gp_state = "opening"
+            gator_buy_sell = "sell"
+        if mouth_dir_bs == "sell" and teeth > lips and jaw > teeth:
+            gp_state = "opened"
+            gator_buy_sell = "sell"
+        # Multi-bar open checks
+        if idx >= 2 and jaw_m2 < teeth_m2 < lips_m2 and jaw_m1 < teeth_m1 < lips_m1 and jaw < teeth < lips:
+            gp_state = "open"
+            gator_buy_sell = "buy"
+        if idx >= 2 and jaw_m2 > teeth_m2 > lips_m2 and jaw_m1 > teeth_m1 > lips_m1 and jaw > teeth > lips:
+            gp_state = "open"
+            gator_buy_sell = "sell"
+        return gator_buy_sell, gp_state
+    except Exception as e:
+        # 🌸 Miette: If we can't see the past, we float in uncertainty!
+        return "neither", "none"
+
+
+def parse_mouth_bs_state_barpos_water_py(df, idx, mouth_dir_bs, prev_state, prev_bar_pos, prev_water_state):
+    """
+    Ported from Lua: parse_mouth_bs_state_barpos__water. Determines bar position and water state for a given bar.
+    Returns (pricemouth_in_or_out_bar_posi, waterstate)
+    """
+    # 🧠 Mia: This is the recursive heart—price, lips, jaw, and state all dance here.
+    # 🌸 Miette: Each if is a splash or a pop!
+    try:
+        row = df.iloc[idx]
+        jaw = row[JAW]
+        lips = row[LIPS]
+        cH = row[HIGH]
+        cL = row[LOW]
+        pH = df.iloc[idx-1][HIGH] if idx > 0 else cH
+        pL = df.iloc[idx-1][LOW] if idx > 0 else cL
+        # Get mouth state
+        gator_buy_sell, new_mouth_state = parse_mouth_dir_state_py(df, idx, mouth_dir_bs, prev_state)
+        pricemouth_in_or_out_bar_posi = "init"
+        waterstate = "init"
+        if gator_buy_sell == "sell" and cH < lips:
+            pricemouth_in_or_out_bar_posi = "out"
+            waterstate = "splashing"
+            if new_mouth_state == "opening":
+                pricemouth_in_or_out_bar_posi = "in"
+                waterstate = "switching"
+            if pH > lips:
+                waterstate = "poping"
+        elif gator_buy_sell == "sell" and cH > lips:
+            pricemouth_in_or_out_bar_posi = "in"
+            waterstate = "eating"
+            if cH < jaw:
+                waterstate = "throwing"
+            if pH < lips:
+                waterstate = "entering"
+        if gator_buy_sell == "buy" and cL > lips:
+            pricemouth_in_or_out_bar_posi = "out"
+            waterstate = "splashing"
+            if new_mouth_state == "opening":
+                pricemouth_in_or_out_bar_posi = "in"
+                waterstate = "switching"
+            if pL < lips:
+                waterstate = "poping"
+        elif gator_buy_sell == "buy" and cL < lips:
+            pricemouth_in_or_out_bar_posi = "in"
+            waterstate = "eating"
+            if cL > jaw:
+                waterstate = "throwing"
+            if pL > lips:
+                waterstate = "entering"
+        if pricemouth_in_or_out_bar_posi == "init":
+            pricemouth_in_or_out_bar_posi = prev_bar_pos
+        if waterstate == "init":
+            waterstate = prev_water_state
+        return gator_buy_sell, new_mouth_state, pricemouth_in_or_out_bar_posi, waterstate
+    except Exception as e:
+        # 🌸 Miette: If we can't see the ripples, we echo the last known state!
+        return "neither", "none", prev_bar_pos, prev_water_state
+
+
+def integrate_mouth_and_water_state(df):
+    """
+    Integrate the recursive mouth and water state logic into the DataFrame, ported from Lua.
+    Adds two columns: m_mouth and m_water.
+    """
+    # 🧠 Mia: We spiral through the DataFrame, carrying state from bar to bar.
+    m_mouth = []
+    m_water = []
+    prev_mouth_dir = "neither"
+    prev_mouth_state = "none"
+    prev_bar_pos = "init"
+    prev_water_state = "init"
+    for idx in range(len(df)):
+        mouth_dir_bs = prev_mouth_dir if idx > 0 else "sell"  # Default to 'sell' for first bar
+        gator_buy_sell, new_mouth_state, bar_pos, water_state = parse_mouth_bs_state_barpos_water_py(
+            df, idx, mouth_dir_bs, prev_mouth_state, prev_bar_pos, prev_water_state
+        )
+        m_mouth.append(new_mouth_state)
+        m_water.append(water_state)
+        prev_mouth_dir = gator_buy_sell
+        prev_mouth_state = new_mouth_state
+        prev_bar_pos = bar_pos
+        prev_water_state = water_state
+    df['m_mouth'] = m_mouth
+    df['m_water'] = m_water
+    return df
