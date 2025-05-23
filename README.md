@@ -30,6 +30,25 @@ pip install -U jgtpy
 
 ```
 
+## Command Line Tools
+
+The package provides the following command-line tools for working with IDS, CDS, and related data services:
+
+| Command      | Entry Point                          | Description (see docs/ for details) |
+|--------------|--------------------------------------|--------------------------------------|
+| `jgtcli`     | jgtpy.jgtcli:main                    | Main CLI for JGTPy operations        |
+| `cdscli`     | jgtpy.cdscli:main                    | CLI for Chaos Data Service (CDS)     |
+| `pds2cds`    | jgtpy.pds2cds:main                   | Convert PDS to CDS                   |
+| `jgtmksg`    | jgtpy.JGTMKSG:main                   | Market signal generator              |
+| `jgtads`     | jgtpy.JGTADS:main                    | ADS (Advanced Data Service) CLI      |
+| `jgtids`     | jgtpy.jgtapycli:main                 | IDS (Indicator Data Service) CLI     |
+| `adscli`     | jgtpy.JGTADS:main                    | Alias for ADS CLI                    |
+| `mkscli`     | jgtpy.JGTMKSG:main                   | Alias for Market Signal Generator    |
+| `idscli`     | jgtpy.jgtapycli:main                 | Alias for IDS CLI                    |
+| `adsfromcds` | jgtpy.adsfromcdsfile:main            | Generate ADS from CDS file           |
+
+For more information on each command, see the documentation in the `docs/` directory or run each command with `--help`.
+
 ## APPENDIX
 
 ### IDS Data Columns

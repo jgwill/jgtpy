@@ -185,3 +185,34 @@ The `jgtpy/JGTCDSSvc.py` file is responsible for providing services related to C
   - **get_higher_cdf_datasets**: This function retrieves the CDS data for higher timeframes of a given instrument and timeframe. It uses parallel processing to speed up the retrieval.
   - **get_higher_cdf_datasets_no_concurrence**: This function retrieves the CDS data for higher timeframes of a given instrument and timeframe without using parallel processing.
   - **get_higher_cdf**: This function retrieves the CDS data for a higher timeframe of a given instrument and timeframe based on a specified level.
+
+Command Line Tools
+------------------
+
+The package provides the following command-line tools for working with IDS, CDS, and related data services:
+
++------------+-----------------------------+--------------------------------------+
+| Command    | Entry Point                 | Description (see docs/ for details)  |
++============+=============================+======================================+
+| jgtcli     | jgtpy.jgtcli:main           | Main CLI for JGTPy operations        |
++------------+-----------------------------+--------------------------------------+
+| cdscli     | jgtpy.cdscli:main           | CLI for Chaos Data Service (CDS)     |
++------------+-----------------------------+--------------------------------------+
+| pds2cds    | jgtpy.pds2cds:main          | Convert PDS to CDS                   |
++------------+-----------------------------+--------------------------------------+
+| jgtmksg    | jgtpy.JGTMKSG:main          | Market signal generator              |
++------------+-----------------------------+--------------------------------------+
+| jgtads     | jgtpy.JGTADS:main           | ADS (Advanced Data Service) CLI      |
++------------+-----------------------------+--------------------------------------+
+| jgtids     | jgtpy.jgtapycli:main        | IDS (Indicator Data Service) CLI     |
++------------+-----------------------------+--------------------------------------+
+| adscli     | jgtpy.JGTADS:main           | Alias for ADS CLI                    |
++------------+-----------------------------+--------------------------------------+
+| mkscli     | jgtpy.JGTMKSG:main          | Alias for Market Signal Generator    |
++------------+-----------------------------+--------------------------------------+
+| idscli     | jgtpy.jgtapycli:main        | Alias for IDS CLI                    |
++------------+-----------------------------+--------------------------------------+
+| adsfromcds | jgtpy.adsfromcdsfile:main   | Generate ADS from CDS file           |
++------------+-----------------------------+--------------------------------------+
+
+For more information on each command, see the documentation in the ``docs/`` directory or run each command with ``--help``.
