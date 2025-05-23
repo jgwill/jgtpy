@@ -188,3 +188,5 @@ zarch/
 jgtpy/refacto__from_args__240714.ipynb
 dev_dk_refresh.sh
 dev_jgtutils_makedist_reinstall_jgtutils.sh
+.hch/
+data.*
