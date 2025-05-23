@@ -64,6 +64,7 @@ def _parse_args():
 
 
 def main():
+    print("---WARNING---That Command line cdscli is not ready----")
     cc = JGTChartConfig()
     args = _parse_args()
 
