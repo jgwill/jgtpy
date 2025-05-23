@@ -78,6 +78,10 @@ The `jgtpy/JGTIDS.py` file is responsible for generating and managing IDS (Indic
 | `zone_signal` | The zone signal value. |
 | `zone_int` | The zone integer value. |
 
+**For the full, up-to-date list of IDS (Indicator Data Service) columns and their descriptions, see the canonical documentation:**
+
+- [docs/IDS_data_columns.md](docs/IDS_data_columns.md)
+
 ### CDS Data Columns
 
 The `jgtpy/JGTCDS.py` file is responsible for creating, reading, and managing Chaos Data Service (CDS) files from Price Data Service (PDS) files. Here is a Markdown table documenting all the columns in `JGTCDS.py` that are added after using `JGTIDS.py` and are in the output:
