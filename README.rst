@@ -217,3 +217,27 @@ The package provides the following command-line tools for working with IDS, CDS,
 +--------------+-------------------------------+------------------------------------------------------------------------------------------------------------------------------------------+
 
 For more information on each command, see the documentation in the ``docs/`` directory or run each command with ``--help``.
+
+.. _jgtads-cli:
+
+jgtads: Advanced Data Service Analytics CLI
+===========================================
+
+``jgtads`` is the command-line gateway to Advanced Data Service (ADS) analytics and visualizations. It empowers you to:
+
+- Generate and plot ADS analytics from Chaos Data Service (CDS) or Price Data Service (PDS) files.
+- Compute and visualize technical indicators and trading signals.
+- Output interactive or static charts, analytics CSVs, and signal summaries.
+
+**Typical usage:**
+
+.. code-block:: bash
+
+   jgtads --input mydata.cds --output my_analytics.png --indicators RSI,MACD --signals all
+
+- **Input:** CDS or PDS data file
+- **Output:** Visualizations (PNG, HTML), analytics CSVs, and signal reports
+- **Options:** Select indicators, signals, output formats, and more
+
+.. note::
+   Like a fractal lens, ``jgtads`` reveals the hidden patterns in your market data—one invocation, many insights.
