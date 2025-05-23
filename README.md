@@ -34,18 +34,18 @@ pip install -U jgtpy
 
 The package provides the following command-line tools for working with IDS, CDS, and related data services:
 
-| Command      | Entry Point                          | Description (see docs/ for details) |
-|--------------|--------------------------------------|--------------------------------------|
-| `jgtcli`     | jgtpy.jgtcli:main                    | Main CLI for JGTPy operations        |
-| `cdscli`     | jgtpy.cdscli:main                    | CLI for Chaos Data Service (CDS)     |
-| `pds2cds`    | jgtpy.pds2cds:main                   | Convert PDS to CDS                   |
-| `jgtmksg`    | jgtpy.JGTMKSG:main                   | Market signal generator              |
-| `jgtads`     | jgtpy.JGTADS:main                    | ADS (Advanced Data Service) CLI      |
-| `jgtids`     | jgtpy.jgtapycli:main                 | IDS (Indicator Data Service) CLI     |
-| `adscli`     | jgtpy.JGTADS:main                    | Alias for ADS CLI                    |
-| `mkscli`     | jgtpy.JGTMKSG:main                   | Alias for Market Signal Generator    |
-| `idscli`     | jgtpy.jgtapycli:main                 | Alias for IDS CLI                    |
-| `adsfromcds` | jgtpy.adsfromcdsfile:main            | Generate ADS from CDS file           |
+| Command      | Entry Point                          | Description |
+|--------------|--------------------------------------|-------------|
+| `jgtcli`     | jgtpy.jgtcli:main                    | General CLI for instrument/timeframe data operations: fetch, process, and chart PDS/IDS/CDS/ADS data. Handles argument parsing for instruments, timeframes, date ranges, and indicator options. |
+| `cdscli`     | jgtpy.cdscli:main                    | CLI for creating and processing Chaos Data Service (CDS) files from instrument/timeframe data, with support for indicator and ADS options. |
+| `pds2cds`    | jgtpy.pds2cds:main                   | Convert a PDS (Price Data Service) file to a CDS (Chaos Data Service) file, with options for bar count and TLID date range. |
+| `jgtmksg`    | jgtpy.JGTMKSG:main                   | Generate market snapshots and chart visualizations for multiple instruments/timeframes, with advanced charting and HTML output options. |
+| `jgtads`     | jgtpy.JGTADS:main                    | Generate and plot Advanced Data Service (ADS) analytics and visualizations from CDS or PDS data, including technical indicators and signals. |
+| `jgtids`     | jgtpy.jgtapycli:main                 | Generate and process Indicator Data Service (IDS) files, with CLI options for indicators, normalization, and output. |
+| `adscli`     | jgtpy.JGTADS:main                    | Alias for `jgtads`: generate and plot ADS analytics and visualizations. |
+| `mkscli`     | jgtpy.JGTMKSG:main                   | Alias for `jgtmksg`: generate market snapshots and chart visualizations. |
+| `idscli`     | jgtpy.jgtapycli:main                 | Alias for `jgtids`: generate and process IDS files. |
+| `adsfromcds` | jgtpy.adsfromcdsfile:main            | Create plots from CDS cache data, supporting custom output directories, chart types, and feature plots. |
 
 For more information on each command, see the documentation in the `docs/` directory or run each command with `--help`.
 
