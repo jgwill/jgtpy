@@ -51,33 +51,6 @@ For more information on each command, see the documentation in the `docs/` direc
 
 
 
-
-## jgtads: Advanced Data Service Analytics CLI
-
-`jgtads` is the command-line gateway to Advanced Data Service (ADS) analytics and visualizations. It empowers you to:
-
-- Generate and plot ADS analytics from Chaos Data Service (CDS) or Price Data Service (PDS) files.
-- Compute and visualize technical indicators and trading signals.
-- Output interactive or static charts, analytics CSVs, and signal summaries.
-
-**Typical usage:**
-
-```sh
-jgtads --instrument EURUSD --timeframe H1 --show --save_figure my_analytics.png
-```
-
-Or, to save with auto-naming:
-
-```sh
-jgtads --instrument EURUSD --timeframe H1 --save_figure charts/ --save_figure_as_timeframe
-```
-
-- `--instrument` and `--timeframe` are required.
-- Use `--show` to display, or `--save_figure` to save.
-- No `--input`, `--output`, `--indicators`, or `--signals` options exist.
-
-> Like a fractal lens, `jgtads` reveals the hidden patterns in your market data—one invocation, many insights.
-
 ## APPENDIX
 
 ### IDS Data Columns
@@ -231,3 +204,30 @@ The `jgtpy/JGTCDSSvc.py` file is responsible for providing services related to C
   - **get_higher_cdf_datasets**: This function retrieves the CDS data for higher timeframes of a given instrument and timeframe. It uses parallel processing to speed up the retrieval.
   - **get_higher_cdf_datasets_no_concurrence**: This function retrieves the CDS data for higher timeframes of a given instrument and timeframe without using parallel processing.
   - **get_higher_cdf**: This function retrieves the CDS data for a higher timeframe of a given instrument and timeframe based on a specified level.
+
+
+## jgtads: Advanced Data Service Analytics CLI
+
+`jgtads` is the command-line gateway to Advanced Data Service (ADS) analytics and visualizations. It empowers you to:
+
+- Generate and plot ADS analytics from Chaos Data Service (CDS) or Price Data Service (PDS) files.
+- Compute and visualize technical indicators and trading signals.
+- Output interactive or static charts, analytics CSVs, and signal summaries.
+
+**Typical usage:**
+
+```sh
+jgtads --instrument EURUSD --timeframe H1 --show --save_figure my_analytics.png
+```
+
+Or, to save with auto-naming:
+
+```sh
+jgtads --instrument EURUSD --timeframe H1 --save_figure charts/ --save_figure_as_timeframe
+```
+
+- `--instrument` and `--timeframe` are required.
+- Use `--show` to display, or `--save_figure` to save.
+- No `--input`, `--output`, `--indicators`, or `--signals` options exist.
+
+> Like a fractal lens, `jgtads` reveals the hidden patterns in your market data—one invocation, many insights.
