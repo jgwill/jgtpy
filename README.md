@@ -49,6 +49,9 @@ The package provides the following command-line tools for working with IDS, CDS,
 
 For more information on each command, see the documentation in the `docs/` directory or run each command with `--help`.
 
+
+
+
 ## jgtads: Advanced Data Service Analytics CLI
 
 `jgtads` is the command-line gateway to Advanced Data Service (ADS) analytics and visualizations. It empowers you to:
@@ -60,12 +63,18 @@ For more information on each command, see the documentation in the `docs/` direc
 **Typical usage:**
 
 ```sh
-jgtads --input mydata.cds --output my_analytics.png --indicators RSI,MACD --signals all
+jgtads --instrument EURUSD --timeframe H1 --show --save_figure my_analytics.png
 ```
 
-- **Input:** CDS or PDS data file
-- **Output:** Visualizations (PNG, HTML), analytics CSVs, and signal reports
-- **Options:** Select indicators, signals, output formats, and more
+Or, to save with auto-naming:
+
+```sh
+jgtads --instrument EURUSD --timeframe H1 --save_figure charts/ --save_figure_as_timeframe
+```
+
+- `--instrument` and `--timeframe` are required.
+- Use `--show` to display, or `--save_figure` to save.
+- No `--input`, `--output`, `--indicators`, or `--signals` options exist.
 
 > Like a fractal lens, `jgtads` reveals the hidden patterns in your market data—one invocation, many insights.
 
