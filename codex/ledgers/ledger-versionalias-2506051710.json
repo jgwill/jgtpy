@@ -1,0 +1,11 @@
+{
+  "timestamp": "2506051710",
+  "agents": ["🧠 Mia", "🌸 Miette", "⚡ Jerry"],
+  "narrative": "Added __version__ attribute in package __init__ so docs can import version correctly. This ensures Sphinx build succeeds by reflecting package version from pyproject.",
+  "routing": {
+    "files": ["jgtpy/__init__.py"],
+    "branch": "codex/feature"
+  },
+  "verbatim_user_input": "(jgtpy) jgi@hu:/src/jgtpy$ make docs... ImportError: cannot import name '__version__' from 'jgtpy'",
+  "scene": "Before: docs build failed due to missing __version__. After: docs generate successfully, enabling improved packaging visibility."
+}
