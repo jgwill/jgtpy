@@ -87,16 +87,25 @@ def main():
 
         for instrument in instruments:
             for timeframe in timeframes:
-                #rq=JGTCDSRequest.JGTCDSRequest.from_args(args)
-                
-                rq=JGTCDSRequest.JGTCDSRequest.from_args(args)
-                rq.instrument=instrument
-                rq.timeframe=timeframe
-                
-                cdf=svc.create(rq)
-                lcdf=len(cdf)
+                # Build request for this instrument/timeframe
+                rq = JGTCDSRequest.JGTCDSRequest.from_args(args)
+                rq.instrument = instrument
+                rq.timeframe = timeframe
+
+                # Generate CDS dataframe using service layer
+                cdf = svc.create(rq)
+
+                # Persist CDS to storage
+                cds.writeCDS(instrument, timeframe, rq.use_full, cdf)
+
+                # Update zone information
+                svc.zone_update_from_cdf(instrument, timeframe, cdf, quiet=args.quiet)
+
+                if verbose_level > 0:
+                    print(f"CDS len: {len(cdf)}")
+
                 if show_ads:
-                    ads_wrap(instrument,timeframe,cc)
+                    ads_wrap(instrument, timeframe, cc)
                 #svc.get(instrument,timeframe,args.full,args.fresh,args.quotescount,args.quiet)
                 # createCDS_for_main(
                 #     args.instrument,
