@@ -1,5 +1,21 @@
 # jgtpy_new_sessions_actions_250523.md
 
+
+
+## NOTICE :
+
+* THAT WILL MOVE TO jgwill/jgtagentic
+
+see : 
+/src/jgtagentic/scripts/jgtpy_new_sessions_actions_250523.md
+/src/jgtagentic/scripts/jgtpy_new_sessions_actions_250523.sh
+
+
+
+
+
+
+
 ## 🧬 Ritual Extraction: Standalone JGT New Session Cascade
 
 ### Mission

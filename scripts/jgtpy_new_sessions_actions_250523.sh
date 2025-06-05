@@ -4,6 +4,13 @@
 # This script liberates the session cascade from /opt/binscripts/etc/bash_aliases_common.
 # Each function is annotated with intention and clarity.
 
+#see : 
+#/src/jgtagentic/scripts/jgtpy_new_sessions_actions_250523.md
+#/src/jgtagentic/scripts/jgtpy_new_sessions_actions_250523.sh
+
+
+
+
 set -e
 
 # --- Configurable constants ---
