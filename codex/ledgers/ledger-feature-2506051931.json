@@ -1,0 +1,11 @@
+{
+  "timestamp": "2506051931",
+  "agents": ["🧠 Mia", "🌸 Miette", "⚡ Jerry"],
+  "narrative": "Refactored cdscli to call JGTCDSSvc for creation and persist output. The CLI now writes CDS files, updates zone data and optionally displays ADS charts, aligning new service based workflow.",
+  "routing": {
+    "files": ["jgtpy/cdscli.py"],
+    "branch": "codex/feature"
+  },
+  "verbatim_user_input": "cdscli -i SPX500 -t D1 -mfi -ta -ba -new",
+  "scene": "Before: cdscli only returned data without saving or zone management. After: generated CDS files and zones support replacing jgtcli."
+}
