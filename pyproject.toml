@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jgtpy"
-version = "0.5.108"
+version = "0.5.109"
 authors = [
   { name="Guillaume Isabelle", email="jgi@jgwill.com" },
 ]
@@ -30,6 +30,7 @@ dependencies = [
   'dash',
   'panel',
   'tdqm',
+  'jgtfxcon',
 ]
 
 optional-dependencies = {  dev-lint = [

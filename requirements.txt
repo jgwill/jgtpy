@@ -29,3 +29,4 @@ jinja2
 dash
 panel
 tdqm
+jgtfxcon
