@@ -71,3 +71,7 @@ mkscli = "jgtpy.JGTMKSG:main"
 idscli = "jgtpy.jgtapycli:main"
 #jgtpy/adsfromcdsfile.py
 adsfromcds = "jgtpy.adsfromcdsfile:main"
+guidecli = "jgtpy.jgtpy_guide_for_agent:main"
+
+[tool.setuptools.package-data]
+"jgtpy" = ["guide_for_llm_agents/*"]
