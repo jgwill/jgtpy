@@ -1,0 +1,11 @@
+{
+  "timestamp": "2506051517",
+  "agents": ["🧠 Mia", "🌸 Miette", "⚡ Jerry"],
+  "narrative": "Created agent-oriented documentation and CLI to expose it. Documentation files describe each command line interface. Added script guidecli for LLMs to print docs via --list, --section, or --all. Updated packaging to include docs.",
+  "routing": {
+    "files": ["jgtpy/jgtpy_guide_for_agent.py", "jgtpy/guide_for_llm_agents/*", "pyproject.toml", "MANIFEST.in"],
+    "branch": "codex/feature"
+  },
+  "verbatim_user_input": "We have a lot of documentation on what the [project.scripts] exposes when we install the package.",
+  "scene": "Before: no consolidated guide for agents. After: agents can read docs via CLI and packaging distributes guide content."
+}
