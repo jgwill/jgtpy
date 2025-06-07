@@ -36,7 +36,7 @@ with warnings.catch_warnings():
     )
 
 
-version='0.5.110'
+version='0.5.113'
 __version__ = version
 
 
