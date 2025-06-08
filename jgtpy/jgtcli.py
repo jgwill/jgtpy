@@ -174,10 +174,10 @@ def createCDS_for_main(
     dropna_volume=True,
 ):
     # implementation goes here
-    col2remove = constants.columns_to_remove
-    config = jgtcommon.readconfig()
-    if "columns_to_remove" in config:  # read it from config otherwise
-        col2remove = config["columns_to_remove"]
+    # Load columns to remove from settings or fallback to defaults
+    col2remove = jgtcommon.load_arg_default_from_settings(
+        "columns_to_remove", constants.columns_to_remove
+    )
     quietting = True
     if verbose_level > 1:
         quietting = False

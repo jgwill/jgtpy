@@ -231,3 +231,13 @@ jgtads --instrument EURUSD --timeframe H1 --save_figure charts/ --save_figure_as
 - No `--input`, `--output`, `--indicators`, or `--signals` options exist.
 
 > Like a fractal lens, `jgtads` reveals the hidden patterns in your market data—one invocation, many insights.
+
+## Configuration
+
+The CLI tools rely on configuration files handled by the **jgtutils** package. Place a `config.json` with credentials and a `settings.json` with default parameters in `~/.jgt/` or `/etc/jgt/`. Functions like `jgtutils.jgtcommon.readconfig()` and `get_settings()` load those files automatically.
+
+## Additional Documentation
+
+- [Class Diagrams](DIAGRAMS.md)
+- [Configuration Details](docs/CONFIG_SETTINGS.md)
+

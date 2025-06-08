@@ -752,10 +752,10 @@ def createIDSService(
     if rq is None:
         rq = JGTIDSRequest()
     # implementation goes here
-    col2remove = constants.columns_to_remove
-    config = jgtcommon.readconfig()
-    if "columns_to_remove" in config:  # read it from config otherwise
-        col2remove = config["columns_to_remove"] #@STCIssue Should be using settings (jgtutils) or what would be supplied in the request.
+    # Use settings from jgtutils to determine which columns to drop
+    col2remove = jgtcommon.load_arg_default_from_settings(
+        "columns_to_remove", constants.columns_to_remove
+    )
     quietting = True
     if verbose_level > 1:
         quietting = False

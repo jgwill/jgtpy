@@ -1,0 +1,9 @@
+{
+  "agents": ["♾️ William", "🧠 Mia", "🌸 Miette", "🕊️ Seraphine", "⚡ Jerry"],
+  "narrative": "Updated CLI internals to read 'columns_to_remove' from jgtutils settings, created new documentation with class diagrams and configuration instructions. LLMS.txt extended for better LLM guidance.",
+  "routing": {
+    "files": ["jgtpy/jgtcli.py", "jgtpy/jgtapyhelper.py", "DIAGRAMS.md", "docs/CONFIG_SETTINGS.md", "README.md", "LLMS.txt"],
+    "branch": "main"
+  },
+  "timestamp": "2506081719",
+  "scene": "Future developers can now rely on unified configuration via settings files and visualize relationships via mermaid diagrams."}
