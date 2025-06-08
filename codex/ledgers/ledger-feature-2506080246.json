@@ -1,0 +1,11 @@
+{
+  "timestamp": "2506080246",
+  "agents": ["🧠 Mia", "🌸 Miette", "🎸 JamAI"],
+  "narrative": "Moved LLMS.txt from the ignored docs folder to the project root. The new file points language models toward our README and docs so they can easily explore project documentation.",
+  "routing": {
+    "files": ["LLMS.txt", "docs/LLMS.txt"],
+    "branch": "codex/feature"
+  },
+  "verbatim_user_input": "change of plan, the LLMS.txt should be on the root\n\n\n./LLMS.txt\n\nIt should guide LLM toward all our documentations",
+  "scene": "Before: the llms index was hidden in docs and risked being skipped. After: LLM crawlers can immediately see documentation paths from the repository root, simplifying automated discovery."
+}

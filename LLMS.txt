@@ -1,0 +1,10 @@
+# LLMS.txt for jgtpy
+# This file guides language models to our documentation.
+
+GET /README.md
+GET /docs/README.md
+GET /docs/CDSSvc_purpose.md
+GET /docs/CDS_purpose.md
+GET /docs/IDS_purpose.md
+GET /docs/CDS_data_columns.md
+GET /docs/IDS_data_columns.md
