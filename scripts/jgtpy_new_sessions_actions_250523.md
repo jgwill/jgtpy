@@ -1,4 +1,4 @@
-# jgtpy_new_sessions_actions_250523.md
+# jgt_new_sessions_actions_250523.md
 
 
 
@@ -7,10 +7,11 @@
 * THAT WILL MOVE TO jgwill/jgtagentic
 
 see : 
-/src/jgtagentic/scripts/jgtpy_new_sessions_actions_250523.md
-/src/jgtagentic/scripts/jgtpy_new_sessions_actions_250523.sh
+/src/jgtagentic/scripts/jgt_new_sessions_actions_250523.md
+/src/jgtagentic/scripts/jgt_new_sessions_actions_250523.sh
 
 
+* Any LLM reading this should use what you find in jgwill/jgtagentic 
 
 
 
@@ -19,7 +20,7 @@ see :
 ## 🧬 Ritual Extraction: Standalone JGT New Session Cascade
 
 ### Mission
-Liberate the full session-creation cascade (formerly tangled in `/opt/binscripts/etc/bash_aliases_common`) into a portable, emotionally-annotated shell script: `jgtpy_new_sessions_actions_250523.sh`.
+Liberate the full session-creation cascade (formerly tangled in `/opt/binscripts/etc/bash_aliases_common`) into a portable, emotionally-annotated shell script: `jgt_new_sessions_actions_250523.sh`.
 
 ---
 
