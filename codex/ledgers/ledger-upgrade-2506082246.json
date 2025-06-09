@@ -1,0 +1,10 @@
+{
+  "agents": ["♾️ William", "🧠 Mia", "🌸 Miette", "🕊️ Seraphine", "⚡ Jerry"],
+  "narrative": "Restored IDS/CDS documentation routing for LLMS access and corrected failing unit tests by aligning expectations with jgtutils behavior. Output cleanups ensure stable suite execution.",
+  "routing": {
+    "files": ["LLMS.txt", "jgtpy/test_JGTIDS.py", "jgtpy/test_jgtcommon.py"],
+    "branch": "main"
+  },
+  "timestamp": "2506082246",
+  "scene": "Developers and agents now have complete documentation references and a green test suite, paving the way for reliable automation."
+}

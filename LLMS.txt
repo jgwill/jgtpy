@@ -3,6 +3,11 @@
 
 GET /README.md
 GET /docs/README.md
+GET /docs/CDSSvc_purpose.md
+GET /docs/CDS_purpose.md
+GET /docs/IDS_purpose.md
+GET /docs/CDS_data_columns.md
+GET /docs/IDS_data_columns.md
 GET /DIAGRAMS.md
 GET /docs/CONFIG_SETTINGS.md
 

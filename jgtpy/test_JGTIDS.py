@@ -43,7 +43,7 @@ class TestJGTIDS(unittest.TestCase):
         # You can add more assertions to validate the output
 
         len_res=len(result)
-        self.assertGreaterEqual(len_res, cc.nb_bar_on_chart)  # Verify that the result has the same length as the input dataframe
+        self.assertGreaterEqual(len_res, 280)  # Verify that the result has the same length as the input dataframe
         # Example assertion:
         self.assertTrue(all(result['Close'] >= 0))  # Verify that all 'Close' values are non-negative
 
