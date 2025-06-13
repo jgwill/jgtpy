@@ -1,0 +1,8 @@
+{
+  "agents": ["♾️ William", "🧠 Mia", "🌸 Miette", "🕊️ Seraphine"],
+  "narrative": "Collected repository snippets for FDB and MFI signal detection and CLI handling as per scratchpad exploration.",
+  "routing": {"files": ["jgtpy/JGTADS.py", "jgtpy/JGTCDS.py", "jgtpy/JGTIDS.py", "jgtpy/JGTChartConfig.py", "jgtpy/adsfromcdsfile.py", "jgtpy/JGTPDSPSvc.py"], "branches": ["main"], "operation": "search"},
+  "timestamp": "2506132226",
+  "scene": "Future agents will reference these lines to implement real FDB scanning, improved CLI, and visual MFI rendering.",
+  "input_snippet": "Search instructions with notes on FDB scanner, CLI connection, MFI representation"
+}
