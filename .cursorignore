@@ -1,3 +1,18 @@
 # Add directories or file patterns to ignore during indexing (e.g. foo/ or *.csv)
 *.csv
 *.html
+data.*
+dist
+build
+node_modules
+mycharts
+output
+pds
+.stc
+.nx
+.spyproject
+.hch
+.idea
+_tmp
+
+weekly_report.txt
