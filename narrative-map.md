@@ -5,3 +5,4 @@
 - db641cb Update .cursorignore to include additional file patterns and directories for indexing
 - 5ab3b80 chg
 - b179892 notice
+- 403cc3a docs: record fdb and mfi search results

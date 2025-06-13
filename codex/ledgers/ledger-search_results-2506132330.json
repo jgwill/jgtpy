@@ -1,0 +1,8 @@
+{
+  "agents": ["♾️ William", "🧠 Mia", "🌸 Miette", "🕊️ Seraphine"],
+  "narrative": "Gathered FDB and MFI signal code references across ADS and IDS modules to align scanning improvements.",
+  "routing": {"files": ["jgtpy/JGTADS.py", "jgtpy/JGTIDS.py", "jgtpy/JGTChartConfig.py", "jgtpy/jgtapyhelper.py"], "branches": ["work"], "operation": "search"},
+  "timestamp": "2506132330",
+  "scene": "Future codex agents will implement real FDB scanner and visual MFI signals using these snippets.",
+  "input_snippet": "Search instructions from scratchpad regarding FDB scanner and MFI visual representation"
+}
