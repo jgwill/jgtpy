@@ -1,5 +1,5 @@
 # LLMS.txt for jgtpy
-# This file guides language models to our documentation.
+# Market Data Services and Indicator Data Processing
 
 GET /README.md
 GET /docs/README.md
@@ -8,3 +8,239 @@ GET /docs/CDS_purpose.md
 GET /docs/IDS_purpose.md
 GET /docs/CDS_data_columns.md
 GET /docs/IDS_data_columns.md
+
+## Package Purpose
+jgtpy serves as the core data services layer for the JGT platform, providing market data processing, technical indicator calculation, and structured data output for signal detection systems.
+
+## Core Data Services
+
+### PDS (Price Data Service)
+- **Purpose**: Raw market data storage and retrieval
+- **Source**: Market data from jgtfxcon connectivity layer
+- **Format**: OHLCV (Open, High, Low, Close, Volume) with Date index
+- **Storage**: `$JGTPY_DATA/pds/` and `$JGTPY_DATA_FULL/pds/`
+
+### IDS (Indicator Data Service) 
+- **Purpose**: Technical indicator calculation and standardization
+- **Key Module**: `JGTIDS.py` and `jgtapyhelper.py`
+- **Indicators**: Bill Williams suite (Alligator, AO/AC, Fractals, MFI)
+- **Output**: Standardized indicator columns for signal analysis
+
+### CDS (Chart Data Service)
+- **Purpose**: Visual chart data preparation and analysis
+- **Integration**: Combines PDS + IDS with additional signal columns
+- **Usage**: Chart generation and visual analysis
+
+### ADS (Analysis Data Service)
+- **Purpose**: Advanced analytical data preparation
+- **Features**: Multi-timeframe analysis and pattern detection
+
+## Key Components
+
+### JGTIDS.py - Indicator Data Service
+Primary module for indicator calculation:
+
+```python
+from jgtpy.JGTIDS import ids_add_indicators, tocds
+
+# Generate IDS with indicators
+df_with_indicators = ids_add_indicators(price_data, quiet=True)
+
+# Generate full CDS with signals
+df_cds = tocds(price_data, quiet=True)
+```
+
+**Core Functions**:
+- `ids_add_indicators()` - Add technical indicators to DataFrame
+- `tocds()` - Complete conversion to Chart Data Service format
+- `_ids_add_fdb_column_logics_v2()` - FDB signal detection logic
+
+### jgtapyhelper.py - Service Layer
+Helper functions and service wrappers:
+
+```python
+from jgtpy import jgtapyhelper as th
+
+# Create IDS from PDS file
+df_ids = th.create_from_pds_file(rq=ids_request)
+
+# Read existing IDS data
+df_ids = th.read_ids(instrument, timeframe)
+
+# Get current bar data
+current_bar = th.read_ids_currentbar(instrument, timeframe, use_full=False)
+```
+
+**Key Functions**:
+- `create_from_pds_file()` - Generate IDS from PDS data
+- `read_ids()` - Load existing IDS data
+- `get_bar_at_index()` - Extract specific bars for analysis
+
+### JGTIDSRequest Configuration
+Controls indicator calculation and data processing:
+
+```python
+from jgtpy.JGTIDSRequest import JGTIDSRequest
+
+rq = JGTIDSRequest()
+rq.instrument = "EUR/USD"
+rq.timeframe = "H4"
+rq.mfi_flag = True              # Enable MFI calculation
+rq.balligator_flag = True       # Enable Big Alligator
+rq.talligator_flag = True       # Enable Tide Alligator
+rq.keep_bid_ask = False         # Remove bid/ask columns
+```
+
+## CLI Interface
+
+### Primary Commands
+```bash
+# Generate IDS data
+jgtpycli ids -i EUR/USD -t H4 --fresh
+
+# Generate CDS with charts
+jgtpycli cds -i SPX500 -t D1 --full
+
+# Generate ADS analysis
+jgtpycli ads -i GBP/USD -t H1 --fresh
+```
+
+### Integration with Platform
+```bash
+# Called by jgtml for fresh data
+jgtapp ids EUR/USD H4
+
+# Called by scanning systems
+jgtapp cds SPX500 D1 --fresh
+```
+
+## Data Processing Pipeline
+
+### Standard Workflow
+```
+Raw Price Data (PDS) → Indicator Calculation (IDS) → 
+Signal Processing (CDS) → Analysis Output (ADS) → 
+Chart Generation → Signal Detection
+```
+
+### Used by jgtml Signal Detection
+```python
+# jgtml calls jgtpy for data preparation
+from jgtpy import jgtapyhelper as th
+
+# Get fresh IDS data for signal scanning
+df = th.create_from_pds_file(instrument, timeframe, use_fresh=True)
+
+# Extract signal bars for analysis
+signal_bar, current_bar = get_last_two_bars(df)
+```
+
+## Column Standards
+
+### IDS Column Naming (from jgtutils.jgtconstants)
+```python
+# Alligator indicators
+JAW, TEETH, LIPS                # Regular Alligator (13-8-5)
+BJAW, BTEETH, BLIPS             # Big Alligator (89-55-34)
+TJAW, TTEETH, TLIPS             # Tide Alligator (377-233-144)
+
+# Oscillators
+AO, AC                          # Awesome/Accelerator Oscillators
+
+# Fractals (multiple degrees)
+FH, FL, FH3, FL3, FH5, FL5      # Fractal highs/lows
+FH8, FL8, FH13, FL13            # Higher degree fractals
+# ... up to FH89, FL89
+
+# Market Facilitation Index
+MFI                             # Bill Williams MFI
+
+# Signal columns
+FDB, FDBB, FDBS                 # Fractal Divergent Bar signals
+ZONE_SIGNAL                     # Market zone identification
+```
+
+### Data Types and Formatting
+- **Numerical precision**: Configurable rounding (default 10 decimal places)
+- **Boolean conversion**: Automatically convert bool columns to int
+- **Date handling**: Pandas datetime index with timezone support
+- **Missing data**: Configurable NaN handling and dropna options
+
+## Integration with Other Packages
+
+### Data Flow from jgtfxcon
+```python
+# jgtfxcon provides raw market data
+import jgtfxcon
+raw_data = jgtfxcon.getPH(instrument, timeframe, quote_count)
+
+# jgtpy processes into indicators
+from jgtpy import jgtapyhelper as th
+indicators_data = th.create_from_df(raw_data)
+```
+
+### Data Flow to jgtml
+```python
+# jgtml uses jgtpy-processed data for signals
+from jgtpy.JGTIDS import _ids_add_fdb_column_logics_v2
+
+# Get processed data with FDB signals
+df_with_fdb = _ids_add_fdb_column_logics_v2(indicators_data)
+```
+
+### Usage in jgtapp Workflows
+```python
+# jgtapp orchestrates data processing workflows
+from jgtpy.jgtpyconstants import IDSCLI_PROG_NAME, CDSCLI_PROG_NAME
+
+# Generate fresh IDS data
+subprocess.run([IDSCLI_PROG_NAME, '-i', instrument, '-t', timeframe, '--fresh'])
+
+# Generate CDS for charting
+subprocess.run([CDSCLI_PROG_NAME, '-i', instrument, '-t', timeframe, '--full'])
+```
+
+## Configuration and Settings
+
+### Environment Variables
+- `JGTPY_DATA` - Standard data storage path
+- `JGTPY_DATA_FULL` - Full historical data storage path
+
+### Configuration Files
+- Settings loaded via jgtutils.jgtcommon configuration system
+- Column removal specifications for data cleanup
+- Indicator parameter defaults and overrides
+
+## Performance and Optimization
+
+### Caching Strategy
+- **File-based caching** for processed indicator data
+- **Timestamp validation** for cache freshness
+- **Configurable cache paths** for different data types
+
+### Data Processing Optimization
+- **Vectorized calculations** using pandas and numpy
+- **Conditional indicator calculation** based on available bars
+- **Memory-efficient processing** for large datasets
+
+## Development State
+
+### Production Components
+- **IDS Generation**: Stable and production-ready
+- **Data Services**: Core functionality complete
+- **CLI Interface**: Full feature set available
+
+### Active Development
+- **Multi-timeframe optimization** for faster processing
+- **Enhanced caching strategies** for improved performance
+- **Integration improvements** with jgtml signal detection
+
+### Integration Points
+- **jgtfxcon**: Receives raw market data
+- **jgtml**: Provides processed data for signal detection
+- **jgtutils**: Uses configuration and utility functions
+- **jgtapy**: Leverages indicator calculation engine
+
+---
+
+*jgtpy serves as the essential data processing backbone of the JGT platform, transforming raw market data into structured, indicator-rich datasets ready for advanced signal analysis and trading decisions.*
