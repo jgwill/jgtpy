@@ -17,3 +17,6 @@ This repository lacks prior agent instructions. This file records the guiding pa
 
 ## 2025-06-14 Assessment
 Implemented fixes for failing tests introduced in previous commit. Updated `test_jgtcli` to mock `_parse_args` and accommodate additional CLI arguments. Adjusted `test_JGTIDS` expectations to reflect actual CDS length, and corrected expected datetime in `test_jgtcommon`. Added missing agent instructions.
+
+## 2025-06-14 Efficiency Upgrade
+Added threaded FDB scanning and CLI `--workers` option after reviewing jgtml patterns. Enhanced unit tests cover new CLI.

@@ -13,14 +13,15 @@ except Exception:
     yaml = None
 
 
-def parse_args():
+def parse_args(argv=None):
     parser = argparse.ArgumentParser(description="JGT Agentic CLI")
     parser.add_argument("-i", "--instrument", default="EUR/USD", help="Instrument symbol, comma separated")
     parser.add_argument("-t", "--timeframe", default="H1", help="Timeframe, comma separated")
     parser.add_argument("-s", "--strategy", help="Path to strategy YAML intent")
     parser.add_argument("-y", "--yaml", action="store_true", help="Output results as YAML")
     parser.add_argument("-q", "--quiet", action="store_true", help="Suppress verbose output")
-    return parser.parse_args()
+    parser.add_argument("-w", "--workers", type=int, default=5, help="Parallel workers for scanning")
+    return parser.parse_args(argv)
 
 
 def main():
@@ -36,7 +37,7 @@ def main():
         if spec.timeframes:
             timeframes = spec.timeframes
 
-    results = scan_fdb(instruments, timeframes, quiet=args.quiet)
+    results = scan_fdb(instruments, timeframes, quiet=args.quiet, workers=args.workers)
 
     if args.yaml:
         if yaml is None:

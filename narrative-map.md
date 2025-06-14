@@ -9,3 +9,5 @@
 - da43d8b feat: add agentic CLI and FDB scanner
 
 - de90ffe test: fix cli and ids tests
+- 8394682 Applying previous commit.
+- 99dd621 feat: add threaded fdb scanner
