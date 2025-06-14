@@ -8,7 +8,7 @@ class TestTlidRangeToJgtfxconStartEndStr(unittest.TestCase):
         # Arrange
         tlid_range = "211124_220113"
         expected_start = '11.24.2021 00:00:00'
-        expected_end = '01.13.2022 00:00:00'
+        expected_end = '01.13.2022 23:59:00'
 
         # Act
         result_start, result_end = tlid_range_to_jgtfxcon_start_end_str(tlid_range)

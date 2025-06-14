@@ -7,3 +7,5 @@
 - b179892 notice
 - 403cc3a docs: record fdb and mfi search results
 - da43d8b feat: add agentic CLI and FDB scanner
+
+- de90ffe test: fix cli and ids tests
