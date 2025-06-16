@@ -72,3 +72,36 @@ These labels help scripts react to transitional bars or stop conditions.
 
 The Lua functions `parse_mouth_dir_state` and `parse_mouth_bs_state_barpos__water` from `jgwill/jgtstrategies` encapsulate the above logic. They examine current and previous bar positions to emit `mouth_dir`, `mouth_state`, `mouth_bar_pos` and `water_state` values. Refer to those functions when porting the logic to Python.
 
+## 8. Algorithm Outline
+
+Below is a high level description of how those Lua utilities operate.  The intent
+is to provide enough guidance for a Python reimplementation while still keeping
+the specification accessible to non-programmers.
+
+1. **Direction Calculation**
+   - Evaluate the slope of `jaw`, `teeth` and `lips` over the last two bars.
+   - If all three slope upward and maintain the order *lips > teeth > jaw* the
+     direction is **Buy**.
+   - If all slope downward in the order *lips < teeth < jaw* the direction is
+     **Sell**.
+   - Any other configuration yields **Neither**.
+
+2. **Phase Determination**
+   - Measure the absolute distances between the lines.
+   - Growing distances move the phase from *Closed* → *Opening* → *Open*.
+   - Shrinking distances reverse the flow: *Open* → *Closing* → *Closed*.
+
+3. **Bar Position**
+   - Compare current price to the three lines to know if it is **above**, **in**
+     or **below** the mouth.  This position assists with water state names like
+     *Entering* or *Throwing*.
+
+4. **Water State Decision**
+   - Use AO to check if momentum is **Above** or **Below** the zero line.
+   - Merge the bar position and mouth phase to emit final labels such as
+     *Splashing* or *Switching*.
+
+This outline is intentionally simplified; corner cases in the Lua scripts handle
+flat markets and data gaps.  Any Python port should replicate those checks so
+the strategy behaves identically across languages.
+
