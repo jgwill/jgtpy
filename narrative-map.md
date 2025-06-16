@@ -7,6 +7,7 @@
 
 - 3956666: Applying previous commit introducing example READMEs.
 
-- <pending>: clarify before/after states in example READMEs.
+- 5d69b85: Applying previous commit introducing extended examples and CLI docs.
+- <pending>: add Examples section to llms.txt.
 
 These changes document the command line tools and provide runnable examples to showcase usage.

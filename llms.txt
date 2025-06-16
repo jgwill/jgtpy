@@ -241,6 +241,12 @@ subprocess.run([CDSCLI_PROG_NAME, '-i', instrument, '-t', timeframe, '--full'])
 - **jgtutils**: Uses configuration and utility functions
 - **jgtapy**: Leverages indicator calculation engine
 
+# Examples
+
+The `examples/` directory contains runnable scripts demonstrating each command
+line interface. Each subfolder has a `run.sh` script and README describing the
+before/after state when executing that CLI tool.
+
 ---
 
 *jgtpy serves as the essential data processing backbone of the JGT platform, transforming raw market data into structured, indicator-rich datasets ready for advanced signal analysis and trading decisions.*
