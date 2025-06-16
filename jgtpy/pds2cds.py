@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+"""Convert a Price Data Service file to a Chaos Data Service file.
+
+Exposes the ``pds2cds`` entry point. Run ``pds2cds --help`` for
+command options.
+"""
 
 import sys
 import os

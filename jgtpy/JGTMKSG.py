@@ -1,4 +1,10 @@
-#!/usr/bin/env python -0 
+#!/usr/bin/env python -0
+"""Market Snapshot Generator CLI.
+
+Implements the ``jgtmksg``/``mkscli`` entry points used to build charts
+and HTML market snapshots. For detailed usage instructions, run
+``jgtmksg --help``.
+"""
 
 # %% Imports
 import datetime

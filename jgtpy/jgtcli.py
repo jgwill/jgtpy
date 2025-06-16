@@ -1,4 +1,10 @@
 #!/usr/bin/env python
+"""Command-line interface for general IDS/CDS operations.
+
+This script exposes :func:`main` used by the ``jgtcli`` entry point.
+It acts as a convenience wrapper around various services for fetching
+and processing market data. Run ``jgtcli --help`` for usage details.
+"""
 
 import sys
 import os

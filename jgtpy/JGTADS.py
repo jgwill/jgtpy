@@ -1,5 +1,10 @@
 #!/usr/bin/env python
-# 
+"""Analysis Data Service CLI and helper utilities.
+
+Provides the ``jgtads``/``adscli`` command for plotting ADS analytics
+from CDS or PDS sources. See ``jgtads --help`` for usage.
+"""
+#
 # # @title ADS
 
 # Imports

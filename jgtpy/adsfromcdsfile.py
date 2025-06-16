@@ -1,6 +1,13 @@
+"""Create ADS charts from cached CDS data.
+
+This module exposes the ``adsfromcds`` entry point used to generate
+plots directly from a CDS cache directory. Run ``adsfromcds --help``
+for command details.
+"""
+
 import os
 import pandas as pd
-import JGTADS 
+import JGTADS
 from JGTADSRequest import JGTADSRequest
 import argparse
 

@@ -1,3 +1,9 @@
+"""Indicator Data Service generation CLI.
+
+Implements the ``jgtids``/``idscli`` commands. Run ``jgtids --help`` to
+see available options for generating IDS files.
+"""
+
 import warnings
 
 # Ignore FutureWarning
