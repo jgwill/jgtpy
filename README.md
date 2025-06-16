@@ -49,6 +49,9 @@ The package provides the following command-line tools for working with IDS, CDS,
 
 For more details on each command, read [CLI_REFERENCE.md](docs/CLI_REFERENCE.md) or run the command with `--help`.
 
+Additional usage demonstrations can be found in the [examples](examples/) directory.
+=======
+
 
 
 ## APPENDIX

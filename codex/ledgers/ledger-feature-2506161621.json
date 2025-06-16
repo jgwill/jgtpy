@@ -1,0 +1,13 @@
+{
+  "timestamp": "2506161621",
+  "agents": ["🧠 Mia", "🌸 Miette", "🎸 JamAI"],
+  "narrative": "Clarified end results for each CLI example README so users know what changes before and after running the scripts.",
+  "routing": {
+    "files": [
+      "examples/*/README.md"
+    ],
+    "branch": "work"
+  },
+  "verbatim_user_input": "In each examples README.md you will describe what is the end-results achived by the command ran in that example (what did we had before running that command ? What will we get after running that command ?)",
+  "scene": "Before: READMEs only mentioned running scripts without context. After: each explains the state before and what output or knowledge is gained after executing the CLI."
+}
