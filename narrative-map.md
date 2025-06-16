@@ -5,6 +5,7 @@
 - c49510e: expand Alligator mouth state spec
 - e4b6746: applying previous commit introducing CLI docs and main entry point.
 - b440b49: add example scripts for each CLI
+- <pending>: add Python porting plan for Alligator mouth utilities.
 
 - 3956666: Applying previous commit introducing example READMEs.
 
@@ -129,6 +130,18 @@ The file `specs/AlligatorWaterMouthState.spec.md` now contains a detailed descri
     This outline is intentionally simplified; corner cases in the Lua scripts handle
     flat markets and data gaps.  Any Python port should replicate those checks so
     the strategy behaves identically across languages.
+    
+    ## 9. Python Porting Plan
+
+    The first milestone is to replicate the Lua helpers in a small Python module. This module should expose four functions mirroring the calculation steps above:
+
+    1. `calculate_mouth_direction(jaw, teeth, lips)` – return `Buy`, `Sell` or `Neither`.
+    2. `calculate_mouth_phase(jaw, teeth, lips)` – determine `Open`, `Closing`, `Opening` or `Closed`.
+    3. `bar_position(price, jaw, teeth, lips)` – categorize the current bar as **above**, **in**, or **below** the mouth.
+    4. `water_state(ao_value, bar_pos, phase)` – combine AO momentum with the bar position and phase to yield final labels.
+
+    When these four pieces are complete, a wrapper can emit `mouth_dir`, `mouth_state` and `water_state` each bar, matching the behavior of the Lua utilities.  The implementation should log mismatches or ambiguous states so they can be reconciled with the original strategy.
+
     
 ```
 
