@@ -116,3 +116,32 @@ The first milestone is to replicate the Lua helpers in a small Python module. Th
 4. `water_state(ao_value, bar_pos, phase)` – combine AO momentum with the bar position and phase to yield final labels.
 
 When these four pieces are complete, a wrapper can emit `mouth_dir`, `mouth_state` and `water_state` each bar, matching the behavior of the Lua utilities.  The implementation should log mismatches or ambiguous states so they can be reconciled with the original strategy.
+
+## 10. Edge Cases and Lua Parity
+
+Porting should mirror the Lua reference `parse_mouth_dir_state` and `parse_mouth_bs_state_barpos__water`. Some notable corner cases:
+
+- **Flat markets** – when all lines are nearly horizontal for several bars, freeze the mouth phase to avoid flapping between open and closed.
+- **Gaps in data** – handle missing AO or line values by carrying forward the last valid state.
+- **Naming mismatches** – older Lua scripts label `Poping` as `Popping`. The Python port should accept either spelling for compatibility.
+
+Any deviations from the Lua implementation must be logged so strategies can be validated across languages.
+
+## 11. Visualization Snippet
+
+To confirm behavior visually, plot the jaw, teeth and lips along with the AO zero line. Color bars by `water_state`:
+
+```python
+# pseudo-code for visualization
+import matplotlib.pyplot as plt
+
+plt.plot(jaw, label="Jaw")
+plt.plot(teeth, label="Teeth")
+plt.plot(lips, label="Lips")
+plt.axhline(0, color="gray", linestyle="--")  # AO zero line
+plt.scatter(price.index, price, c=water_state_colors)
+plt.legend()
+plt.show()
+```
+
+This optional snippet helps verify that transitions like *Splashing* or *Entering* align with the indicator data.

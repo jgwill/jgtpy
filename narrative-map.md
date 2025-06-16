@@ -5,7 +5,7 @@
 - c49510e: expand Alligator mouth state spec
 - e4b6746: applying previous commit introducing CLI docs and main entry point.
 - b440b49: add example scripts for each CLI
-- <pending>: add Python porting plan for Alligator mouth utilities.
+- 9d967b7: add Python porting plan for Alligator mouth utilities.
 
 - 3956666: Applying previous commit introducing example READMEs.
 
@@ -14,8 +14,9 @@
 
 These changes document the command line tools and provide runnable examples to showcase usage.
 
-- <pending>: add Alligator water and mouth state specification.
-- <pending>: expand spec with algorithm outline for direction, phase, and water states.
+- 9d967b7: add Alligator water and mouth state specification.
+- 9d967b7: expand spec with algorithm outline for direction, phase, and water states.
+- <pending>: add parity and visualization guidance to spec.
 
 ### Alligator Water & Mouth Spec
 
@@ -97,13 +98,13 @@ The file `specs/AlligatorWaterMouthState.spec.md` now contains a detailed descri
     ## 7. Implementation Hints
     
     The Lua functions `parse_mouth_dir_state` and `parse_mouth_bs_state_barpos__water` from `jgwill/jgtstrategies` encapsulate the above logic. They examine current and previous bar positions to emit `mouth_dir`, `mouth_state`, `mouth_bar_pos` and `water_state` values. Refer to those functions when porting the logic to Python.
-
+    
     ## 8. Algorithm Outline
-
+    
     Below is a high level description of how those Lua utilities operate.  The intent
     is to provide enough guidance for a Python reimplementation while still keeping
     the specification accessible to non-programmers.
-
+    
     1. **Direction Calculation**
        - Evaluate the slope of `jaw`, `teeth` and `lips` over the last two bars.
        - If all three slope upward and maintain the order *lips > teeth > jaw* the
@@ -111,37 +112,64 @@ The file `specs/AlligatorWaterMouthState.spec.md` now contains a detailed descri
        - If all slope downward in the order *lips < teeth < jaw* the direction is
          **Sell**.
        - Any other configuration yields **Neither**.
-
+    
     2. **Phase Determination**
        - Measure the absolute distances between the lines.
        - Growing distances move the phase from *Closed* → *Opening* → *Open*.
        - Shrinking distances reverse the flow: *Open* → *Closing* → *Closed*.
-
+    
     3. **Bar Position**
        - Compare current price to the three lines to know if it is **above**, **in**
          or **below** the mouth.  This position assists with water state names like
          *Entering* or *Throwing*.
-
+    
     4. **Water State Decision**
        - Use AO to check if momentum is **Above** or **Below** the zero line.
        - Merge the bar position and mouth phase to emit final labels such as
          *Splashing* or *Switching*.
-
+    
     This outline is intentionally simplified; corner cases in the Lua scripts handle
     flat markets and data gaps.  Any Python port should replicate those checks so
     the strategy behaves identically across languages.
     
+    
     ## 9. Python Porting Plan
-
+    
     The first milestone is to replicate the Lua helpers in a small Python module. This module should expose four functions mirroring the calculation steps above:
-
+    
     1. `calculate_mouth_direction(jaw, teeth, lips)` – return `Buy`, `Sell` or `Neither`.
     2. `calculate_mouth_phase(jaw, teeth, lips)` – determine `Open`, `Closing`, `Opening` or `Closed`.
     3. `bar_position(price, jaw, teeth, lips)` – categorize the current bar as **above**, **in**, or **below** the mouth.
     4. `water_state(ao_value, bar_pos, phase)` – combine AO momentum with the bar position and phase to yield final labels.
-
-    When these four pieces are complete, a wrapper can emit `mouth_dir`, `mouth_state` and `water_state` each bar, matching the behavior of the Lua utilities.  The implementation should log mismatches or ambiguous states so they can be reconciled with the original strategy.
-
     
+    When these four pieces are complete, a wrapper can emit `mouth_dir`, `mouth_state` and `water_state` each bar, matching the behavior of the Lua utilities.  The implementation should log mismatches or ambiguous states so they can be reconciled with the original strategy.
+    
+    ## 10. Edge Cases and Lua Parity
+    
+    Porting should mirror the Lua reference `parse_mouth_dir_state` and `parse_mouth_bs_state_barpos__water`. Some notable corner cases:
+    
+    - **Flat markets** – when all lines are nearly horizontal for several bars, freeze the mouth phase to avoid flapping between open and closed.
+    - **Gaps in data** – handle missing AO or line values by carrying forward the last valid state.
+    - **Naming mismatches** – older Lua scripts label `Poping` as `Popping`. The Python port should accept either spelling for compatibility.
+    
+    Any deviations from the Lua implementation must be logged so strategies can be validated across languages.
+    
+    ## 11. Visualization Snippet
+    
+    To confirm behavior visually, plot the jaw, teeth and lips along with the AO zero line. Color bars by `water_state`:
+    
+    ```python
+    # pseudo-code for visualization
+    import matplotlib.pyplot as plt
+    
+    plt.plot(jaw, label="Jaw")
+    plt.plot(teeth, label="Teeth")
+    plt.plot(lips, label="Lips")
+    plt.axhline(0, color="gray", linestyle="--")  # AO zero line
+    plt.scatter(price.index, price, c=water_state_colors)
+    plt.legend()
+    plt.show()
+    ```
+    
+    This optional snippet helps verify that transitions like *Splashing* or *Entering* align with the indicator data.
 ```
-
