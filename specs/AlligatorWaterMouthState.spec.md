@@ -145,3 +145,30 @@ plt.show()
 ```
 
 This optional snippet helps verify that transitions like *Splashing* or *Entering* align with the indicator data.
+
+## 12. Related Lua Implementations
+
+Development of the mouth and water logic originally happened in the
+`jgwill/jgtstrategies` repository.  Several Lua scripts there call the helper
+functions to emit trading signals:
+
+- `strategies/standard/xpto231120v4.lua` – first reference emitting mouth state
+  events.
+- `strategies/standard/xpto231120v4fix.lua` – bug-fix version with extended
+  state handling.
+- `strategies/standard/xpto231123v4fix_bop.lua` – variant that integrates BOP
+  logic.
+- `strategies/standard/xpto231125v4fix.lua` – refined parsing of water state
+  transitions.
+- `strategies/standard/xptoDSPrep231124v5.lua` – dataset preparation script that
+  logs mouth and water states.
+- `stratagies/standard/jgtstrategiesfunctions250523.lua` – function library
+  containing `parse_mouth_dir_state` and
+  `parse_mouth_bs_state_barpos__water`.
+- `strategies/standard/_mouth_signal_state_analysis.csv` – example output with
+  columns `mouth_dir`, `mouth_state`, `mouth_bar_pos` and `water_state`.
+
+Copies of these Lua files also live inside the **jgtstratpy** package under
+`jgtstratpy/src/lua_strat/` for Python integration.  See
+`docs/mouth_water_index.md` in `jgwill/jgtstrategies` for the full list.  These
+references provide context and test cases when verifying the Python port.
