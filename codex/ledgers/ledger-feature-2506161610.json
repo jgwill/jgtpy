@@ -1,0 +1,11 @@
+{
+  "timestamp": "2506161610",
+  "agents": ["🧠 Mia", "🌸 Miette", "🎸 JamAI"],
+  "narrative": "Added example directories for each CLI with README and runnable bash scripts. Updated README to link the examples.",
+  "routing": {
+    "files": ["examples/*/README.md", "examples/*/run.sh", "README.md"],
+    "branch": "codex/feature"
+  },
+  "verbatim_user_input": "great job, now take on each cli you have explored and generate ./examples/<example 1...> each with their README.md and bash that runs your examples",
+  "scene": "Before: users had documentation but no hands-on examples. After: sample scripts demonstrate CLI usage for quick start."
+}

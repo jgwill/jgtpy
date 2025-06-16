@@ -1,0 +1,12 @@
+# Narrative Map
+
+## Commit Timeline
+
+- e4b6746: applying previous commit introducing CLI docs and main entry point.
+- b440b49: add example scripts for each CLI
+
+- 3956666: Applying previous commit introducing example READMEs.
+
+- <pending>: clarify before/after states in example READMEs.
+
+These changes document the command line tools and provide runnable examples to showcase usage.

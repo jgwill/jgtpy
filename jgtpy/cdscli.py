@@ -1,4 +1,10 @@
 #!/usr/bin/env python
+"""Chaos Data Service command-line interface.
+
+This module provides the ``cdscli`` entry point for creating and
+processing CDS files. Invoke ``cdscli --help`` to see available
+options.
+"""
 
 import sys
 import os

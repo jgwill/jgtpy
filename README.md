@@ -47,7 +47,8 @@ The package provides the following command-line tools for working with IDS, CDS,
 | `idscli`     | jgtpy.jgtapycli:main                 | Alias for `jgtids`: generate and process IDS files. |
 | `adsfromcds` | jgtpy.adsfromcdsfile:main            | Create plots from CDS cache data, supporting custom output directories, chart types, and feature plots. |
 
-For more information on each command, see the documentation in the `docs/` directory or run each command with `--help`.
+For more details on each command, read [CLI_REFERENCE.md](docs/CLI_REFERENCE.md) or run the command with `--help`.
+Additional usage demonstrations can be found in the [examples](examples/) directory.
 
 
 
