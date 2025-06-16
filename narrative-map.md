@@ -11,3 +11,5 @@
 - <pending>: add Examples section to llms.txt.
 
 These changes document the command line tools and provide runnable examples to showcase usage.
+
+- <pending>: add Alligator water and mouth state specification.
