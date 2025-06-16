@@ -1051,6 +1051,11 @@ def tocds(
     if add_mfi_signals_proto:
         dfires= _cds_add_mfi_squat_n_signals_column_logics_v1(dfires, quiet=quiet)
     
+    # Integrate the mouth state calculation
+    dfires['mouth_state'] = dfires.apply(lambda row: tah.calculate_mouth_state(dfires), axis=1)
+    
+    # Integrate the water state calculation
+    dfires = tah.integrate_water_state(dfires)
     
     # Remove the specified columns
     if columns_to_remove is not None:

@@ -118,6 +118,8 @@ venv.bak/
 test/History
 History
 data
+data.*
+
 
 # testing
 test/*.csv

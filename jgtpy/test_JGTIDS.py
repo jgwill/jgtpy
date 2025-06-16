@@ -1,12 +1,10 @@
-
-
-    
 import unittest
 import pandas as pd
 from JGTIDS import tocds
 from jgtpy.JGTADSRequest import JGTADSRequest
 from jgtpy.JGTChartConfig import JGTChartConfig
 import os
+from jgtpy.jgtapyhelper import calculate_mouth_state, calculate_water_state
 
 class TestJGTIDS(unittest.TestCase):
   
@@ -48,6 +46,37 @@ class TestJGTIDS(unittest.TestCase):
         self.assertTrue(all(result['Close'] >= 0))  # Verify that all 'Close' values are non-negative
 
         # You can add more assertions based on your specific requirements
+
+    def test_calculate_mouth_state(self):
+        # Arrange
+        data = {
+            'JAW': [1, 2, 3, 4, 5],
+            'TEETH': [1, 2, 3, 4, 5],
+            'LIPS': [1, 2, 3, 4, 5]
+        }
+        df = pd.DataFrame(data)
+
+        # Act
+        result = calculate_mouth_state(df)
+
+        # Assert
+        self.assertEqual(result, 'open')
+
+    def test_calculate_water_state(self):
+        # Arrange
+        data = {
+            'JAW': [1, 2, 3, 4, 5],
+            'TEETH': [1, 2, 3, 4, 5],
+            'LIPS': [1, 2, 3, 4, 5],
+            'CLOSE': [1, 2, 3, 4, 5]
+        }
+        df = pd.DataFrame(data)
+
+        # Act
+        result = calculate_water_state(df)
+
+        # Assert
+        self.assertEqual(result, 'splashing')
 
 
 if __name__ == "__main__":

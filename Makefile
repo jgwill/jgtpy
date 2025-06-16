@@ -107,6 +107,6 @@ dev-release:
 
 .PHONY: dev-release-plus
 dev-release-plus:
-	pip install --user -U jgtutils
+	pip install -U jgtutils
 	make dev-release
 	twine upload dist/*

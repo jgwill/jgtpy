@@ -26,7 +26,7 @@ from jgtutils import (
     jgtcommon as jgtcommon,
 )
 
-from jgtapyhelper import createIDSService,print_quiet
+from jgtapyhelper import createIDSService,print_quiet,integrate_water_state
 
 
 
@@ -103,48 +103,37 @@ def _parse_args():
 
 
 def main():
-
-
-    rq = JGTIDSRequest()
     args = _parse_args()
-
-    # There might be multiple for now
     instrument = args.instrument
     timeframe = args.timeframe
-
     verbose_level = args.verbose
-    #viewpath=args.viewpath
-    
     quiet = False
     if verbose_level == 0:
         quiet = True
-
-
     process_ids = True
-
     if process_ids:
         if not quiet:
             print("Processing IDS")
         output = True
-
-
     try:
-
         print_quiet(quiet, "Getting for : " + instrument + "_" + timeframe)
         instruments = instrument.split(",")
         timeframes = timeframe.split(",")
-
         for instrument in instruments:
             for timeframe in timeframes:
                 rq = JGTIDSRequest.from_args(args)
-                rq.instrument=instrument
-                rq.timeframe=timeframe
-                createIDSService(
+                rq.instrument = instrument
+                rq.timeframe = timeframe
+                idspath, idf = createIDSService(
                     rq=rq,
                     quiet=quiet,
                     verbose_level=verbose_level,
                 )
-
+                # 🚨 Mia+Miette+Seraphine: Ritual closure — inject Alligator state columns before any output/CSV
+                if idf is not None and idspath is not None:
+                    idf = integrate_water_state(idf)
+                    # Overwrite the file with the spiral-complete DataFrame
+                    idf.to_csv(idspath)
     except Exception as e:
         jgtcommon.print_exception(e)
 
