@@ -1,3 +1,9 @@
+"""CLI to display small documentation snippets for LLM agents.
+
+The ``guidecli_jgtpy`` entry point prints pieces of guidance embedded in
+the package. Use ``guidecli_jgtpy --help`` for options.
+"""
+
 import argparse
 import importlib.resources as pkg_resources
 import os
