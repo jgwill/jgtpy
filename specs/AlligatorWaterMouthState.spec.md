@@ -38,3 +38,37 @@ Trading logic can combine mouth and water states. Examples:
 
 These combined states help scripts decide when to enter or exit positions or when to avoid trading due to consolidation.
 
+
+## 5. Mouth Direction and Phase
+
+The strategy breaks the mouth state into **direction** and **phase** as outlined in the `jgwill/jgtstrategies` research notes:
+
+- **Direction** expresses bias:
+  - **Buy** – jaw, teeth and lips slope upward and lips are above teeth which are above the jaw.
+  - **Sell** – jaw, teeth and lips slope downward and lips are below teeth which are below the jaw.
+  - **Neither** – any other configuration.
+- **Phase** expresses separation between lines:
+  - **Open** – lines are well separated and aligned with the direction.
+  - **Closed** – lines are intertwined or nearly crossing.
+  - **Opening** – direction has just shifted and the lines are starting to separate.
+  - **None** – no clear pattern.
+
+Both direction and phase feed into trade filters. A change in phase often triggers a `signal_alligator_mouth_state_changed` event in the strategy layer.
+
+## 6. Detailed Water States
+
+When price interacts with the mouth, the water state describes how price "swims" relative to the jaw, teeth and lips:
+
+- **Splashing** – price outside the mouth as it moves away in the direction of the trend.
+- **Eating** – price inside the mouth but still trending with direction.
+- **Throwing** – price deep inside the mouth and pushing against the jaw line.
+- **Poping** – price outside the mouth with previous bar showing a potential reversal.
+- **Entering** – price sliding back inside the mouth after being outside.
+- **Switching** – price still inside while the mouth transitions from opening to closing or vice versa.
+
+These labels help scripts react to transitional bars or stop conditions.
+
+## 7. Implementation Hints
+
+The Lua functions `parse_mouth_dir_state` and `parse_mouth_bs_state_barpos__water` from `jgwill/jgtstrategies` encapsulate the above logic. They examine current and previous bar positions to emit `mouth_dir`, `mouth_state`, `mouth_bar_pos` and `water_state` values. Refer to those functions when porting the logic to Python.
+
