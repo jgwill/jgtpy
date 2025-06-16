@@ -103,3 +103,12 @@ def help():
         "> \n",
         "For more information, please visit: https://jgtpy.jgwill.com\n",
     )
+
+from .alligator_state import (
+    calculate_mouth_direction,
+    calculate_mouth_phase,
+    bar_position,
+    water_state,
+    parse_alligator_state,
+)
+

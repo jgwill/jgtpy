@@ -16,7 +16,8 @@ These changes document the command line tools and provide runnable examples to s
 
 - 9d967b7: add Alligator water and mouth state specification.
 - 9d967b7: expand spec with algorithm outline for direction, phase, and water states.
-- <pending>: add parity and visualization guidance to spec.
+- 04afaf2: add parity and visualization guidance to spec.
+- <pending>: add alligator_state module for mouth & water logic.
 
 ### Alligator Water & Mouth Spec
 
