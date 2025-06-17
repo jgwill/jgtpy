@@ -10,15 +10,16 @@
 - 3956666: Applying previous commit introducing example READMEs.
 
 - 5d69b85: Applying previous commit introducing extended examples and CLI docs.
-- <pending>: add Examples section to llms.txt.
+- 53db715: add Examples section to llms.txt.
 
 These changes document the command line tools and provide runnable examples to showcase usage.
 
 - 9d967b7: add Alligator water and mouth state specification.
 - 9d967b7: expand spec with algorithm outline for direction, phase, and water states.
 - 04afaf2: add parity and visualization guidance to spec.
-- <pending>: add alligator_state module for mouth & water logic.
-- <pending>: cross-link Lua strategy docs in Alligator spec.
+- cd1a53d: add alligator_state module for mouth & water logic.
+- cd1a53d: cross-link Lua strategy docs in Alligator spec.
+- df45e8f: document output tuple for mouth/water state.
 
 ### Alligator Water & Mouth Spec
 
@@ -191,5 +192,16 @@ The file `specs/AlligatorWaterMouthState.spec.md` now contains a detailed descri
 
     Copies also exist inside **jgtstratpy** under `jgtstratpy/src/lua_strat/`. See
     `docs/mouth_water_index.md` in `jgwill/jgtstrategies` for the full list. These
+    ## 13. Output Structure
+
+    Lua scripts typically emit four values per bar which are logged in `_mouth_signal_state_analysis.csv`:
+
+    - `mouth_dir` – the bias from `Buy`, `Sell` or `Neither`.
+    - `mouth_phase` – one of `Open`, `Closed`, `Opening` or `Closing`.
+    - `mouth_bar_pos` – whether price is `above`, `in` or `below` the mouth.
+    - `water_state` – labels such as `Splashing`, `Eating`, `Throwing`, `Poping`, `Entering` or `Switching`.
+
+    The Python wrapper `parse_alligator_state` should return these four elements so output mirrors the Lua helpers.
+
     references provide context and test cases when verifying the Python port.
 ```

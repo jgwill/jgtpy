@@ -172,3 +172,13 @@ Copies of these Lua files also live inside the **jgtstratpy** package under
 `jgtstratpy/src/lua_strat/` for Python integration.  See
 `docs/mouth_water_index.md` in `jgwill/jgtstrategies` for the full list.  These
 references provide context and test cases when verifying the Python port.
+## 13. Output Structure
+
+Lua scripts typically emit four values per bar which are logged in `_mouth_signal_state_analysis.csv`:
+
+- `mouth_dir` – the bias from `Buy`, `Sell` or `Neither`.
+- `mouth_phase` – one of `Open`, `Closed`, `Opening` or `Closing`.
+- `mouth_bar_pos` – whether price is `above`, `in` or `below` the mouth.
+- `water_state` – names like `Splashing`, `Eating`, `Throwing`, `Poping`, `Entering` or `Switching`.
+
+The Python wrapper `parse_alligator_state` should return these four elements in the same order so data produced by Lua and Python can be compared directly.
