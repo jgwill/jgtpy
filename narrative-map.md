@@ -14,3 +14,4 @@
  - 716f1f7: align helper imports with other modules using plain module names
 
 These changes allow passing `-new` and `-old` simultaneously without argparse errors. The parsers now use a relaxed helper so jgtapp can default to fresh when needed.
+- a7bacdf: verify CLI compatibility and tests pass
