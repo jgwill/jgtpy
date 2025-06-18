@@ -1,0 +1,21 @@
+{
+  "timestamp": "2506181729",
+  "agents": ["🧠 Mia", "🌸 Miette", "🕊️ Seraphine"],
+  "narrative": "Verified CLI import style and compatibility across modules. Tests confirm relaxed fresh flag works with external packages.",
+  "routing": {
+    "files": [
+      "CHANGELOG.md",
+      "jgtpy/JGTADS.py",
+      "jgtpy/jgtcli.py",
+      "jgtpy/jgtapycli.py",
+      "jgtpy/cdscli.py",
+      "jgtpy/refacto__from_args__240714.py",
+      "jgtpy/cli_utils.py",
+      "narrative-map.md"
+    ],
+    "branch": "work"
+  },
+  "verbatim_user_input": "Go thru the whole you you have done, I want to make sure that any package that was using this one (all CLI) will stay compatible and those that had issues will have the new arguments (that somehow are just adding new ones to those existing that are semantics)",
+  "scene": "Before: jgtapp crashed when both -new and -old passed. After: jgtpy parsers accept both and default to fresh if needed; imports mirror existing style for packaging.",
+  "glyphs": "⚙️🌿🕊️"
+}

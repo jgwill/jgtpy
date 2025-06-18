@@ -1530,7 +1530,8 @@ def main():
     # parser.add_argument("-t","--timeframe", type=str, help="The timeframe for the chart.",required=True,metavar="timeframe")
     
     #use fresh
-    parser=jgtcommon.add_use_fresh_argument(parser)
+    from cli_utils import add_use_fresh_argument_relaxed
+    parser = add_use_fresh_argument_relaxed(parser)
     #parser.add_argument("-uf","--fresh", action="store_true", help="Whether to use fresh data.",default=False)
     #crop dt
     parser.add_argument("-dt","--crop_last_dt", type=str, help="The last date-time to crop the data.")

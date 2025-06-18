@@ -1,0 +1,12 @@
+{
+  "timestamp": "2506181654",
+  "agents": ["🧠 Mia", "🌸 Miette", "🕊️ Seraphine"],
+  "narrative": "Align helper imports with existing package style to satisfy user feedback that absolute package prefixes were inconsistent.",
+  "routing": {
+    "branch": "work",
+    "paths": ["jgtpy/JGTADS.py", "jgtpy/cdscli.py", "jgtpy/jgtcli.py", "jgtpy/jgtapycli.py", "jgtpy/refacto__from_args__240714.py", "CHANGELOG.md", "narrative-map.md"]
+  },
+  "user_input": "unacceptable yet, Look at how other python module from this package are imported",
+  "scene": "Imports now mirror other modules, ensuring backward compatibility when packaging.",
+  "glyphs": "🌸🧠🕊️"
+}
