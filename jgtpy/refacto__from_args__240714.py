@@ -43,7 +43,8 @@ def parse_args():
     jgtcommon.add_ads_argument(parser)
     #jgtcommon.add_use_full_argument(parser)
     jgtcommon.add_bars_amount_V2_arguments(parser)
-    jgtcommon.add_use_fresh_argument(parser)
+    from .cli_utils import add_use_fresh_argument_relaxed
+    add_use_fresh_argument_relaxed(parser)
     
     jgtcommon.add_ids_mfi_argument(parser)
     jgtcommon.add_ids_gator_oscillator_argument(parser)

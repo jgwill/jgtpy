@@ -1,0 +1,20 @@
+{
+  "timestamp": "2506181629",
+  "agents": ["🧠 Mia", "🌸 Miette", "🎸 JamAI"],
+  "narrative": "Relaxed CLI fresh/notfresh handling so both flags can be passed together. Added helper and updated parsers; tests updated.",
+  "routing": {
+    "files": [
+      "jgtpy/cli_utils.py",
+      "jgtpy/cdscli.py",
+      "jgtpy/jgtapycli.py",
+      "jgtpy/jgtcli.py",
+      "jgtpy/JGTADS.py",
+      "jgtpy/refacto__from_args__240714.py",
+      "jgtpy/test_cli_utils.py"
+    ],
+    "branch": "work"
+  },
+  "verbatim_user_input": "make sure we support receiving that and if when using \"-old\" the prices dont exist, do like if the \"-new\" was used.  of course \"-new\" is probably semantic to \"--fresh\"",
+  "scene": "Before: CLI would exit with error if both -new and -old flags were given. After: new helper allows both flags; jgtapp invocations will default to fresh when both are present.",
+  "glyphs": "🌿⚙️🎼"
+}
