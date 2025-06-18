@@ -48,7 +48,7 @@ def _parse_args():
     jgtcommon.add_verbose_argument(parser)
     jgtcommon.add_ads_argument(parser)
     jgtcommon.add_bars_amount_V2_arguments(parser)
-    from jgtpy.cli_utils import add_use_fresh_argument_relaxed
+    from cli_utils import add_use_fresh_argument_relaxed
     add_use_fresh_argument_relaxed(parser)
     
     jgtcommon.add_ids_mfi_argument(parser)

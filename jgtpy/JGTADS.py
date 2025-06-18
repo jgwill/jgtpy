@@ -1530,7 +1530,7 @@ def main():
     # parser.add_argument("-t","--timeframe", type=str, help="The timeframe for the chart.",required=True,metavar="timeframe")
     
     #use fresh
-    from jgtpy.cli_utils import add_use_fresh_argument_relaxed
+    from cli_utils import add_use_fresh_argument_relaxed
     parser = add_use_fresh_argument_relaxed(parser)
     #parser.add_argument("-uf","--fresh", action="store_true", help="Whether to use fresh data.",default=False)
     #crop dt

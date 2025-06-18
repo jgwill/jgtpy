@@ -10,6 +10,7 @@
 - bb1a509: test: ensure relaxed fresh argument
 
  - a4efcda: introduce relaxed fresh argument helper and update parsers
- - ba2f9c3: switch to absolute imports for cli_utils helper
+- ba2f9c3: switch to absolute imports for cli_utils helper
+ - 716f1f7: align helper imports with other modules using plain module names
 
 These changes allow passing `-new` and `-old` simultaneously without argparse errors. The parsers now use a relaxed helper so jgtapp can default to fresh when needed.
