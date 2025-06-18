@@ -1,0 +1,20 @@
+{
+  "timestamp": "2506181636",
+  "agents": ["🧠 Mia", "🌸 Miette", "🎸 JamAI"],
+  "narrative": "Switch CLI helpers to absolute import paths for packaging stability and document changes.",
+  "routing": {
+    "files": [
+      "jgtpy/JGTADS.py",
+      "jgtpy/cdscli.py",
+      "jgtpy/jgtcli.py",
+      "jgtpy/jgtapycli.py",
+      "jgtpy/refacto__from_args__240714.py",
+      "CHANGELOG.md",
+      "narrative-map.md"
+    ],
+    "branch": "work"
+  },
+  "verbatim_user_input": "Watch the way you are importing, that is weard (relative import might cause issues when publishing the package).  Also go thru all you did to ensure backward compatibilities and also write / update CHANGELOG.md",
+  "scene": "Before: CLI parsers used relative imports to access new helper. After: absolute imports ensure distribution-friendly structure and changelog tracks the update.",
+  "glyphs": "🎼🌿⚙️"
+}

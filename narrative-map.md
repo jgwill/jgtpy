@@ -9,4 +9,7 @@
 - 0837331: feat(cli): allow fresh and notfresh flags together
 - bb1a509: test: ensure relaxed fresh argument
 
+ - a4efcda: introduce relaxed fresh argument helper and update parsers
+ - ba2f9c3: switch to absolute imports for cli_utils helper
+
 These changes allow passing `-new` and `-old` simultaneously without argparse errors. The parsers now use a relaxed helper so jgtapp can default to fresh when needed.
