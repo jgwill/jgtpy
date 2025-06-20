@@ -146,6 +146,168 @@ class AlligatorMouthWaterAnalyzer:
                 return MouthPhase.SLEEPING if current_dist < self.threshold else MouthPhase.CLOSING
             else:
                 return MouthPhase.OPEN if current_dist > self.threshold else MouthPhase.SLEEPING
+    
+    def calculate_bar_position(
+        self,
+        price_high: float,
+        price_low: float,
+        jaw: float,
+        teeth: float,
+        lips: float
+    ) -> BarPosition:
+        """Calculate where the price bar sits relative to the Alligator mouth."""
+        highest_line = max(jaw, teeth, lips)
+        lowest_line = min(jaw, teeth, lips)
+        
+        if price_low > highest_line:
+            return BarPosition.ABOVE
+        elif price_high < lowest_line:
+            return BarPosition.BELOW
+        else:
+            return BarPosition.IN
+    
+    def calculate_water_state_extended(
+        self,
+        price_high: Sequence[float],
+        price_low: Sequence[float],
+        ao_values: Sequence[float],
+        jaw: Sequence[float],
+        teeth: Sequence[float],
+        lips: Sequence[float],
+        mouth_direction: MouthDirection,
+        mouth_phase: MouthPhase,
+        bar_position: BarPosition
+    ) -> WaterState:
+        """Calculate water state based on price action and mouth characteristics."""
+        if len(ao_values) < 2 or len(price_high) < 2 or len(price_low) < 2:
+            return WaterState.SLEEPING
+            
+        ao_current = ao_values[-1]
+        
+        # Previous bar price levels for momentum analysis
+        prev_high = price_high[-2] if len(price_high) >= 2 else price_high[-1]
+        prev_low = price_low[-2] if len(price_low) >= 2 else price_low[-1]
+        
+        # Get previous bar position for transition detection
+        if len(jaw) >= 2 and len(teeth) >= 2 and len(lips) >= 2:
+            prev_bar_pos = self.calculate_bar_position(
+                prev_high, prev_low, jaw[-2], teeth[-2], lips[-2]
+            )
+        else:
+            prev_bar_pos = bar_position
+        
+        # Water state logic based on Lua implementation
+        if mouth_direction == MouthDirection.SELL:
+            current_high = price_high[-1]
+            lips_val = lips[-1]
+            jaw_val = jaw[-1]
+            
+            if current_high < lips_val:  # Below lips
+                if bar_position == BarPosition.BELOW:
+                    if mouth_phase == MouthPhase.OPENING:
+                        return WaterState.SWITCHING
+                    elif len(lips) >= 2 and prev_high > lips[-2]:  # Previous was above lips
+                        return WaterState.POPING
+                    else:
+                        return WaterState.SPLASHING
+                        
+            elif current_high > lips_val:  # Above lips
+                if bar_position == BarPosition.IN:
+                    if current_high < jaw_val:  # Below jaw
+                        return WaterState.THROWING
+                    elif len(lips) >= 2 and prev_high < lips[-2]:  # Previous was below lips
+                        return WaterState.ENTERING
+                    else:
+                        return WaterState.EATING
+                        
+        elif mouth_direction == MouthDirection.BUY:
+            current_low = price_low[-1]
+            lips_val = lips[-1]
+            jaw_val = jaw[-1]
+            
+            if current_low > lips_val:  # Above lips
+                if bar_position == BarPosition.ABOVE:
+                    if mouth_phase == MouthPhase.OPENING:
+                        return WaterState.SWITCHING
+                    elif len(lips) >= 2 and prev_low < lips[-2]:  # Previous was below lips
+                        return WaterState.POPING
+                    else:
+                        return WaterState.SPLASHING
+                        
+            elif current_low < lips_val:  # Below lips
+                if bar_position == BarPosition.IN:
+                    if current_low > jaw_val:  # Above jaw
+                        return WaterState.THROWING
+                    elif len(lips) >= 2 and prev_low > lips[-2]:  # Previous was above lips
+                        return WaterState.ENTERING
+                    else:
+                        return WaterState.EATING
+        
+        # Default cases
+        if mouth_phase in [MouthPhase.SLEEPING, MouthPhase.NONE]:
+            return WaterState.SLEEPING
+        elif bar_position == BarPosition.IN and mouth_phase in [MouthPhase.CLOSING, MouthPhase.OPENING]:
+            return WaterState.SWITCHING
+        elif bar_position != prev_bar_pos:
+            return WaterState.ENTERING
+        else:
+            return WaterState.EATING
+    
+    def analyze_single_bar(
+        self,
+        price_high: float,
+        price_low: float,
+        ao_value: float,
+        jaw: Sequence[float],
+        teeth: Sequence[float],
+        lips: Sequence[float],
+        gator_oscillator: Optional[Sequence[float]] = None
+    ) -> AlligatorMouthWaterState:
+        """Analyze a single bar and return complete state information."""
+        # Calculate mouth direction and confidence
+        mouth_direction, confidence = self.calculate_mouth_direction_extended(jaw, teeth, lips)
+        
+        # Calculate mouth phase
+        mouth_phase = self.calculate_mouth_phase_extended(jaw, teeth, lips, gator_oscillator)
+        
+        # Calculate bar position
+        bar_position = self.calculate_bar_position(
+            price_high, price_low, jaw[-1], teeth[-1], lips[-1]
+        )
+        
+        # Calculate water state (needs sequences for momentum analysis)
+        price_high_seq = [price_high] if isinstance(price_high, (int, float)) else price_high
+        price_low_seq = [price_low] if isinstance(price_low, (int, float)) else price_low
+        ao_seq = [ao_value] if isinstance(ao_value, (int, float)) else ao_value
+        
+        water_state = self.calculate_water_state_extended(
+            price_high_seq, price_low_seq, ao_seq,
+            jaw, teeth, lips, mouth_direction, mouth_phase, bar_position
+        )
+        
+        # Detect transitions
+        transition_detected = False
+        if self._previous_state is not None:
+            transition_detected = (
+                self._previous_state.mouth_direction != mouth_direction or
+                self._previous_state.mouth_phase != mouth_phase or
+                self._previous_state.water_state != water_state
+            )
+        
+        # Create state object
+        current_state = AlligatorMouthWaterState(
+            mouth_direction=mouth_direction,
+            mouth_phase=mouth_phase,
+            bar_position=bar_position,
+            water_state=water_state,
+            confidence_score=confidence,
+            transition_detected=transition_detected
+        )
+        
+        # Store for next iteration
+        self._previous_state = current_state
+        
+        return current_state
 
 
 # Convenience functions for backward compatibility
