@@ -16,6 +16,15 @@ import pandas as pd
 from typing import Sequence, Tuple, Dict, Optional, Union
 from dataclasses import dataclass
 from enum import Enum
+import argparse
+import sys
+import os
+
+# Add jgtpy path for imports
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
+
+from jgtutils import jgtcommon
+import JGTCDS as cds
 
 
 class MouthDirection(Enum):
@@ -323,3 +332,266 @@ def calculate_mouth_phase(jaw: Sequence[float], teeth: Sequence[float], lips: Se
     analyzer = AlligatorMouthWaterAnalyzer()
     phase = analyzer.calculate_mouth_phase_extended(jaw, teeth, lips)
     return phase.value
+
+
+def _parse_args():
+    """Parse command-line arguments."""
+    parser = argparse.ArgumentParser(
+        description="Alligator Mouth and Water State Analysis CLI",
+        epilog="Analyze market data using enhanced Alligator mouth and water state logic."
+    )
+    
+    # Core arguments
+    parser.add_argument(
+        "-i", "--instrument", 
+        required=True,
+        help="Instrument symbol (e.g., EUR/USD, SPX500)"
+    )
+    parser.add_argument(
+        "-t", "--timeframe",
+        required=True, 
+        help="Timeframe (e.g., D1, H4, H1, M15)"
+    )
+    
+    # Output options
+    parser.add_argument(
+        "-o", "--output",
+        help="Output file path (default: auto-generated based on instrument/timeframe)"
+    )
+    parser.add_argument(
+        "--output-format",
+        choices=["csv", "json", "both"],
+        default="csv",
+        help="Output format (default: csv)"
+    )
+    
+    # Analysis options
+    parser.add_argument(
+        "--lookback-periods",
+        type=int,
+        default=3,
+        help="Number of lookback periods for analysis (default: 3)"
+    )
+    parser.add_argument(
+        "--threshold",
+        type=float,
+        default=1e-8,
+        help="Threshold for mouth phase detection (default: 1e-8)"
+    )
+    
+    # Data options
+    parser.add_argument(
+        "--use-full",
+        action="store_true",
+        help="Use full dataset"
+    )
+    parser.add_argument(
+        "--data-dir",
+        default=None,
+        help="Data directory (default: from JGTPY_DATA env var or standard location)"
+    )
+    
+    # Verbosity
+    parser.add_argument(
+        "-v", "--verbose",
+        action="count",
+        default=0,
+        help="Increase verbosity (-v, -vv, -vvv)"
+    )
+    parser.add_argument(
+        "-q", "--quiet",
+        action="store_true",
+        help="Suppress output"
+    )
+    
+    return parser.parse_args()
+
+
+def load_cds_data(instrument: str, timeframe: str, data_dir: Optional[str] = None, use_full: bool = False) -> pd.DataFrame:
+    """Load CDS data for the given instrument and timeframe."""
+    # Determine data directory
+    if data_dir is None:
+        data_dir = os.environ.get("JGTPY_DATA", os.path.join(os.path.dirname(__file__), "..", "data", "current"))
+    
+    # Build file path
+    filename = f"{instrument.replace('/', '-')}__{timeframe}.csv" if use_full else f"{instrument.replace('/', '-')}_{timeframe}.csv"
+    filepath = os.path.join(data_dir, "cds", filename)
+    
+    if not os.path.exists(filepath):
+        raise FileNotFoundError(f"CDS file not found: {filepath}")
+    
+    # Load the data
+    df = pd.read_csv(filepath)
+    
+    # Ensure we have the required columns
+    required_cols = ['jaw', 'teeth', 'lips', 'ao', 'High', 'Low']
+    missing_cols = [col for col in required_cols if col not in df.columns]
+    if missing_cols:
+        raise ValueError(f"Required columns missing from CDS data: {missing_cols}")
+    
+    return df
+
+
+def analyze_dataframe(df: pd.DataFrame, lookback_periods: int = 3, threshold: float = 1e-8, verbose: int = 0) -> pd.DataFrame:
+    """Analyze the entire dataframe and add mouth/water state columns."""
+    analyzer = AlligatorMouthWaterAnalyzer(lookback_periods=lookback_periods, threshold=threshold)
+    
+    # Initialize result columns
+    df = df.copy()
+    df['mouth_direction'] = 'neither'
+    df['mouth_phase'] = 'none'
+    df['bar_position'] = 'in'
+    df['water_state'] = 'sleeping'
+    df['mouth_confidence'] = 0.0
+    df['state_transition'] = False
+    
+    if verbose > 0:
+        print(f"Analyzing {len(df)} bars...")
+    
+    # Analyze each bar (need at least lookback_periods bars for analysis)
+    for i in range(lookback_periods, len(df)):
+        try:
+            # Get the required sequences
+            jaw_seq = df['jaw'].iloc[max(0, i-lookback_periods):i+1].values
+            teeth_seq = df['teeth'].iloc[max(0, i-lookback_periods):i+1].values
+            lips_seq = df['lips'].iloc[max(0, i-lookback_periods):i+1].values
+            ao_seq = df['ao'].iloc[max(0, i-lookback_periods):i+1].values
+            high_seq = df['High'].iloc[max(0, i-lookback_periods):i+1].values
+            low_seq = df['Low'].iloc[max(0, i-lookback_periods):i+1].values
+            
+            # Perform analysis
+            state = analyzer.analyze_single_bar(
+                price_high=df['High'].iloc[i],
+                price_low=df['Low'].iloc[i],
+                ao_value=df['ao'].iloc[i],
+                jaw=jaw_seq,
+                teeth=teeth_seq,
+                lips=lips_seq
+            )
+            
+            # Store results
+            df.loc[df.index[i], 'mouth_direction'] = state.mouth_direction.value
+            df.loc[df.index[i], 'mouth_phase'] = state.mouth_phase.value
+            df.loc[df.index[i], 'bar_position'] = state.bar_position.value
+            df.loc[df.index[i], 'water_state'] = state.water_state.value
+            df.loc[df.index[i], 'mouth_confidence'] = state.confidence_score
+            df.loc[df.index[i], 'state_transition'] = state.transition_detected
+            
+        except Exception as e:
+            if verbose > 1:
+                print(f"Warning: Analysis failed for bar {i}: {e}")
+            continue
+    
+    if verbose > 0:
+        print(f"Analysis complete. Added mouth/water state columns.")
+        
+        # Print summary statistics
+        print("\nMouth Direction Distribution:")
+        print(df['mouth_direction'].value_counts())
+        print("\nWater State Distribution:")
+        print(df['water_state'].value_counts())
+        
+        transitions = df['state_transition'].sum()
+        print(f"\nState transitions detected: {transitions}")
+    
+    return df
+
+
+def save_results(df: pd.DataFrame, instrument: str, timeframe: str, output_path: Optional[str] = None, 
+                output_format: str = "csv", data_dir: Optional[str] = None, verbose: int = 0) -> str:
+    """Save analysis results to file."""
+    if output_path is None:
+        # Auto-generate output path
+        if data_dir is None:
+            data_dir = os.environ.get("JGTPY_DATA", os.path.join(os.path.dirname(__file__), "..", "data", "current"))
+        
+        # Create mouth_water subdirectory
+        output_dir = os.path.join(data_dir, "mouth_water")
+        os.makedirs(output_dir, exist_ok=True)
+        
+        base_filename = f"{instrument.replace('/', '-')}_{timeframe}_mouth_water"
+        output_path = os.path.join(output_dir, base_filename)
+    
+    # Save based on format
+    saved_files = []
+    
+    if output_format in ["csv", "both"]:
+        csv_path = f"{output_path}.csv"
+        df.to_csv(csv_path, index=False)
+        saved_files.append(csv_path)
+        if verbose > 0:
+            print(f"Saved CSV: {csv_path}")
+    
+    if output_format in ["json", "both"]:
+        json_path = f"{output_path}.json"
+        df.to_json(json_path, orient="records", date_format="iso")
+        saved_files.append(json_path)
+        if verbose > 0:
+            print(f"Saved JSON: {json_path}")
+    
+    return saved_files[0] if len(saved_files) == 1 else saved_files
+
+
+def main():
+    """Main CLI entry point."""
+    args = _parse_args()
+    
+    if not args.quiet:
+        print("Alligator Mouth and Water State Analysis CLI")
+        print("=" * 50)
+    
+    try:
+        # Load CDS data
+        if not args.quiet and args.verbose > 0:
+            print(f"Loading CDS data for {args.instrument}_{args.timeframe}...")
+        
+        df = load_cds_data(
+            args.instrument, 
+            args.timeframe, 
+            data_dir=args.data_dir,
+            use_full=args.use_full
+        )
+        
+        if not args.quiet:
+            print(f"Loaded {len(df)} bars of data")
+        
+        # Perform analysis
+        if not args.quiet and args.verbose > 0:
+            print("Performing mouth and water state analysis...")
+        
+        analyzed_df = analyze_dataframe(
+            df,
+            lookback_periods=args.lookback_periods,
+            threshold=args.threshold,
+            verbose=args.verbose if not args.quiet else 0
+        )
+        
+        # Save results
+        saved_files = save_results(
+            analyzed_df,
+            args.instrument,
+            args.timeframe,
+            output_path=args.output,
+            output_format=args.output_format,
+            data_dir=args.data_dir,
+            verbose=args.verbose if not args.quiet else 0
+        )
+        
+        if not args.quiet:
+            print("\nAnalysis complete!")
+            if isinstance(saved_files, list):
+                for file in saved_files:
+                    print(f"Results saved to: {file}")
+            else:
+                print(f"Results saved to: {saved_files}")
+    
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        if args.verbose > 1:
+            import traceback
+            traceback.print_exc()
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
