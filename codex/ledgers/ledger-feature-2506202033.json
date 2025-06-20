@@ -1,0 +1,12 @@
+{
+  "timestamp": "2506202033",
+  "agents": ["🧠 Mia", "🌸 Miette", "🕊️ Seraphine"],
+  "narrative": "Refined ADS specification by listing all dataset fields directly so the document stands alone. Updated narrative map to mirror plotting work.",
+  "routing": {
+    "files": ["specs/JGTADS.specs.md", "narrative-map.md"],
+    "branch": "work"
+  },
+  "verbatim_user_input": ["in specs/JGTADS.specs.md, we see 'It combines all columns documented...' That is important that we are independent of these files"],
+  "scene": "Before: chart spec pointed to other docs. After: full column list enables independent implementation.",
+  "glyphs": "📖🧠🌸"
+}

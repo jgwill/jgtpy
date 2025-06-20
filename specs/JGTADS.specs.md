@@ -4,16 +4,46 @@ This document describes the plotting logic of `JGTADS.py` in implementation inde
 
 ## Required Data Structure
 
-The input is a tabular dataset (CSV or DataFrame) produced by the CDS service. It combines all columns documented in `IDS_data_columns.md` and `CDS_data_columns.md`. Key fields used by the charting routine are:
+The input is a tabular dataset (CSV or DataFrame) produced by the CDS service. It contains price series, indicator lines and numerous derived signals used for plotting.
 
-- **OHLC columns**: `Open`, `High`, `Low`, `Close` (price series for candlesticks).
-- **Alligator lines**: `jaw`, `teeth`, `lips`.
-- **Fractals**: `fh`, `fl` plus optional degree variants `fh<n>` and `fl<n>` where `<n>` indicates fractal degree (e.g. `fh8`).
-- **FDB signals**: `fdb`, `fdbb`, `fdbs`.
-- **AO/AC oscillators**: `ao`, `ac`.
-- **Saucer and peak markers**: `sb`, `ss`, `price_peak_above`, `price_peak_bellow`, `ao_peak_above`, `ao_peak_bellow`.
-- **Zone information**: `zcol`, `zlc`, `zlcB`, `zlcS`.
-- **Mouth/Water state**: `mouth_direction`, `mouth_phase`, `bar_position`, `water_state`, `mouth_direction_confidence`, `mouth_phase_confidence`.
+### Price and Volume
+- `Date` – timestamp of each bar
+- `BidOpen`, `BidHigh`, `BidLow`, `BidClose` – raw bid prices
+- `AskOpen`, `AskHigh`, `AskLow`, `AskClose` – raw ask prices
+- `Open`, `High`, `Low`, `Close` – consolidated OHLC values
+- `Volume` – tick volume
+- `Median` – midpoint of High and Low
+
+### Core Indicators
+- `ao` – Awesome Oscillator
+- `ac` – Acceleration/Deceleration Oscillator
+- `jaw`, `teeth`, `lips` – Alligator lines
+- `bjaw`, `bteeth`, `blips` – baseline Alligator averages
+- `tjaw`, `tteeth`, `tlips` – trailing Alligator averages
+- `mfi` – Market Facilitation Index
+
+### Fractal Levels
+- `fh`, `fl` – base fractal highs and lows
+- `fh3`, `fl3`, `fh5`, `fl5`, `fh8`, `fl8`, `fh13`, `fl13`, `fh21`, `fl21`, `fh34`, `fl34`, `fh55`, `fl55`, `fh89`, `fl89` – higher degree fractals
+
+### Signals and Zones
+- `fdb`, `fdbb`, `fdbs` – fractal divergent bar signals
+- `aoaz`, `aobz` – AO zone classification
+- `zlc`, `zlcb`, `zlcs` – zero line cross values
+- `zcol` – zone color
+- `zone_sig` – zone signal label
+- `bz`, `sz` – buy and sell zone flags
+- `acs`, `acb` – AC oscillator buy/sell markers
+- `ss`, `sb` – saucer sell/buy markers
+- `price_peak_above`, `price_peak_bellow` – price peak markers
+- `ao_peak_above`, `ao_peak_bellow` – AO peak markers
+
+### Mouth/Water States
+- `mouth_direction`, `mouth_phase`, `bar_position`, `water_state`
+- `mouth_direction_confidence`, `mouth_phase_confidence`
+
+### Additional MFI Metrics
+- `mfi_sq`, `mfi_green`, `mfi_fade`, `mfi_fake`, `mfi_sig`, `mfi_str`
 
 All rows are indexed by date/time which is converted to the appropriate format depending on timeframe.
 

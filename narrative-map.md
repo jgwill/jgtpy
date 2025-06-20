@@ -15,7 +15,8 @@
 
 These changes allow passing `-new` and `-old` simultaneously without argparse errors. The parsers now use a relaxed helper so jgtapp can default to fresh when needed.
 - a7bacdf: verify CLI compatibility and tests pass
-\n- <pending>: documented JGTADS plotting and mouth water modules; added new data columns specs.
+- 5c5b651: documented JGTADS plotting and mouth water modules; added new data columns specs.
 
-- <pending2>: added operational guide for agents and expanded specs for chart config, request object and mouth/water analysis
-- <pending3>: refine mouth/water spec with lookback notes and operational context; create observation loop spec
+- d54bb49: added operational guide for agents and expanded specs for chart config, request object and mouth/water analysis
+- 4b38cdb: refine mouth/water spec with lookback notes and operational context; create observation loop spec
+- <newcommit>: refine dataset column definitions in ADS spec
