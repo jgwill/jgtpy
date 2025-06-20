@@ -18,3 +18,4 @@ These changes allow passing `-new` and `-old` simultaneously without argparse er
 \n- <pending>: documented JGTADS plotting and mouth water modules; added new data columns specs.
 
 - <pending2>: added operational guide for agents and expanded specs for chart config, request object and mouth/water analysis
+- <pending3>: refine mouth/water spec with lookback notes and operational context; create observation loop spec
