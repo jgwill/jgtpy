@@ -629,6 +629,13 @@ def plot_from_cds_df(
 
        
     
+    # Mouth Water Analysis Plots (if enabled via -mw flag)
+    if hasattr(rq, 'mouth_water_flag') and rq.mouth_water_flag:
+        mouth_water_plots = make_mouth_water_plots(data_last_selection, cc, main_plot_panel_id)
+        addplot.extend(mouth_water_plots)
+        if rq.verbose_level > 1 and mouth_water_plots:
+            print(f"Added {len(mouth_water_plots)} mouth water plots")
+    
     #print("addplot dict : " + str(addplot))
 
     # get date time of the last bar
@@ -1613,3 +1620,41 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+def make_mouth_water_plots(
+    data: pd.DataFrame,
+    cc: JGTChartConfig = None,
+    main_plot_panel_id: int = 0
+):
+    """Create mouth water state plots for integration with main chart."""
+    plots = []
+    
+    # Check if mouth water columns exist
+    required_cols = ['mouth_direction', 'mouth_phase', 'bar_position', 'water_state']
+    if not all(col in data.columns for col in required_cols):
+        return plots
+    
+    try:
+        from mouth_water_plotter import MouthWaterPlotter, MouthWaterPlotConfig
+        
+        config = MouthWaterPlotConfig()
+        plotter = MouthWaterPlotter(config)
+        
+        # Get last completed state for highlighting
+        last_completed, _ = plotter.get_last_completed_state(data)
+        
+        # Create plots for water states with enhanced positioning
+        plots.extend(plotter.create_mouth_water_addplots(data, main_plot_panel_id))
+        
+        # Add special highlight for last completed state
+        if last_completed is not None:
+            highlight_plot = plotter.create_last_state_highlight_plot(data, main_plot_panel_id)
+            if highlight_plot:
+                plots.append(highlight_plot)
+        
+    except ImportError:
+        print("Mouth water plotter not available")
+    except Exception as e:
+        print(f"Error creating mouth water plots: {e}")
+    
+    return plots
