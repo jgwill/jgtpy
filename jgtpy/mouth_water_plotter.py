@@ -75,7 +75,7 @@ class MouthWaterPlotConfig:
         # Bar position symbols
         self.bar_position_symbols = {
             BarPosition.ABOVE: "↑",         # Up arrow
-            BarPosition.IN: "↔",            # Left-right arrow
+            BarPosition.IN: "s",            # Left-right arrow
             BarPosition.BELOW: "↓",         # Down arrow
         }
         
