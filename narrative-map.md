@@ -15,3 +15,4 @@
 
 These changes allow passing `-new` and `-old` simultaneously without argparse errors. The parsers now use a relaxed helper so jgtapp can default to fresh when needed.
 - a7bacdf: verify CLI compatibility and tests pass
+\n- <pending>: documented JGTADS plotting and mouth water modules; added new data columns specs.
