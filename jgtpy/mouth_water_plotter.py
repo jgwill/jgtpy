@@ -53,7 +53,7 @@ class MouthWaterPlotConfig:
             WaterState.POPING: "^",         # Up arrow for pop
             WaterState.ENTERING: ">",       # Right arrow for entering
             WaterState.SWITCHING: "D",      # Approximately equal for switching
-            WaterState.SLEEPING: "-",       # Dash for sleeping
+            WaterState.SLEEPING: ".",       # Dash for sleeping
         }
         
         # Mouth direction symbols
