@@ -13,4 +13,5 @@ if [ -z "$JGTPY_DATA" ]; then
 fi
 
 # Run the Python CLI tool
-exec python "$SCRIPT_DIR/jgtpy/alligator_mouth_water.py" "$@" 
+exec python "$SCRIPT_DIR/jgtpy/alligator_mouth_water.py" "$@"
+
