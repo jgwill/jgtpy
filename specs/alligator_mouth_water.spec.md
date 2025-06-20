@@ -33,8 +33,10 @@ After processing, the following columns are appended to the dataframe:
 4. **Water State** – Combines direction, phase, and bar position with AO momentum to produce the water activity state. Transition detection compares with the previous bar state.
 
 ## Usage
-`analyze_dataframe(df)` attaches these columns to a CDS dataframe. The results
-are consumed by `mouth_water_plotter` and ADS plotting routines.
+`analyze_dataframe(df)` attaches these columns to a CDS dataframe. The input
+should be sorted by ascending date with no gaps so that slope calculations are
+consistent. The results are consumed by `mouth_water_plotter` and ADS plotting
+routines.
 
 ## Operational Context
 CLI tools schedule this analysis periodically (e.g. every five minutes) and feed

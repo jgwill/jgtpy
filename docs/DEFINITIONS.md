@@ -13,3 +13,9 @@ Working with SpecLang guides us to:
 - Maintain the specs in lockstep with code changes so new agents always understand the expected behavior.
 
 This approach allows multiple language implementations or AI agents to share the same understanding of the plotting services built here.
+
+Additional points distilled from the SpecLang research prototype:
+
+- Specs evolve through an iterative feedback loop where running code informs new sections or clarifies ambiguous behavior.
+- Natural language is used as "prose code": concise yet precise instructions that assume a programmer's mindset.
+- The model may suggest refinements, so treat the spec as a conversation rather than a static document.

@@ -13,4 +13,9 @@ This repository uses multiple agents to maintain natural-language specifications
 3. Every commit must include a ledger entry under `codex/ledgers` describing the change, agents involved and the scene unlocked by the new docs.
 4. Run `pytest -q` after modifications to verify that tests still pass.
 
+## Spec Writing Guidelines
+* Treat specs as living documents. Iterate when new behavior emerges or agents suggest clarifications.
+* Use short sentences and bullet lists to describe data fields, configuration options and algorithm steps.
+* Aim for "prose code": enough detail for another developer to reproduce the logic without referencing Python internals.
+
 These notes capture how to proceed with future specification work.

@@ -21,3 +21,15 @@ These changes allow passing `-new` and `-old` simultaneously without argparse er
 - 4b38cdb: refine mouth/water spec with lookback notes and operational context; create observation loop spec
 - fb667b9: refine dataset column definitions in ADS spec
 - d11c7c5: document SpecLang definition
+- aa273be: applying previous commit introducing more specs and CDS column updates
+
+## Spec Overview
+
+| Spec File | Purpose |
+|-----------|---------|
+| `JGTADS.specs.md` | Describes the multi-panel ADS chart plotting steps and dataset columns. |
+| `JGTADSRequest.spec.md` | Defines the request object controlling ADS plotting. |
+| `JGTChartConfig.spec.md` | Lists configuration fields for customizing ADS plots. |
+| `alligator_mouth_water.spec.md` | Explains how mouth and water states are computed. |
+| `mouth_water_plotter.spec.md` | Outlines overlay creation for mouth/water annotations. |
+| `observation_loop.spec.md` | Summarizes the CLI-driven analysis and voice workflow. |

@@ -5,7 +5,8 @@ interfaces to evaluate ADS charts and trading states.
 
 ## Overview
 1. **Data Refresh** – Every few minutes a CLI agent pulls the latest CDS data and
-   runs analysis modules such as `alligator_mouth_water`.
+   runs analysis modules such as `alligator_mouth_water`. The dataset must remain
+   sorted chronologically so subsequent plots align with voice commentary.
 2. **Chart Generation** – The enriched dataset is plotted using `JGTADS` and
    overlay modules. Figures may be saved or sent to a display service.
 3. **Voice Inspection Window** – A companion voice agent opens a short

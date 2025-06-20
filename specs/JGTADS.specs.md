@@ -74,6 +74,9 @@ Additional subplots are only rendered if the corresponding `JGTChartConfig` flag
 
 - `JGTChartConfig` controls which overlays appear. Disabling AO hides the AO panel and shifts AC up.
 - The mouth/water annotations rely on analysis results from `alligator_mouth_water.py`. If those columns are absent, the plot is generated without them.
-- The plotting code expects data sorted by ascending datetime with no gaps.
+ - The plotting code expects data sorted by ascending datetime with no gaps.
+
+## Output
+The plotting routine returns a figure object, the associated axes list and the clipped dataset used for the plot. Implementations may instead stream the figure to a web interface or save it to disk depending on the request settings.
 
 This specification allows implementing an equivalent chart generator in another environment while keeping behavior consistent with the Python version.

@@ -37,5 +37,6 @@ Marker sizes and offsets are configurable via `MouthWaterPlotConfig`.
 1. Instantiate `MouthWaterPlotter` with optional configuration.
 2. Call `create_mouth_water_addplots(data, panel_id)` to get overlays for the main ADS plot.
 3. Optional: use `create_specialized_mouth_water_chart` for more detailed standalone visuals or CLI output.
+   Ensure the input dataset is ordered by time so markers appear in the correct sequence.
 
 These steps allow any implementation to reproduce the same overlay and analysis charts using the data columns described above.
