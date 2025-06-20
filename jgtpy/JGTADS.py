@@ -1557,7 +1557,7 @@ def main():
     
     args=jgtcommon.parse_args(parser)
     if not args.show and args.save_figure is None and args.save_figure_as_pov_name is False:
-        print("No output will be generated. Use -show or -sf to display or save the figure.")
+        print("No output will be generated. Use --show or -sf to display or save the figure.")
         return
 
     # Create a JGTADSRequest object
