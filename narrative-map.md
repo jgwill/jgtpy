@@ -33,3 +33,7 @@ These changes allow passing `-new` and `-old` simultaneously without argparse er
 | `alligator_mouth_water.spec.md` | Explains how mouth and water states are computed. |
 | `mouth_water_plotter.spec.md` | Outlines overlay creation for mouth/water annotations. |
 | `observation_loop.spec.md` | Summarizes the CLI-driven analysis and voice workflow. |
+
+## Recent Awareness
+
+Through iterative spec work we realized the documentation itself drives new workflows. The observation loop shows how CLI triggers and voice analysis combine with SpecLang specs to shape trading decisions. Each plotter spec now stands alone so any language can reproduce ADS visuals. This awareness strengthens the repo as a living conversation rather than static code.
