@@ -16,3 +16,9 @@ pds
 _tmp
 
 weekly_report.txt
+.hch
+.vscode
+.stc
+codex
+data*
+*egg-info
