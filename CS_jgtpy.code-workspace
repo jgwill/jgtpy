@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "../jgtutils"
 		}
 	],
 	"settings": {}

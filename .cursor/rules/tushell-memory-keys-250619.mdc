@@ -1,0 +1,11 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+tushell get-memory --key "Workspace.jgwill.jgtstrategies.ALLIGATOR_MOUTH_STATE.md" --json
+
+above is one way to retrieve in the terminal output
+bellow is how to create a file "Workspace.jgwill.jgtstrategies.ALLIGATOR_MOUTH_STATE.md.json" from the key name so you can see the key after that:
+tushell get-memory --jkey "Workspace.jgwill.jgtstrategies.ALLIGATOR_MOUTH_STATE.md"  
+
