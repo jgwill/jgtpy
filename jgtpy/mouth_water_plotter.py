@@ -52,7 +52,7 @@ class MouthWaterPlotConfig:
             WaterState.THROWING: "X",       # X for throwing
             WaterState.POPING: "^",         # Up arrow for pop
             WaterState.ENTERING: ">",       # Right arrow for entering
-            WaterState.SWITCHING: "≈",      # Approximately equal for switching
+            WaterState.SWITCHING: "D",      # Approximately equal for switching
             WaterState.SLEEPING: "-",       # Dash for sleeping
         }
         
