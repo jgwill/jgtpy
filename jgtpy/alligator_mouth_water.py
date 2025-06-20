@@ -66,19 +66,9 @@ class AlligatorMouthWaterState:
 class AlligatorMouthWaterAnalyzer:
     """
     Main analyzer class for Alligator mouth and water states.
-    
-    Provides enhanced analysis beyond the basic alligator_state module,
-    including multi-period analysis, state transitions, and confidence scoring.
     """
     
     def __init__(self, lookback_periods: int = 3, threshold: float = 1e-8):
-        """
-        Initialize the analyzer.
-        
-        Args:
-            lookback_periods: Number of periods to look back for trend analysis
-            threshold: Minimum threshold for considering lines as separated
-        """
         self.lookback_periods = lookback_periods
         self.threshold = threshold
         self._previous_state: Optional[AlligatorMouthWaterState] = None
@@ -89,17 +79,7 @@ class AlligatorMouthWaterAnalyzer:
         teeth: Sequence[float], 
         lips: Sequence[float]
     ) -> Tuple[MouthDirection, float]:
-        """
-        Calculate mouth direction with confidence scoring.
-        
-        Args:
-            jaw: Jaw line values (slowest MA)
-            teeth: Teeth line values (medium MA)  
-            lips: Lips line values (fastest MA)
-            
-        Returns:
-            Tuple of (direction, confidence_score)
-        """
+        """Calculate mouth direction with confidence scoring."""
         if len(jaw) < 2 or len(teeth) < 2 or len(lips) < 2:
             return MouthDirection.NEITHER, 0.0
             
@@ -116,7 +96,7 @@ class AlligatorMouthWaterAnalyzer:
         slopes_up = jaw_slope > 0 and teeth_slope > 0 and lips_slope > 0
         slopes_down = jaw_slope < 0 and teeth_slope < 0 and lips_slope < 0
         
-        # Calculate confidence based on slope magnitude and line separation
+        # Calculate confidence
         jaw_teeth_sep = abs(teeth[-1] - jaw[-1])
         teeth_lips_sep = abs(lips[-1] - teeth[-1])
         total_separation = jaw_teeth_sep + teeth_lips_sep
@@ -131,6 +111,41 @@ class AlligatorMouthWaterAnalyzer:
             return MouthDirection.SELL, confidence
         else:
             return MouthDirection.NEITHER, confidence * 0.5
+    
+    def calculate_mouth_phase_extended(
+        self,
+        jaw: Sequence[float],
+        teeth: Sequence[float], 
+        lips: Sequence[float],
+        gator_oscillator: Optional[Sequence[float]] = None
+    ) -> MouthPhase:
+        """Calculate mouth phase with optional Gator Oscillator integration."""
+        if len(jaw) < 2 or len(teeth) < 2 or len(lips) < 2:
+            return MouthPhase.NONE
+            
+        # Calculate distances between lines
+        current_dist = (abs(jaw[-1] - teeth[-1]) + abs(teeth[-1] - lips[-1])) / 2.0
+        previous_dist = (abs(jaw[-2] - teeth[-2]) + abs(teeth[-2] - lips[-2])) / 2.0
+        
+        # Use Gator Oscillator if available
+        if gator_oscillator is not None and len(gator_oscillator) >= 2:
+            current_gator = abs(gator_oscillator[-1])
+            previous_gator = abs(gator_oscillator[-2])
+            
+            if current_gator > previous_gator:
+                return MouthPhase.OPENING if previous_gator < self.threshold else MouthPhase.OPEN
+            elif current_gator < previous_gator:
+                return MouthPhase.SLEEPING if current_gator < self.threshold else MouthPhase.CLOSING
+            else:
+                return MouthPhase.OPEN if current_gator > self.threshold else MouthPhase.SLEEPING
+        else:
+            # Fallback to distance calculation
+            if current_dist > previous_dist:
+                return MouthPhase.OPENING if previous_dist < self.threshold else MouthPhase.OPEN
+            elif current_dist < previous_dist:
+                return MouthPhase.SLEEPING if current_dist < self.threshold else MouthPhase.CLOSING
+            else:
+                return MouthPhase.OPEN if current_dist > self.threshold else MouthPhase.SLEEPING
 
 
 # Convenience functions for backward compatibility
@@ -139,3 +154,10 @@ def calculate_mouth_direction(jaw: Sequence[float], teeth: Sequence[float], lips
     analyzer = AlligatorMouthWaterAnalyzer()
     direction, _ = analyzer.calculate_mouth_direction_extended(jaw, teeth, lips)
     return direction.value
+
+
+def calculate_mouth_phase(jaw: Sequence[float], teeth: Sequence[float], lips: Sequence[float]) -> str:
+    """Backward compatible mouth phase calculation."""
+    analyzer = AlligatorMouthWaterAnalyzer()
+    phase = analyzer.calculate_mouth_phase_extended(jaw, teeth, lips)
+    return phase.value
