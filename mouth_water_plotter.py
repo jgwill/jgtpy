@@ -570,7 +570,7 @@ def create_mouth_water_cli():
     parser.add_argument("-ct", "--chart_type", 
                        choices=["states_timeline", "last_state_analysis", "zone_combined"], 
                        default="last_state_analysis", help="Type of chart to create")
-    parser.add_argument("--show", action="store_true", default=True, help="Display the chart")
+    parser.add_argument("--show", action="store_true", default=False, help="Display the chart")
     parser.add_argument("-mw", "--mouth_water_flag", action="store_true", 
                        help="Force mouth water analysis")
     parser.add_argument("-v", "--verbose", type=int, default=0, help="Verbosity level")
