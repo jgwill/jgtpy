@@ -19,4 +19,5 @@ These changes allow passing `-new` and `-old` simultaneously without argparse er
 
 - d54bb49: added operational guide for agents and expanded specs for chart config, request object and mouth/water analysis
 - 4b38cdb: refine mouth/water spec with lookback notes and operational context; create observation loop spec
-- <newcommit>: refine dataset column definitions in ADS spec
+- fb667b9: refine dataset column definitions in ADS spec
+- d11c7c5: document SpecLang definition
