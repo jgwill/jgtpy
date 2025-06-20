@@ -49,6 +49,7 @@ class JGTIDSRequest(JGTPDSRequest):
                  balligator_flag=True, 
                  mfi_flag=True, 
                  gator_oscillator_flag=False,
+                 mouth_water_flag=False,
                  balligator_period_jaws=89, 
                  balligator_period_teeth=55, 
                  balligator_period_lips=34,
@@ -82,6 +83,7 @@ class JGTIDSRequest(JGTPDSRequest):
         self.balligator_flag = balligator_flag
         self.mfi_flag = mfi_flag
         self.gator_oscillator_flag = gator_oscillator_flag
+        self.mouth_water_flag = mouth_water_flag
         self.balligator_period_jaws = balligator_period_jaws
         self.balligator_period_teeth = balligator_period_teeth
         self.balligator_period_lips = balligator_period_lips
@@ -128,6 +130,7 @@ class JGTIDSRequest(JGTPDSRequest):
         self.balligator_flag = args.balligator_flag
         self.mfi_flag = args.mfi_flag
         self.gator_oscillator_flag = args.gator_oscillator_flag if hasattr(args, 'gator_oscillator_flag') else False
+        self.mouth_water_flag = args.mouth_water_flag if hasattr(args, 'mouth_water_flag') else False
         self.balligator_period_jaws = args.balligator_period_jaws if hasattr(args, 'balligator_period_jaws') else 89
         self.balligator_period_teeth = args.balligator_period_teeth if hasattr(args, 'balligator_period_teeth') else 55
         self.balligator_period_lips = args.balligator_period_lips if hasattr(args, 'balligator_period_lips') else 34
