@@ -60,7 +60,7 @@ class MouthWaterPlotConfig:
         self.mouth_direction_symbols = {
             MouthDirection.BUY: "▲",        # Up triangle for buy
             MouthDirection.SELL: "▼",       # Down triangle for sell
-            MouthDirection.NEITHER: "♦",    # Diamond for neither
+            MouthDirection.NEITHER: "D",    # Diamond for neither
         }
         
         # Mouth phase symbols  
