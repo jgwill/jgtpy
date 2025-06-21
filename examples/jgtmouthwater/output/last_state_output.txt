@@ -1,4 +1,0 @@
-usage: jgtmouthwater [-h] -i INSTRUMENT -t TIMEFRAME [-c COUNT]
-                     [-ct {states_timeline,last_state_analysis,zone_combined}]
-                     [--show] [-mw] [-v VERBOSE]
-jgtmouthwater: error: unrecognized arguments: --save output/last_state_analysis.png

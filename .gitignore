@@ -190,3 +190,4 @@ dev_dk_refresh.sh
 dev_jgtutils_makedist_reinstall_jgtutils.sh
 .hch/
 data.*
+*_output.txt
