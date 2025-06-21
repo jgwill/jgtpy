@@ -73,6 +73,8 @@ idscli = "jgtpy.jgtapycli:main"
 #jgtpy/adsfromcdsfile.py
 adsfromcds = "jgtpy.adsfromcdsfile:main"
 guidecli_jgtpy = "jgtpy.jgtpy_guide_for_agent:main"
+# Mouth water plotting
+jgtmouthwater = "jgtpy.mouth_water_plotter:create_mouth_water_cli"
 
 [tool.setuptools.package-data]
 "jgtpy" = ["guide_for_llm_agents/*"]
