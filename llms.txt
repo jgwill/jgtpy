@@ -20,7 +20,7 @@ jgtpy serves as the core data services layer for the JGT platform, providing mar
 - **Format**: OHLCV (Open, High, Low, Close, Volume) with Date index
 - **Storage**: `$JGTPY_DATA/pds/` and `$JGTPY_DATA_FULL/pds/`
 
-### IDS (Indicator Data Service) 
+### IDS (Indicator Data Service)
 - **Purpose**: Technical indicator calculation and standardization
 - **Key Module**: `JGTIDS.py` and `jgtapyhelper.py`
 - **Indicators**: Bill Williams suite (Alligator, AO/AC, Fractals, MFI)
@@ -118,8 +118,8 @@ jgtapp cds SPX500 D1 --fresh
 
 ### Standard Workflow
 ```
-Raw Price Data (PDS) → Indicator Calculation (IDS) → 
-Signal Processing (CDS) → Analysis Output (ADS) → 
+Raw Price Data (PDS) → Indicator Calculation (IDS) →
+Signal Processing (CDS) → Analysis Output (ADS) →
 Chart Generation → Signal Detection
 ```
 
@@ -250,3 +250,13 @@ before/after state when executing that CLI tool.
 ---
 
 *jgtpy serves as the essential data processing backbone of the JGT platform, transforming raw market data into structured, indicator-rich datasets ready for advanced signal analysis and trading decisions.*
+
+
+------
+# command line interface (CLI) for jgtpy guidance
+
+* guidecli_jgtpy --list  # Shows all 10 sections including new ones
+* guidecli_jgtpy --section jgtmouthwater  # Shows new comprehensive guide
+
+
+
