@@ -47,35 +47,35 @@ class MouthWaterPlotConfig:
         
         # Fallback ASCII symbols for environments without emoji support
         self.water_symbols = {
-            WaterState.SPLASHING: "s",      # Wave symbol
+            WaterState.SPLASHING: "s",      # Square for splashing
             WaterState.EATING: "o",         # Circle for eating
             WaterState.THROWING: "X",       # X for throwing
             WaterState.POPING: "^",         # Up arrow for pop
             WaterState.ENTERING: ">",       # Right arrow for entering
-            WaterState.SWITCHING: "D",      # Approximately equal for switching
-            WaterState.SLEEPING: ".",       # Dash for sleeping
+            WaterState.SWITCHING: "d",      # Diamond for switching
+            WaterState.SLEEPING: ".",       # Dot for sleeping
         }
         
         # Mouth direction symbols
         self.mouth_direction_symbols = {
-            MouthDirection.BUY: "▲",        # Up triangle for buy
-            MouthDirection.SELL: "▼",       # Down triangle for sell
+            MouthDirection.BUY: "^",        # Up triangle for buy
+            MouthDirection.SELL: "v",       # Down triangle for sell
             MouthDirection.NEITHER: "D",    # Diamond for neither
         }
         
         # Mouth phase symbols  
         self.mouth_phase_symbols = {
-            MouthPhase.OPENING: "◐",        # Half circle opening
-            MouthPhase.OPEN: "○",           # Open circle
-            MouthPhase.CLOSING: "◑",        # Half circle closing
-            MouthPhase.SLEEPING: "●",       # Filled circle sleeping
-            MouthPhase.NONE: "·",           # Dot for none
+            MouthPhase.OPENING: "D",        # Diamond opening
+            MouthPhase.OPEN: "o",           # Open circle
+            MouthPhase.CLOSING: "s",        # Square closing
+            MouthPhase.SLEEPING: ".",       # Dot sleeping
+            MouthPhase.NONE: ".",           # Dot for none
         }
         
         # Bar position symbols
         self.bar_position_symbols = {
             BarPosition.ABOVE: "^",         # Up arrow
-            BarPosition.IN: "s",            # Left-right arrow
+            BarPosition.IN: "s",            # Square
             BarPosition.BELOW: "v",         # Down arrow
         }
         
@@ -133,12 +133,112 @@ class MouthWaterPlotter:
         
         return last_completed, state_summary
     
+    def create_mouth_water_addplots(
+        self, 
+        data: pd.DataFrame, 
+        main_plot_panel_id: int = 0
+    ) -> List:
+        """Create mouth water state plots for mplfinance addplot."""
+        plots = []
+        
+        # Calculate offset for positioning
+        price_range = data[HIGH].max() - data[LOW].min()
+        offset = price_range * self.config.text_offset_ratio
+        
+        # Water State Plot (main indicator)
+        water_plots = self._make_water_state_addplots(data, main_plot_panel_id, offset)
+        plots.extend(water_plots)
+        
+        # Mouth Direction Plot
+        direction_plots = self._make_mouth_direction_addplots(data, main_plot_panel_id, offset * 2)
+        plots.extend(direction_plots)
+        
+        return plots
+    
+    def _make_water_state_addplots(self, data: pd.DataFrame, panel_id: int, offset: float):
+        """Create water state scatter plots."""
+        plots = []
+        
+        for state in WaterState:
+            mask = data['water_state'] == state.value
+            if mask.any():
+                # Position markers above high prices
+                values = np.where(mask, data[HIGH] + offset, np.nan)
+                
+                # Use ASCII symbols for better compatibility
+                symbol = self.config.water_symbols[state]
+                color = self.config.water_state_colors[state]
+                
+                plot = mpf.make_addplot(
+                    values,
+                    panel=panel_id,
+                    type="scatter",
+                    markersize=self.config.marker_size,
+                    marker=symbol if len(symbol) == 1 else 'o',
+                    color=color,
+                )
+                plots.append(plot)
+        
+        return plots
+    
+    def _make_mouth_direction_addplots(self, data: pd.DataFrame, panel_id: int, offset: float):
+        """Create mouth direction scatter plots."""
+        plots = []
+        
+        for direction in MouthDirection:
+            mask = data['mouth_direction'] == direction.value
+            if mask.any():
+                # Position markers above high prices with offset
+                values = np.where(mask, data[HIGH] + offset, np.nan)
+                
+                symbol = self.config.mouth_direction_symbols[direction]
+                color = self.config.mouth_direction_colors[direction]
+                
+                plot = mpf.make_addplot(
+                    values,
+                    panel=panel_id,
+                    type="scatter",
+                    markersize=self.config.marker_size,
+                    marker=symbol if len(symbol) == 1 else '^',
+                    color=color,
+                )
+                plots.append(plot)
+        
+        return plots
+    
+    def create_last_state_highlight_plot(self, data: pd.DataFrame, panel_id: int = 0):
+        """Create a special plot highlighting the last completed state."""
+        if len(data) < 2:
+            return None
+        
+        last_completed = data.iloc[-2]
+        
+        # Create a large marker for the last completed state
+        values = np.full(len(data), np.nan)
+        values[-2] = last_completed[HIGH] + (data[HIGH].max() - data[LOW].min()) * 0.05
+        
+        # Get state info for styling
+        water_state = WaterState(last_completed['water_state'])
+        mouth_dir = MouthDirection(last_completed['mouth_direction'])
+        
+        plot = mpf.make_addplot(
+            values,
+            panel=panel_id,
+            type="scatter",
+            markersize=self.config.last_bar_marker_size,
+            marker='*',  # Star for prominence
+            color=self.config.water_state_colors[water_state],
+            # Could add label but mplfinance doesn't support it well
+        )
+        
+        return plot
+    
     def create_specialized_mouth_water_chart(
         self,
         data: pd.DataFrame,
         instrument: str,
         timeframe: str,
-        chart_type: str = "last_state_analysis",
+        chart_type: str = "last_state",
         show: bool = True
     ) -> Tuple[Figure, list]:
         """Create specialized mouth water charts.
@@ -161,6 +261,81 @@ class MouthWaterPlotter:
             return self._create_zone_combined_chart(data, instrument, timeframe, show)
         else:
             return self._create_last_state_analysis_chart(data, instrument, timeframe, last_state, show)
+    
+    def _create_states_timeline_chart(self, data: pd.DataFrame, instrument: str, timeframe: str, show: bool):
+        """Create chart showing state evolution over time."""
+        fig, axes = plt.subplots(4, 1, figsize=(15, 12), sharex=True)
+        fig.suptitle(f"{instrument} {timeframe} - Mouth Water States Timeline", fontsize=16)
+        
+        dates = range(len(data))
+        
+        # Chart 1: Water States
+        ax1 = axes[0]
+        water_states = [WaterState(ws).name for ws in data['water_state']]
+        unique_water = list(WaterState)
+        water_nums = [unique_water.index(WaterState(ws)) for ws in data['water_state']]
+        
+        colors = [self.config.water_state_colors[WaterState(ws)] for ws in data['water_state']]
+        ax1.scatter(dates, water_nums, c=colors, alpha=0.7, s=50)
+        ax1.set_title("Water States")
+        ax1.set_yticks(range(len(unique_water)))
+        ax1.set_yticklabels([ws.name for ws in unique_water])
+        ax1.grid(True, alpha=0.3)
+        
+        # Chart 2: Mouth Direction
+        ax2 = axes[1]
+        unique_dirs = list(MouthDirection)
+        dir_nums = [unique_dirs.index(MouthDirection(md)) for md in data['mouth_direction']]
+        dir_colors = [self.config.mouth_direction_colors[MouthDirection(md)] for md in data['mouth_direction']]
+        
+        ax2.scatter(dates, dir_nums, c=dir_colors, alpha=0.7, s=50)
+        ax2.set_title("Mouth Direction")
+        ax2.set_yticks(range(len(unique_dirs)))
+        ax2.set_yticklabels([md.name for md in unique_dirs])
+        ax2.grid(True, alpha=0.3)
+        
+        # Chart 3: Bar Position
+        ax3 = axes[2]
+        unique_pos = list(BarPosition)
+        pos_nums = [unique_pos.index(BarPosition(bp)) for bp in data['bar_position']]
+        pos_colors = [self.config.bar_position_colors[BarPosition(bp)] for bp in data['bar_position']]
+        
+        ax3.scatter(dates, pos_nums, c=pos_colors, alpha=0.7, s=50)
+        ax3.set_title("Bar Position")
+        ax3.set_yticks(range(len(unique_pos)))
+        ax3.set_yticklabels([bp.name for bp in unique_pos])
+        ax3.grid(True, alpha=0.3)
+        
+        # Chart 4: Zone Colors (if available)
+        ax4 = axes[3]
+        if 'zcol' in data.columns:
+            zone_colors = data['zcol'].values
+            zone_map = {'red': 0, 'gray': 1, 'green': 2}
+            zone_nums = [zone_map.get(zc, 1) for zc in zone_colors]
+            
+            ax4.scatter(dates, zone_nums, c=zone_colors, alpha=0.7, s=50)
+            ax4.set_title("Zone Colors")
+            ax4.set_yticks([0, 1, 2])
+            ax4.set_yticklabels(['SELL', 'NEUTRAL', 'BUY'])
+        else:
+            ax4.text(0.5, 0.5, 'Zone data not available', ha='center', va='center', transform=ax4.transAxes)
+            ax4.set_title("Zone Colors (N/A)")
+        
+        ax4.set_xlabel("Bar Index")
+        ax4.grid(True, alpha=0.3)
+        
+        # Highlight last completed bar
+        last_completed_idx = len(data) - 2
+        for ax in axes:
+            ax.axvline(x=last_completed_idx, color='red', linestyle='--', alpha=0.7, label='Last Completed')
+        
+        axes[0].legend()
+        plt.tight_layout()
+        
+        if show:
+            plt.show()
+        
+        return fig, axes
     
     def _create_last_state_analysis_chart(self, data: pd.DataFrame, instrument: str, timeframe: str, last_state: pd.Series, show: bool):
         """Create detailed analysis of the last completed state."""
@@ -283,81 +458,6 @@ Confidence: {confidence:.3f}
         
         return fig, axes.flatten()
     
-    def _create_states_timeline_chart(self, data: pd.DataFrame, instrument: str, timeframe: str, show: bool):
-        """Create chart showing state evolution over time."""
-        fig, axes = plt.subplots(4, 1, figsize=(15, 12), sharex=True)
-        fig.suptitle(f"{instrument} {timeframe} - Mouth Water States Timeline", fontsize=16)
-        
-        dates = range(len(data))
-        
-        # Chart 1: Water States
-        ax1 = axes[0]
-        water_states = [WaterState(ws).name for ws in data['water_state']]
-        unique_water = list(WaterState)
-        water_nums = [unique_water.index(WaterState(ws)) for ws in data['water_state']]
-        
-        colors = [self.config.water_state_colors[WaterState(ws)] for ws in data['water_state']]
-        ax1.scatter(dates, water_nums, c=colors, alpha=0.7, s=50)
-        ax1.set_title("Water States")
-        ax1.set_yticks(range(len(unique_water)))
-        ax1.set_yticklabels([ws.name for ws in unique_water])
-        ax1.grid(True, alpha=0.3)
-        
-        # Chart 2: Mouth Direction
-        ax2 = axes[1]
-        unique_dirs = list(MouthDirection)
-        dir_nums = [unique_dirs.index(MouthDirection(md)) for md in data['mouth_direction']]
-        dir_colors = [self.config.mouth_direction_colors[MouthDirection(md)] for md in data['mouth_direction']]
-        
-        ax2.scatter(dates, dir_nums, c=dir_colors, alpha=0.7, s=50)
-        ax2.set_title("Mouth Direction")
-        ax2.set_yticks(range(len(unique_dirs)))
-        ax2.set_yticklabels([md.name for md in unique_dirs])
-        ax2.grid(True, alpha=0.3)
-        
-        # Chart 3: Bar Position
-        ax3 = axes[2]
-        unique_pos = list(BarPosition)
-        pos_nums = [unique_pos.index(BarPosition(bp)) for bp in data['bar_position']]
-        pos_colors = [self.config.bar_position_colors[BarPosition(bp)] for bp in data['bar_position']]
-        
-        ax3.scatter(dates, pos_nums, c=pos_colors, alpha=0.7, s=50)
-        ax3.set_title("Bar Position")
-        ax3.set_yticks(range(len(unique_pos)))
-        ax3.set_yticklabels([bp.name for bp in unique_pos])
-        ax3.grid(True, alpha=0.3)
-        
-        # Chart 4: Zone Colors (if available)
-        ax4 = axes[3]
-        if 'zcol' in data.columns:
-            zone_colors = data['zcol'].values
-            zone_map = {'red': 0, 'gray': 1, 'green': 2}
-            zone_nums = [zone_map.get(zc, 1) for zc in zone_colors]
-            
-            ax4.scatter(dates, zone_nums, c=zone_colors, alpha=0.7, s=50)
-            ax4.set_title("Zone Colors")
-            ax4.set_yticks([0, 1, 2])
-            ax4.set_yticklabels(['SELL', 'NEUTRAL', 'BUY'])
-        else:
-            ax4.text(0.5, 0.5, 'Zone data not available', ha='center', va='center', transform=ax4.transAxes)
-            ax4.set_title("Zone Colors (N/A)")
-        
-        ax4.set_xlabel("Bar Index")
-        ax4.grid(True, alpha=0.3)
-        
-        # Highlight last completed bar
-        last_completed_idx = len(data) - 2
-        for ax in axes:
-            ax.axvline(x=last_completed_idx, color='red', linestyle='--', alpha=0.7, label='Last Completed')
-        
-        axes[0].legend()
-        plt.tight_layout()
-        
-        if show:
-            plt.show()
-        
-        return fig, axes
-    
     def _create_zone_combined_chart(self, data: pd.DataFrame, instrument: str, timeframe: str, show: bool):
         """Create chart emphasizing zone and mouth water state combinations."""
         fig, axes = plt.subplots(3, 1, figsize=(15, 12))
@@ -396,14 +496,17 @@ Confidence: {confidence:.3f}
             zone_pos = {'red': 0, 'gray': 1, 'green': 2}.get(zone, 1)
             
             # Water state affects marker style
-            marker = self.config.water_symbols[water_state]
+            marker_symbol = self.config.water_symbols[water_state]
             color = self.config.mouth_direction_colors[mouth_dir]
             
             # Size based on confidence
             confidence = row.get('mouth_direction_confidence', 0.5)
             size = 50 + confidence * 100
             
-            ax2.scatter(i, zone_pos, c=color, s=size, marker=marker if len(marker)==1 else 'o', 
+            # Use valid matplotlib markers
+            valid_marker = 'o' if marker_symbol in ['-', '~', '≈'] else marker_symbol
+            
+            ax2.scatter(i, zone_pos, c=color, s=size, marker=valid_marker, 
                        alpha=0.7)
         
         ax2.set_title("Zone vs Direction vs Water State")
@@ -467,7 +570,7 @@ def create_mouth_water_cli():
     parser.add_argument("-ct", "--chart_type", 
                        choices=["states_timeline", "last_state_analysis", "zone_combined"], 
                        default="last_state_analysis", help="Type of chart to create")
-    parser.add_argument("--show", action="store_true", default=True, help="Display the chart")
+    parser.add_argument("--show", action="store_true", default=False, help="Display the chart")
     parser.add_argument("-mw", "--mouth_water_flag", action="store_true", 
                        help="Force mouth water analysis")
     parser.add_argument("-v", "--verbose", type=int, default=0, help="Verbosity level")
@@ -529,4 +632,4 @@ def create_mouth_water_cli():
 
 
 if __name__ == "__main__":
-    create_mouth_water_cli()
+    create_mouth_water_cli() 
