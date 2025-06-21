@@ -15,31 +15,31 @@ echo
 mkdir -p output
 cd output
 
-echo "2. Generating Last State Analysis Chart..."
+echo "2. Generating Last State Analysis Chart (no display)..."
 echo "----------------------------------------"
-# Generate last state analysis (default) and save output
-jgtmouthwater -i EUR/USD -t m5 -c 50 -ct last_state_analysis -v 1 > last_state_output.txt 2>&1
+# Generate last state analysis (default) and save output with longer timeout
+timeout 300 jgtmouthwater -i EUR/USD -t m5 -c 50 -ct last_state_analysis -v 1 > last_state_output.txt 2>&1
 echo "✓ Last state analysis completed - output saved to last_state_output.txt"
 echo
 
-echo "3. Generating States Timeline Chart..."
+echo "3. Generating States Timeline Chart (no display)..."
 echo "------------------------------------"
-# Generate states timeline chart
-jgtmouthwater -i EUR/USD -t m5 -c 100 -ct states_timeline -v 1 > states_timeline_output.txt 2>&1
+# Generate states timeline chart with longer timeout
+timeout 300 jgtmouthwater -i EUR/USD -t m5 -c 100 -ct states_timeline -v 1 > states_timeline_output.txt 2>&1
 echo "✓ States timeline completed - output saved to states_timeline_output.txt"
 echo
 
-echo "4. Generating Zone Combined Chart..."
+echo "4. Generating Zone Combined Chart (no display)..."
 echo "----------------------------------"
-# Generate zone combined chart
-jgtmouthwater -i EUR/USD -t m5 -c 75 -ct zone_combined -v 1 > zone_combined_output.txt 2>&1
+# Generate zone combined chart with longer timeout
+timeout 300 jgtmouthwater -i EUR/USD -t m5 -c 75 -ct zone_combined -v 1 > zone_combined_output.txt 2>&1
 echo "✓ Zone combined completed - output saved to zone_combined_output.txt"
 echo
 
 echo "5. Testing Different Instruments..."
 echo "---------------------------------"
-# Test with different instrument
-jgtmouthwater -i GBP/USD -t m15 -c 30 -ct last_state_analysis -v 1 > gbpusd_output.txt 2>&1
+# Test with different instrument and longer timeout
+timeout 300 jgtmouthwater -i GBP/USD -t m15 -c 30 -ct last_state_analysis -v 1 > gbpusd_output.txt 2>&1
 echo "✓ GBP/USD analysis completed - output saved to gbpusd_output.txt"
 echo
 
@@ -84,4 +84,5 @@ echo "Positions:    ^(above) s(in) v(below)"
 echo
 
 echo "Examples completed! Check the output/ directory for detailed results."
-echo "To view charts interactively, add --show flag to any command." 
+echo "To view charts interactively, add --show flag to any command."
+echo "Note: Charts are generated without display to prevent hanging on headless systems." 
