@@ -36,7 +36,7 @@ with warnings.catch_warnings():
     )
 
 
-version='0.5.116'
+version='0.5.121'
 __version__ = version
 
 
@@ -74,6 +74,18 @@ import JGTIDSSvc as idssvc
 
 import JGTCDSSvc as cdssvc 
 
+# Alligator Mouth and Water State Analysis
+from .alligator_mouth_water import (
+    AlligatorMouthWaterAnalyzer,
+    AlligatorMouthWaterState,
+    MouthDirection,
+    MouthPhase,
+    BarPosition,
+    WaterState,
+    calculate_mouth_direction,
+    calculate_mouth_phase,
+)
+
 def help():
     print(
         "JGTPY\n",
@@ -100,6 +112,11 @@ def help():
         "> \n",
         "> #MKS \n",
         '> jgt.mksg_by_crop_dates(i,t,"H4","Fractal","2023-01-01",scn_root_dir="./data",show_chart=True,show_tabs=True,save_fig_image=True,save_cds_data=True)\n',
+        "> \n",
+        "> #Alligator Mouth and Water State Analysis\n",
+        "> analyzer = jgt.AlligatorMouthWaterAnalyzer()\n",
+        "> direction, confidence = analyzer.calculate_mouth_direction_extended(jaw, teeth, lips)\n",
+        "> phase = analyzer.calculate_mouth_phase_extended(jaw, teeth, lips)\n",
         "> \n",
         "For more information, please visit: https://jgtpy.jgwill.com\n",
     )

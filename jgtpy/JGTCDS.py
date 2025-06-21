@@ -46,6 +46,7 @@ def createFromPDSFileToCDSFile(
     largest_fractal_period=89,
     talligator_flag=False,
     talligator_period_jaws=377,
+    mouth_water_flag=False,
     viewpath=False,
     quotescount=NB_BARS_BY_DEFAULT_IN_CDS,
     dropna_volume=True,
@@ -70,6 +71,7 @@ def createFromPDSFileToCDSFile(
     largest_fractal_period (int, optional): The period for the largest fractal. Default is 89.
     talligator_flag (bool, optional): If True, calculates the Tide Alligator. Default is False.
     talligator_period_jaws (int, optional): The period for the Tide Alligator Jaws. Default is 377.
+    mouth_water_flag (bool, optional): If True, calculates the Mouth Water. Default is False.
     viewpath (bool, optional): If True, displays the file path. Default is False.
     quotescount (int, optional): The number of quotes to keep. Default is 300.
 
@@ -90,6 +92,7 @@ def createFromPDSFileToCDSFile(
         rq.talligator_flag = talligator_flag
         rq.balligator_period_jaws = balligator_period_jaws
         rq.talligator_period_jaws = talligator_period_jaws
+        rq.mouth_water_flag = mouth_water_flag
         rq.largest_fractal_period = largest_fractal_period
         rq.viewpath=viewpath
         rq.talligator_fix_quotescount()

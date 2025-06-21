@@ -22,3 +22,9 @@
 | `mfi_val` | The MFI value. |
 | `zone_signal` | The zone signal value. |
 | `zone_int` | The zone integer value. |
+| `mouth_direction` | The direction of the Alligator mouth (buy, sell, or neither). |
+| `mouth_phase` | The phase of the Alligator mouth (opening, open, closing, sleeping, or none). |
+| `bar_position` | The position of the bar relative to the Alligator mouth (above, in, or below). |
+| `water_state` | The water classification derived from mouth behavior (splashing, eating, throwing, poping, entering, switching, sleeping). |
+| `mouth_direction_confidence` | Confidence score for the mouth direction calculation. |
+| `mouth_phase_confidence` | Confidence score for the mouth phase calculation. |

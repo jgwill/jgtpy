@@ -55,6 +55,7 @@ def _parse_args():
     jgtcommon.add_ids_gator_oscillator_argument(parser)
     jgtcommon.add_ids_balligator_argument(parser)
     jgtcommon.add_ids_talligator_argument(parser)
+    jgtcommon.add_ids_mouth_water_argument(parser)
     jgtcommon.add_ids_fractal_largest_period_argument(parser)
     jgtcommon.add_viewpath_argument(parser)
     
@@ -147,6 +148,7 @@ def main():
                     largest_fractal_period=args.largest_fractal_period,
                     talligator_flag=args.talligator_flag,
                     talligator_period_jaws=args.talligator_period_jaws,
+                    mouth_water_flag=args.mouth_water_flag,
                     viewpath=args.viewpath,
                     quotescount=args.quotescount,
                     dropna_volume=do_we_dropna_volume
@@ -176,6 +178,7 @@ def createCDS_for_main(
     largest_fractal_period=89,
     talligator_flag=False,
     talligator_period_jaws=377,
+    mouth_water_flag=False,
     viewpath=False,
     quotescount=NB_BARS_BY_DEFAULT_IN_CDS,
     dropna_volume=True,
@@ -207,6 +210,7 @@ def createCDS_for_main(
             largest_fractal_period=largest_fractal_period,
             talligator_flag=talligator_flag,
             talligator_period_jaws=talligator_period_jaws,
+            mouth_water_flag=mouth_water_flag,
             viewpath=viewpath,
             quotescount=quotescount,
             dropna_volume=dropna_volume,

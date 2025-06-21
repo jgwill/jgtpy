@@ -55,6 +55,7 @@ def _parse_args():
     jgtcommon.add_ids_gator_oscillator_argument(parser)
     jgtcommon.add_ids_balligator_argument(parser)
     jgtcommon.add_ids_talligator_argument(parser)
+    jgtcommon.add_ids_mouth_water_argument(parser)
     jgtcommon.add_ids_fractal_largest_period_argument(parser)
     jgtcommon.add_viewpath_argument(parser)
     

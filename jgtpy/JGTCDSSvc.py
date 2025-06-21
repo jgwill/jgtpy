@@ -57,6 +57,7 @@ def set_rq_defaults(rq): #@STCIssue We would migrate to use jgtutils/jgtclirqdat
     rq.mfi_flag = True
     rq.balligator_flag = True
     rq.talligator_flag = True
+    rq.mouth_water_flag = False
     rq.dropna_volume = True
     
     if rq.timeframe=="M1":

@@ -1,0 +1,11 @@
+Prepare the framework for making what is bellow working
+<SPECS>
+
+
+</SPECS>
+
+<DOCS>
+
+</DOCS>
+create a README.md and a ROADMAP.md '[ ]' planned, '[*]' in progress, '[x]' completed.
+Make sure to separate your classes, you have a tendencies to put everyithng in one files, that needs to be reusable and modulable

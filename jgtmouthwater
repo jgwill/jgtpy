@@ -1,0 +1,17 @@
+#!/bin/bash
+# Alligator Mouth and Water State Analysis CLI Wrapper
+# This script provides a convenient wrapper around the Python CLI tool
+
+# Determine the script directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Set default data directory if not already set
+if [ -z "$JGTPY_DATA" ]; then
+    if [ -d "$SCRIPT_DIR/data/current" ]; then
+        export JGTPY_DATA="$SCRIPT_DIR/data/current"
+    fi
+fi
+
+# Run the Python CLI tool
+exec python "$SCRIPT_DIR/jgtpy/alligator_mouth_water.py" "$@"
+

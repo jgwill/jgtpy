@@ -26,6 +26,11 @@ from aohelper import add_ao_price_peaks_v2
 from JGTChartConfig import JGTChartConfig
 from JGTIDSRequest import JGTIDSRequest
 
+try:
+    from alligator_mouth_water import AlligatorMouthWaterAnalyzer
+except ImportError:
+    AlligatorMouthWaterAnalyzer = None
+
 # %%
 # @title Vars
 _dtformat = "%m.%d.%Y %H:%M:%S"
@@ -1047,6 +1052,69 @@ def tocds(
     dfires = __cleanse_ao_peak_v1_secondary_columns(dfires, quiet=True)
     dfires = __format_boolean_columns_to_int(dfires, quiet=True)
     dfires = add_ao_price_peaks_v2(dfires, quiet=True, rq=rq)   
+    
+    # Add mouth water analysis if enabled
+    if rq.mouth_water_flag and AlligatorMouthWaterAnalyzer is not None:
+        try:
+            analyzer = AlligatorMouthWaterAnalyzer()
+            
+            # Check if required columns exist
+            required_cols = ['jaw', 'teeth', 'lips', 'ao']
+            if all(col in dfires.columns for col in required_cols):
+                # Initialize columns with default values
+                dfires['mouth_direction'] = 'neither'
+                dfires['mouth_phase'] = 'none'
+                dfires['bar_position'] = 'in'
+                dfires['water_state'] = 'sleeping'
+                dfires['mouth_direction_confidence'] = 0.0
+                dfires['mouth_phase_confidence'] = 0.0
+                
+                # Analyze each bar and add the mouth water columns
+                for i, idx in enumerate(dfires.index):
+                    try:
+                        # Get required sequences (current + lookback periods)
+                        lookback = analyzer.lookback_periods
+                        start_idx = max(0, i - lookback)
+                        
+                        jaw_seq = dfires['jaw'].iloc[start_idx:i+1].values
+                        teeth_seq = dfires['teeth'].iloc[start_idx:i+1].values
+                        lips_seq = dfires['lips'].iloc[start_idx:i+1].values
+                        
+                        # Current bar data
+                        price_high = dfires.at[idx, 'High']
+                        price_low = dfires.at[idx, 'Low']
+                        ao_value = dfires.at[idx, 'ao']
+                        
+                        # Only analyze if we have enough data points
+                        if len(jaw_seq) >= 2:
+                            result = analyzer.analyze_single_bar(
+                                price_high=price_high,
+                                price_low=price_low,
+                                ao_value=ao_value,
+                                jaw=jaw_seq,
+                                teeth=teeth_seq,
+                                lips=lips_seq
+                            )
+                            
+                            if result:
+                                dfires.at[idx, 'mouth_direction'] = result.mouth_direction.value
+                                dfires.at[idx, 'mouth_phase'] = result.mouth_phase.value
+                                dfires.at[idx, 'bar_position'] = result.bar_position.value
+                                dfires.at[idx, 'water_state'] = result.water_state.value
+                                dfires.at[idx, 'mouth_direction_confidence'] = result.confidence_score
+                                dfires.at[idx, 'mouth_phase_confidence'] = result.confidence_score
+                    except Exception as e:
+                        if not quiet:
+                            print(f"Mouth water analysis failed for bar {idx}: {e}")
+                        
+                if not quiet:
+                    print("Added mouth water analysis columns")
+            else:
+                if not quiet:
+                    print("Skipping mouth water analysis: required alligator columns not found")
+        except Exception as e:
+            if not quiet:
+                print(f"Mouth water analysis failed: {e}")
     
     if add_mfi_signals_proto:
         dfires= _cds_add_mfi_squat_n_signals_column_logics_v1(dfires, quiet=quiet)
