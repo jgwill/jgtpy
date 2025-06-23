@@ -7,6 +7,7 @@ from jgtpy.alligator_mouth_water import (
     MouthDirection,
     MouthPhase,
     WaterState,
+    BarPosition,
     load_cds_data,
     analyze_dataframe,
 )
@@ -22,6 +23,11 @@ def _parse_args():
     p.add_argument("--n-bars", type=int, default=5, help="Number of bars to show")
     p.add_argument("--data-dir", default=None, help="CDS data directory")
     p.add_argument("--use-full", action="store_true", help="Load full dataset")
+    p.add_argument(
+        "--show-position",
+        action="store_true",
+        help="Include bar position glyph (above, in, below mouth)",
+    )
     return p.parse_args()
 
 
@@ -52,11 +58,18 @@ class GlyphMapper:
         MouthDirection.NEITHER: "",
     }
 
-    def map_row(self, row: pd.Series) -> str:
+    position_glyphs = {
+        BarPosition.ABOVE: "📈",
+        BarPosition.IN: "💧",
+        BarPosition.BELOW: "🏊",
+    }
+
+    def map_row(self, row: pd.Series, show_position: bool = False) -> str:
         direction = self.direction_glyphs.get(MouthDirection(row["mouth_direction"]), "")
         phase = self.phase_glyphs.get(MouthPhase(row["mouth_phase"]), "")
         water = self.water_glyphs.get(WaterState(row["water_state"]), "")
-        return f"🐊{water}{phase}{direction}"
+        position = self.position_glyphs.get(BarPosition(row["bar_position"]), "") if show_position else ""
+        return f"🐊{water}{phase}{position}{direction}"
 
 
 def main():
@@ -75,7 +88,7 @@ def main():
     mapper = GlyphMapper()
     tail_df = df.tail(args.n_bars)
     for ts, row in tail_df.iterrows():
-        glyphs = mapper.map_row(row)
+        glyphs = mapper.map_row(row, show_position=args.show_position)
         print(f"{ts}: {glyphs}")
 
 

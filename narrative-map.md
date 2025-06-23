@@ -23,6 +23,8 @@ These changes allow passing `-new` and `-old` simultaneously without argparse er
 - d11c7c5: document SpecLang definition
 - aa273be: applying previous commit introducing more specs and CDS column updates
 - 6d5810e: introduce glyphcli for emoji-based state summaries
+- b8168ff: initial implementation with basic mapping
+* new: added `--show-position` option for bar placement glyphs
 
 ## Spec Overview
 

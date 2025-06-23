@@ -16,6 +16,7 @@ This spec describes a small command line tool for summarizing market states with
 - `--n-bars` – Number of recent bars to display (default: 5).
 - `--data-dir` – Optional path to CDS data.
 - `--use-full` – Load the full dataset from the CDS directory.
+- `--show-position` – Append a glyph showing if the bar closed above, inside or below the mouth.
 
 ## Behavior
 1. Load CDS data with `alligator_mouth_water.load_cds_data`.
@@ -27,6 +28,10 @@ This spec describes a small command line tool for summarizing market states with
    - 🏊 – active water state.
    - 🦷 – mouth logic (open/close).
    - 🪥 – reset or sleeping phase.
+   - Position glyphs:
+     - 📈 – price bar above the mouth.
+     - 💧 – price within the mouth.
+     - 🏊 – price below the mouth.
 4. Print a timestamp and the glyph sequence for the requested number of bars.
 
 The output provides a condensed view of market conditions suitable for chat interfaces or quick logs.
