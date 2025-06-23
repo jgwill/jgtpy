@@ -75,6 +75,7 @@ adsfromcds = "jgtpy.adsfromcdsfile:main"
 guidecli_jgtpy = "jgtpy.jgtpy_guide_for_agent:main"
 # Mouth water plotting
 jgtmouthwater = "jgtpy.mouth_water_plotter:create_mouth_water_cli"
+glyphcli = "jgtpy.glyph_cli:main"
 
 [tool.setuptools.package-data]
 "jgtpy" = ["guide_for_llm_agents/*"]

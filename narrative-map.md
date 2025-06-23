@@ -22,6 +22,7 @@ These changes allow passing `-new` and `-old` simultaneously without argparse er
 - fb667b9: refine dataset column definitions in ADS spec
 - d11c7c5: document SpecLang definition
 - aa273be: applying previous commit introducing more specs and CDS column updates
+- 6d5810e: introduce glyphcli for emoji-based state summaries
 
 ## Spec Overview
 
