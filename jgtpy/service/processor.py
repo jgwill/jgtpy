@@ -106,42 +106,66 @@ class ParallelProcessor:
         try:
             logger.debug(f"Processing {instrument}/{timeframe}")
             
-            # This is where we'll integrate with existing JGT services
-            # For now, this is a placeholder that simulates the work
+            # Import and use actual JGTCDSSvc
+            from JGTCDSSvc import get
             
-            # TODO: Replace with actual JGTCDSSvc.get() call
-            # from JGTCDSSvc import get
-            # cdf = get(
-            #     instrument=instrument,
-            #     timeframe=timeframe,
-            #     use_fresh=self.config.use_fresh,
-            #     use_full=self.config.use_full,
-            #     quiet=self.config.quiet
-            # )
-            
-            # Simulate processing time
-            time.sleep(0.1)  # Remove this in real implementation
-            
-            processing_time = time.time() - start_time
-            
-            # For now, return a simulated success
-            return ProcessingResult(
+            # Process using real CDS service
+            cdf = get(
                 instrument=instrument,
                 timeframe=timeframe,
-                success=True,
-                file_path=f"/tmp/jgtpy/data/current/cds/{instrument}_{timeframe}.csv",
-                processing_time=processing_time
+                use_fresh=self.config.use_fresh,
+                use_full=self.config.use_full,
+                quiet=self.config.quiet,
+                quotescount=-1  # Use default quote count
             )
             
-        except Exception as e:
             processing_time = time.time() - start_time
-            logger.error(f"Failed to process {instrument}/{timeframe}: {e}")
+            
+            if cdf is not None and len(cdf) > 0:
+                # Generate expected file path based on config
+                data_path = self.config.data_full_path if self.config.use_full else self.config.data_path
+                file_path = f"{data_path}/cds/{instrument}_{timeframe}.csv"
+                
+                logger.debug(f"✓ {instrument}/{timeframe} processed: {len(cdf)} rows")
+                
+                return ProcessingResult(
+                    instrument=instrument,
+                    timeframe=timeframe,
+                    success=True,
+                    file_path=file_path,
+                    processing_time=processing_time
+                )
+            else:
+                return ProcessingResult(
+                    instrument=instrument,
+                    timeframe=timeframe,
+                    success=False,
+                    error="CDS processing returned empty result",
+                    processing_time=processing_time
+                )
+            
+        except ImportError as e:
+            processing_time = time.time() - start_time
+            error_msg = f"Could not import JGTCDSSvc: {e}"
+            logger.error(f"Failed to process {instrument}/{timeframe}: {error_msg}")
             
             return ProcessingResult(
                 instrument=instrument,
                 timeframe=timeframe,
                 success=False,
-                error=str(e),
+                error=error_msg,
+                processing_time=processing_time
+            )
+        except Exception as e:
+            processing_time = time.time() - start_time
+            error_msg = f"Processing error: {e}"
+            logger.error(f"Failed to process {instrument}/{timeframe}: {error_msg}")
+            
+            return ProcessingResult(
+                instrument=instrument,
+                timeframe=timeframe,
+                success=False,
+                error=error_msg,
                 processing_time=processing_time
             )
     
