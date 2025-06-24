@@ -80,23 +80,45 @@ class JGTScheduler:
     
     def _should_refresh(self, timeframe: str, current_time: datetime) -> bool:
         """Check if timeframe should be refreshed at current time"""
-        # This is a simplified version - would need full timeframe logic
-        # from jgtutils.timeframe_scheduler
-        
-        current_minute = current_time.minute
-        current_hour = current_time.hour
-        
-        # Basic timeframe checking (simplified)
-        if timeframe == "m5" and current_minute % 5 == 0:
-            return True
-        elif timeframe == "m15" and current_minute % 15 == 0:
-            return True
-        elif timeframe == "H1" and current_minute == 0:
-            return True
-        elif timeframe == "H4" and current_minute == 0 and current_hour % 4 == 0:
-            return True
-        
-        return False
+        # Use the real timeframe scheduling logic from jgtutils
+        try:
+            from jgtutils.timeframe_scheduler import get_times_by_timeframe_str, get_current_time
+            
+            # Get valid times for this timeframe
+            valid_times = get_times_by_timeframe_str(timeframe)
+            if not valid_times:
+                return False
+            
+            # Get current time in the format expected by timeframe scheduler
+            current_time_str = get_current_time(timeframe)
+            
+            # Check if current time matches any valid time
+            is_valid_time = current_time_str in valid_times
+            
+            # Only trigger if we haven't processed this timeframe in the last minute
+            # to avoid duplicate processing
+            last_refresh = self.last_refresh_times.get(timeframe)
+            if last_refresh and (current_time - last_refresh).total_seconds() < 60:
+                return False
+            
+            return is_valid_time
+            
+        except ImportError:
+            logger.warning("Could not import jgtutils.timeframe_scheduler, using fallback logic")
+            # Fallback to simplified logic
+            current_minute = current_time.minute
+            current_hour = current_time.hour
+            
+            if timeframe == "m5" and current_minute % 5 == 0:
+                return True
+            elif timeframe == "m15" and current_minute % 15 == 0:
+                return True
+            elif timeframe == "H1" and current_minute == 0:
+                return True
+            elif timeframe == "H4" and current_minute == 0 and current_hour % 4 == 0:
+                return True
+            
+            return False
     
     def _trigger_refresh(self, timeframe: str):
         """Trigger data refresh for specific timeframe"""
