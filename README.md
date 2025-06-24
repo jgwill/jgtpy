@@ -47,6 +47,7 @@ The package provides the following command-line tools for working with IDS, CDS,
 | `idscli`     | jgtpy.jgtapycli:main                 | Alias for `jgtids`: generate and process IDS files. |
 | `adsfromcds` | jgtpy.adsfromcdsfile:main            | Create plots from CDS cache data, supporting custom output directories, chart types, and feature plots. |
 | `glyphcli`   | jgtpy.glyph_cli:main                 | Summarize mouth and water states using emoji glyphs. Supports `--show-position` to include bar placement. |
+| `signalglyph`| jgtpy.glyph_signals_cli:main         | Summarize indicator signals with emoji glyphs. |
 
 For more details on each command, read [CLI_REFERENCE.md](docs/CLI_REFERENCE.md) or run the command with `--help`.
 

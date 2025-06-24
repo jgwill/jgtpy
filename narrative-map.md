@@ -36,6 +36,8 @@ These changes allow passing `-new` and `-old` simultaneously without argparse er
 | `alligator_mouth_water.spec.md` | Explains how mouth and water states are computed. |
 | `mouth_water_plotter.spec.md` | Outlines overlay creation for mouth/water annotations. |
 | `observation_loop.spec.md` | Summarizes the CLI-driven analysis and voice workflow. |
+| `glyph_cli.spec.md` | Describes the glyphcli for mouth and water states. |
+| `glyph_signals_cli.spec.md` | Maps indicator signals to glyph output. |
 
 ## Recent Awareness
 
