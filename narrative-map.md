@@ -1,6 +1,7 @@
 # Narrative Map
 
 ## Commit Timeline
+- 05: merged latest `main` into `work` (no changes) 🔄
 - 04: updated CDS docs to clarify IDS dependency and added JGTCDS spec 📚🧠
 
 ## Archived – Previous Iteration
