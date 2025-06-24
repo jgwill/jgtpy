@@ -22,12 +22,47 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from jgtutils import jgtcommon
 from jgtutils.jgtclihelper import print_jsonl_message
 
+# Try to import python-dotenv if available
+try:
+    from dotenv import load_dotenv
+    _has_dotenv = True
+except ImportError:
+    _has_dotenv = False
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
+
+def load_env_files():
+    """Load .env files from multiple locations"""
+    if not _has_dotenv:
+        return
+    
+    # Load .env files in order of precedence (last one wins)
+    env_locations = [
+        Path.home() / ".env",  # $HOME/.env
+        Path.home() / ".jgt" / ".env",  # $HOME/.jgt/.env
+        Path.cwd() / ".env"  # CWD/.env (highest precedence)
+    ]
+    
+    for env_file in env_locations:
+        if env_file.exists():
+            logger.debug(f"Loading environment from: {env_file}")
+            load_dotenv(env_file)
+
+def load_jgt_config() -> Dict[str, Any]:
+    """Load configuration from $HOME/.jgt/config.json"""
+    config_file = Path.home() / ".jgt" / "config.json"
+    if config_file.exists():
+        try:
+            with open(config_file, 'r') as f:
+                return json.load(f)
+        except Exception as e:
+            logger.warning(f"Failed to load {config_file}: {e}")
+    return {}
 
 @dataclass
 class JGTServiceConfig:
@@ -68,7 +103,13 @@ class JGTServiceConfig:
     
     @classmethod
     def from_env(cls) -> "JGTServiceConfig":
-        """Create configuration from environment variables"""
+        """Create configuration from environment variables and config files"""
+        # Load .env files first
+        load_env_files()
+        
+        # Load JGT config file
+        jgt_config = load_jgt_config()
+        
         config = cls()
         
         # Parse instruments from env
@@ -76,6 +117,8 @@ class JGTServiceConfig:
                                    os.getenv("JGTPY_INSTRUMENTS"))
         if instruments_env:
             config.instruments = [i.strip() for i in instruments_env.split(",")]
+        elif "instruments" in jgt_config:
+            config.instruments = jgt_config["instruments"]
         
         # Parse timeframes from env  
         timeframes_env = os.getenv("JGTPY_SERVICE_TIMEFRAMES",
@@ -83,11 +126,17 @@ class JGTServiceConfig:
                                            os.getenv("LOW_TIMEFRAMES")))
         if timeframes_env:
             config.timeframes = [t.strip() for t in timeframes_env.split(",")]
+        elif "timeframes" in jgt_config:
+            config.timeframes = jgt_config["timeframes"]
         
         # Other settings
         config.data_path = os.getenv("JGTPY_DATA", config.data_path)
         config.data_full_path = os.getenv("JGTPY_DATA_FULL", config.data_full_path)
         config.dropbox_token = os.getenv("JGTPY_DROPBOX_APP_TOKEN")
+        
+        # Try to get dropbox token from jgt_config if not in env
+        if not config.dropbox_token and "dropbox_token" in jgt_config:
+            config.dropbox_token = jgt_config["dropbox_token"]
         
         # Numeric settings
         if os.getenv("JGTPY_SERVICE_PARALLEL_WORKERS"):

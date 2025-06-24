@@ -18,14 +18,23 @@ Main Components:
 from .base import JGTServiceManager, JGTServiceConfig
 from .scheduler import JGTScheduler
 from .processor import ParallelProcessor
-from .uploader import CloudUploader
+
+# Optional imports that might not be available
+try:
+    from .uploader import CloudUploader
+    _has_uploader = True
+except ImportError:
+    CloudUploader = None
+    _has_uploader = False
 
 __all__ = [
     'JGTServiceManager',
     'JGTServiceConfig', 
     'JGTScheduler',
     'ParallelProcessor',
-    'CloudUploader'
 ]
+
+if _has_uploader:
+    __all__.append('CloudUploader')
 
 __version__ = "0.1.0" 
