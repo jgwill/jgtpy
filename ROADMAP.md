@@ -24,6 +24,8 @@ Implementation of automated data refresh service for jgtpy package with timefram
 - [ ] Add support for multiple instruments/timeframes
 - [ ] Implement graceful shutdown handling
 - [ ] Make sure that a new cli command is runnable in `pyproject.toml` like : jgtschedulercli (or a better name than that)
+- [ ] Important, launching a server and running a CLI to have fresh prices are 2 things (that service or runner or whatever you call it must be independent or at least installed by default and wont need the  `[serve]`)
+- [ ]  We have to distribute the data to dropbox. Use "JGTPY_DROPBOX_APP_TOKEN" from the .env make sure to read CWD/.env or $HOME/.env or from the $HOME/.jgt/config.json
 
 **Key Components:**
 ```python
