@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jgtpy"
-version = "0.5.121"
+version = "0.6.0"
 authors = [
   { name="Guillaume Isabelle", email="jgi@jgwill.com" },
 ]
@@ -15,7 +15,7 @@ keywords = ["data"]
 requires-python = ">=3.7"
 dependencies = [
   "pandas>=0.25.1",
-  "python-dotenv>=0.19.2", 
+  "python-dotenv>=0.19.2",
   "jgtapy>=1.9.21",
   "jgtutils>=1.0.11",
   "dropbox>=11.36.2",
@@ -41,7 +41,7 @@ classifiers = [
 [project.optional-dependencies]
 serve = [
     "fastapi>=0.104.0",
-    "uvicorn>=0.24.0", 
+    "uvicorn>=0.24.0",
     "httpx>=0.25.0",
     "aiofiles>=23.2.1"
 ]
@@ -87,7 +87,7 @@ jgtmouthwater = "jgtpy.mouth_water_plotter:create_mouth_water_cli"
 jgtservice = "jgtpy.jgtservice:main"
 jgtrefresh = "jgtpy.jgtservice:main"
 
-# Web/server functionality (requires [serve] dependencies)  
+# Web/server functionality (requires [serve] dependencies)
 jgtservice-web = "jgtpy.jgtservice:main"
 jgtservice-daemon = "jgtpy.jgtservice:main"
 
