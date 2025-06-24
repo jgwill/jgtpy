@@ -163,7 +163,7 @@ echo ""
 # Build daemon command
 DAEMON_CMD="jgtservice --daemon --all"
 if [[ -n "$VERBOSE" ]]; then
-    DAEMON_CMD="$DAEMON_CMD $VERBOSE"
+    DAEMON_CMD="$DAEMON_CMD -v 2"
 fi
 
 print_status "Executing: $DAEMON_CMD"

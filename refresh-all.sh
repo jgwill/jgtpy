@@ -139,7 +139,7 @@ fi
 
 # Add verbose flag if requested
 if [[ -n "$VERBOSE" ]]; then
-    CMD="$CMD $VERBOSE"
+    CMD="$CMD -v 2"
 fi
 
 print_status "Executing: $CMD"
