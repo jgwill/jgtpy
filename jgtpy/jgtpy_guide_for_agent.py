@@ -20,7 +20,9 @@ def _doc_dir():
     return pkg_resources.files(PACKAGE) / DOC_PATH
 
 def _scripts_dir():
-    return pkg_resources.files(PACKAGE)
+    # Look for scripts in the package root directory
+    package_root = pkg_resources.files(PACKAGE).parent
+    return package_root
 
 def list_sections():
     return [p.stem for p in _doc_dir().iterdir() if p.suffix == '.md']
