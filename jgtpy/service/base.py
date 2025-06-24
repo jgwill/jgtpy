@@ -332,8 +332,23 @@ class JGTServiceManager:
         """Run web server mode"""
         logger.info(f"Starting web server on port {self.config.web_port}...")
         
-        # Will be implemented in later phase
-        logger.info("Web server mode not yet implemented")
+        try:
+            # Import and start FastAPI service
+            from .api import JGTServiceAPI
+            
+            api = JGTServiceAPI(self.config, self)
+            
+            # Run the server (blocking)
+            import asyncio
+            asyncio.run(api.start_server())
+            
+        except ImportError as e:
+            logger.error(f"FastAPI dependencies not available: {e}")
+            logger.error("Install with: pip install jgtpy[serve]")
+            raise
+        except Exception as e:
+            logger.error(f"Web server failed to start: {e}")
+            raise
     
     def get_status(self) -> Dict[str, Any]:
         """Get current service status"""

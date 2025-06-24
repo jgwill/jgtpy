@@ -27,6 +27,13 @@ except ImportError:
     CloudUploader = None
     _has_uploader = False
 
+try:
+    from .api import JGTServiceAPI
+    _has_api = True
+except ImportError:
+    JGTServiceAPI = None
+    _has_api = False
+
 __all__ = [
     'JGTServiceManager',
     'JGTServiceConfig', 
@@ -36,5 +43,8 @@ __all__ = [
 
 if _has_uploader:
     __all__.append('CloudUploader')
+
+if _has_api:
+    __all__.append('JGTServiceAPI')
 
 __version__ = "0.1.0" 
