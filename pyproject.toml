@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jgtpy"
-version = "0.6.4"
+version = "0.6.6"
 authors = [
   { name="Guillaume Isabelle", email="jgi@jgwill.com" },
 ]
@@ -91,5 +91,12 @@ jgtrefresh = "jgtpy.jgtservice:main"
 jgtservice-web = "jgtpy.jgtservice:main"
 jgtservice-daemon = "jgtpy.jgtservice:main"
 
+# Environment initialization
+jgt = "jgtpy.jgt_init:main"
+
 [tool.setuptools.package-data]
-"jgtpy" = ["guide_for_llm_agents/*"]
+"jgtpy" = [
+    "guide_for_llm_agents/*",
+    "*.sh",
+    "SCRIPTS_README.md"
+]
