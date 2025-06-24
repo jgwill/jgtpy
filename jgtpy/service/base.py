@@ -239,25 +239,92 @@ class JGTServiceManager:
         self.running = False
         self.shutdown_event.set()
         
+        # Stop components
+        if self.scheduler:
+            self.scheduler.stop()
+        if self.processor:
+            self.processor.shutdown()
+        
         logger.info("JGT Service stopped")
     
     def _initialize_components(self):
         """Initialize service components"""
-        # Will be implemented when other modules are ready
-        pass
+        from .scheduler import JGTScheduler
+        from .processor import ParallelProcessor
+        
+        # Initialize processor (always needed)
+        self.processor = ParallelProcessor(
+            max_workers=self.config.max_workers,
+            config=self.config
+        )
+        logger.info(f"Initialized processor with {self.config.max_workers} workers")
+        
+        # Initialize uploader if enabled and token available
+        if self.config.enable_upload and self.config.dropbox_token:
+            try:
+                from .uploader import CloudUploader
+                self.uploader = CloudUploader(
+                    token=self.config.dropbox_token,
+                    config=self.config
+                )
+                logger.info("Initialized cloud uploader")
+            except ImportError as e:
+                logger.warning(f"Could not initialize uploader: {e}")
+                logger.warning("Install dropbox package: pip install dropbox")
+                self.uploader = None
+        else:
+            if not self.config.enable_upload:
+                logger.info("Upload disabled in configuration")
+            else:
+                logger.warning("Upload enabled but no Dropbox token found")
+            self.uploader = None
+        
+        # Initialize scheduler for daemon mode
+        if self.config.daemon_mode:
+            self.scheduler = JGTScheduler(
+                config=self.config,
+                processor=self.processor,
+                uploader=self.uploader
+            )
+            logger.info("Initialized scheduler for daemon mode")
     
     def _run_one_time_refresh(self):
         """Run one-time data refresh"""
         logger.info("Running one-time data refresh...")
+        
+        # Process all configured instruments/timeframes
+        results = self.processor.process_all_instruments_timeframes()
+        
+        successful = sum(1 for r in results if r.success)
+        logger.info(f"Data processing completed: {successful}/{len(results)} successful")
+        
+        # Upload if configured and uploader available
+        if self.uploader and results:
+            upload_results = self.uploader.upload_processing_results(results)
+            upload_successful = sum(1 for r in upload_results if r.success)
+            logger.info(f"Upload completed: {upload_successful}/{len(upload_results)} files uploaded")
+        
         logger.info("One-time refresh completed")
     
     def _run_daemon(self):
         """Run in daemon mode with scheduler"""
         logger.info("Starting daemon mode...")
         
+        # Start the scheduler
+        if self.scheduler:
+            self.scheduler.start()
+            logger.info("Scheduler started")
+        else:
+            logger.error("No scheduler initialized for daemon mode")
+            return
+        
         # Wait for shutdown signal
         while self.running and not self.shutdown_event.is_set():
             self.shutdown_event.wait(timeout=1.0)
+        
+        # Stop the scheduler
+        if self.scheduler:
+            self.scheduler.stop()
         
         logger.info("Daemon mode shutting down...")
     
