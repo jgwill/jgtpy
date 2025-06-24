@@ -13,7 +13,7 @@ NC='\033[0m' # No Color
 
 # Configuration
 DEFAULT_TIMEFRAMES="m5,m15,m30,H1,H4,D1,W1,M1"
-DEFAULT_INSTRUMENTS="EUR/USD,XAU/USD,SPX500,GBP/USD,USD/JPY"
+DEFAULT_INSTRUMENTS="EUR/USD,XAU/USD,SPX500,GBP/USD,USD/JPY,AUD/USD,USD/CAD"
 
 # Parse command line arguments
 TIMEFRAMES="${1:-$DEFAULT_TIMEFRAMES}"
@@ -119,7 +119,9 @@ if [[ -n "$TIMEFRAMES" && "$TIMEFRAMES" != "all" ]]; then
     IFS=',' read -ra TF_ARRAY <<< "$TIMEFRAMES"
     for tf in "${TF_ARRAY[@]}"; do
         tf=$(echo "$tf" | xargs)  # trim whitespace
-        CMD="$CMD -t $tf"
+        if [[ -n "$tf" ]]; then
+            CMD="$CMD -t $tf"
+        fi
     done
 else
     CMD="$CMD --all"
@@ -131,7 +133,9 @@ if [[ -n "$INSTRUMENTS" && "$INSTRUMENTS" != "all" ]]; then
     IFS=',' read -ra INST_ARRAY <<< "$INSTRUMENTS"
     for inst in "${INST_ARRAY[@]}"; do
         inst=$(echo "$inst" | xargs)  # trim whitespace
-        CMD="$CMD -i \"$inst\""
+        if [[ -n "$inst" ]]; then
+            CMD="$CMD -i \"$inst\""
+        fi
     done
 else
     CMD="$CMD --all"
