@@ -132,6 +132,29 @@ export JGTPY_API_KEY="your_api_key"
 
 For complete documentation, see [docs/jgtservice_implementation.md](docs/jgtservice_implementation.md).
 
+## Quick Start Scripts
+
+The repository includes convenience scripts for common operations:
+
+```bash
+# First time setup
+./setup-service.sh --full
+
+# Check service status
+./check-status.sh
+
+# Refresh all data (excludes m1)
+./refresh-all.sh
+
+# Start API server
+./start-api-server.sh
+
+# Start continuous daemon
+./start-daemon.sh
+```
+
+See [SCRIPTS_README.md](SCRIPTS_README.md) for detailed script documentation.
+
 =======
 
 
