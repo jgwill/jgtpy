@@ -62,8 +62,17 @@ def parse_arguments() -> argparse.Namespace:
         help='Show service status and configuration'
     )
     
-    # Configuration arguments
-    jgtcommon.add_instrument_timeframe_arguments(parser, timeframe=True)
+    # Configuration arguments (made optional since --status doesn't need them)
+    parser.add_argument(
+        '-i', '--instrument',
+        type=str,
+        help='Instrument to process (e.g., EUR/USD, XAU/USD)'
+    )
+    parser.add_argument(
+        '-t', '--timeframe', 
+        type=str,
+        help='Timeframe to process (e.g., H1, m15, H4)'
+    )
     
     # Service-specific arguments
     parser.add_argument(
