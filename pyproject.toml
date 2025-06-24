@@ -94,6 +94,9 @@ jgtservice-daemon = "jgtpy.jgtservice:main"
 # Environment initialization
 jgt = "jgtpy.jgt_init:main"
 
+[tool.setuptools]
+include-package-data = true
+
 [tool.setuptools.package-data]
 "jgtpy" = [
     "guide_for_llm_agents/*",
