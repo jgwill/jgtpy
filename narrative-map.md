@@ -4,6 +4,7 @@
 - 05: merged latest `main` into `work` (no changes) 🔄
 - 04: updated CDS docs to clarify IDS dependency and added JGTCDS spec 📚🧠
 - 06: packaged service scripts so `guidecli_jgtpy --scripts` works outside repo ⚙️📚
+- 07: wheel now bundles `jgtpy/scripts` so installed guide finds them 🔧📦
 
 ## Archived – Previous Iteration
 ### Commit Timeline

@@ -15,5 +15,6 @@ service management scripts bundled with the package.
 - `--install-scripts [dir]` copies all scripts to the current or given directory,
   making them executable.
 
-Scripts are shipped in the published wheel using `MANIFEST.in` so
-`guidecli_jgtpy --scripts` works even when called outside the repository.
+Scripts reside under `jgtpy/scripts` and are included in the wheel via
+`pyproject.toml` package data. This ensures `guidecli_jgtpy --scripts`
+works even when called outside the repository.
