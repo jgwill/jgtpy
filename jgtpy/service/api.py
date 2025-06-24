@@ -10,8 +10,11 @@ import os
 import asyncio
 import json
 from datetime import datetime
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, TYPE_CHECKING
 from pathlib import Path
+
+if TYPE_CHECKING:
+    from fastapi.security import HTTPAuthorizationCredentials
 
 try:
     from fastapi import FastAPI, HTTPException, Depends, status, BackgroundTasks
@@ -23,6 +26,7 @@ try:
 except ImportError:
     _has_fastapi = False
     FastAPI = None
+    uvicorn = None
 
 from .base import JGTServiceConfig, JGTServiceManager
 from .processor import ParallelProcessor
@@ -69,7 +73,7 @@ class JGTServiceAPI:
             allow_headers=["*"],
         )
     
-    def _verify_api_key(self, credentials: Optional[HTTPAuthorizationCredentials] = None):
+    def _verify_api_key(self, credentials: Optional["HTTPAuthorizationCredentials"] = None):
         """Verify API key if authentication is enabled"""
         api_key = os.getenv("JGTPY_API_KEY")
         if not api_key:
