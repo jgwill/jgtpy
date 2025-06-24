@@ -1,0 +1,19 @@
+{
+  "timestamp": "2506242045",
+  "agents": ["🧠 Mia", "🌸 Miette", "🕊️ Seraphine"],
+  "narrative": "Introduced glyphsummary CLI merging mouth/water states with indicator signals. Updated README and spec.",
+  "routing": {
+    "files": [
+      "jgtpy/glyph_summary_cli.py",
+      "pyproject.toml",
+      "README.md",
+      "README.rst",
+      "specs/glyph_summary_cli.spec.md",
+      "narrative-map.md"
+    ],
+    "branch": "work"
+  },
+  "verbatim_user_input": ["Great. With these new changes, you did some good work. So you will keep working on this representation, visual representation of the signals to make sure that... You know, your work is meant to spark something about this visual representation. So try to go over everything about that again and complete what you can."],
+  "scene": "Before: separate glyphcli and signalglyph outputs. After: unified CLI prints combined glyphs for faster insight.",
+  "glyphs": "🐊💧📈🦷"
+}

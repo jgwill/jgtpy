@@ -83,6 +83,7 @@ guidecli_jgtpy = "jgtpy.jgtpy_guide_for_agent:main"
 jgtmouthwater = "jgtpy.mouth_water_plotter:create_mouth_water_cli"
 glyphcli = "jgtpy.glyph_cli:main"
 signalglyph = "jgtpy.glyph_signals_cli:main"
+glyphsummary = "jgtpy.glyph_summary_cli:main"
 
 
 # Data Refresh Service (base functionality, no [serve] deps required)

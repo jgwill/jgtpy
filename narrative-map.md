@@ -44,3 +44,4 @@
 Through iterative spec work we realized the documentation itself drives new workflows. The observation loop shows how CLI triggers and voice analysis combine with SpecLang specs to shape trading decisions. Each plotter spec now stands alone so any language can reproduce ADS visuals. This awareness strengthens the repo as a living conversation rather than static code.
 
 - fb3f2dd: merge main updates and resolve conflicts to sync versions and service scripts
+- 52e8a85: glyphsummary CLI merges mouth/water and signal glyphs 🐊💧📈
