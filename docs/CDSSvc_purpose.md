@@ -4,12 +4,12 @@ The `jgtpy/JGTCDSSvc.py` file is responsible for providing services related to C
 
 * **Purpose of JGTCDSSvc** 📊
   - The main purpose of `JGTCDSSvc.py` is to provide functionalities for creating, reading, and managing CDS files. It acts as a service layer that interacts with `JGTCDS.py` to perform these operations.
-  - The module provides functions to create CDS files from PDS files, read CDS files, and manage the data. It also handles data cleansing and normalization.
+  - The module provides functions to create CDS files from IDS datasets produced by `JGTIDS.py`, read CDS files, and manage the data. It also handles data cleansing and normalization.
 
 * **Data Processing** 🔄
-  - The input data is read from PDS files and processed by `JGTIDS.py` to add various technical indicators and signals.
-  - The processed data from `JGTIDS.py` is then used by `JGTCDS.py` to create CDS files. The module adds additional indicators and signals to the data, such as fractal divergent bar signals, zero line cross signals, and zone signals.
-  - The data is cleansed and normalized to ensure it is ready for analysis and charting.
+  - Raw PDS data is first transformed into IDS datasets by the `JGTIDS.py` service. This service adds the core indicator columns required by the rest of the system.
+  - `JGTCDSSvc.py` calls into `JGTCDS.py`, which appends CDS‑specific columns such as fractal divergent bar signals, zero line cross signals, and zone signals.
+  - The resulting dataset is cleansed and normalized to ensure it is ready for analysis and charting.
 
 * **End-Results Produced** 📈
   - The CDS files created by `JGTCDSSvc.py` contain processed financial market data with various technical indicators and signals. These files are used for further analysis, charting, and generating trading signals.

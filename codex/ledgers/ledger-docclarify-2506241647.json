@@ -1,0 +1,18 @@
+{
+  "timestamp": "2506241647",
+  "agents": ["🧠 Mia", "🌸 Miette", "🕊️ Seraphine"],
+  "narrative": "Clarified CDS docs to note dependence on JGTIDS service and created new JGTCDS spec.",
+  "routing": {
+    "files": [
+      "docs/CDS_purpose.md",
+      "docs/CDSSvc_purpose.md",
+      "docs/README.md",
+      "specs/JGTCDS.spec.md",
+      "narrative-map.md"
+    ],
+    "branch": "work"
+  },
+  "verbatim_user_input": "CDS purpose documentation contains that the module provide functions for o create CDS files from PDS files , read CDS files .... that would be more accurate to say that this depends on any other service  which is the JGTIDS. py that creates the IDS and the CDS columns are added as results of that.   update in ./docs file what needs that clarification around \"Data Processing\" section",
+  "scene": "Before: docs implied CDS acted directly on PDS files. After: documentation highlights reliance on JGTIDS-produced IDS data and includes a spec so other languages can replicate the workflow.",
+  "glyphs": "📚🧠🕊️"
+}
