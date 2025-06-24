@@ -33,7 +33,8 @@ This spec describes a small command line tool for summarizing market states with
      - 📈 – price bar above the mouth.
      - 💧 – price within the mouth.
      - 🏊 – price below the mouth.
-4. Print a timestamp and the glyph sequence for the requested number of bars.
+4. `load_cds_data` parses the `Date` column and sets it as the DataFrame index.
+   Each output line begins with this timestamp followed by the glyph sequence.
 5. When `--style ascii` is selected, use simple letters like `S`, `E`, `T` for
    water states and `+`/`-` for direction instead of emojis.
 

@@ -30,6 +30,7 @@ This spec defines a command line tool that translates key indicator signals into
    - `zone_sig` → 💧 (zone signal)
 3. If no signals are active, output 🪥 as a neutral glyph.
 4. When `--style ascii` is used, map signals to simple letters instead of emoji.
-5. Print the timestamp with the glyph string for the requested number of bars.
+5. `load_cds_data` parses the `Date` column and sets it as the DataFrame index.
+   Each printed line shows that timestamp followed by the glyph string.
 
 The CLI allows quick signal checks through emoji, making it suitable for voice assistants or minimal interfaces.

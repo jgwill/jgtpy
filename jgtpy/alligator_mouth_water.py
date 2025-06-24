@@ -420,8 +420,10 @@ def load_cds_data(instrument: str, timeframe: str, data_dir: Optional[str] = Non
     if not os.path.exists(filepath):
         raise FileNotFoundError(f"CDS file not found: {filepath}")
     
-    # Load the data
-    df = pd.read_csv(filepath)
+    # Load the data and set the date index for easier time based access
+    df = pd.read_csv(filepath, parse_dates=["Date"])
+    if "Date" in df.columns:
+        df.set_index("Date", inplace=True)
     
     # Ensure we have the required columns
     required_cols = ['jaw', 'teeth', 'lips', 'ao', 'High', 'Low']

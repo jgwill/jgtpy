@@ -27,7 +27,8 @@ This spec describes a command line tool that outputs emoji sequences summarizing
 3. For each row, generate two glyph strings:
    - Mouth/water glyphs from `GlyphMapper` (and position glyph if requested).
    - Signal glyphs from `SignalGlyphMapper` for the selected signals.
-4. Print the timestamp followed by the combined glyph string for the requested bars.
+4. `load_cds_data` parses `Date` and sets it as the DataFrame index. Each line
+   begins with this timestamp followed by the combined glyph string.
 5. When `--style ascii` is chosen, both state and signal glyphs use simple characters instead of emojis.
 
 This CLI allows voice interfaces or logs to display condensed market context using a short sequence of emoji glyphs.

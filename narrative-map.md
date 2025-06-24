@@ -50,3 +50,4 @@ Through iterative spec work we realized the documentation itself drives new work
 - cc478ac: glyphsummary usage examples for emoji and ascii 📑
  - f7de6fa: minor cleanup applying previous commit 🔄
  - 6b6bc4a: support AC oscillator glyphs and alias signals 📈🔻
+- pending: output timestamps on glyph CLIs ⏱️
