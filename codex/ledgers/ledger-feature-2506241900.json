@@ -1,0 +1,20 @@
+{
+  "timestamp": "2506241900",
+  "agents": ["🧠 Mia", "🌸 Miette", "🕊️ Seraphine"],
+  "narrative": "Include service scripts inside the wheel so guidecli_jgtpy finds them when installed. Updated specs and docs.",
+  "routing": {
+    "files": [
+      "MANIFEST.in",
+      "pyproject.toml",
+      "jgtpy/__init__.py",
+      "package.json",
+      "CHANGELOG.md",
+      "specs/guidecli_jgtpy.spec.md",
+      "narrative-map.md"
+    ],
+    "branch": "work"
+  },
+  "verbatim_user_input": "guidecli_jgtpy --scripts\nAvailable bash scripts:\nNo scripts found. This might be because:\n1. The package was installed without scripts\n2. You're not in the development directory\n3. Scripts are not properly included in the package\n\nTry running from the package root directory or reinstall the package.\n\n-------\nAgain, I repeat that this options IS NOT FOR WHEN WE RUN THAT FROM THE CLONED REPOSITORY but a new FOLDER where we want the SCRIPTS !!!  I guess they should come from where the package is installed.  Bellow is a proof that they seems to have been forgotted" ,
+  "scene": "Before: wheel lacked jgtpy/scripts so CLI couldn't list scripts outside repo. After: pyproject and manifest include the folder, version bumped to 0.6.14 and docs updated.",
+  "glyphs": "🔧📦"
+}
