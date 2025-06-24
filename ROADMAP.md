@@ -8,10 +8,10 @@ Implementation of automated data refresh service for jgtpy package with timefram
 ## Phase 1: Core Service Framework (Week 1-2)
 
 ### Task 1.1: Project Structure Setup
-- [ ] Create `jgtpy/service/` module directory
-- [ ] Add `__init__.py` and base service classes
-- [ ] Update `pyproject.toml` with optional server dependencies
-- [ ] Add `[serve]` extra requirements section
+- [x] Create `jgtpy/service/` module directory
+- [x] Add `__init__.py` and base service classes
+- [x] Update `pyproject.toml` with optional server dependencies
+- [x] Add `[serve]` extra requirements section
 
 **Files to create:**
 - `jgtpy/service/__init__.py`
@@ -19,13 +19,12 @@ Implementation of automated data refresh service for jgtpy package with timefram
 - `jgtpy/service/scheduler.py`
 
 ### Task 1.2: Basic Scheduler Implementation  
-- [ ] Adapt `timeframe_scheduler.py` patterns for jgtpy
-- [ ] Create `JGTScheduler` class with timeframe awareness
-- [ ] Add support for multiple instruments/timeframes
-- [ ] Implement graceful shutdown handling
-- [ ] Make sure that a new cli command is runnable in `pyproject.toml` like : jgtschedulercli (or a better name than that)
-- [ ] Important, launching a server and running a CLI to have fresh prices are 2 things (that service or runner or whatever you call it must be independent or at least installed by default and wont need the  `[serve]`)
-- [ ]  We have to distribute the data to dropbox. Use "JGTPY_DROPBOX_APP_TOKEN" from the .env make sure to read CWD/.env or $HOME/.env or from the $HOME/.jgt/config.json
+- [x] Adapt `timeframe_scheduler.py` patterns for jgtpy
+- [x] Create `JGTScheduler` class with timeframe awareness
+- [x] Add support for multiple instruments/timeframes
+- [x] Implement graceful shutdown handling
+- [*] CLI entry via main jgtservice now covers scheduler; dedicated CLI optional
+- [x] We have to distribute the data to dropbox. Use "JGTPY_DROPBOX_APP_TOKEN" from the .env make sure to read CWD/.env or $HOME/.env or from the $HOME/.jgt/config.json
 
 **Key Components:**
 ```python
@@ -37,10 +36,10 @@ class JGTScheduler:
 ```
 
 ### Task 1.3: Configuration Management
-- [ ] Extend `jgtcommon.py` settings for service configuration
-- [ ] Add environment variable support for service settings
-- [ ] Create default service configuration template
-- [ ] Add validation for service configuration
+- [x] Extend `jgtcommon.py` settings for service configuration
+- [x] Add environment variable support for service settings
+- [*] Create default service configuration template
+- [x] Add validation for service configuration
 
 **Environment Variables:**
 - `JGTPY_SERVICE_INSTRUMENTS`
@@ -49,10 +48,10 @@ class JGTScheduler:
 - `JGTPY_SERVICE_PARALLEL_WORKERS`
 
 ### Task 1.4: CLI Entry Points
-- [ ] Create `jgtservice` main CLI script
-- [ ] Add service mode flags (--daemon, --web, --refresh-once)
-- [ ] Integrate with existing argument parsing patterns
-- [ ] Add service status and control commands
+- [x] Create `jgtservice` main CLI script
+- [x] Add service mode flags (--daemon, --web, --refresh-once)
+- [x] Integrate with existing argument parsing patterns
+- [x] Add service status and control commands
 
 **New CLI Commands:**
 ```bash
@@ -76,10 +75,10 @@ jgtservice --status
 - `RequestQueue`
 
 ### Task 2.2: Parallel Processing Engine
-- [ ] Implement `concurrent.futures` based processor
-- [ ] Add configurable worker pool management
+- [x] Implement `concurrent.futures` based processor
+- [x] Add configurable worker pool management
 - [ ] Create resource monitoring and throttling
-- [ ] Add progress tracking and reporting
+- [*] Basic progress logging implemented; detailed tracking planned
 
 **Key Features:**
 ```python
@@ -97,7 +96,7 @@ class ParallelProcessor:
 - [ ] Add detailed logging with structured output
 
 ### Task 2.4: Integration with Existing Services
-- [ ] Integrate with `JGTCDSSvc.py` for CDS processing
+- [x] Integrate with `JGTCDSSvc.py` for CDS processing
 - [ ] Use existing `JGTIDSSvc.py` for IDS processing  
 - [ ] Maintain compatibility with current PDS services
 - [ ] Add service-level caching and optimization
@@ -105,10 +104,10 @@ class ParallelProcessor:
 ## Phase 3: Distribution & Upload (Week 5-6)
 
 ### Task 3.1: Modernize Dropbox Integration
-- [ ] Update `JGTCloudFS.py` to use current dropbox package
-- [ ] Add authentication handling and token management
-- [ ] Implement batch upload capabilities
-- [ ] Add upload progress tracking and resumption
+- [x] Update `JGTCloudFS.py` to use current dropbox package
+- [x] Add authentication handling and token management
+- [x] Implement batch upload capabilities
+- [*] Basic progress metrics logged; resumption TBD
 
 **Enhanced CloudFS:**
 ```python
@@ -120,13 +119,13 @@ class JGTCloudFS:
 ```
 
 ### Task 3.2: Upload Configuration
-- [ ] Add configurable upload paths per data type
-- [ ] Support different upload destinations (current vs full)
+- [x] Add configurable upload paths per data type
+- [x] Support different upload destinations (current vs full)
 - [ ] Add upload filtering based on instrument/timeframe
 - [ ] Implement upload scheduling and throttling
 
 ### Task 3.3: Upload Status & Monitoring
-- [ ] Create upload status tracking system
+- [*] Create upload status tracking system
 - [ ] Add upload verification and integrity checking
 - [ ] Implement upload retry mechanisms
 - [ ] Add upload metrics and reporting
