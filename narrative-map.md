@@ -3,6 +3,7 @@
 ## Commit Timeline
 - 05: merged latest `main` into `work` (no changes) 🔄
 - 04: updated CDS docs to clarify IDS dependency and added JGTCDS spec 📚🧠
+- 06: packaged service scripts so `guidecli_jgtpy --scripts` works outside repo ⚙️📚
 
 ## Archived – Previous Iteration
 ### Commit Timeline

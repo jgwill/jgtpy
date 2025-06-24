@@ -1,0 +1,19 @@
+{
+  "timestamp": "2506241826",
+  "agents": ["🧠 Mia", "🌸 Miette", "🎸 JamAI"],
+  "narrative": "Packaged service scripts so guidecli_jgtpy lists them after installation and documented the new behavior.",
+  "routing": {
+    "files": [
+      "MANIFEST.in",
+      "pyproject.toml",
+      "CHANGELOG.md",
+      "jgtpy/guide_for_llm_agents/jgtservice.md",
+      "narrative-map.md",
+      "specs/guidecli_jgtpy.spec.md"
+    ],
+    "branch": "work"
+  },
+  "verbatim_user_input": "guidecli_jgtpy --scripts\n\n----\noutput no scripts which should, we dont want to run that from the cloned repository but those scripts should be installed with the published package, revise the pyproject.toml and what happens for that command and this jgtpy/guidecly_jgtpy.py something",
+  "scene": "Before: scripts were excluded from the wheel so the guide command only worked from the repo. After: MANIFEST and pyproject ensure scripts ship with the package and docs mention it.",
+  "glyphs": "⚙️📚"
+}
