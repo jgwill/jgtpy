@@ -1,0 +1,18 @@
+{
+  "timestamp": "2506242200",
+  "agents": ["🧠 Mia", "🌸 Miette", "🕊️ Seraphine"],
+  "narrative": "Extend signalglyph CLI to handle AC oscillator signals and lowercase aliases. Updated docs and specs to list new defaults.",
+  "routing": {
+    "files": [
+      "jgtpy/glyph_signals_cli.py",
+      "specs/glyph_signals_cli.spec.md",
+      "README.md",
+      "README.rst",
+      "narrative-map.md"
+    ],
+    "branch": "work"
+  },
+  "verbatim_user_input": ["python jgtpy/glyph_signals_cli.py -i EUR/USD -t D1 --n-bars 1 --data-dir /src/jgtml/data/current --signals fdb,acs,acb,zlcb,zlcs\n329: \ud83e\udf65\n\n-----\nShould that have more Glyphs in the output ??  You might have not been completly done with what you started before, resume..."] ,
+  "scene": "Before: signalglyph only supported FDB and ZLC columns. After: AC oscillator and alias columns produce glyphs, so the command now prints multiple icons instead of a single toothbrush.",
+  "glyphs": "🔺🔻🐊🏊📈"
+}

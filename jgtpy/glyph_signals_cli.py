@@ -12,16 +12,26 @@ class SignalGlyphMapper:
     signal_glyphs = {
         "fdbb": "🐊",  # fractal divergent bar buy
         "fdbs": "🦷",  # fractal divergent bar sell
-        "zlcB": "📈",  # zero line cross buy
-        "zlcS": "🏊",  # zero line cross sell
+        "fdb": "🐊",  # generic divergent bar
+        "zlcb": "📈",  # zero line cross buy
+        "zlcs": "🏊",  # zero line cross sell
+        "zlcB": "📈",  # legacy column
+        "zlcS": "🏊",  # legacy column
+        "acb": "🔺",  # AC oscillator buy
+        "acs": "🔻",  # AC oscillator sell
         "zone_sig": "💧",  # zone signal
     }
 
     ascii_glyphs = {
         "fdbb": "B",
         "fdbs": "S",
+        "fdb": "F",
+        "zlcb": "+",
+        "zlcs": "-",
         "zlcB": "+",
         "zlcS": "-",
+        "acb": "U",
+        "acs": "D",
         "zone_sig": "Z",
     }
 
@@ -32,7 +42,21 @@ class SignalGlyphMapper:
         if signals is None:
             signals = self.signal_glyphs.keys()
         mapping = self.ascii_glyphs if self.style == "ascii" else self.signal_glyphs
-        glyphs = [mapping[s] for s in signals if s in row and row[s]]
+        glyphs = []
+        for s in signals:
+            key = s.lower()
+            glyph = mapping.get(key)
+            if glyph is None:
+                glyph = mapping.get(s)
+            if glyph is None:
+                continue
+            val = row.get(s)
+            if val is None:
+                val = row.get(key)
+            if val is None:
+                val = row.get(key.capitalize())
+            if val:
+                glyphs.append(glyph)
         default = "-" if self.style == "ascii" else "🪥"
         return "".join(glyphs) if glyphs else default
 
@@ -49,7 +73,7 @@ def _parse_args():
     p.add_argument("--use-full", action="store_true", help="Load full dataset")
     p.add_argument(
         "--signals",
-        default="fdbb,fdbs,zlcB,zlcS,zone_sig",
+        default="fdbb,fdbs,zlcb,zlcs,acb,acs,zone_sig",
         help="Comma-separated signal columns to include",
     )
     p.add_argument(

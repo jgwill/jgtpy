@@ -48,3 +48,5 @@ Through iterative spec work we realized the documentation itself drives new work
 - 148863d: combine state and signal glyphs under single CLI entry 🐊🦷📈
 - newcommit: add ascii style option for all glyph CLIs 🅰️
 - cc478ac: glyphsummary usage examples for emoji and ascii 📑
+ - f7de6fa: minor cleanup applying previous commit 🔄
+ - 6b6bc4a: support AC oscillator glyphs and alias signals 📈🔻

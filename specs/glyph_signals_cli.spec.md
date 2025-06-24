@@ -7,7 +7,7 @@ This spec defines a command line tool that translates key indicator signals into
 - Useful for chat-based summaries when charts are unnecessary.
 
 ## Required Data
-- CDS dataset containing signal columns such as `fdbb`, `fdbs`, `zlcB`, `zlcS`, and `zone_sig`.
+- CDS dataset containing signal columns such as `fdbb`, `fdbs`, `zlcb`, `zlcs`, `acb`, `acs`, and `zone_sig`.
 
 ## Arguments
 - `-i/--instrument` – Instrument symbol.
@@ -21,10 +21,12 @@ This spec defines a command line tool that translates key indicator signals into
 ## Behavior
 1. Load CDS data with `load_cds_data` from `alligator_mouth_water.py`.
 2. For each row, map active signal columns to emoji glyphs:
-   - `fdbb` → 🐊 (buy divergence)
-   - `fdbs` → 🦷 (sell divergence)
-   - `zlcB` → 📈 (zero line cross buy)
-   - `zlcS` → 🏊 (zero line cross sell)
+   - `fdbb` or `fdb` → 🐊 (divergent bar)
+   - `fdbs` → 🦷 (divergent bar sell)
+   - `zlcb` → 📈 (zero line cross buy)
+   - `zlcs` → 🏊 (zero line cross sell)
+   - `acb` → 🔺 (AC oscillator buy)
+   - `acs` → 🔻 (AC oscillator sell)
    - `zone_sig` → 💧 (zone signal)
 3. If no signals are active, output 🪥 as a neutral glyph.
 4. When `--style ascii` is used, map signals to simple letters instead of emoji.
