@@ -191,3 +191,4 @@ dev_jgtutils_makedist_reinstall_jgtutils.sh
 .hch/
 data.*
 *_output.txt
+pyproject.toml.backup

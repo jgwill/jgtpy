@@ -65,6 +65,7 @@ guidecli_jgtpy --examples
 ```bash
 # List available scripts
 guidecli_jgtpy --scripts
+# These scripts are packaged with the library and work even outside the repo
 
 # Show script content
 guidecli_jgtpy --script refresh-all.sh

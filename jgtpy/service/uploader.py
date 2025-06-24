@@ -38,7 +38,7 @@ class UploadResult:
 class CloudUploader:
     """Modern Dropbox uploader for JGT data distribution"""
     
-    def __init__(self, token: str, config=None):
+    def __init__(self, token: str = None, config=None):
         if not _has_dropbox:
             raise ImportError("dropbox package not available. Install with: pip install dropbox")
         
@@ -50,9 +50,21 @@ class CloudUploader:
         logger.info("Cloud Uploader initialized")
     
     def connect(self):
-        """Connect to Dropbox API"""
+        """Connect to Dropbox API (supports short-lived tokens with refresh)."""
         try:
-            self.dbx = dropbox.Dropbox(self.token)
+            if self.config and self.config.dropbox_refresh_token and self.config.dropbox_app_key and self.config.dropbox_app_secret:
+                logger.debug("Connecting to Dropbox using refresh token flow")
+                self.dbx = dropbox.Dropbox(
+                    oauth2_refresh_token=self.config.dropbox_refresh_token,
+                    app_key=self.config.dropbox_app_key,
+                    app_secret=self.config.dropbox_app_secret,
+                )
+            elif self.token:
+                logger.debug("Connecting to Dropbox using access token")
+                self.dbx = dropbox.Dropbox(self.token)
+            else:
+                raise AuthError("", "No Dropbox credentials provided")
+
             # Test connection
             self.dbx.users_get_current_account()
             logger.info("Connected to Dropbox successfully")

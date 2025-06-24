@@ -19,10 +19,65 @@ DOC_PATH = 'guide_for_llm_agents'
 def _doc_dir():
     return pkg_resources.files(PACKAGE) / DOC_PATH
 
+def _ensure_scripts_available():
+    """Ensure scripts are available in the package directory"""
+    package_dir = pkg_resources.files(PACKAGE)
+    scripts_dir = package_dir / "scripts"
+    
+    # Create scripts directory if it doesn't exist
+    if not scripts_dir.exists():
+        scripts_dir.mkdir(exist_ok=True)
+    
+    # Copy scripts from root directory if they don't exist in package
+    root_dir = package_dir.parent
+    scripts_copied = []
+    
+    for script_file in root_dir.glob("*.sh"):
+        target_file = scripts_dir / script_file.name
+        if not target_file.exists():
+            try:
+                import shutil
+                shutil.copy2(script_file, target_file)
+                scripts_copied.append(script_file.name)
+            except Exception as e:
+                print(f"Warning: Could not copy {script_file.name}: {e}")
+    
+    return scripts_dir
+
 def _scripts_dir():
-    # Look for scripts in the package root directory
-    package_root = pkg_resources.files(PACKAGE).parent
-    return package_root
+    """Get the directory containing bash scripts"""
+    # Try to ensure scripts are available in package directory
+    try:
+        return _ensure_scripts_available()
+    except Exception:
+        pass
+    
+    # Fallback: Try multiple locations where scripts might be found
+    
+    # 1. Try package data files (when installed)
+    try:
+        import pkg_resources
+        scripts_dir = pkg_resources.resource_filename(PACKAGE, '')
+        if Path(scripts_dir).exists():
+            return scripts_dir
+    except Exception:
+        pass
+    
+    # 2. Try package root directory (development)
+    try:
+        package_root = pkg_resources.files(PACKAGE).parent
+        if Path(package_root).exists():
+            return package_root
+    except Exception:
+        pass
+    
+    # 3. Try current working directory
+    cwd = Path.cwd()
+    if cwd.exists():
+        return cwd
+    
+    # 4. Fallback to package directory
+    return pkg_resources.files(PACKAGE)
 
 def list_sections():
     return [p.stem for p in _doc_dir().iterdir() if p.suffix == '.md']
@@ -36,17 +91,36 @@ def read_section(name: str) -> str:
 def list_scripts():
     """List available bash scripts in the package"""
     scripts = []
-    for file in _scripts_dir().iterdir():
-        if file.suffix == '.sh' and file.is_file():
-            scripts.append(file.name)
+    scripts_dir = _scripts_dir()
+    
+    try:
+        for file in scripts_dir.iterdir():
+            if file.suffix == '.sh' and file.is_file():
+                scripts.append(file.name)
+    except Exception as e:
+        print(f"Warning: Could not access scripts directory: {e}")
+    
+    if not scripts:
+        print("No scripts found. This might be because:")
+        print("1. The package was installed without scripts")
+        print("2. You're not in the development directory")
+        print("3. Scripts are not properly included in the package")
+        print("\nTry running from the package root directory or reinstall the package.")
+    
     return sorted(scripts)
 
 def read_script(name: str) -> str:
     """Read a bash script from the package"""
-    path = _scripts_dir() / name
-    if path.is_file():
-        return path.read_text()
-    raise FileNotFound(f"Script {name} not found")
+    scripts_dir = _scripts_dir()
+    path = scripts_dir / name
+    
+    try:
+        if path.is_file():
+            return path.read_text()
+        else:
+            raise FileNotFoundError(f"Script {name} not found in {scripts_dir}")
+    except Exception as e:
+        raise FileNotFoundError(f"Could not read script {name}: {e}")
 
 def show_script_examples():
     """Show examples of how to use the bash scripts"""

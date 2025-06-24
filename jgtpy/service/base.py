@@ -90,6 +90,11 @@ class JGTServiceConfig:
     upload_path_current: str = "/dist/data/current/cds"
     upload_path_full: str = "/dist/data/full/cds"
     
+    # Dropbox OAuth2 refresh support
+    dropbox_refresh_token: Optional[str] = None
+    dropbox_app_key: Optional[str] = None
+    dropbox_app_secret: Optional[str] = None
+    
     # Processing settings
     use_fresh: bool = True
     use_full: bool = False
@@ -125,7 +130,11 @@ class JGTServiceConfig:
                                   os.getenv("TRADABLE_TIMEFRAMES", 
                                            os.getenv("LOW_TIMEFRAMES")))
         if timeframes_env:
-            config.timeframes = [t.strip() for t in timeframes_env.split(",")]
+            # Handle both comma and space separation
+            if ',' in timeframes_env:
+                config.timeframes = [t.strip() for t in timeframes_env.split(",")]
+            else:
+                config.timeframes = [t.strip() for t in timeframes_env.split()]
         elif "timeframes" in jgt_config:
             config.timeframes = jgt_config["timeframes"]
         
@@ -137,6 +146,11 @@ class JGTServiceConfig:
         # Try to get dropbox token from jgt_config if not in env
         if not config.dropbox_token and "dropbox_token" in jgt_config:
             config.dropbox_token = jgt_config["dropbox_token"]
+        
+        # Dropbox OAuth2 refresh support
+        config.dropbox_refresh_token = os.getenv("JGTPY_DROPBOX_REFRESH_TOKEN", jgt_config.get("dropbox_refresh_token"))
+        config.dropbox_app_key = os.getenv("JGTPY_DROPBOX_APP_KEY", jgt_config.get("dropbox_app_key"))
+        config.dropbox_app_secret = os.getenv("JGTPY_DROPBOX_APP_SECRET", jgt_config.get("dropbox_app_secret"))
         
         # Numeric settings
         if os.getenv("JGTPY_SERVICE_PARALLEL_WORKERS"):
@@ -166,8 +180,8 @@ class JGTServiceConfig:
             errors.append("max_workers must be >= 1")
         if self.refresh_interval < 1:
             errors.append("refresh_interval must be >= 1")
-        if self.enable_upload and not self.dropbox_token:
-            errors.append("Dropbox token required when upload is enabled")
+        if self.enable_upload and not (self.dropbox_token or (self.dropbox_refresh_token and self.dropbox_app_key and self.dropbox_app_secret)):
+            errors.append("Dropbox credentials required when upload is enabled (token or refresh token with app key/secret)")
             
         return errors
 
@@ -271,6 +285,10 @@ class JGTServiceManager:
             except ImportError as e:
                 logger.warning(f"Could not initialize uploader: {e}")
                 logger.warning("Install dropbox package: pip install dropbox")
+                self.uploader = None
+            except Exception as e:
+                logger.error(f"Failed to initialize uploader: {e}")
+                logger.warning("Uploader disabled due to initialization error")
                 self.uploader = None
         else:
             if not self.config.enable_upload:

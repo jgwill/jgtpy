@@ -11,6 +11,7 @@ import logging
 import concurrent.futures
 from typing import List, Dict, Any, Tuple, Optional
 from dataclasses import dataclass
+from pathlib import Path
 
 sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
@@ -106,7 +107,28 @@ class ParallelProcessor:
         try:
             logger.debug(f"Processing {instrument}/{timeframe}")
             
-            # Import and use actual JGTCDSSvc
+            # Step 1: Refresh PDS data first
+            logger.debug(f"Refreshing PDS data for {instrument}/{timeframe}")
+            try:
+                from JGTPDSP import refreshPH
+                refreshPH(
+                    instrument=instrument,
+                    timeframe=timeframe,
+                    quote_count=-1,
+                    quiet=self.config.quiet,
+                    use_fresh=True,
+                    verbose_level=self.config.verbose_level
+                )
+                logger.debug(f"PDS refresh completed for {instrument}/{timeframe}")
+            except ImportError as e:
+                logger.warning(f"Could not import JGTPDSP: {e}")
+                logger.warning("PDS refresh skipped - using existing data")
+            except Exception as e:
+                logger.warning(f"PDS refresh failed for {instrument}/{timeframe}: {e}")
+                logger.warning("Continuing with existing PDS data")
+            
+            # Step 2: Process CDS data
+            logger.debug(f"Processing CDS data for {instrument}/{timeframe}")
             from JGTCDSSvc import get
             
             # Process using real CDS service
@@ -124,7 +146,12 @@ class ParallelProcessor:
             if cdf is not None and len(cdf) > 0:
                 # Generate expected file path based on config
                 data_path = self.config.data_full_path if self.config.use_full else self.config.data_path
-                file_path = f"{data_path}/cds/{instrument}_{timeframe}.csv"
+                # Create directory structure if it doesn't exist
+                instrument_dir = instrument.replace("/", "")
+                cds_dir = Path(data_path) / "cds" / instrument_dir
+                cds_dir.mkdir(parents=True, exist_ok=True)
+                
+                file_path = cds_dir / f"{timeframe}.cds"
                 
                 logger.debug(f"✓ {instrument}/{timeframe} processed: {len(cdf)} rows")
                 
@@ -132,7 +159,7 @@ class ParallelProcessor:
                     instrument=instrument,
                     timeframe=timeframe,
                     success=True,
-                    file_path=file_path,
+                    file_path=str(file_path),
                     processing_time=processing_time
                 )
             else:
