@@ -36,7 +36,7 @@ with warnings.catch_warnings():
     )
 
 
-version='0.5.121'
+version='0.6.6'
 __version__ = version
 
 
@@ -72,7 +72,7 @@ from JGTMKSG import (
 
 import JGTIDSSvc as idssvc
 
-import JGTCDSSvc as cdssvc 
+import JGTCDSSvc as cdssvc
 
 # Alligator Mouth and Water State Analysis
 from .alligator_mouth_water import (
