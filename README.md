@@ -10,25 +10,33 @@ pip install -U jgtpy
 ## Example
 
 ```py
-
-    >>> import pandas as pd
-    >>> import jgtpy
-    >>> df=jgtpy.getPH('EUR/USD','H4')
-    >>>
-    >>> # retrieve 3000 periods and generate from the DF
-    >>> df=jgtpy.getPH('EUR/USD','H4',3000,with_index=False)
-    >>> dfi=jgtpy.createFromDF(df)
-    >>>
-    >>> # Create with Timerange
-    >>> start="11.17.2022 00:00:00"
-    >>> end="11.25.2022 00:00:00"
-    >>> df=jgtpy.createByRange("USD/CAD","m15",start,end)
-    >>>
-    >>> # offsets date for retreival
-    >>> dtfirst_with_offset=jgtetl.svc_offset_dt_by_tf(dtfirst,ctx.timeframe)
-    >>> df=createByRange(ctx.instrument,ctx.timeframe,dtfirst_with_offset,dtlast)
+# it was so outdated I removed it, any LLM who has relevant code, please submit
+a PR
 
 ```
+
+## Signals
+
+* Bellow is a CSV of the various signals that this package aim to serve with their corresponding columns in CDS data:
+
+```
+Name;Title;Description;Question;Notes
+fdb;Fractal Divergent Bar Code;Fractal Divergent Bar Code (contains the signal value either buy, sell or nothing);;" bdb"
+fdbs;Fractal Divergent Bar Sell;Fractal Divergent Bar Sell;;" Bearish Divergent Bar"
+fdbb;Fractal Divergent Bar Buy;Fractal Divergent Bar Buy;;" Bullish Divergent Bar"
+acs;AC Deceleration Sell;AC Deceleration Sell;;" "
+acb;AC Acceleration Buy;AC Acceleration Buy;;" "
+fs;Fractal Sell;Fractal Sell;Can the representation be optimized ? Enhanced ?;" "
+fb;Fractal Buy;Fractal Buy;;" "
+zlcb;Zero Line Crossing Buy;Zero Line Crossing Buy;;" "
+zlcs;Zero Line Crossing Sell;Zero Line Crossing Sell;;" "
+zcol;Zero Line Crossing;Zero Line Crossing (Not sure if this is a signal);How many bars were there since last cross signal of the opposite direction ? How is the relationship of this signal profit and this number of bars ?;" Number of bars before last cross when another type of signal was generated could be a learning"
+sz;Zone Signal Sell;Zone Signal Sell;;" "
+bz;Zone Signal Buy;Zone Signal Buy;;" "
+ss;Saucer Sell;Saucer Sell;;" "
+sb;Saucer Buy;Saucer Buy;;
+```
+(it might be somewhere later but for now that will tell LLM about them easiely)
 
 ## Command Line Tools
 
