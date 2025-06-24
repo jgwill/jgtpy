@@ -1,0 +1,12 @@
+{
+  "timestamp": "2506241701",
+  "agents": ["🧠 Mia", "🌸 Miette", "🕊️ Seraphine"],
+  "narrative": "Restored earlier narrative map while marking it as archived. Kept new bullet for CDS doc clarification.",
+  "routing": {
+    "files": ["narrative-map.md"],
+    "branch": "work"
+  },
+  "verbatim_user_input": "don't delete previous narrative map content rather mark them as archived or from another iteration",
+  "scene": "Before: commit replaced narrative map with a single bullet. After: previous history preserved under archived section for continuity.",
+  "glyphs": "🗺️📚"
+}
