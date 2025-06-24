@@ -27,17 +27,24 @@ def _parse_args():
         default="fdbb,fdbs,zlcB,zlcS,zone_sig",
         help="Comma-separated signal columns to include",
     )
+    p.add_argument(
+        "--style",
+        choices=["emoji", "ascii"],
+        default="emoji",
+        help="Glyph style to use",
+    )
     return p.parse_args()
 
 
 class CombinedGlyphMapper:
     """Map both mouth/water states and indicator signals."""
 
-    def __init__(self, show_position: bool = False, signals=None):
-        self.state_mapper = GlyphMapper()
-        self.signal_mapper = SignalGlyphMapper()
+    def __init__(self, show_position: bool = False, signals=None, style: str = "emoji"):
+        self.state_mapper = GlyphMapper(style=style)
+        self.signal_mapper = SignalGlyphMapper(style=style)
         self.show_position = show_position
         self.signals = signals
+        self.style = style
 
     def map_row(self, row: pd.Series) -> str:
         state = self.state_mapper.map_row(row, show_position=self.show_position)
@@ -59,7 +66,9 @@ def main():
         df = analyze_dataframe(df)
 
     signals = [s.strip() for s in args.signals.split(",") if s.strip()]
-    mapper = CombinedGlyphMapper(show_position=args.show_position, signals=signals)
+    mapper = CombinedGlyphMapper(
+        show_position=args.show_position, signals=signals, style=args.style
+    )
     tail_df = df.tail(args.n_bars)
     for ts, row in tail_df.iterrows():
         glyphs = mapper.map_row(row)

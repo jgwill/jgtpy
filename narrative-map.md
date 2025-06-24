@@ -45,3 +45,6 @@ Through iterative spec work we realized the documentation itself drives new work
 
 - fb3f2dd: merge main updates and resolve conflicts to sync versions and service scripts
 - 52e8a85: glyphsummary CLI merges mouth/water and signal glyphs 🐊💧📈
+- 148863d: combine state and signal glyphs under single CLI entry 🐊🦷📈
+- newcommit: add ascii style option for all glyph CLIs 🅰️
+- cc478ac: glyphsummary usage examples for emoji and ascii 📑

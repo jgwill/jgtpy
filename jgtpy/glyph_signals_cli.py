@@ -7,7 +7,7 @@ from jgtpy.alligator_mouth_water import load_cds_data
 
 
 class SignalGlyphMapper:
-    """Map indicator signal columns to emoji glyphs."""
+    """Map indicator signal columns to glyphs."""
 
     signal_glyphs = {
         "fdbb": "🐊",  # fractal divergent bar buy
@@ -17,11 +17,24 @@ class SignalGlyphMapper:
         "zone_sig": "💧",  # zone signal
     }
 
+    ascii_glyphs = {
+        "fdbb": "B",
+        "fdbs": "S",
+        "zlcB": "+",
+        "zlcS": "-",
+        "zone_sig": "Z",
+    }
+
+    def __init__(self, style: str = "emoji") -> None:
+        self.style = style
+
     def map_row(self, row: pd.Series, signals=None) -> str:
         if signals is None:
             signals = self.signal_glyphs.keys()
-        glyphs = [self.signal_glyphs[s] for s in signals if s in row and row[s]]
-        return "".join(glyphs) if glyphs else "🪥"
+        mapping = self.ascii_glyphs if self.style == "ascii" else self.signal_glyphs
+        glyphs = [mapping[s] for s in signals if s in row and row[s]]
+        default = "-" if self.style == "ascii" else "🪥"
+        return "".join(glyphs) if glyphs else default
 
 
 def _parse_args():
@@ -39,6 +52,12 @@ def _parse_args():
         default="fdbb,fdbs,zlcB,zlcS,zone_sig",
         help="Comma-separated signal columns to include",
     )
+    p.add_argument(
+        "--style",
+        choices=["emoji", "ascii"],
+        default="emoji",
+        help="Glyph style to use",
+    )
     return p.parse_args()
 
 
@@ -52,7 +71,7 @@ def main():
     )
 
     signals = [s.strip() for s in args.signals.split(",") if s.strip()]
-    mapper = SignalGlyphMapper()
+    mapper = SignalGlyphMapper(style=args.style)
     tail_df = df.tail(args.n_bars)
     for ts, row in tail_df.iterrows():
         glyphs = mapper.map_row(row, signals)

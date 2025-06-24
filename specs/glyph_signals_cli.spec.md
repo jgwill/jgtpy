@@ -16,6 +16,7 @@ This spec defines a command line tool that translates key indicator signals into
 - `--data-dir` – Optional CDS directory path.
 - `--use-full` – Load the full dataset rather than the recent subset.
 - `--signals` – Comma-separated list of signal columns to display.
+- `--style` – Choose `emoji` (default) or `ascii` glyph output.
 
 ## Behavior
 1. Load CDS data with `load_cds_data` from `alligator_mouth_water.py`.
@@ -26,6 +27,7 @@ This spec defines a command line tool that translates key indicator signals into
    - `zlcS` → 🏊 (zero line cross sell)
    - `zone_sig` → 💧 (zone signal)
 3. If no signals are active, output 🪥 as a neutral glyph.
-4. Print the timestamp with the glyph string for the requested number of bars.
+4. When `--style ascii` is used, map signals to simple letters instead of emoji.
+5. Print the timestamp with the glyph string for the requested number of bars.
 
 The CLI allows quick signal checks through emoji, making it suitable for voice assistants or minimal interfaces.
