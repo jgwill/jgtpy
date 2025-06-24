@@ -83,8 +83,11 @@ guidecli_jgtpy = "jgtpy.jgtpy_guide_for_agent:main"
 # Mouth water plotting
 jgtmouthwater = "jgtpy.mouth_water_plotter:create_mouth_water_cli"
 
-# Data Refresh Service
+# Data Refresh Service (base functionality, no [serve] deps required)
 jgtservice = "jgtpy.jgtservice:main"
+jgtrefresh = "jgtpy.jgtservice:main"  # Alternative name for refresh operations
+
+# Web/server functionality (requires [serve] dependencies)  
 jgtservice-web = "jgtpy.jgtservice:main"
 jgtservice-daemon = "jgtpy.jgtservice:main"
 
