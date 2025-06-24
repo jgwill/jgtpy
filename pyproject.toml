@@ -33,7 +33,14 @@ dependencies = [
   'jgtfxcon',
 ]
 
-optional-dependencies = {  dev-lint = [
+optional-dependencies = {  
+  serve = [
+    "fastapi>=0.104.0",
+    "uvicorn>=0.24.0", 
+    "httpx>=0.25.0",
+    "aiofiles>=23.2.1"
+  ],
+  dev-lint = [
     "flake8>=3.6.0,<3.7.0",
     "isort>=4.3.4,<4.4.0",
   ],  dev-test = [
@@ -75,6 +82,11 @@ adsfromcds = "jgtpy.adsfromcdsfile:main"
 guidecli_jgtpy = "jgtpy.jgtpy_guide_for_agent:main"
 # Mouth water plotting
 jgtmouthwater = "jgtpy.mouth_water_plotter:create_mouth_water_cli"
+
+# Data Refresh Service
+jgtservice = "jgtpy.jgtservice:main"
+jgtservice-web = "jgtpy.jgtservice:main"
+jgtservice-daemon = "jgtpy.jgtservice:main"
 
 [tool.setuptools.package-data]
 "jgtpy" = ["guide_for_llm_agents/*"]
