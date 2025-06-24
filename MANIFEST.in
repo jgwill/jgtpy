@@ -6,3 +6,6 @@ global-exclude __pycache__
 global-exclude *.py[co]
 global-exclude .DS_Store
 recursive-include docs/guide_for_llm_agents *
+include *.sh
+recursive-include jgtpy/scripts *.sh
+include SCRIPTS_README.md

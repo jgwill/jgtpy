@@ -1,7 +1,8 @@
 # LLMS.txt for jgtpy
-# Market Data Services and Indicator Data Processing
+# Market Data Services, Indicator Data Processing, and Automated Data Refresh Service
 
 GET /README.md
+GET /docs/jgtservice_implementation.md
 GET /docs/README.md
 GET /docs/CDSSvc_purpose.md
 GET /docs/CDS_purpose.md
@@ -10,9 +11,33 @@ GET /docs/CDS_data_columns.md
 GET /docs/IDS_data_columns.md
 
 ## Package Purpose
-jgtpy serves as the core data services layer for the JGT platform, providing market data processing, technical indicator calculation, and structured data output for signal detection systems.
+jgtpy serves as the core data services layer for the JGT platform, providing market data processing, technical indicator calculation, structured data output for signal detection systems, and automated data refresh services with cloud distribution.
 
 ## Core Data Services
+
+### Signals
+
+* Bellow is a CSV of the various signals that this package aim to serve with their corresponding columns in CDS data:
+
+```
+Name;Title;Description;Question;Notes
+fdb;Fractal Divergent Bar Code;Fractal Divergent Bar Code (contains the signal value either buy, sell or nothing);;" bdb"
+fdbs;Fractal Divergent Bar Sell;Fractal Divergent Bar Sell;;" Bearish Divergent Bar"
+fdbb;Fractal Divergent Bar Buy;Fractal Divergent Bar Buy;;" Bullish Divergent Bar"
+acs;AC Deceleration Sell;AC Deceleration Sell;;" "
+acb;AC Acceleration Buy;AC Acceleration Buy;;" "
+fs;Fractal Sell;Fractal Sell;Can the representation be optimized ? Enhanced ?;" "
+fb;Fractal Buy;Fractal Buy;;" "
+zlcb;Zero Line Crossing Buy;Zero Line Crossing Buy;;" "
+zlcs;Zero Line Crossing Sell;Zero Line Crossing Sell;;" "
+zcol;Zero Line Crossing;Zero Line Crossing (Not sure if this is a signal);How many bars were there since last cross signal of the opposite direction ? How is the relationship of this signal profit and this number of bars ?;" Number of bars before last cross when another type of signal was generated could be a learning"
+sz;Zone Signal Sell;Zone Signal Sell;;" "
+bz;Zone Signal Buy;Zone Signal Buy;;" "
+ss;Saucer Sell;Saucer Sell;;" "
+sb;Saucer Buy;Saucer Buy;;
+```
+(it might be somewhere later but for now that will tell LLM about them easiely)
+
 
 ### PDS (Price Data Service)
 - **Purpose**: Raw market data storage and retrieval
@@ -251,6 +276,67 @@ before/after state when executing that CLI tool.
 
 *jgtpy serves as the essential data processing backbone of the JGT platform, transforming raw market data into structured, indicator-rich datasets ready for advanced signal analysis and trading decisions.*
 
+
+## JGT Data Refresh Service (v0.6.0)
+
+The JGT Data Refresh Service (`jgtservice`) provides automated data processing with parallel execution, intelligent scheduling, and cloud distribution.
+
+### Service Components
+- **JGTServiceManager**: Main service orchestration and lifecycle management
+- **JGTScheduler**: Timeframe-based task scheduling using jgtutils patterns
+- **ParallelProcessor**: Multi-threaded data processing with configurable workers
+- **CloudUploader**: Modernized Dropbox integration for automatic uploads
+- **JGTServiceAPI**: FastAPI web service with RESTful endpoints
+
+### CLI Usage
+```bash
+# One-time refresh
+jgtservice --refresh-once -i EUR/USD -t H1
+
+# Continuous daemon mode
+jgtservice --daemon --all
+
+# Web API server
+jgtservice --web --port 8080
+
+# Service status
+jgtservice --status
+```
+
+### Web API Endpoints
+```
+GET /api/v1/data/{instrument}/{timeframe}     # Retrieve CDS data
+GET /api/v1/data/{instrument}/{timeframe}/latest  # Latest data point
+GET /api/v1/status                           # Service status
+GET /api/v1/health                           # Health check
+POST /api/v1/refresh                         # Trigger refresh
+GET /api/v1/metrics                          # Processing metrics
+GET /docs                                    # API documentation
+```
+
+### Installation
+```bash
+# Base functionality
+pip install -e .
+
+# With web service dependencies
+pip install -e ".[serve]"
+```
+
+### Configuration
+Uses environment variables for configuration:
+- `JGTPY_DATA` / `JGTPY_DATA_FULL` - Data storage paths
+- `TRADABLE_TIMEFRAMES` / `HIGH_TIMEFRAMES` / `LOW_TIMEFRAMES` - Timeframe configuration
+- `JGTPY_DROPBOX_APP_TOKEN` - Upload authentication
+- `JGTPY_SERVICE_*` - Service-specific settings
+
+### Performance
+- 50%+ faster than sequential processing
+- EUR/USD H1: ~8 seconds processing time
+- Memory stable during extended runs
+- Individual failure isolation
+
+For complete documentation: `docs/jgtservice_implementation.md`
 
 ------
 # command line interface (CLI) for jgtpy guidance

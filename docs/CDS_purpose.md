@@ -3,13 +3,13 @@
 The `jgtpy/JGTCDS.py` file is responsible for creating, reading, and managing Chaos Data Service (CDS) files from Price Data Service (PDS) files. Here is a detailed documentation of the purpose of JGTCDS and what it produces after getting data from `JGTIDS.py`:
 
 * **Purpose of JGTCDS** 📊
-  - The main purpose of `JGTCDS.py` is to process the input data from `JGTIDS.py` and create CDS files. These files contain processed financial market data with various technical indicators and signals.
-  - The module provides functions to create CDS files from PDS files, read CDS files, and manage the data. It also handles data cleansing and normalization.
+  - The main purpose of `JGTCDS.py` is to process the IDS data produced by the `JGTIDS.py` service and create CDS files. These files contain processed financial market data with various technical indicators and signals.
+  - The module provides functions to create CDS files from this IDS output, read CDS files, and manage the data. It also handles data cleansing and normalization.
 
 * **Data Processing** 🔄
-  - The input data is read from PDS files and processed by `JGTIDS.py` to add various technical indicators and signals.
-  - The processed data from `JGTIDS.py` is then used by `JGTCDS.py` to create CDS files. The module adds additional indicators and signals to the data, such as fractal divergent bar signals, zero line cross signals, and zone signals.
-  - The data is cleansed and normalized to ensure it is ready for analysis and charting.
+  - Raw PDS data is first transformed into IDS datasets by the `JGTIDS.py` service. This step adds the core indicator columns used throughout the system.
+  - `JGTCDS.py` depends on these IDS datasets to generate CDS files. It appends additional CDS‑specific columns such as fractal divergent bar signals, zero line cross signals, and zone signals.
+  - The resulting data is cleansed and normalized to ensure it is ready for analysis and charting.
 
 * **End-Results Produced** 📈
   - The CDS files created by `JGTCDS.py` contain processed financial market data with various technical indicators and signals. These files are used for further analysis, charting, and generating trading signals.

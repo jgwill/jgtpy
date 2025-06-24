@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jgtpy"
-version = "0.5.122"
+version = "0.6.14"
 authors = [
   { name="Guillaume Isabelle", email="jgi@jgwill.com" },
 ]
@@ -14,39 +14,23 @@ readme = "README.md"
 keywords = ["data"]
 requires-python = ">=3.7"
 dependencies = [
-  'pandas>=0.25.1',
-  'python-dotenv>=0.19.2',
-  'jgtapy>=1.9.21',
-  'jgtutils>=1.0.11',
-  'dropbox>=11.36.2',
-  'tlid>=0.1.15',
-  'scipy>=1.7.3',
-  'matplotlib>=3.3.1',
-  'plotly>=5.18.0',
-  'mplfinance>=0.12.10b0',
-  'panel>=1.2.3',
-  'tomli>=1.2.3',
-  'jinja2',
-  'dash',
-  'panel',
-  'tdqm',
-  'jgtfxcon',
+  "pandas>=0.25.1",
+  "python-dotenv>=0.19.2",
+  "jgtapy>=1.9.21",
+  "jgtutils>=1.0.11",
+  "dropbox>=11.36.2",
+  "tlid>=0.1.15",
+  "scipy>=1.7.3",
+  "matplotlib>=3.3.1",
+  "plotly>=5.18.0",
+  "mplfinance>=0.12.10b0",
+  "panel>=1.2.3",
+  "tomli>=1.2.3",
+  "jinja2",
+  "dash",
+  "tdqm",
+  "jgtfxcon",
 ]
-
-optional-dependencies = {  dev-lint = [
-    "flake8>=3.6.0,<3.7.0",
-    "isort>=4.3.4,<4.4.0",
-  ],  dev-test = [
-    "coverage",
-    "pytest>=3.10",
-  ],  dev-docs = [
-    "readme_renderer",
-    "sphinx",
-    "sphinx_rtd_theme>=0.4.0",
-    "html2text>=2020.1.16",
-    "html2markdown>=0.1.7",
-    "twine",
-  ]}
 
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -54,10 +38,33 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
+[project.optional-dependencies]
+serve = [
+    "fastapi>=0.104.0",
+    "uvicorn>=0.24.0",
+    "httpx>=0.25.0",
+    "aiofiles>=23.2.1"
+]
+dev-lint = [
+    "flake8>=3.6.0,<3.7.0",
+    "isort>=4.3.4,<4.4.0",
+]
+dev-test = [
+    "coverage",
+    "pytest>=3.10",
+]
+dev-docs = [
+    "readme_renderer",
+    "sphinx",
+    "sphinx_rtd_theme>=0.4.0",
+    "html2text>=2020.1.16",
+    "html2markdown>=0.1.7",
+    "twine",
+]
+
 [project.urls]
 "Homepage" = "https://github.com/jgwill/jgtpy"
 "Bug Tracker" = "https://github.com/jgwill/jgtpy/issues"
-
 
 [project.scripts]
 jgtcli = "jgtpy.jgtcli:main"
@@ -66,17 +73,35 @@ pds2cds = "jgtpy.pds2cds:main"
 jgtmksg = "jgtpy.JGTMKSG:main"
 jgtads = "jgtpy.JGTADS:main"
 jgtids = "jgtpy.jgtapycli:main"
-
 adscli = "jgtpy.JGTADS:main"
 mkscli = "jgtpy.JGTMKSG:main"
 idscli = "jgtpy.jgtapycli:main"
-#jgtpy/adsfromcdsfile.py
 adsfromcds = "jgtpy.adsfromcdsfile:main"
 guidecli_jgtpy = "jgtpy.jgtpy_guide_for_agent:main"
+
 # Mouth water plotting
 jgtmouthwater = "jgtpy.mouth_water_plotter:create_mouth_water_cli"
 glyphcli = "jgtpy.glyph_cli:main"
 signalglyph = "jgtpy.glyph_signals_cli:main"
 
+
+# Data Refresh Service (base functionality, no [serve] deps required)
+jgtservice = "jgtpy.jgtservice:main"
+jgtrefresh = "jgtpy.jgtservice:main"
+
+# Web/server functionality (requires [serve] dependencies)
+jgtservice-web = "jgtpy.jgtservice:main"
+jgtservice-daemon = "jgtpy.jgtservice:main"
+
+# Environment initialization
+jgt = "jgtpy.jgt_init:main"
+
+[tool.setuptools]
+include-package-data = true
+
 [tool.setuptools.package-data]
-"jgtpy" = ["guide_for_llm_agents/*"]
+"jgtpy" = [
+    "guide_for_llm_agents/*",
+    "SCRIPTS_README.md",
+    "scripts/*.sh"
+]

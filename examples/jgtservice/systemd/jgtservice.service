@@ -1,0 +1,39 @@
+[Unit]
+Description=JGT Data Refresh Service
+Documentation=https://github.com/jgwill/jgtpy
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=jgt
+Group=jgt
+WorkingDirectory=/opt/jgtpy
+ExecStart=/opt/jgtpy/venv/bin/jgtservice --daemon --all
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=on-failure
+RestartSec=42s
+
+# Environment configuration
+Environment=JGTPY_DATA=/data/current
+Environment=JGTPY_DATA_FULL=/data/full
+Environment=JGTPY_DROPBOX_APP_TOKEN=your_dropbox_token_here
+Environment=JGTPY_SERVICE_MAX_WORKERS=4
+Environment=JGTPY_SERVICE_WEB_PORT=8080
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/data
+ReadWritePaths=/var/log/jgtservice
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=jgtservice
+
+[Install]
+WantedBy=multi-user.target 

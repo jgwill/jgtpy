@@ -4,6 +4,8 @@ jgtpy
 Enhanced JGTPy CDS, IDS, PDS Services
 
 
+* Please see the README.md  - that file is outdated.
+
 Installation
 ------------
 

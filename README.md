@@ -10,25 +10,33 @@ pip install -U jgtpy
 ## Example
 
 ```py
-
-    >>> import pandas as pd
-    >>> import jgtpy
-    >>> df=jgtpy.getPH('EUR/USD','H4')
-    >>>
-    >>> # retrieve 3000 periods and generate from the DF
-    >>> df=jgtpy.getPH('EUR/USD','H4',3000,with_index=False)
-    >>> dfi=jgtpy.createFromDF(df)
-    >>>
-    >>> # Create with Timerange
-    >>> start="11.17.2022 00:00:00"
-    >>> end="11.25.2022 00:00:00"
-    >>> df=jgtpy.createByRange("USD/CAD","m15",start,end)
-    >>>
-    >>> # offsets date for retreival
-    >>> dtfirst_with_offset=jgtetl.svc_offset_dt_by_tf(dtfirst,ctx.timeframe)
-    >>> df=createByRange(ctx.instrument,ctx.timeframe,dtfirst_with_offset,dtlast)
+# it was so outdated I removed it, any LLM who has relevant code, please submit
+a PR
 
 ```
+
+## Signals
+
+* Bellow is a CSV of the various signals that this package aim to serve with their corresponding columns in CDS data:
+
+```
+Name;Title;Description;Question;Notes
+fdb;Fractal Divergent Bar Code;Fractal Divergent Bar Code (contains the signal value either buy, sell or nothing);;" bdb"
+fdbs;Fractal Divergent Bar Sell;Fractal Divergent Bar Sell;;" Bearish Divergent Bar"
+fdbb;Fractal Divergent Bar Buy;Fractal Divergent Bar Buy;;" Bullish Divergent Bar"
+acs;AC Deceleration Sell;AC Deceleration Sell;;" "
+acb;AC Acceleration Buy;AC Acceleration Buy;;" "
+fs;Fractal Sell;Fractal Sell;Can the representation be optimized ? Enhanced ?;" "
+fb;Fractal Buy;Fractal Buy;;" "
+zlcb;Zero Line Crossing Buy;Zero Line Crossing Buy;;" "
+zlcs;Zero Line Crossing Sell;Zero Line Crossing Sell;;" "
+zcol;Zero Line Crossing;Zero Line Crossing (Not sure if this is a signal);How many bars were there since last cross signal of the opposite direction ? How is the relationship of this signal profit and this number of bars ?;" Number of bars before last cross when another type of signal was generated could be a learning"
+sz;Zone Signal Sell;Zone Signal Sell;;" "
+bz;Zone Signal Buy;Zone Signal Buy;;" "
+ss;Saucer Sell;Saucer Sell;;" "
+sb;Saucer Buy;Saucer Buy;;
+```
+(it might be somewhere later but for now that will tell LLM about them easiely)
 
 ## Command Line Tools
 
@@ -52,6 +60,111 @@ The package provides the following command-line tools for working with IDS, CDS,
 For more details on each command, read [CLI_REFERENCE.md](docs/CLI_REFERENCE.md) or run the command with `--help`.
 
 Additional usage demonstrations can be found in the [examples](examples/) directory.
+
+## JGT Data Refresh Service
+
+**New in v0.6.0**: Automated data refresh service with parallel processing and cloud distribution.
+
+The JGT Data Refresh Service (`jgtservice`) modernizes the manual bash script workflow for processing financial market data with:
+
+- **Automated Scheduling**: Timeframe-based refresh using intelligent scheduling
+- **Parallel Processing**: Concurrent instrument/timeframe processing with configurable workers  
+- **Cloud Distribution**: Modernized Dropbox integration for automatic uploads
+- **Web API**: RESTful endpoints for data access and service management
+- **Multiple Modes**: Daemon, web server, one-time refresh, and status monitoring
+
+### Installation
+
+```bash
+# Install base functionality
+pip install -e .
+
+# Install with web service dependencies
+pip install -e ".[serve]"
+```
+
+### Quick Start
+
+```bash
+# One-time refresh
+jgtservice --refresh-once -i EUR/USD -t H1
+
+# Continuous daemon mode  
+jgtservice --daemon --all
+
+# Web API server
+jgtservice --web --port 8080
+
+# Check service status
+jgtservice --status
+```
+
+### Web API Endpoints
+
+When running in web mode (`jgtservice --web`), the following API endpoints are available:
+
+- `GET /api/v1/data/{instrument}/{timeframe}` - Retrieve processed CDS data
+- `GET /api/v1/data/{instrument}/{timeframe}/latest` - Get latest data point
+- `GET /api/v1/status` - Service status and configuration
+- `GET /api/v1/health` - Health check endpoint
+- `POST /api/v1/refresh` - Trigger manual refresh
+- `GET /api/v1/metrics` - Processing metrics and statistics
+- `GET /docs` - Interactive API documentation
+
+### Configuration
+
+The service can be configured via environment variables:
+
+```bash
+# Data paths
+export JGTPY_DATA="/path/to/current/data" 
+export JGTPY_DATA_FULL="/path/to/full/data"
+
+# Timeframe configuration
+export TRADABLE_TIMEFRAMES="m1,m5,m15,m30,H1,H4"
+export HIGH_TIMEFRAMES="H4,D1,W1"
+
+# Service settings
+export JGTPY_SERVICE_MAX_WORKERS=4
+export JGTPY_SERVICE_WEB_PORT=8080
+export JGTPY_DROPBOX_APP_TOKEN="your_dropbox_token"
+
+# Optional API authentication
+export JGTPY_API_KEY="your_api_key"
+```
+
+### Performance
+
+- **50%+ faster** than sequential processing through parallel execution
+- **EUR/USD H1**: ~8 seconds processing time
+- **Memory stable** during extended daemon runs
+- **Error resilient** with individual failure isolation
+
+For complete documentation, see [docs/jgtservice_implementation.md](docs/jgtservice_implementation.md).
+
+## Quick Start Scripts
+
+The repository includes convenience scripts for common operations:
+
+```bash
+# First time setup
+./setup-service.sh --full
+
+# Check service status
+./check-status.sh
+
+# Refresh all data (excludes m1)
+./refresh-all.sh
+
+# Start API server
+./start-api-server.sh
+
+# Start continuous daemon
+./start-daemon.sh
+```
+
+See [SCRIPTS_README.md](SCRIPTS_README.md) for detailed script documentation.
+
 =======
 
 
