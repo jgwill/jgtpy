@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../jgtutils"
+		},
+		{
+			"path": "../jgtcore"
+		}
+	],
+	"settings": {}
+}
