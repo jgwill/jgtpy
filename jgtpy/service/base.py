@@ -90,6 +90,11 @@ class JGTServiceConfig:
     upload_path_current: str = "/dist/data/current/cds"
     upload_path_full: str = "/dist/data/full/cds"
     
+    # Dropbox OAuth2 refresh support
+    dropbox_refresh_token: Optional[str] = None
+    dropbox_app_key: Optional[str] = None
+    dropbox_app_secret: Optional[str] = None
+    
     # Processing settings
     use_fresh: bool = True
     use_full: bool = False
@@ -142,6 +147,11 @@ class JGTServiceConfig:
         if not config.dropbox_token and "dropbox_token" in jgt_config:
             config.dropbox_token = jgt_config["dropbox_token"]
         
+        # Dropbox OAuth2 refresh support
+        config.dropbox_refresh_token = os.getenv("JGTPY_DROPBOX_REFRESH_TOKEN", jgt_config.get("dropbox_refresh_token"))
+        config.dropbox_app_key = os.getenv("JGTPY_DROPBOX_APP_KEY", jgt_config.get("dropbox_app_key"))
+        config.dropbox_app_secret = os.getenv("JGTPY_DROPBOX_APP_SECRET", jgt_config.get("dropbox_app_secret"))
+        
         # Numeric settings
         if os.getenv("JGTPY_SERVICE_PARALLEL_WORKERS"):
             config.max_workers = int(os.getenv("JGTPY_SERVICE_PARALLEL_WORKERS"))
@@ -170,8 +180,8 @@ class JGTServiceConfig:
             errors.append("max_workers must be >= 1")
         if self.refresh_interval < 1:
             errors.append("refresh_interval must be >= 1")
-        if self.enable_upload and not self.dropbox_token:
-            errors.append("Dropbox token required when upload is enabled")
+        if self.enable_upload and not (self.dropbox_token or (self.dropbox_refresh_token and self.dropbox_app_key and self.dropbox_app_secret)):
+            errors.append("Dropbox credentials required when upload is enabled (token or refresh token with app key/secret)")
             
         return errors
 
