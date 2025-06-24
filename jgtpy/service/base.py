@@ -125,7 +125,11 @@ class JGTServiceConfig:
                                   os.getenv("TRADABLE_TIMEFRAMES", 
                                            os.getenv("LOW_TIMEFRAMES")))
         if timeframes_env:
-            config.timeframes = [t.strip() for t in timeframes_env.split(",")]
+            # Handle both comma and space separation
+            if ',' in timeframes_env:
+                config.timeframes = [t.strip() for t in timeframes_env.split(",")]
+            else:
+                config.timeframes = [t.strip() for t in timeframes_env.split()]
         elif "timeframes" in jgt_config:
             config.timeframes = jgt_config["timeframes"]
         
@@ -271,6 +275,10 @@ class JGTServiceManager:
             except ImportError as e:
                 logger.warning(f"Could not initialize uploader: {e}")
                 logger.warning("Install dropbox package: pip install dropbox")
+                self.uploader = None
+            except Exception as e:
+                logger.error(f"Failed to initialize uploader: {e}")
+                logger.warning("Uploader disabled due to initialization error")
                 self.uploader = None
         else:
             if not self.config.enable_upload:

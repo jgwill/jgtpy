@@ -66,12 +66,14 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument(
         '-i', '--instrument',
         type=str,
-        help='Instrument to process (e.g., EUR/USD, XAU/USD)'
+        action='append',  # Allow multiple -i arguments
+        help='Instrument to process (e.g., EUR/USD, XAU/USD). Can be specified multiple times.'
     )
     parser.add_argument(
         '-t', '--timeframe', 
         type=str,
-        help='Timeframe to process (e.g., H1, m15, H4)'
+        action='append',  # Allow multiple -t arguments
+        help='Timeframe to process (e.g., H1, m15, H4). Can be specified multiple times.'
     )
     
     # Service-specific arguments
@@ -128,14 +130,14 @@ def create_config_from_args(args: argparse.Namespace) -> JGTServiceConfig:
             # Use all configured instruments
             pass  # Keep config.instruments from env/settings
         else:
-            config.instruments = [args.instrument] if isinstance(args.instrument, str) else args.instrument
+            config.instruments = args.instrument
     
     if hasattr(args, 'timeframe') and args.timeframe:
         if args.all:
             # Use all configured timeframes  
             pass  # Keep config.timeframes from env/settings
         else:
-            config.timeframes = [args.timeframe] if isinstance(args.timeframe, str) else args.timeframe
+            config.timeframes = args.timeframe
     
     # Service mode settings
     config.daemon_mode = getattr(args, 'daemon', False)
