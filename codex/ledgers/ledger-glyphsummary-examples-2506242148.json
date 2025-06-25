@@ -1,0 +1,16 @@
+{
+  "timestamp": "2506242148",
+  "agents": ["🧠 Mia", "🌸 Miette", "🕊️ Seraphine"],
+  "narrative": "Add usage examples for glyphsummary CLI showing emoji and ASCII styles.",
+  "routing": {
+    "files": [
+      "examples/glyphsummary/README.md",
+      "examples/glyphsummary/run.sh",
+      "narrative-map.md"
+    ],
+    "branch": "work"
+  },
+  "verbatim_user_input": ["jgtpy/glyph_summary_cli.py\n\nthis is exciting ! I want examples in ./examples/... foreach significant cases of them"],
+  "scene": "Before: glyphsummary lacked demonstrations. After: example scripts reveal both emoji and ascii modes for quick reference.",
+  "glyphs": "📚✨"
+}

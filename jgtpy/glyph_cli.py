@@ -28,6 +28,12 @@ def _parse_args():
         action="store_true",
         help="Include bar position glyph (above, in, below mouth)",
     )
+    p.add_argument(
+        "--style",
+        choices=["emoji", "ascii"],
+        default="emoji",
+        help="Glyph style to use",
+    )
     return p.parse_args()
 
 
@@ -64,7 +70,46 @@ class GlyphMapper:
         BarPosition.BELOW: "🏊",
     }
 
+    ascii_water = {
+        WaterState.SPLASHING: "S",
+        WaterState.EATING: "E",
+        WaterState.THROWING: "T",
+        WaterState.POPING: "P",
+        WaterState.ENTERING: "N",
+        WaterState.SWITCHING: "X",
+        WaterState.SLEEPING: "-",
+    }
+
+    ascii_phase = {
+        MouthPhase.OPENING: "O",
+        MouthPhase.OPEN: "O",
+        MouthPhase.CLOSING: "C",
+        MouthPhase.SLEEPING: "-",
+        MouthPhase.NONE: "-",
+    }
+
+    ascii_direction = {
+        MouthDirection.BUY: "+",
+        MouthDirection.SELL: "-",
+        MouthDirection.NEITHER: "",
+    }
+
+    ascii_position = {
+        BarPosition.ABOVE: "^",
+        BarPosition.IN: "=",
+        BarPosition.BELOW: "v",
+    }
+
+    def __init__(self, style: str = "emoji") -> None:
+        self.style = style
+
     def map_row(self, row: pd.Series, show_position: bool = False) -> str:
+        if self.style == "ascii":
+            direction = self.ascii_direction.get(MouthDirection(row["mouth_direction"]), "")
+            phase = self.ascii_phase.get(MouthPhase(row["mouth_phase"]), "")
+            water = self.ascii_water.get(WaterState(row["water_state"]), "")
+            position = self.ascii_position.get(BarPosition(row["bar_position"]), "") if show_position else ""
+            return f"A{water}{phase}{position}{direction}"
         direction = self.direction_glyphs.get(MouthDirection(row["mouth_direction"]), "")
         phase = self.phase_glyphs.get(MouthPhase(row["mouth_phase"]), "")
         water = self.water_glyphs.get(WaterState(row["water_state"]), "")
@@ -85,7 +130,7 @@ def main():
     if not required_cols.issubset(df.columns):
         df = analyze_dataframe(df)
 
-    mapper = GlyphMapper()
+    mapper = GlyphMapper(style=args.style)
     tail_df = df.tail(args.n_bars)
     for ts, row in tail_df.iterrows():
         glyphs = mapper.map_row(row, show_position=args.show_position)

@@ -7,21 +7,58 @@ from jgtpy.alligator_mouth_water import load_cds_data
 
 
 class SignalGlyphMapper:
-    """Map indicator signal columns to emoji glyphs."""
+    """Map indicator signal columns to glyphs."""
 
     signal_glyphs = {
-        "fdbb": "🐊",  # fractal divergent bar buy
-        "fdbs": "🦷",  # fractal divergent bar sell
-        "zlcB": "📈",  # zero line cross buy
-        "zlcS": "🏊",  # zero line cross sell
-        "zone_sig": "💧",  # zone signal
+        "fdbb": "🟢",  # fractal divergent bar buy
+        "fdbs": "🔴",  # fractal divergent bar sell
+        "fdb": "🎯",  # generic divergent bar
+        "zlcb": "⬆️",  # zero line cross buy
+        "zlcs": "⬇️",  # zero line cross sell
+        "zlcB": "⬆️",  # legacy column
+        "zlcS": "⬇️",  # legacy column
+        "acb": "🔺",  # AC oscillator buy
+        "acs": "🔻",  # AC oscillator sell
+        "zone_sig": "💠",  # zone signal
     }
+
+    ascii_glyphs = {
+        "fdbb": "B",
+        "fdbs": "S",
+        "fdb": "F",
+        "zlcb": "+",
+        "zlcs": "-",
+        "zlcB": "+",
+        "zlcS": "-",
+        "acb": "U",
+        "acs": "D",
+        "zone_sig": "O",
+    }
+
+    def __init__(self, style: str = "emoji") -> None:
+        self.style = style
 
     def map_row(self, row: pd.Series, signals=None) -> str:
         if signals is None:
             signals = self.signal_glyphs.keys()
-        glyphs = [self.signal_glyphs[s] for s in signals if s in row and row[s]]
-        return "".join(glyphs) if glyphs else "🪥"
+        mapping = self.ascii_glyphs if self.style == "ascii" else self.signal_glyphs
+        glyphs = []
+        for s in signals:
+            key = s.lower()
+            glyph = mapping.get(key)
+            if glyph is None:
+                glyph = mapping.get(s)
+            if glyph is None:
+                continue
+            val = row.get(s)
+            if val is None:
+                val = row.get(key)
+            if val is None:
+                val = row.get(key.capitalize())
+            if val:
+                glyphs.append(glyph)
+        default = "-" if self.style == "ascii" else "🪥"
+        return "".join(glyphs) if glyphs else default
 
 
 def _parse_args():
@@ -36,8 +73,14 @@ def _parse_args():
     p.add_argument("--use-full", action="store_true", help="Load full dataset")
     p.add_argument(
         "--signals",
-        default="fdbb,fdbs,zlcB,zlcS,zone_sig",
+        default="fdbb,fdbs,zlcb,zlcs,acb,acs,zone_sig",
         help="Comma-separated signal columns to include",
+    )
+    p.add_argument(
+        "--style",
+        choices=["emoji", "ascii"],
+        default="emoji",
+        help="Glyph style to use",
     )
     return p.parse_args()
 
@@ -52,7 +95,7 @@ def main():
     )
 
     signals = [s.strip() for s in args.signals.split(",") if s.strip()]
-    mapper = SignalGlyphMapper()
+    mapper = SignalGlyphMapper(style=args.style)
     tail_df = df.tail(args.n_bars)
     for ts, row in tail_df.iterrows():
         glyphs = mapper.map_row(row, signals)

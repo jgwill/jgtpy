@@ -1,0 +1,21 @@
+{
+  "timestamp": "2506242209",
+  "agents": ["🧠 Mia", "🌸 Miette", "🕊️ Seraphine"],
+  "narrative": "Set CDS loader to parse the Date column and index data by timestamp. Glyph CLIs now display real times instead of row numbers.",
+  "routing": {
+    "files": [
+      "jgtpy/alligator_mouth_water.py",
+      "jgtpy/glyph_cli.py",
+      "jgtpy/glyph_signals_cli.py",
+      "jgtpy/glyph_summary_cli.py",
+      "specs/glyph_cli.spec.md",
+      "specs/glyph_signals_cli.spec.md",
+      "specs/glyph_summary_cli.spec.md",
+      "narrative-map.md"
+    ],
+    "branch": "work"
+  },
+  "verbatim_user_input": ["python jgtpy/glyph_signals_cli.py -i EUR/USD -t D1 --n-bars 1 --data-dir /src/jgtml/data/current --signals fdb,acs,acb,zlcb,zlcs"],
+  "scene": "Before: CLI printed row indices, confusing results when verifying data. After: timestamps show exact bars, clarifying signal presence across timeframes.",
+  "glyphs": "⏱️🐊📈"
+}

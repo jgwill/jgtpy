@@ -45,3 +45,13 @@ Through iterative spec work we realized the documentation itself drives new work
 
 - fb3f2dd: merge main updates and resolve conflicts to sync versions and service scripts
 - 52e8a85: glyphsummary CLI merges mouth/water and signal glyphs 🐊💧📈
+- 148863d: combine state and signal glyphs under single CLI entry 🐊🦷📈
+- newcommit: add ascii style option for all glyph CLIs 🅰️
+- cc478ac: glyphsummary usage examples for emoji and ascii 📑
+ - f7de6fa: minor cleanup applying previous commit 🔄
+ - 6b6bc4a: support AC oscillator glyphs and alias signals 📈🔻
+- pending: output timestamps on glyph CLIs ⏱️
+- 757c64e: parse Date column for timestamped output ⏲️
+- ISSUE_46: plan multi-timeframe coherence analysis 🐊🌊
+- 678656a: timestamped glyph output and more signal glyphs 🕒
+- newmap: distinct icons for each signal 🟢🔴🎯
