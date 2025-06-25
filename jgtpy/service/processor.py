@@ -150,14 +150,13 @@ class ParallelProcessor:
             processing_time = time.time() - start_time
             
             if cdf is not None and len(cdf) > 0:
-                # Generate expected file path based on config
+                # The CDS service handles file writing itself
+                # Just return success with basic file path info for uploader
                 data_path = self.config.data_full_path if self.config.use_full else self.config.data_path
-                # Create directory structure if it doesn't exist
-                instrument_dir = instrument.replace("/", "-")  # EUR/USD -> EUR-USD
-                cds_dir = Path(data_path) / "cds" / instrument_dir
-                cds_dir.mkdir(parents=True, exist_ok=True)
                 
-                file_path = cds_dir / f"{timeframe}.cds"
+                # Expected file path (where CDS service writes files)
+                instrument_name = instrument.replace("/", "-")  # EUR/USD -> EUR-USD
+                file_path = Path(data_path) / "cds" / f"{instrument_name}_{timeframe}.csv"
                 
                 logger.debug(f"✓ {instrument}/{timeframe} processed: {len(cdf)} rows")
                 
