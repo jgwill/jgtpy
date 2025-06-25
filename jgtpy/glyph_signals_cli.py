@@ -10,16 +10,16 @@ class SignalGlyphMapper:
     """Map indicator signal columns to glyphs."""
 
     signal_glyphs = {
-        "fdbb": "🐊",  # fractal divergent bar buy
-        "fdbs": "🦷",  # fractal divergent bar sell
-        "fdb": "🐊",  # generic divergent bar
-        "zlcb": "📈",  # zero line cross buy
-        "zlcs": "🏊",  # zero line cross sell
-        "zlcB": "📈",  # legacy column
-        "zlcS": "🏊",  # legacy column
+        "fdbb": "🟢",  # fractal divergent bar buy
+        "fdbs": "🔴",  # fractal divergent bar sell
+        "fdb": "🎯",  # generic divergent bar
+        "zlcb": "⬆️",  # zero line cross buy
+        "zlcs": "⬇️",  # zero line cross sell
+        "zlcB": "⬆️",  # legacy column
+        "zlcS": "⬇️",  # legacy column
         "acb": "🔺",  # AC oscillator buy
         "acs": "🔻",  # AC oscillator sell
-        "zone_sig": "💧",  # zone signal
+        "zone_sig": "💠",  # zone signal
     }
 
     ascii_glyphs = {
@@ -32,7 +32,7 @@ class SignalGlyphMapper:
         "zlcS": "-",
         "acb": "U",
         "acs": "D",
-        "zone_sig": "Z",
+        "zone_sig": "O",
     }
 
     def __init__(self, style: str = "emoji") -> None:

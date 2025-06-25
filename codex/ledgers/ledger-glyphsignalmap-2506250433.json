@@ -1,0 +1,16 @@
+{
+  "timestamp": "2506250433",
+  "agents": ["🧠 Mia", "🌸 Miette", "🕊️ Seraphine"],
+  "narrative": "Refine signal glyph mapping to avoid overlap with mouth and water icons. Each signal now has a unique emoji and ASCII fallback.",
+  "routing": {
+    "files": [
+      "jgtpy/glyph_signals_cli.py",
+      "specs/glyph_signals_cli.spec.md",
+      "narrative-map.md"
+    ],
+    "branch": "work"
+  },
+  "verbatim_user_input": ["Please address any inline comments on the diff, as well as any additional instructions below.\nIn general, all your glyph in :  \"jgtpy/glyph_signals_cli.py\" are confusing, look carefully and make this coherent with the alligator's mouth and Water state or at least not contradictionary (using the same glyphs for other signals is not acceptable)"],
+  "scene": "Before: FDB and zone signals reused mouth glyphs causing confusion. After: buy/sell/cross signals show unique icons like circles and arrows for clarity.",
+  "glyphs": "🟢🔴🎯⬆️⬇️"
+}

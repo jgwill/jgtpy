@@ -53,3 +53,5 @@ Through iterative spec work we realized the documentation itself drives new work
 - pending: output timestamps on glyph CLIs ⏱️
 - 757c64e: parse Date column for timestamped output ⏲️
 - ISSUE_46: plan multi-timeframe coherence analysis 🐊🌊
+- 678656a: timestamped glyph output and more signal glyphs 🕒
+- newmap: distinct icons for each signal 🟢🔴🎯

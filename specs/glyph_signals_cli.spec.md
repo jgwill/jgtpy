@@ -21,13 +21,14 @@ This spec defines a command line tool that translates key indicator signals into
 ## Behavior
 1. Load CDS data with `load_cds_data` from `alligator_mouth_water.py`.
 2. For each row, map active signal columns to emoji glyphs:
-   - `fdbb` or `fdb` → 🐊 (divergent bar)
-   - `fdbs` → 🦷 (divergent bar sell)
-   - `zlcb` → 📈 (zero line cross buy)
-   - `zlcs` → 🏊 (zero line cross sell)
+   - `fdbb` → 🟢 (divergent bar buy)
+   - `fdbs` → 🔴 (divergent bar sell)
+   - `fdb` → 🎯 (generic divergent bar)
+   - `zlcb` → ⬆️ (zero line cross buy)
+   - `zlcs` → ⬇️ (zero line cross sell)
    - `acb` → 🔺 (AC oscillator buy)
    - `acs` → 🔻 (AC oscillator sell)
-   - `zone_sig` → 💧 (zone signal)
+   - `zone_sig` → 💠 (zone signal)
 3. If no signals are active, output 🪥 as a neutral glyph.
 4. When `--style ascii` is used, map signals to simple letters instead of emoji.
 5. `load_cds_data` parses the `Date` column and sets it as the DataFrame index.
