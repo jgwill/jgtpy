@@ -73,7 +73,7 @@ class JGTServiceAPI:
             allow_headers=["*"],
         )
     
-    def _verify_api_key(self, credentials: Optional["HTTPAuthorizationCredentials"] = None):
+    def _verify_api_key(self, credentials: Optional[HTTPAuthorizationCredentials] = None):
         """Verify API key if authentication is enabled"""
         api_key = os.getenv("JGTPY_API_KEY")
         if not api_key:
