@@ -39,6 +39,7 @@ logger = logging.getLogger(__name__)
 def load_env_files():
     """Load .env files from multiple locations"""
     if not _has_dotenv:
+        logger.warning("python-dotenv not available, .env files will not be loaded")
         return
     
     # Load .env files in order of precedence (last one wins)
@@ -48,10 +49,17 @@ def load_env_files():
         Path.cwd() / ".env"  # CWD/.env (highest precedence)
     ]
     
+    loaded_files = []
     for env_file in env_locations:
         if env_file.exists():
-            logger.debug(f"Loading environment from: {env_file}")
+            logger.info(f"Loading environment from: {env_file}")
             load_dotenv(env_file)
+            loaded_files.append(str(env_file))
+    
+    if loaded_files:
+        logger.info(f"Loaded {len(loaded_files)} .env files")
+    else:
+        logger.warning("No .env files found")
 
 def load_jgt_config() -> Dict[str, Any]:
     """Load configuration from $HOME/.jgt/config.json"""
@@ -135,17 +143,25 @@ class JGTServiceConfig:
                 config.timeframes = [t.strip() for t in timeframes_env.split(",")]
             else:
                 config.timeframes = [t.strip() for t in timeframes_env.split()]
+            logger.info(f"Loaded timeframes from environment: {config.timeframes}")
         elif "timeframes" in jgt_config:
             config.timeframes = jgt_config["timeframes"]
+            logger.info(f"Loaded timeframes from config file: {config.timeframes}")
+        else:
+            logger.info(f"Using default timeframes: {config.timeframes}")
         
         # Other settings
         config.data_path = os.getenv("JGTPY_DATA", config.data_path)
         config.data_full_path = os.getenv("JGTPY_DATA_FULL", config.data_full_path)
         config.dropbox_token = os.getenv("JGTPY_DROPBOX_APP_TOKEN")
         
+        # Debug logging for token
+        logger.debug(f"Dropbox token from env: {'SET' if config.dropbox_token else 'NOT SET'}")
+        
         # Try to get dropbox token from jgt_config if not in env
         if not config.dropbox_token and "dropbox_token" in jgt_config:
             config.dropbox_token = jgt_config["dropbox_token"]
+            logger.debug("Dropbox token loaded from config file")
         
         # Dropbox OAuth2 refresh support
         config.dropbox_refresh_token = os.getenv("JGTPY_DROPBOX_REFRESH_TOKEN", jgt_config.get("dropbox_refresh_token"))
@@ -327,6 +343,22 @@ class JGTServiceManager:
     def _run_daemon(self):
         """Run in daemon mode with scheduler"""
         logger.info("Starting daemon mode...")
+        
+        # Run initial refresh to ensure all data is up to date
+        logger.info("Running initial data refresh for all timeframes...")
+        try:
+            results = self.processor.process_all_instruments_timeframes()
+            successful = sum(1 for r in results if r.success)
+            logger.info(f"Initial refresh completed: {successful}/{len(results)} successful")
+            
+            # Upload if configured and uploader available
+            if self.uploader and results:
+                upload_results = self.uploader.upload_processing_results(results)
+                upload_successful = sum(1 for r in upload_results if r.success)
+                logger.info(f"Initial upload completed: {upload_successful}/{len(upload_results)} files uploaded")
+        except Exception as e:
+            logger.error(f"Initial refresh failed: {e}")
+            logger.warning("Continuing with scheduler anyway...")
         
         # Start the scheduler
         if self.scheduler:

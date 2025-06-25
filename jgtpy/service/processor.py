@@ -47,6 +47,12 @@ class ParallelProcessor:
             self.config.timeframes
         )
     
+    def process_all(self, instruments: List[str] = None, timeframes: List[str] = None) -> List[ProcessingResult]:
+        """Process specific or all instruments and timeframes"""
+        target_instruments = instruments if instruments is not None else self.config.instruments
+        target_timeframes = timeframes if timeframes is not None else self.config.timeframes
+        return self.process_instruments_timeframes(target_instruments, target_timeframes)
+    
     def process_instruments_timeframes(self, instruments: List[str], 
                                      timeframes: List[str]) -> List[ProcessingResult]:
         """Process specific instruments and timeframes in parallel"""
@@ -116,7 +122,7 @@ class ParallelProcessor:
                     timeframe=timeframe,
                     quote_count=-1,
                     quiet=self.config.quiet,
-                    use_fresh=True,
+                    use_full=self.config.use_full,
                     verbose_level=self.config.verbose_level
                 )
                 logger.debug(f"PDS refresh completed for {instrument}/{timeframe}")
@@ -147,7 +153,7 @@ class ParallelProcessor:
                 # Generate expected file path based on config
                 data_path = self.config.data_full_path if self.config.use_full else self.config.data_path
                 # Create directory structure if it doesn't exist
-                instrument_dir = instrument.replace("/", "")
+                instrument_dir = instrument.replace("/", "-")  # EUR/USD -> EUR-USD
                 cds_dir = Path(data_path) / "cds" / instrument_dir
                 cds_dir.mkdir(parents=True, exist_ok=True)
                 
