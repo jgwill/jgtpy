@@ -72,12 +72,29 @@ def load_jgt_config() -> Dict[str, Any]:
             logger.warning(f"Failed to load {config_file}: {e}")
     return {}
 
+def _get_default_instruments() -> List[str]:
+    """Get default instruments from environment variables or fallback to hardcoded list"""
+    # Try various environment variable names
+    instruments_env = os.getenv("JGTPY_SERVICE_INSTRUMENTS", 
+                               os.getenv("JGTPY_INSTRUMENTS",
+                                        os.getenv("instruments")))
+    
+    if instruments_env:
+        instruments = [i.strip() for i in instruments_env.split(",")]
+        logger.debug(f"Default instruments from environment: {instruments}")
+        return instruments
+    
+    # Fallback to hardcoded list
+    fallback = ["EUR/USD", "XAU/USD"]
+    logger.debug(f"Using fallback default instruments: {fallback}")
+    return fallback
+
 @dataclass
 class JGTServiceConfig:
     """Configuration class for JGT Service"""
     
     # Core settings
-    instruments: List[str] = field(default_factory=lambda: ["EUR/USD", "XAU/USD"])
+    instruments: List[str] = field(default_factory=lambda: _get_default_instruments())
     timeframes: List[str] = field(default_factory=lambda: ["H1", "m15"])
     refresh_interval: int = 60  # seconds
     max_workers: int = 4

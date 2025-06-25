@@ -134,7 +134,9 @@ class JGTScheduler:
                 
                 # Upload if configured
                 if self.uploader and results:
-                    self.uploader.upload_results(results)
+                    upload_results = self.uploader.upload_processing_results(results)
+                    upload_successful = sum(1 for r in upload_results if r.success)
+                    logger.info(f"Upload completed: {upload_successful}/{len(upload_results)} files uploaded")
                     
             except Exception as e:
                 logger.error(f"Refresh failed for {timeframe}: {e}")
