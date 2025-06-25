@@ -15,7 +15,17 @@ NC='\033[0m' # No Color
 
 # Configuration
 DEFAULT_TIMEFRAMES="m5,m15,H1,H4,D1,W1,M1"
-DEFAULT_INSTRUMENTS="EUR/USD,XAU/USD,SPX500,GBP/USD,USD/JPY,AUD/USD,USD/CAD"
+
+# Try to get instruments from environment, fallback to default
+if [ -n "$JGTPY_SERVICE_INSTRUMENTS" ]; then
+    DEFAULT_INSTRUMENTS="$JGTPY_SERVICE_INSTRUMENTS"
+elif [ -n "$JGTPY_INSTRUMENTS" ]; then
+    DEFAULT_INSTRUMENTS="$JGTPY_INSTRUMENTS"
+elif [ -n "$instruments" ]; then
+    DEFAULT_INSTRUMENTS="$instruments"
+else
+    DEFAULT_INSTRUMENTS="EUR/USD,XAU/USD,SPX500,GBP/USD,USD/JPY,AUD/USD,USD/CAD"
+fi
 
 # Parse command line arguments
 TIMEFRAMES="${1:-$DEFAULT_TIMEFRAMES}"
