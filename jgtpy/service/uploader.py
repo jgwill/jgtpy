@@ -90,6 +90,7 @@ class CloudUploader:
         
         file_size = local_path_obj.stat().st_size
         
+        # Try Python dropbox library first
         try:
             # Ensure remote path starts with /
             if not remote_path.startswith('/'):
@@ -115,24 +116,52 @@ class CloudUploader:
                 upload_time=upload_time
             )
             
-        except ApiError as e:
-            upload_time = time.time() - start_time
-            error_msg = f"Dropbox API error: {e}"
-            logger.error(f"✗ Failed to upload {local_path}: {error_msg}")
+        except Exception as e:
+            logger.warning(f"Python dropbox upload failed: {e}")
+            logger.info("Falling back to droxul command...")
             
-            return UploadResult(
-                local_path=local_path,
-                remote_path=remote_path,
-                success=False,
-                file_size=file_size,
-                upload_time=upload_time,
-                error=error_msg
-            )
+            # Fallback to droxul command
+            return self._upload_with_droxul(local_path, remote_path, file_size, start_time)
+    
+    def _upload_with_droxul(self, local_path: str, remote_path: str, file_size: int, start_time: float) -> UploadResult:
+        """Upload using droxul command as fallback"""
+        try:
+            import subprocess
+            
+            # droxul upload $path_of_instrument_timeframe_csv /dist/data/current/
+            remote_dir = str(Path(remote_path).parent)
+            
+            cmd = ["droxul", "upload", local_path, remote_dir]
+            logger.debug(f"Running: {' '.join(cmd)}")
+            
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+            upload_time = time.time() - start_time
+            
+            if result.returncode == 0:
+                logger.info(f"✓ Uploaded via droxul: {Path(local_path).name} ({file_size} bytes) in {upload_time:.2f}s")
+                return UploadResult(
+                    local_path=local_path,
+                    remote_path=remote_path,
+                    success=True,
+                    file_size=file_size,
+                    upload_time=upload_time
+                )
+            else:
+                error_msg = f"droxul command failed: {result.stderr}"
+                logger.error(f"✗ droxul upload failed: {error_msg}")
+                return UploadResult(
+                    local_path=local_path,
+                    remote_path=remote_path,
+                    success=False,
+                    file_size=file_size,
+                    upload_time=upload_time,
+                    error=error_msg
+                )
+                
         except Exception as e:
             upload_time = time.time() - start_time
-            error_msg = f"Upload error: {e}"
-            logger.error(f"✗ Failed to upload {local_path}: {error_msg}")
-            
+            error_msg = f"droxul fallback failed: {e}"
+            logger.error(f"✗ All upload methods failed: {error_msg}")
             return UploadResult(
                 local_path=local_path,
                 remote_path=remote_path,
@@ -197,15 +226,21 @@ class CloudUploader:
             if result.success and result.file_path:
                 local_path = result.file_path
                 
-                # Determine remote path based on data type and config
-                if self.config.use_full:
-                    base_remote_path = self.config.upload_path_full
-                else:
-                    base_remote_path = self.config.upload_path_current
+                # Check if file actually exists (since CDS service writes files)
+                if not Path(local_path).exists():
+                    logger.warning(f"File does not exist: {local_path}")
+                    continue
                 
-                # Create remote filename
+                # Determine remote path based on data type and config  
+                # Use /dist/data/current/ pattern as per user's droxul usage
+                if self.config.use_full:
+                    remote_dir = "/dist/data/full/"
+                else:
+                    remote_dir = "/dist/data/current/"
+                
+                # Create remote path
                 filename = Path(local_path).name
-                remote_path = f"{base_remote_path}/{filename}"
+                remote_path = f"{remote_dir}{filename}"
                 
                 file_mappings.append((local_path, remote_path))
         
