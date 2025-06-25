@@ -4,6 +4,7 @@ JGT Data Refresh Service - FastAPI Web Service
 Provides RESTful API endpoints for data access, service management, and monitoring.
 Implements modern async web framework with OpenAPI documentation.
 """
+from __future__ import annotations
 
 import logging
 import os
