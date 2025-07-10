@@ -16,12 +16,20 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 # import .
 
-from jgtutils import (
-    jgtconstants as constants,
-    jgtcommon as jgtcommon,
-    jgtwslhelper as wsl,
-)
-from jgtutils.jgtconstants import NB_BARS_BY_DEFAULT_IN_CDS
+# jgtcore compatibility imports
+try:
+    from jgtcore.cli import new_parser, parse_args
+    from jgtcore.constants import NB_BARS_BY_DEFAULT_IN_CDS
+    import jgtcore.constants as constants
+    # For now, keep jgtutils for functions not yet migrated
+    from jgtutils import jgtcommon, jgtwslhelper as wsl
+except ImportError:
+    from jgtutils import (
+        jgtconstants as constants,
+        jgtcommon as jgtcommon,
+        jgtwslhelper as wsl,
+    )
+    from jgtutils.jgtconstants import NB_BARS_BY_DEFAULT_IN_CDS
 
 import argparse
 import JGTPDSP as pds
@@ -37,7 +45,13 @@ import pandas as pd
 
 
 def _parse_args():
-    parser=jgtcommon.new_parser(JGTCLI_PROG_DESCRIPTION,prog=JGTCLI_PROG_NAME,epilog=JGTCLI_EPILOG,add_exiting_quietly_flag=True)
+    # Use jgtcore if available, otherwise fallback to jgtutils
+    try:
+        from jgtcore.cli import new_parser
+        parser = new_parser(JGTCLI_PROG_DESCRIPTION, prog=JGTCLI_PROG_NAME, epilog=JGTCLI_EPILOG, add_exiting_quietly_flag=True)
+    except (ImportError, TypeError):
+        # jgtcore new_parser may not have all the same parameters, fallback to jgtutils
+        parser = jgtcommon.new_parser(JGTCLI_PROG_DESCRIPTION, prog=JGTCLI_PROG_NAME, epilog=JGTCLI_EPILOG, add_exiting_quietly_flag=True)
     
     # jgtfxcommon.add_main_arguments(parser)
     jgtcommon.add_instrument_timeframe_arguments(parser)
@@ -65,7 +79,12 @@ def _parse_args():
     #add_jgtclirqdata_arguments
     jgtcommon.add_load_json_file_argument(parser)
     jgtcommon.add_jgtclirqdata_arguments(parser)
-    args=jgtcommon.parse_args(parser)
+    # Use jgtcore parse_args if available, otherwise fallback to jgtutils
+    try:
+        from jgtcore.cli import parse_args
+        args = parse_args(parser)
+    except (ImportError, TypeError):
+        args = jgtcommon.parse_args(parser)
     # jgtcommon.add_cds_argument(parser)
     
     return args

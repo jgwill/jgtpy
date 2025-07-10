@@ -39,6 +39,15 @@ with warnings.catch_warnings():
 version='0.6.15'
 __version__ = version
 
+# jgtcore compatibility layer
+try:
+    import jgtcore
+    JGTCORE_AVAILABLE = True
+    JGTCORE_VERSION = jgtcore.__version__
+except ImportError:
+    JGTCORE_AVAILABLE = False
+    JGTCORE_VERSION = None
+
 
 # from JGTCDS import (
 #     create as cds_create,

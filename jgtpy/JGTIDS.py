@@ -39,8 +39,31 @@ _dtformat = "%m.%d.%Y %H:%M:%S"
 # @title INDICATOR's Data Frame Columns naming
 
 
-from jgtutils.jgtconstants import *
+# jgtcore compatibility imports - explicit imports only (no wildcards)
+try:
+    from jgtcore.constants import (
+        JAW, BJAW, TEETH, BTEETH, LIPS, BLIPS, TJAW, TTEETH, TLIPS,
+        OPEN, HIGH, LOW, CLOSE, VOLUME, DATE, TIME,
+        AO, AC, FH, FL, FH3, FL3, FH5, FL5,
+        MFI, MFI_SQUAT, MFI_GREEN, MFI_FADE, MFI_FAKE,
+        FDB, FDBB, FDBS, FDB_TARGET, ZONE_SIGNAL,
+        VECTOR_AO_FDBS, VECTOR_AO_FDBB,
+        IDS_COLUMNS_TO_NORMALIZE, ML_DEFAULT_COLUMNS_TO_KEEP,
+        NB_BARS_BY_DEFAULT_IN_CDS
+    )
+except ImportError:
+    from jgtutils.jgtconstants import (
+        JAW, BJAW, TEETH, BTEETH, LIPS, BLIPS, TJAW, TTEETH, TLIPS,
+        OPEN, HIGH, LOW, CLOSE, VOLUME, DATE, TIME,
+        AO, AC, FH, FL, FH3, FL3, FH5, FL5,
+        MFI, MFI_SQUAT, MFI_GREEN, MFI_FADE, MFI_FAKE,
+        FDB, FDBB, FDBS, FDB_TARGET, ZONE_SIGNAL,
+        VECTOR_AO_FDBS, VECTOR_AO_FDBB,
+        IDS_COLUMNS_TO_NORMALIZE, ML_DEFAULT_COLUMNS_TO_KEEP,
+        NB_BARS_BY_DEFAULT_IN_CDS
+    )
 
+# Continue with the original explicit imports for compatibility
 from jgtutils.jgtconstants import (
     JAW,
     BJAW,

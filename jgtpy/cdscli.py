@@ -16,11 +16,18 @@ sys.path.insert(0, os.path.abspath(os.path.dirname(__file__)))
 
 # import .
 
-from jgtutils import (
-    jgtconstants as constants,
-    jgtcommon as jgtcommon,
-    jgtwslhelper as wsl,
-)
+# jgtcore compatibility imports
+try:
+    from jgtcore.cli import new_parser, parse_args
+    import jgtcore.constants as constants
+    # For now, keep jgtutils for functions not yet migrated
+    from jgtutils import jgtcommon, jgtwslhelper as wsl
+except ImportError:
+    from jgtutils import (
+        jgtconstants as constants,
+        jgtcommon as jgtcommon,
+        jgtwslhelper as wsl,
+    )
 
 import argparse
 import JGTPDSP as pds
