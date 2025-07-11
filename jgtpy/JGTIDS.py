@@ -88,6 +88,15 @@ from jgtutils.jgtconstants import (
     MFI,
     ZONE_SIGNAL,
     NB_BARS_BY_DEFAULT_IN_CDS,
+    ZLC,
+    ZLCB,
+    ZLCS,
+    BZ,
+    SZ,
+    ZCOL,
+    nonTradingZoneColor,
+    sellingZoneColor,
+    buyingZoneColor,
 )
 from jgtutils.colconverthelper import zone_str_to_id
 from jgtutils.jgtconstants import indicator_AO_awesomeOscillator_column_name
@@ -1251,7 +1260,7 @@ def jgti_add_zlc_plus_other_AO_signal(
             greenZone = 1
             zoneColor = buyingZoneColor
 
-        dfsrc.at[i, signal_zcol_column_name] = zoneColor
+        dfsrc.at[i, ZCOL] = zoneColor
         dfsrc.at[i, ZONE_SIGNAL] = int(zone_str_to_id(zoneColor))
 
         # Sell Zone Signal
