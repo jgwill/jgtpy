@@ -87,6 +87,7 @@ from jgtutils.jgtconstants import (
     FL89,
     MFI,
     ZONE_SIGNAL,
+    NB_BARS_BY_DEFAULT_IN_CDS,
 )
 from jgtutils.colconverthelper import zone_str_to_id
 from jgtutils.jgtconstants import indicator_AO_awesomeOscillator_column_name
@@ -1045,21 +1046,21 @@ def tocds(
     else:
         print("DEPRECATION NOTICE: tocds() is deprecated and will be removed in a future release. Please use toids() from jgtapyhelper instead.")
         dfires = ids_add_indicators(dfsrc, quiet=quiet, cc=cc, rq=rq)
-    
+
     dfires = _ids_add_fdb_column_logics_v2(dfires, quiet=quiet)                 #@STCIssue SignalBusiness Code
     dfires = cds_add_signals_to_indicators(dfires, quiet=quiet, cc=cc, rq=rq)   #@STCIssue SignalBusiness Code
     dfires = jgti_add_zlc_plus_other_AO_signal(dfires, quiet=quiet, rq=rq)      #@STCIssue SignalBusiness Code
     if rq.keep_bid_ask==False:
-        dfires = _pds_cleanse_original_columns(dfires, quiet=True)  
+        dfires = _pds_cleanse_original_columns(dfires, quiet=True)
     dfires = __cleanse_ao_peak_v1_secondary_columns(dfires, quiet=True)
     dfires = __format_boolean_columns_to_int(dfires, quiet=True)
-    dfires = add_ao_price_peaks_v2(dfires, quiet=True, rq=rq)   
-    
+    dfires = add_ao_price_peaks_v2(dfires, quiet=True, rq=rq)
+
     # Add mouth water analysis if enabled
     if rq.mouth_water_flag and AlligatorMouthWaterAnalyzer is not None:
         try:
             analyzer = AlligatorMouthWaterAnalyzer()
-            
+
             # Check if required columns exist
             required_cols = ['jaw', 'teeth', 'lips', 'ao']
             if all(col in dfires.columns for col in required_cols):
@@ -1070,23 +1071,23 @@ def tocds(
                 dfires['water_state'] = 'sleeping'
                 dfires['mouth_direction_confidence'] = 0.0
                 dfires['mouth_phase_confidence'] = 0.0
-                
+
                 # Analyze each bar and add the mouth water columns
                 for i, idx in enumerate(dfires.index):
                     try:
                         # Get required sequences (current + lookback periods)
                         lookback = analyzer.lookback_periods
                         start_idx = max(0, i - lookback)
-                        
+
                         jaw_seq = dfires['jaw'].iloc[start_idx:i+1].values
                         teeth_seq = dfires['teeth'].iloc[start_idx:i+1].values
                         lips_seq = dfires['lips'].iloc[start_idx:i+1].values
-                        
+
                         # Current bar data
                         price_high = dfires.at[idx, 'High']
                         price_low = dfires.at[idx, 'Low']
                         ao_value = dfires.at[idx, 'ao']
-                        
+
                         # Only analyze if we have enough data points
                         if len(jaw_seq) >= 2:
                             result = analyzer.analyze_single_bar(
@@ -1097,7 +1098,7 @@ def tocds(
                                 teeth=teeth_seq,
                                 lips=lips_seq
                             )
-                            
+
                             if result:
                                 dfires.at[idx, 'mouth_direction'] = result.mouth_direction.value
                                 dfires.at[idx, 'mouth_phase'] = result.mouth_phase.value
@@ -1108,7 +1109,7 @@ def tocds(
                     except Exception as e:
                         if not quiet:
                             print(f"Mouth water analysis failed for bar {idx}: {e}")
-                        
+
                 if not quiet:
                     print("Added mouth water analysis columns")
             else:
@@ -1117,11 +1118,11 @@ def tocds(
         except Exception as e:
             if not quiet:
                 print(f"Mouth water analysis failed: {e}")
-    
+
     if add_mfi_signals_proto:
         dfires= _cds_add_mfi_squat_n_signals_column_logics_v1(dfires, quiet=quiet)
-    
-    
+
+
     # Remove the specified columns
     if columns_to_remove is not None:
         dfires.drop(columns=columns_to_remove, errors="ignore", inplace=True)
