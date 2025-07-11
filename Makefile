@@ -69,12 +69,12 @@ disto:
 .PHONY: pypi-release
 pypi-release:
 	twine --version
-	twine upload -s dist/*
+	twine upload dist/*
 
 .PHONY: release
 release:
 	make dist
-	git tag -s $(version)
+	git tag $(version)
 	git push origin $(version)
 	make pypi-release
 
