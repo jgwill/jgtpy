@@ -93,6 +93,8 @@ from jgtutils.jgtconstants import (
     SS,
     AO,
     AC,
+    AOAZ,
+    AOBZ,
     PRICE_PEAK_ABOVE,
     PRICE_PEAK_BELLOW,
     AO_PEAK_ABOVE,
