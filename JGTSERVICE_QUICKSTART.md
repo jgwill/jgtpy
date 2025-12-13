@@ -8,7 +8,7 @@
 
 ```bash
 # 1. Create trading environment
-jgt init my-trading
+jgt my-trading
 
 # 2. Enter directory
 cd my-trading
@@ -175,4 +175,4 @@ jgtservice --status      # See what's missing
 
 - Full options: `jgtservice --help`
 - Architecture details: see `/src/jgtpy/CLAUDE.md`
-- Create environment: `jgt init --help`
+- Create environment: `jgt --help`
