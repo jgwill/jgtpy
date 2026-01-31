@@ -22,6 +22,13 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 from jgtutils import jgtcommon
 from jgtutils.jgtclihelper import print_jsonl_message
 
+# Import jgtcore tracing infrastructure
+try:
+    from jgtcore import JGTTracer, is_tracing_enabled
+    _has_tracing = True
+except ImportError:
+    _has_tracing = False
+
 # Try to import python-dotenv if available
 try:
     from dotenv import load_dotenv
@@ -231,6 +238,17 @@ class JGTServiceManager:
         self.web_server = None
         self.shutdown_event = threading.Event()
         
+        # Initialize tracing
+        self.tracer = None
+        if _has_tracing:
+            try:
+                self.tracer = JGTTracer("jgtpy", "service_manager")
+                logger.info("JGT Service Manager tracing enabled")
+            except Exception as e:
+                logger.warning(f"Failed to initialize tracing: {e}")
+        else:
+            logger.info("JGT Service Manager tracing not available")
+        
         # Setup signal handlers
         signal.signal(signal.SIGINT, self._signal_handler)
         signal.signal(signal.SIGTERM, self._signal_handler)
@@ -246,6 +264,81 @@ class JGTServiceManager:
         """Start the service based on configuration"""
         logger.info("Starting JGT Service...")
         
+        # Start service-level tracing
+        if self.tracer:
+            service_metadata = {
+                "service_mode": self._get_service_mode(),
+                "instruments": self.config.instruments,
+                "timeframes": self.config.timeframes,
+                "max_workers": self.config.max_workers
+            }
+            with self.tracer.trace_operation("service_startup", service_metadata) as trace_id:
+                try:
+                    self._start_with_tracing(trace_id)
+                except Exception as e:
+                    self.tracer.add_step("startup_error", 
+                                       input_data={"error_type": type(e).__name__},
+                                       output_data={"error_message": str(e)})
+                    raise
+        else:
+            self._start_without_tracing()
+    
+    def _get_service_mode(self):
+        """Get the current service mode as a string"""
+        if self.config.refresh_once:
+            return "refresh_once"
+        elif self.config.web_mode:
+            return "web_server"
+        elif self.config.daemon_mode:
+            return "daemon"
+        else:
+            return "default_once"
+    
+    def _start_with_tracing(self, trace_id):
+        """Start service with tracing enabled"""
+        # Validate configuration
+        self.tracer.add_step("validate_config", {"config_validation": True})
+        errors = self.config.validate()
+        if errors:
+            self.tracer.add_step("config_validation_failed", 
+                               input_data={"errors": errors},
+                               output_data={"validation_result": "failed"})
+            for error in errors:
+                logger.error(f"Configuration error: {error}")
+            raise ValueError(f"Configuration validation failed: {errors}")
+        
+        self.tracer.add_step("config_validated", output_data={"validation_result": "passed"})
+        self.running = True
+        
+        try:
+            # Initialize components
+            self.tracer.add_step("initialize_components", {"service_mode": self._get_service_mode()})
+            self._initialize_components()
+            
+            if self.config.refresh_once:
+                # One-time refresh mode
+                self.tracer.add_step("run_one_time_refresh", {"mode": "refresh_once"})
+                self._run_one_time_refresh()
+            elif self.config.web_mode:
+                # Web server mode
+                self.tracer.add_step("run_web_server", {"mode": "web_server", "port": self.config.web_port})
+                self._run_web_server()
+            elif self.config.daemon_mode:
+                # Daemon mode with scheduler
+                self.tracer.add_step("run_daemon", {"mode": "daemon"})
+                self._run_daemon()
+            else:
+                # Default: run once then exit
+                self.tracer.add_step("run_default_once", {"mode": "default"})
+                self._run_one_time_refresh()
+                
+        except Exception as e:
+            logger.error(f"Service startup failed: {e}")
+            self.stop()
+            raise
+    
+    def _start_without_tracing(self):
+        """Start service without tracing (fallback)"""
         # Validate configuration
         errors = self.config.validate()
         if errors:
