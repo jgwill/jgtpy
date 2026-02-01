@@ -26,6 +26,13 @@ from jgtutils.coltypehelper import DTYPE_DEFINITIONS
 
 from jgtutils.jgtconstants import NB_BARS_BY_DEFAULT_IN_CDS
 
+# Import jgtcore tracing infrastructure
+try:
+    from jgtcore import JGTTracer
+    _has_tracing = True
+except ImportError:
+    _has_tracing = False
+
 #DTYPE_COLTYPE = coltypehelper.get_dtype_definitions()
 
 # %%
@@ -80,31 +87,63 @@ def createFromPDSFileToCDSFile(
     - c (DataFrame): The DataFrame containing the data.
 
     """
-    if rq is None:
-        #print("rq is None in createFromPDSFileToCDSFile")
-        rq = JGTCDSRequest()
-        rq.timeframe=timeframe
-        rq.instrument=instrument
-        rq.quotescount = quotescount
-        rq.gator_oscillator_flag = gator_oscillator_flag
-        rq.mfi_flag = mfi_flag
-        rq.balligator_flag = balligator_flag
-        rq.talligator_flag = talligator_flag
-        rq.balligator_period_jaws = balligator_period_jaws
-        rq.talligator_period_jaws = talligator_period_jaws
-        rq.mouth_water_flag = mouth_water_flag
-        rq.largest_fractal_period = largest_fractal_period
-        rq.viewpath=viewpath
-        rq.talligator_fix_quotescount()
-    if rq.viewpath:
-        cdspath = get_pov_local_data_filename(instrument,timeframe,use_full=use_full)
-        print(cdspath)
-        return cdspath,None
-    # Working around an issue with keep_bid_ask, we use the value supplied in this function to override the value in the request
-    rq.keep_bid_ask = keep_bid_ask
-    rq.dropna_volume = dropna_volume
+    
+    # Initialize tracing for CDS processing
+    tracer = None
+    trace_id = None
+    if _has_tracing:
+        try:
+            tracer = JGTTracer("jgtpy", "cds_processing")
+            trace_id = tracer.start_operation(f"CDS_create_{instrument}_{timeframe}", {
+                "instrument": instrument,
+                "timeframe": timeframe,
+                "use_full": use_full,
+                "use_fresh": use_fresh,
+                "quotescount": quotescount,
+                "mfi_flag": mfi_flag,
+                "mouth_water_flag": mouth_water_flag
+            })
+        except Exception as e:
+            print(f"Tracing initialization error: {e}")
+            tracer = None
+    
+    try:
+        if tracer:
+            tracer.add_step("validate_parameters", {"instrument": instrument, "timeframe": timeframe})
+        
+        if rq is None:
+            #print("rq is None in createFromPDSFileToCDSFile")
+            rq = JGTCDSRequest()
+            rq.timeframe=timeframe
+            rq.instrument=instrument
+            rq.quotescount = quotescount
+            rq.gator_oscillator_flag = gator_oscillator_flag
+            rq.mfi_flag = mfi_flag
+            rq.balligator_flag = balligator_flag
+            rq.talligator_flag = talligator_flag
+            rq.balligator_period_jaws = balligator_period_jaws
+            rq.talligator_period_jaws = talligator_period_jaws
+            rq.mouth_water_flag = mouth_water_flag
+            rq.largest_fractal_period = largest_fractal_period
+            rq.viewpath=viewpath
+            rq.talligator_fix_quotescount()
+        
+        if tracer:
+            tracer.add_step("request_configured", {"request_created": rq is not None})
+        
+        if rq.viewpath:
+            cdspath = get_pov_local_data_filename(instrument,timeframe,use_full=use_full)
+            print(cdspath)
+            return cdspath,None
+        
+        # Working around an issue with keep_bid_ask, we use the value supplied in this function to override the value in the request
+        rq.keep_bid_ask = keep_bid_ask
+        rq.dropna_volume = dropna_volume
 
-    cdf = createFromPDSFile(
+        if tracer:
+            tracer.add_step("begin_cds_processing", {"keep_bid_ask": keep_bid_ask, "dropna_volume": dropna_volume})
+
+        cdf = createFromPDSFile(
         instrument, timeframe, quiet,         
         use_full=use_full, 
         rq=rq,
@@ -113,10 +152,26 @@ def createFromPDSFileToCDSFile(
     )
 
 
-    # Define the file path based on the environment variable or local path
-    fpath = writeCDS(instrument, timeframe, use_full, cdf)
+        # Define the file path based on the environment variable or local path
+        if tracer:
+            tracer.add_step("write_cds_file", {"use_full": use_full})
+        
+        fpath = writeCDS(instrument, timeframe, use_full, cdf)
 
-    return fpath, cdf
+        if tracer:
+            tracer.add_step("cds_processing_complete", 
+                          output_data={"file_path": fpath, "rows": len(cdf) if cdf is not None else 0})
+            tracer.complete_operation({"success": True, "file_path": fpath})
+        
+        return fpath, cdf
+    
+    except Exception as e:
+        if tracer:
+            tracer.add_step("cds_processing_error", 
+                          input_data={"error_type": type(e).__name__},
+                          output_data={"error_message": str(e)})
+            tracer.complete_operation({"success": False, "error": str(e)})
+        raise
 
 
 
