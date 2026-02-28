@@ -4,14 +4,21 @@ jgtpy
 """
 
 from setuptools import find_packages, setup
-
 import re
+from pathlib import Path
 
 def read_version():
-    with open("jgtpy/__init__.py") as f:
-        content=f.read()
-        version_match = re.search(r"version=['\"]([^'\"]*)['\"]", content)
-        return version_match.group(1)
+    """Read version from __init__.py without importing."""
+    init_file = Path(__file__).parent / "jgtpy" / "__init__.py"
+    if not init_file.exists():
+        return "0.0.0"
+    content = init_file.read_text()
+    # Try different version patterns
+    for pattern in [r'version\s*=\s*["\']([^"\']+)["\']', r'__version__\s*=\s*["\']([^"\']+)["\']']:
+        match = re.search(pattern, content)
+        if match:
+            return match.group(1)
+    return "0.0.0"
 
 version = read_version()
 
