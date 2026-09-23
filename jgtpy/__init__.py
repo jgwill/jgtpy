@@ -127,5 +127,5 @@ def help():
         "> direction, confidence = analyzer.calculate_mouth_direction_extended(jaw, teeth, lips)\n",
         "> phase = analyzer.calculate_mouth_phase_extended(jaw, teeth, lips)\n",
         "> \n",
-        "For more information, please visit: https://jgtpy.jgwill.com\n",
+        "For more information, please visit: https://docs.jgtpy.jgwill.com\n",
     )
