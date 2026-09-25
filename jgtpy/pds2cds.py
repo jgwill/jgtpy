@@ -115,6 +115,16 @@ def apply_timeframe_indicator_policy(rq):
   return rq
 
 
+def required_warmup_bars(instrument, timeframe, converged=True):
+  """Bars to read before the first CDS row you keep, for this instrument and timeframe.
+
+  Applies the same per-timeframe policy as a conversion (no Tide Alligator on
+  W1 or M1, no Big Alligator on M1), then asks the request. See
+  JGTIDSRequest.warmup_bars for what converged means and why 610 is not it.
+  """
+  return build_cds_request(instrument=instrument, timeframe=timeframe).warmup_bars(converged=converged)
+
+
 def build_cds_request(instrument=None, timeframe=None, mouth_water_flag=None,
                       balligator_flag=None, talligator_flag=None, mfi_flag=None):
   """Build the request pds2cds converts with.

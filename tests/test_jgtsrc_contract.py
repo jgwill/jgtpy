@@ -5,7 +5,8 @@ Consumer, 2026-09-25: jgt-pricedb-util/src/jgtpricedb_util/jobs/derive_cds.py
     pds2cds.build_cds_request(instrument=..., timeframe=...)
     pds2cds.cds.createFromDF(prices, quiet=True, rq=request)
     pds2cds.svc.zone_update_from_cdf(instrument, timeframe, cds, quiet=True)
-and, for the store's raw AO (jgwill/jgtsrc#159), request.normalize_ao_ac.
+and, for the store's raw AO (jgwill/jgtsrc#159), request.normalize_ao_ac,
+and pds2cds.required_warmup_bars for the window it reads.
 
 Run against the installed package: pytest tests/test_jgtsrc_contract.py
 """
@@ -79,3 +80,29 @@ def test_raw_ao_is_the_default_ao_times_one_divisor():
     ratio = norm["ao"][both] / raw["ao"][both]
     assert ratio.max() - ratio.min() < 1e-3 * ratio.median()
     assert raw["ao"].abs().max() < 0.2  # price units, not a -1..1 scale
+
+
+def test_the_declared_warmups():
+    from jgtpy import pds2cds
+    assert pds2cds.required_warmup_bars("EUR/USD", "D1", converged=False) == 610
+    assert pds2cds.required_warmup_bars("EUR/USD", "D1") == 2872
+    assert pds2cds.required_warmup_bars("EUR/USD", "W1") == 678  # no Tide Alligator on W1
+
+
+def test_a_converged_window_lets_go_of_its_seed():
+    """The converged warmup removes at least 95% of the error a 610-bar window leaves."""
+    from jgtpy import pds2cds
+    prices = _prices(n=3500)
+    full = _build(prices, normalize_ao_ac=False)
+    last = prices.index[-100:]
+
+    def worst(warm, line):
+        window = _build(prices.tail(100 + warm), normalize_ao_ac=False)
+        return (window.loc[last, line] - full.loc[last, line]).abs().max()
+
+    converged = pds2cds.required_warmup_bars("EUR/USD", "D1")
+    defined = pds2cds.required_warmup_bars("EUR/USD", "D1", converged=False)
+    for line in ("tjaw", "tteeth"):
+        after, before = worst(converged, line), worst(defined, line)
+        assert after < 0.05 * before, (line, after, before)
+        assert after < 2e-4, (line, after)  # under 2 pips on a walk that drifts far more than EUR/USD

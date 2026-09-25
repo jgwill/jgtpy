@@ -190,6 +190,38 @@ class JGTIDSRequest(JGTPDSRequest):
         TJAW_REQUIRED_CALC_BARS = TJAW_PERIODS+TTEETH_PERIODS #@STCIssue We should use : self.talligator_period_jaws ,... instead of TJAW_PERIODS, TTEETH_PERIODS
         return TJAW_REQUIRED_CALC_BARS
 
+    # Regular Alligator: (period, shift) for jaw, teeth, lips (Williams 13/8, 8/5, 5/3)
+    _ALLIGATOR_LINES = ((13, 8), (8, 5), (5, 3))
+    # A smoothed moving average (SMMA) keeps (1 - 1/period)**n of its seed error
+    # after n bars; seven periods leave about 0.1% of it.
+    CONVERGED_PERIODS = 7
+
+    def warmup_bars(self, converged=True):
+        """Bars to read before the first row you keep, for this request's Alligators.
+
+        converged=False: period + shift of the slowest enabled line, the bars
+        until that line exists (610 with the Tide Alligator, as dropna() shows).
+
+        converged=True (default): shift + 7 * period of the slowest line, the
+        bars until every Alligator line has let go of the average it was seeded
+        with. Read only 610 bars and the Tide jaw still carries about a fifth of
+        its seed: measured 2026-09-25 on EUR/USD D1, up to 32 pips from the
+        full-history value, against 0.3 pip at 2440 bars. Keep a window of this
+        length and a row's Alligator values do not depend on where it started.
+        """
+        lines = list(self._ALLIGATOR_LINES)
+        if self.balligator_flag:
+            lines += [(self.balligator_period_jaws, self.balligator_shift_jaws),
+                      (self.balligator_period_teeth, self.balligator_shift_teeth),
+                      (self.balligator_period_lips, self.balligator_shift_lips)]
+        if self.talligator_flag:
+            lines += [(self.talligator_period_jaws, self.talligator_shift_jaws),
+                      (self.talligator_period_teeth, self.talligator_shift_teeth),
+                      (self.talligator_period_lips, self.talligator_shift_lips)]
+        if converged:
+            return max(shift + self.CONVERGED_PERIODS * period for period, shift in lines)
+        return max(period + shift for period, shift in lines)
+
     def talligator_fix_quotescount(self,nb_bars_by_default=NB_BARS_BY_DEFAULT_IN_CDS):
         if self.use_full:
             return
