@@ -1179,150 +1179,124 @@ def jgti_add_zlc_plus_other_AO_signal(
     # AO Bellow Zero
     dfsrc[AOBZ] = (dfsrc[AO] < 0).astype(int)
 
-    c = 0
-    xc = len(dfsrc)
-    for i, row in dfsrc.iterrows():
-        c = c + 1
-        cao = dfsrc.at[i, AO]  # Current AO
-        cac = dfsrc.at[i, AC]  # Current AC
-        pac1 = dfsrc.at[i, "pac1"]  # Past AC 1
-        pac2 = dfsrc.at[i, "pac2"]  # Past AC 2
-        pac3 = dfsrc.at[i, "pac3"]  # Past AC 3
-        cacgreen = False
-        pac1green = False
-        pac2green = False
-        if cac > pac1:
-            cacgreen = True
-        if pac1 > pac2:
-            pac1green = True
-        if pac2 > pac3:
-            pac2green = True
+    # The rules below run over NumPy arrays and each column is written once at
+    # the end: iterrows() and .at cost about 6 s per 3000 bars. Columns are
+    # created in the order the row loop first wrote them, float64 like its .at
+    # enlargement made them (zcol and the colors: object), and not at all for
+    # an empty frame.
+    n = len(dfsrc)
+    if n == 0:
+        return dfsrc
+    ao = dfsrc[AO].to_numpy()
+    ac = dfsrc[AC].to_numpy()
+    pac1s, pac2s, pac3s = (dfsrc[c].to_numpy() for c in ("pac1", "pac2", "pac3"))
+    pao1s, pao2s, pao3s = (dfsrc[c].to_numpy() for c in ("pao1", "pao2", "pao3"))
+    aoazs = dfsrc[AOAZ].to_numpy()
+    aobzs = dfsrc[AOBZ].to_numpy()
+    labels = dfsrc.index
 
-        pao1 = dfsrc.at[i, "pao1"]  # Past AO 1
-        pao2 = dfsrc.at[i, "pao2"]  # Past AO 2
-        pao3 = dfsrc.at[i, "pao3"]  # Past AO 3
-        caogreen = False
-        pao1green = False
-        pao2green = False
-        if cao > pao1:
-            caogreen = True
-        if pao1 > pao2:
-            pao1green = True
-        if pao2 > pao3:
-            pao2green = True
+    out = {name: [0] * n for name in (ZLC, ZLCB, ZLCS, ZONE_SIGNAL, SZ, BZ, ACS, ACB, SS, SB)}
+    zcols = [None] * n
+    aocolors = [None] * n
+    accolors = [None] * n
 
-        # For simplicity
+    for k in range(n):
+        cao = ao[k]  # Current AO
+        cac = ac[k]  # Current AC
+        pac1 = pac1s[k]  # Past AC 1
+        pac2 = pac2s[k]  # Past AC 2
+        pac3 = pac3s[k]  # Past AC 3
+        cacgreen = cac > pac1
+        pac1green = pac1 > pac2
+        pac2green = pac2 > pac3
+
+        pao1 = pao1s[k]  # Past AO 1
+        pao2 = pao2s[k]  # Past AO 2
+        pao3 = pao3s[k]  # Past AO 3
+        caogreen = cao > pao1
+        pao1green = pao1 > pao2
+        pao2green = pao2 > pao3
+
         caored = not caogreen
         pao1red = not pao1green
         pao2red = not pao2green
-
         cacred = not cacgreen
         pac1red = not pac1green
         pac2red = not pac2green
 
-        aoaz = dfsrc.at[i, AOAZ]
-        aobz = dfsrc.at[i, AOBZ]
+        aoaz = aoazs[k]
+        aobz = aobzs[k]
 
         # ZLC
-        isZLCBuy:int = 0
-        isZLCSell:int = 0
-        zlcCode:int = 0
+        isZLCBuy = 0
+        isZLCSell = 0
+        zlcCode = 0
         if pao1 > 0 and aobz == 1:
             zlcCode = -1
             isZLCSell = 1
         if pao1 < 0 and aoaz == 1:
             zlcCode = 1
             isZLCBuy = 1
+        out[ZLC][k] = zlcCode
+        out[ZLCB][k] = isZLCBuy
+        out[ZLCS][k] = isZLCSell
 
-        dfsrc.at[i, ZLC] = int(zlcCode)
-        dfsrc.at[i, ZLCB] = int(isZLCBuy)
-        dfsrc.at[i, ZLCS] = int(isZLCSell)
-
-        # dfsrc[signal_zcol_column_name] = dfsrc[signal_zcol_column_name].astype(object)
-        # Coloring AO
-        # dfsrc['aocolor'] = dfsrc['aocolor'].astype(object)
-
-        if rq.include_ao_color:
-            if caogreen:
-                dfsrc.at[i, "aocolor"] = "green"
-            else:
-                dfsrc.at[i, "aocolor"] = "red"
-
-        # Coloring AC
-        # dfsrc['accolor'] = dfsrc['accolor'].astype(object)
-        if rq.include_ac_color:
-            if cacgreen:
-                dfsrc.at[i, "accolor"] = "green"
-            else:
-                dfsrc.at[i, "accolor"] = "red"
+        aocolors[k] = "green" if caogreen else "red"
+        accolors[k] = "green" if cacgreen else "red"
 
         # --@STCIssue Zone  (Not sure, it might have to be ABove or Bellow)
-
         zoneColor = nonTradingZoneColor  # default Zone Color
-
-        redZone:int = 0
+        redZone = 0
         if cacred and caored and pac1red and pao1red:
-            redZone:int = 1
+            redZone = 1
             zoneColor = sellingZoneColor
-
-        greenZone:int = 0
+        greenZone = 0
         if cacgreen and caogreen and pac1green and pao1green:
             greenZone = 1
             zoneColor = buyingZoneColor
-
-        dfsrc.at[i, ZCOL] = zoneColor
-        dfsrc.at[i, ZONE_SIGNAL] = int(zone_str_to_id(zoneColor))
-
-        # Sell Zone Signal
-
-        dfsrc.at[i, SZ] = int(redZone)
-
-        # Buy Zone Signal
-        dfsrc.at[i, BZ] = int(greenZone)
+        zcols[k] = zoneColor
+        out[ZONE_SIGNAL][k] = int(zone_str_to_id(zoneColor))
+        out[SZ][k] = redZone  # Sell Zone Signal
+        out[BZ][k] = greenZone  # Buy Zone Signal
 
         # AC Sell / Buy  3 AC Against AO af AC Bellow, 2 if above
-        acSell:int = 0
-        msgacSignal = "No "
+        acSell = 0
         if cacred and pac1red and caogreen and pao1green:
             acSell = 1
-            if (
-                cac < 0 and pac2green
-            ):  # We require 3 bars red on the AC When bellow zero
+            if cac < 0 and pac2green:  # We require 3 bars red on the AC When bellow zero
                 acSell = 0
-        acBuy:int = 0
+        acBuy = 0
         if cacgreen and pac1green and caored and pao1red:
             acBuy = 1
             if cac > 0 and pac2red:
                 acBuy = 0
-
-        # AC Sell Signal (Deceleration)
-
-        dfsrc.at[i, ACS] = int(acSell)
-
-        # AC Buy Signal (Acceleration)
-        dfsrc.at[i, ACB] = int(acBuy)
-
+        out[ACS][k] = acSell  # AC Sell Signal (Deceleration)
+        out[ACB][k] = acBuy  # AC Buy Signal (Acceleration)
         if acSell and not quiet:
-            print("AC Sell Signal with AC Bellow Zero Line " + str(i))
+            print("AC Sell Signal with AC Bellow Zero Line " + str(labels[k]))
         if acBuy and not quiet:
-            print("AC Buy Signal with AC ABove Zero Line " + str(i))
+            print("AC Buy Signal with AC ABove Zero Line " + str(labels[k]))
 
         # Saucer Strategy
         # More on Saucer Strategy : http://simp.ly/p/2K1HBr
-        saucerSell:int = 0
-        if cao < 0 and caored and pao1green and pao2green:
-            saucerSell = 1
+        out[SS][k] = 1 if (cao < 0 and caored and pao1green and pao2green) else 0
+        out[SB][k] = 1 if (cao > 0 and caogreen and pao1red and pao2red) else 0
 
-        saucerBuy:int = 0
-        if cao > 0 and caogreen and pao1red and pao2red:
-            saucerBuy = 1
+    def put(name, values, dtype):
+        if name in dfsrc.columns:  # .at wrote into an existing column and kept its dtype
+            dtype = dfsrc[name].dtype
+        dfsrc[name] = pd.Series(values, index=dfsrc.index, dtype=dtype)
 
-        dfsrc.at[i, SS] = int(saucerSell)
-        dfsrc.at[i, SB] = int(saucerBuy)
-
-        # What Happens on the Next PLUS 35 Periods ??
-        if c < xc - 35:
-            cPrice = row["Close"]
+    put(ZLC, out[ZLC], "float64")
+    put(ZLCB, out[ZLCB], "float64")
+    put(ZLCS, out[ZLCS], "float64")
+    if rq.include_ao_color:
+        put("aocolor", aocolors, "object")
+    if rq.include_ac_color:
+        put("accolor", accolors, "object")
+    put(ZCOL, zcols, "object")
+    for name in (ZONE_SIGNAL, SZ, BZ, ACS, ACB, SS, SB):
+        put(name, out[name], "float64")
     return dfsrc
 
 

@@ -36,7 +36,7 @@ with warnings.catch_warnings():
     )
 
 
-version='0.6.31'
+version='0.6.32'
 __version__ = version
 
 # jgtcore compatibility layer
