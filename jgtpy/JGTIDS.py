@@ -17,6 +17,7 @@ from JGTPDHelper import (
     __cleanse_ao_peak_v1_secondary_columns,
     _pds_cleanse_original_columns,
     pds_cleanse_extra_columns,
+    drop_placeholder_candles,
 )
 
 from jgtapy import Indicators
@@ -209,6 +210,8 @@ def ids_add_indicators(
     if rq is None:
         rq = JGTIDSRequest()
 
+    dfsrc = drop_placeholder_candles(dfsrc, quiet=quiet)
+
     dfresult = None
 
     #Migrated from Signature to Request Object
@@ -243,14 +246,21 @@ def ids_add_indicators(
             largest_fractal_period=largest_fractal_period,
         )
 
-    return round_columns(dfresult, rq.rounding_decimal_min)
+    keep = () if getattr(rq, "normalize_ao_ac", True) else tuple(columns_to_normalize)
+    return round_columns(dfresult, rq.rounding_decimal_min, keep_small_values_in=keep)
 
 
-def round_columns(df, rounding_decimal_min=10):
+def round_columns(df, rounding_decimal_min=10, keep_small_values_in=()):
+    """Round float columns; values whose str() is scientific (|x| < 1e-4) become 0.
+
+    Columns in `keep_small_values_in` are rounded only. AO and AC in price
+    units (normalize_ao_ac=False) live below 1e-4 on most pairs.
+    """
     for col in df.columns:
         if df[col].dtype == "float64" and df[col].apply(lambda x: x % 1 != 0).any():
             df[col] = df[col].round(decimals=rounding_decimal_min)
-            df[col] = df[col].apply(lambda x: 0 if "e" in str(x) else x)
+            if col not in keep_small_values_in:
+                df[col] = df[col].apply(lambda x: 0 if "e" in str(x) else x)
     return df
 
 
@@ -497,8 +507,8 @@ def ids_add_indicators_LEGACY(
     except TypeError:
         pass
 
-    normalize = True
-    if normalize:
+    # AO/AC divided by the frame maximum unless the request asks for price units
+    if getattr(ids_request, "normalize_ao_ac", True):
         dfresult = normalize_columns(dfresult, columns_to_normalize)
 
     if not quiet:

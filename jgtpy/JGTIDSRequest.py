@@ -30,6 +30,7 @@ class JGTIDSRequest(JGTPDSRequest):
         peak_width (int): Width of the peaks.
         peak_divider_min_height (int): Minimum height of the peak divider.
         rounding_decimal_min (int): Minimum decimal for rounding.
+        normalize_ao_ac (bool): Divide AO and AC by their largest absolute value in the frame (default True). False keeps them in price units, on one scale whatever the frame length.
         disable_ao_peaks_v1 (bool): Flag indicating whether to disable AO Peak V1.
         include_ao_color (bool): Flag indicating whether to include AO color data.
         include_ac_color (bool): Flag indicating whether to include AC color data.
@@ -62,6 +63,7 @@ class JGTIDSRequest(JGTPDSRequest):
                  peak_divider_min_height = 3,
                  rounding_decimal_min=11, 
                  disable_ao_peaks_v1=True,
+                 normalize_ao_ac=True,
                  include_ao_color=False,
                  include_ac_color=False,
                  addAlligatorOffsetInFutur=False,
@@ -79,6 +81,7 @@ class JGTIDSRequest(JGTPDSRequest):
         self.include_ao_color = include_ao_color
         self.include_ac_color = include_ac_color
         self.disable_ao_peaks_v1 = disable_ao_peaks_v1
+        self.normalize_ao_ac = normalize_ao_ac
         self.aof_flag = aof_flag
         self.balligator_flag = balligator_flag
         self.mfi_flag = mfi_flag

@@ -36,7 +36,7 @@ with warnings.catch_warnings():
     )
 
 
-version='0.6.29'
+version='0.6.30'
 __version__ = version
 
 # jgtcore compatibility layer
@@ -56,7 +56,6 @@ except ImportError:
 # )
 
 # import JGTADS as ads
-from JGTADS import (plot_v2 as plot)
 #     plot as plot,
 #     plot as ads_create,
 #     plot_perspective as plot_perspective,
@@ -72,12 +71,34 @@ from JGTADS import (plot_v2 as plot)
 # import JGTChartConfig as CC
 
 # import JGTMKSG as mksg
-from JGTMKSG import (
-    pto_generate_snapshot_240302_v2_by_crop_dates as mksg_by_crop_dates,
-    pto_generate_snapshot_240302_v2_by_crop_dates as mksg_create_crops,
-    generate_market_snapshots as mksg_by_pov,
-    generate_market_snapshots as mksg_create_pov,
-)
+
+# Charting and snapshot names load on first use. JGTADS and JGTMKSG pull in
+# matplotlib, panel and bokeh, which `from jgtpy import pds2cds` never needs.
+_LAZY_NAMES = {
+    "plot": ("JGTADS", "plot_v2"),
+    "ads_create": ("JGTADS", "plot"),
+    "cds_create": ("JGTCDS", "create"),
+    "read": ("JGTCDS", "readCDSFile"),
+    "mksg_by_crop_dates": ("JGTMKSG", "pto_generate_snapshot_240302_v2_by_crop_dates"),
+    "mksg_create_crops": ("JGTMKSG", "pto_generate_snapshot_240302_v2_by_crop_dates"),
+    "mksg_by_pov": ("JGTMKSG", "generate_market_snapshots"),
+    "mksg_create_pov": ("JGTMKSG", "generate_market_snapshots"),
+}
+
+
+def __getattr__(name):
+    try:
+        module_name, attr = _LAZY_NAMES[name]
+    except KeyError:
+        raise AttributeError(f"module 'jgtpy' has no attribute {name!r}") from None
+    import importlib
+    value = getattr(importlib.import_module(module_name), attr)
+    globals()[name] = value
+    return value
+
+
+def __dir__():
+    return sorted(set(globals()) | set(_LAZY_NAMES))
 
 import JGTIDSSvc as idssvc
 

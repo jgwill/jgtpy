@@ -195,3 +195,38 @@ def pds_cleanse_extra_columns(dfsrc, quiet=True):
     if not quiet:
         print("Columns cleanup was executed")
     return dfsrc
+
+
+_QUOTE_COLUMNS = ["BidOpen", "BidHigh", "BidLow", "BidClose",
+                  "AskOpen", "AskHigh", "AskLow", "AskClose"]
+_OHLC_COLUMNS = ["Open", "High", "Low", "Close"]
+
+
+def drop_placeholder_candles(dfsrc, quiet=True):
+    """Drop FXCM placeholder candles: every quote exactly 1.0.
+
+    ForexConnect sometimes answers a bar with all eight bid/ask quotes at 1.0
+    and the real volume (the bar that just closed at the 21:00 UTC rollover,
+    the oldest rows of a window fetched after the Friday close). No market
+    quotes 1.0 on every field, so the test is by value with no threshold.
+    AO and AC are divided by their frame maximum, so one such bar would flatten
+    them for weeks. The eight quote columns are tested when present, else the
+    four OHLC columns.
+    """
+    cols = [c for c in _QUOTE_COLUMNS if c in dfsrc.columns]
+    if len(cols) != len(_QUOTE_COLUMNS):
+        cols = [c for c in _OHLC_COLUMNS if c in dfsrc.columns]
+        if len(cols) != len(_OHLC_COLUMNS):
+            return dfsrc
+    placeholder = (dfsrc[cols] == 1.0).all(axis=1)
+    count = int(placeholder.sum())
+    if count == 0:
+        return dfsrc
+    if not quiet:
+        import sys
+        print(f"jgtpy: dropped {count} placeholder candles (all quotes 1.0)", file=sys.stderr)
+    kept = dfsrc.loc[~placeholder]
+    # jgtapy computes on positions: a positional index must stay contiguous
+    if dfsrc.index.name is None:
+        kept = kept.reset_index(drop=True)
+    return kept

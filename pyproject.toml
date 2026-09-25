@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "jgtpy"
-version = "0.6.29"
+version = "0.6.30"
 authors = [
   { name="Guillaume Isabelle", email="jgi@jgwill.com" },
 ]
@@ -16,9 +16,9 @@ requires-python = ">=3.7"
 dependencies = [
   "pandas>=0.25.1",
   "python-dotenv>=0.19.2",
-  "jgtapy>=1.9.21",
-  "jgtutils>=1.0.24",
-  "jgtcore>=0.2.5",
+  "jgtapy>=1.9.22",
+  "jgtutils>=1.0.30",
+  "jgtcore>=0.2.6",
   "dropbox>=11.36.2",
   "tlid>=0.1.15",
   "scipy>=1.7.3",
@@ -29,8 +29,7 @@ dependencies = [
   "tomli>=1.2.3",
   "jinja2",
   "dash",
-  "tdqm",
-  "jgtfxcon>=0.5.65",
+  "jgtfxcon>=0.7.0",
 ]
 
 classifiers = [

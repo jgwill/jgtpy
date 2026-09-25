@@ -18,6 +18,7 @@ import datetime
 
 from JGTChartConfig import JGTChartConfig
 from JGTIDSRequest import JGTIDSRequest
+from JGTPDHelper import drop_placeholder_candles
 
 
 from jgtutils.jgtconstants import (
@@ -106,6 +107,8 @@ def ids_add_indicators(
     if rq is None:
         rq = JGTIDSRequest()
 
+    dfsrc = drop_placeholder_candles(dfsrc, quiet=quiet)
+
     dfresult = None
     if (
         not useLEGACY
@@ -130,15 +133,22 @@ def ids_add_indicators(
 
     #print("IDS::debug len(dfresult):" + str(len(dfresult)))
     #print(" dfresult.columns:", dfresult.columns)
-    dfresult= round_columns(dfresult, rq.rounding_decimal_min)
+    keep = () if getattr(rq, "normalize_ao_ac", True) else tuple(columns_to_normalize)
+    dfresult= round_columns(dfresult, rq.rounding_decimal_min, keep_small_values_in=keep)
     return dfresult
 
 
-def round_columns(df, rounding_decimal_min=10):
+def round_columns(df, rounding_decimal_min=10, keep_small_values_in=()):
+    """Round float columns; values whose str() is scientific (|x| < 1e-4) become 0.
+
+    Columns in `keep_small_values_in` are rounded only. AO and AC in price
+    units (normalize_ao_ac=False) live below 1e-4 on most pairs.
+    """
     for col in df.columns:
         if df[col].dtype == "float64" and df[col].apply(lambda x: x % 1 != 0).any():
             df[col] = df[col].round(decimals=rounding_decimal_min)
-            df[col] = df[col].apply(lambda x: 0 if "e" in str(x) else x)
+            if col not in keep_small_values_in:
+                df[col] = df[col].apply(lambda x: 0 if "e" in str(x) else x)
     return df
 
 def calculate_mfi_sq(row, prev_row):
@@ -445,8 +455,8 @@ def ids_add_indicators__legacy(
     #print(dfresult)
     #print("-------------------------------")
 
-    normalize = True
-    if normalize:
+    # AO/AC divided by the frame maximum unless the request asks for price units
+    if getattr(rq, "normalize_ao_ac", True):
         dfresult = normalize_columns(dfresult, columns_to_normalize)
 
     if not quiet:
